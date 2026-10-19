@@ -8,7 +8,7 @@ const polishAudit=process.argv.includes("--polish");
 const sudokuAudit=process.argv.includes("--lapidoku");
 const achievementAudit=process.argv.includes("--achievements");
 
-const script=`<script>${process.argv.includes('--guide-auto')?'':"localStorage.setItem('lapinous_guide_seen_v2','1');"}window.mobileErrors=[];addEventListener('error',e=>{if(e.message)mobileErrors.push(e.message)});</script>`;
+const script=`<script>${process.argv.includes('--guide-auto')?'':"localStorage.setItem('lapinous_guide_seen_v4','1');"}window.mobileErrors=[];addEventListener('error',e=>{if(e.message)mobileErrors.push(e.message)});</script>`;
 
 const audit=`<script>addEventListener('load',async()=>{const pause=ms=>new Promise(r=>setTimeout(r,ms));for(let i=0;i<100&&!window.openMemory;i++)await pause(200);if(location.search.includes('guideauto')){for(let i=0;i<100&&!document.getElementById('startupScreen')?.hidden;i++)await pause(200);if(!document.querySelector('#myModal.show'))throw Error('Tutoriel non ouvert automatiquement');window.guideAutoVerified=true;bootstrap.Modal.getOrCreateInstance(document.getElementById('myModal')).hide();await pause(400);}if(!document.body.classList.contains('game-running'))document.getElementById('adoptBtn').click();await pause(2500);if(location.search.includes('family')&&!sessionStorage.familyFixture){const saved=JSON.parse(localStorage.getItem('lapinous_autosave'));saved.ownedSpecies=['azur','caramel','mocha','bambou'];saved.salonFavorites=['caramel','mocha','bambou'];saved.species='azur';if(location.search.includes('brand')){saved.speciesNames||={};saved.speciesNames.azur='Ancienne sauvegarde';}localStorage.setItem('lapinous_autosave',JSON.stringify(saved));sessionStorage.familyFixture='1';location.reload();return;}window.visualReady=true;});</script>`;
 
@@ -41,6 +41,8 @@ for(const [name,expression] of (polishAudit?[
 ['retour-guide',"bootstrap.Modal.getOrCreateInstance(document.getElementById('myModal')).hide()"],
 ['cuisine',"document.getElementById('cuisineBtn').click()"],
 ['chambre',"document.getElementById('chambreBtn').click()"],
+['agilite-animee',"document.getElementById('jardinBtn').click();startAgility()"],
+['fin-agilite',"stopAgility(false)"],
 ['salle-de-bain',"document.getElementById('sdbBtn').click();"],
 ...(process.argv.includes('--brand')?[
 ['quiz',"openRabbitQuiz()"],

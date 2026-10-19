@@ -1,0 +1,12 @@
+import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
+const source=fs.readFileSync('assets/js/script.js','utf8');
+const start=source.indexOf('        function updateAmbience() {');
+const end=source.indexOf('        window.toggleLapinousAudio',start);
+const tracks=[];let events=[];
+const context={window:{},Date,ensureNewSystems(){},currentActiveEvents:()=>events,AUDIO_FILES:{ambience:'base.mp3',noel:'event.mp3',nouvel_an_chinois:[]},game:{audio:{muted:false,ambience:true}},ambienceKey:'',ambienceCleanups:[],ambienceAudios:[],seasonSoundUntil:0,getCachedAudio:src=>({cloneNode(){const audio={src,paused:true,volume:1,play(){this.paused=false;return Promise.resolve();},pause(){this.paused=true;}};tracks.push(audio);return audio;}})};
+vm.runInNewContext(source.slice(start,end),context);
+context.updateAmbience();assert.equal(tracks[0].paused,false);
+events=['noel'];context.updateAmbience();assert.equal(tracks[0].paused,true);assert.equal(tracks[1].src,'event.mp3');assert.equal(tracks[1].paused,false);
+context.seasonSoundUntil=Date.now()+2200;context.updateAmbience();assert.ok(tracks.every(track=>track.paused));
+context.seasonSoundUntil=0;context.updateAmbience();assert.equal(tracks.at(-1).src,'event.mp3');assert.equal(tracks.at(-1).paused,false);assert.ok(tracks.filter(track=>track.src==='base.mp3').every(track=>track.paused));
+console.log('Audio : ambiance de base arrêtée pour événement, suspension pendant le jingle et reprise sans superposition OK.');

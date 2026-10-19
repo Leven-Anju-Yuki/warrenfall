@@ -140,6 +140,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Renvoie (et crée si besoin) la progression du lapin actuellement actif.
         function progress() {
             if (!game.progress[game.species]) game.progress[game.species] = freshSpeciesProgress();
+            if(game.roomUpgrades){game.progress[game.species].improvements=game.roomUpgrades;game.progress[game.species].boosts=game.roomBoosts;}
             ensureAttackTraining(game.progress[game.species]);
             return game.progress[game.species];
         }
@@ -160,6 +161,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function progressForSpecies(key) {
             if (!game.progress[key]) game.progress[key] = freshSpeciesProgress();
+            if(game.roomUpgrades){game.progress[key].improvements=game.roomUpgrades;game.progress[key].boosts=game.roomBoosts;}
             ensureAttackTraining(game.progress[key]);
             return game.progress[key];
         }
@@ -212,6 +214,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         function ensureNewSystems() {
+            window.LapinousEconomy.sharedUpgrades(game);
             game.records = {
                 eggsOpened: 0,
                 eggsBought: 0,
@@ -472,12 +475,14 @@ document.addEventListener("DOMContentLoaded", () => {
             return tracks;
         }
 
+        let seasonSoundUntil = 0;
+        let seasonResumeTimer;
         function updateAmbience() {
             ensureNewSystems();
             const event = currentActiveEvents().find((name) => AUDIO_FILES[name]);
             const wanted = event ? AUDIO_FILES[event] : AUDIO_FILES.ambience;
             const files = Array.isArray(wanted) ? wanted : [wanted];
-            const enabled = !game.audio.muted && game.audio.ambience;
+            const enabled = !game.audio.muted && game.audio.ambience && Date.now() >= seasonSoundUntil;
             const key = enabled ? files.join("|") : "";
             // Changer de pièce ne redémarre pas la musique déjà en cours.
             if (key === ambienceKey) {
@@ -1841,7 +1846,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     mg.quiz.completed++;
                     recordAchievement("quizCompleted");
                     mg.quiz.bestScore = Math.max(mg.quiz.bestScore, score / total);
-                    if (score > 0) gainFriendship(score);
+                    if (score > 0) {gainFriendship(score);rewardMinigame("quiz",Math.min(9,Math.floor(score/3)));}
                     progress().energy = Math.max(0, progress().energy - 2);
                     autoSave();
                     updateStatusBars();
@@ -2306,6 +2311,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 progress().cleanliness - Number(lvl.cleanliness || 0),
             );
             gainFriendship(lvl.friendship);
+            rewardMinigame("puzzle:"+puz.id, levelIndex);
             updateStatusBars();
             autoSave();
             spawnParticles("🧩", 10);
@@ -2505,7 +2511,7 @@ document.addEventListener("DOMContentLoaded", () => {
             },
             jardin: {
                 label: "🌿 Jardin",
-                image: () => `./assets/img/Zone_jardin/entrainement.png`,
+                image: () => `./assets/img/Zone_jardin/entrainement.gif`,
                 content: () => {
                     const icon = progress().improvements.jardin
                         ? "./assets/img/Zone_jardin/agilite.png"
@@ -2640,6 +2646,8 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("level").innerText = progress().currentLevel;
             updateStatusBars();
         }
+        function rewardMinigame(key,level){const amount=window.LapinousEconomy.mini(game,key,level);if(amount)showToast(`Niveau réussi : +${amount} carottes, en plus de ton amitié !`,"success");}
+        function awardBattleLoot(){const item=window.LapinousEconomy.loot(game,window.LapinousShop.getCatalog()?.items||[]);if(item)showToast(`Butin : ${item.name} ×1 dans la réserve de cuisine !`,"success");}
         function gainFriendship(amount) {
             const scaled = Math.max(
                 1,
@@ -2878,6 +2886,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     recordAchievement("gamesWon");
                     recordAchievement("memoryCompleted");
                     gainFriendship(6);
+                    rewardMinigame("memory",st.level);
                     game.records.puzzlesCompleted += 1;
                     showToast(`Memory niveau ${st.level + 1} terminé !`, "success");
                     autoSave();
@@ -2905,7 +2914,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const mg = ensureMinigameProgress().lapidoku;
             if (!Number.isInteger(index) || index < 0 || index > Math.min(11, Number(mg.level) || 0)) return;
             const level = LapinousSudoku.create(index);
-            lapidokuState = {...level, given:level.board.map(Boolean), selected:level.board.indexOf(0), finished:false, lost:false, mistakes:0, mistakeLimit:LapinousSudoku.mistakeLimit, notice:"Choisis une case vide, puis un chiffre."};
+            lapidokuState = {...level, rewardLevel:index, given:level.board.map(Boolean), selected:level.board.indexOf(0), finished:false, lost:false, mistakes:0, mistakeLimit:LapinousSudoku.mistakeLimit, notice:"Choisis une case vide, puis un chiffre."};
             renderLapidoku();
         };
         function renderLapidoku() {
@@ -2933,7 +2942,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const mg=ensureMinigameProgress().lapidoku;
             mg.completed=(Number(mg.completed)||0)+1;
             mg.level=Math.max(Number(mg.level)||0,Math.min(11,st.index+1));
-            recordAchievement("gamesWon");gainFriendship(8);
+            recordAchievement("gamesWon");gainFriendship(8);rewardMinigame("lapidoku",lapidokuState.rewardLevel);
             st.notice="Grille réussie ! +8 💛 — progression enregistrée.";
             autoSave();renderLapidoku();
         };
@@ -2978,7 +2987,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 <div class="agility-runner" id="agilityRunner" tabindex="0" aria-label="Parcours d'agilité">
                   <div class="agility-ground"></div>
-                  <div class="agility-runner-rabbit" id="agilityRabbit">🐇</div>
+                  <div class="agility-runner-rabbit" id="agilityRabbit"><img src="./assets/img/Ouverture_du_jeu/animations/azazel_course.gif" alt="Ton lapin court"></div>
                   <div class="agility-start-hint" id="agilityHint">ESPACE, ↑ ou clique pour sauter</div>
                 </div>
                 <div class="agility-runner-controls">
@@ -2988,6 +2997,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <small>Le parcours accélère progressivement. Trois collisions mettent fin à la partie.</small>
               </div>`;
             const runner = document.getElementById("agilityRunner");
+            runner.style.backgroundImage=getComputedStyle(body).backgroundImage;
             runner.onclick = (e) => {
                 if (!e.target.closest("button")) agilityJump();
             };
@@ -3034,7 +3044,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 if (runner) {
                     const el = document.createElement("div");
                     el.className = "agility-obstacle";
-                    el.textContent = Math.random() < 0.5 ? "🪵" : "🪨";
+                    el.classList.add(Math.random()<.5?"agility-log":"agility-rock");
+                    el.setAttribute("aria-label",el.classList.contains("agility-log")?"Bûche à sauter":"Rocher à sauter");
                     runner.appendChild(el);
                     agilityRun.obstacles.push({ x: 100, hit: false, el });
                 }
@@ -3076,6 +3087,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 traitGain("friendship", 0) +
                 progress().boosts.friendship;
             gainFriendship(reward);
+            if(meters>=20)rewardMinigame("agility",Math.floor(meters/100));
             progress().food = Math.max(0, progress().food - 6);
             progress().energy = Math.max(0, progress().energy - 8);
             progress().cleanliness = Math.max(
@@ -3363,11 +3375,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 bossHp > 0 || playerHp <= Math.max(10, Math.round(playerMaxHp * 0.1));
 
             if (bossHp <= 0) {
-                const reward = Math.max(
-                    2,
-                    Math.round((boss.difficulty || 20) * 0.3) + Math.floor(Math.random() * 3),
-                );
+                const reward = window.LapinousEconomy.combatReward(boss.difficulty);
                 game.carrots += reward;
+                awardBattleLoot();
                 ensureNewSystems();
                 recordAchievement("bossesDefeated");
                 playSfx("victory");
@@ -3809,8 +3819,9 @@ document.addEventListener("DOMContentLoaded", () => {
             const f = tacticalFight;
             if (!f) return;
             if (win) {
-                const reward = Math.max(2, Math.round((f.boss.difficulty || 20) * 0.22));
+                const reward = window.LapinousEconomy.combatReward(f.boss.difficulty);
                 game.carrots += reward;
+                awardBattleLoot();
                 recordAchievement("bossesDefeated");
                 f.team.forEach((x) => {
                     const old = game.species;
@@ -4165,7 +4176,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (stage === 0) progress().friendship -= UPGRADE_COST;
             else game.carrots -= roomUpgradeCost(room);
             progress().boosts[statKey] += 2;
-            progress().improvements[room] = stage + 1;
+            game.roomUpgrades[room] = stage + 1;
             progress().lastUpgradeLevel = progress().currentLevel;
             showToast(message, "success");
             spawnParticles("✨", 8);
@@ -4294,13 +4305,14 @@ document.addEventListener("DOMContentLoaded", () => {
         let seasonalAudioContext = null;
         let lastSeasonSound = "";
         function playSeasonSound(eventName, force = false) {
-            if (!eventName || (!force && lastSeasonSound === eventName)) return;
+            if (!eventName || game.audio?.muted || game.audio?.sfx===false || (!force && lastSeasonSound === eventName)) return;
             try {
                 const AudioCtx = window.AudioContext || window.webkitAudioContext;
                 if (!AudioCtx) return;
                 seasonalAudioContext = seasonalAudioContext || new AudioCtx();
                 if (seasonalAudioContext.state === "suspended") seasonalAudioContext.resume();
                 const ctx = seasonalAudioContext;
+                seasonSoundUntil=Date.now()+2200;updateAmbience();clearTimeout(seasonResumeTimer);seasonResumeTimer=setTimeout(updateAmbience,2300);
                 const now = ctx.currentTime + 0.03;
                 const melodies = {
                     halloween: [
@@ -4534,6 +4546,7 @@ document.addEventListener("DOMContentLoaded", () => {
         const backgroundAvailability = new Map();
         const backgroundFailures = new Map();
         let requestedBackground = "";
+        let resolveBackground;
         function updateSceneBackground(force = false) {
             const zone = body.classList.contains("battle-scene")
                 ? "combat"
@@ -4548,14 +4561,18 @@ document.addEventListener("DOMContentLoaded", () => {
             );
             const request = paths.join("|");
             if (force !== true && request === requestedBackground) return;
+            resolveBackground?.(false);
+            window.LapinousBackgroundReady=new Promise(resolve=>resolveBackground=resolve);
+            const resolveThisBackground=resolveBackground;
             requestedBackground = request;
             const apply = (path) => {
+                resolveThisBackground(true);
                 if (requestedBackground === request)
                     body.style.setProperty("background-image", `url("${path}")`, "important");
             };
             function tryPath(index) {
                 const path = paths[index];
-                if (!path || requestedBackground !== request) return;
+                if (!path || requestedBackground !== request) {resolveThisBackground(false);return;}
                 if (backgroundAvailability.get(path) === true) {
                     apply(path);
                     return;
@@ -4878,5 +4895,5 @@ document.addEventListener("DOMContentLoaded", () => {
         );
         document.addEventListener("pointerdown", () => updateAmbience(), { once: true });
         window.LapinousStartupFinish?.();
-    });
+    }).catch(error=>{console.error("Initialisation du jeu interrompue",error);window.LapinousStartupError?.();});
 });

@@ -1124,3 +1124,17 @@ Suivi du 16 octobre : tableau [Warrenfall](https://trello.com/b/5VmsAFi7/warrenf
 - [x] Carnet illustré enrichi : trois sources réelles de carottes, portraits et rôles des six accompagnateurs (marchande, Chef, apothicaire, artisan, spécialiste des fragments, couturière), lieux et étapes pratiques ; ouverture automatique au premier chargement après cette mise à jour, relecture par le livre. [trello:6ac39daf6e132da85a61925d:code:guide-companions-105]
 
 - [x] Guide 105 vérifié en navigateur : ouverture automatique après chargement, navigation et portraits sur 568×280 et 1920×1080 ; bouton Lire le texte pour les pages défilantes. PWA testée avec le nouveau style. [trello:6ac39daf6e132da85a61925d:code:guide-105-tests]
+
+## Règles et cohérence du terrier — 19 octobre 2026
+
+- [x] Introduction une fois par session d’onglet, pas au rechargement ; attente des ressources requises et des animations d’accompagnateurs, nouvelle tentative au lieu d’entrée incomplète. [trello:6ac39db49bd7456ac00b5038:code:startup-strict-106]
+- [x] Mini-jeux : 2/3 carottes par niveau récompensé, à chaque nouvelle partie réussie, même sur un niveau déjà terminé ; amitié principale conservée. Combats revalorisés, 35 % de butin ingrédient partagé de Cuisine. [trello:6ac39dc482f20ad66d405a8b:code:economy-106]
+- [x] Évolutions et bonus communs à la sauvegarde ; fusion du meilleur palier des anciennes progressions. Besoins et techniques individuels conservés. [trello:6ac75d423df6f3af4d7dffa3:code:shared-evolutions-106]
+- [x] Carnet en parchemin, mage des fragments, explications corrigées pour les stocks, évolutions et gains ; police de titres serif et texte de lecture. [trello:6ac39daf6e132da85a61925d:code:guide-rules-106]
+- [x] Ambiance suspendue pendant le son d’événement ; GIF de course dans l’agilité, obstacles et fond cohérents ; nom de pièce retiré, œufs repositionnés, favicon Dashboard et icônes remplacés. [trello:6ac39d846f4f8d11b7da6ab0:code:world-polish-106]
+- [x] Apothicairerie : fond complet, armoire ancrée au sol, bulle au-dessus du personnage. [trello:6ac75d423df6f3af4d7dffa3:code:apothecary-floor-106]
+- [ ] Valider en jeu réel le chargement sur réseau lent, l’audio d’événement, la course et le placement de l’apothicairerie sur téléphone. [trello:6ac39d846f4f8d11b7da6ab0:manuel:world-106]
+
+- [x] Œufs regroupés dans leur fenêtre dédiée sur PC et téléphone, ouverte depuis la navigation ; le panneau ne flotte plus au-dessus du décor et ne cache plus le lapin principal. [trello:6ac39d846f4f8d11b7da6ab0:code:eggs-dialog-106]
+
+- [x] Ouverture corrigée : GIF avant le fond et la barre de chargement, aucun écran de chargement visible avant l’introduction ; petites récompenses des mini-jeux renouvelées à chaque partie réussie. [trello:6ac39db49bd7456ac00b5038:code:opening-order-107]

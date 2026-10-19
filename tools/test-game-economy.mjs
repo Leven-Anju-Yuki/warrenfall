@@ -1,0 +1,10 @@
+import vm from 'node:vm';import fs from 'node:fs';import assert from 'node:assert/strict';
+const context={window:{}};vm.runInNewContext(fs.readFileSync('assets/js/game-economy.js','utf8'),context);
+const api=context.window.LapinousEconomy;
+const game={carrots:0,progress:{a:{improvements:{cuisine:true,chambre:2},boosts:{energy:4}},b:{improvements:{cuisine:3,sdb:1},boosts:{food:6}}}};
+api.sharedUpgrades(game);assert.equal(game.roomUpgrades.cuisine,3);assert.equal(game.roomUpgrades.chambre,2);assert.equal(game.progress.a.improvements,game.progress.b.improvements);assert.equal(game.progress.a.boosts.food,6);
+const restored=JSON.parse(JSON.stringify(game));api.sharedUpgrades(restored);assert.equal(restored.progress.a.improvements,restored.roomUpgrades);
+assert.equal(api.mini(game,'memory',0),2);assert.equal(api.mini(game,'memory',0),2);assert.equal(api.mini(game,'memory',3),3);assert.equal(game.carrots,7);
+const pool=[{id:'soap',kind:'restore',stat:'cleanliness'},{id:'market_apple',kind:'restore',stat:'food',category:'market'}];
+assert.equal(api.loot(game,pool,()=>0).id,'market_apple');assert.equal(game.inventory.market_apple,1);assert.equal(api.loot(game,pool,()=>.9),null);assert.equal(api.combatReward(20),9);assert.ok(api.combatReward(100)>api.combatReward(20));
+console.log('Économie : migration des évolutions partagées, 2/3 carottes à chaque nouvelle réussite, récompenses combat et butin ingrédients OK.');

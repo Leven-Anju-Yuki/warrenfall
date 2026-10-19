@@ -3,7 +3,7 @@
     <head>
         <meta charset="UTF-8">
         <link rel="preload" as="image" href="./assets/img/Ouverture_du_jeu/fonds_4K/05_chargement_3840x2160.jpg">
-        <style>#startupScreen{position:fixed;inset:0;z-index:2147483646;background:#23172b;color:#fff6df}#startupScreen[hidden]{display:none!important}</style>
+        <style>#startupScreen{position:fixed;inset:0;z-index:2147483646;background:#23172b;color:#fff6df}#startupScreen[hidden]{display:none!important}#startupScreen.startup-opening>:not(#startupIntro){visibility:hidden}</style>
         <script src="./assets/js/image-manifest.js?v=companion-motion-69"></script>
         <script src="./assets/js/image-assets.js"></script>
 <style>html:not(.local-admin) .encyclopedia-lock-row, html:not(.local-admin) .admin-test-toggle, html:not(.local-admin) #adminTestPanel { display:none !important; }</style>
@@ -56,12 +56,12 @@
     <link rel="manifest" href="./manifest.json">
 <meta name="theme-color" content="#80613d">
 <link rel="stylesheet" href="./assets/css/lapidoku.css?v=mistakes-87">
-<link rel="stylesheet" href="./assets/css/shop-polish.css?v=feet-guide-105">
-<link rel="stylesheet" href="./assets/css/startup.css?v=opening-95">
-<link rel="stylesheet" href="./assets/css/game-guide.css?v=guide-105">
+<link rel="stylesheet" href="./assets/css/shop-polish.css?v=feet-guide-107">
+<link rel="stylesheet" href="./assets/css/startup.css?v=opening-107">
+<link rel="stylesheet" href="./assets/css/game-guide.css?v=guide-107">
 </head>
     <body class="default">
-        <section id="startupScreen" aria-label="Ouverture de Warrenfall" aria-busy="true">
+        <section id="startupScreen" class="startup-opening" aria-label="Ouverture de Warrenfall" aria-busy="true">
             <img id="startupArtwork" src="./assets/img/Ouverture_du_jeu/fonds_4K/05_chargement_3840x2160.jpg" alt="">
             <img id="startupIntro" hidden alt="Introduction animée de Warrenfall">
             <img id="startupLogo" src="./assets/img/Ouverture_du_jeu/logo/Warrenfall_logo_transparent.png" alt="Warrenfall : Les Chroniques de Garenne">
@@ -72,7 +72,7 @@
                 <p id="startupStatus" role="status">Chargement des images d’ouverture…</p>
             </div>
         </section>
-        <script src="./assets/js/startup.js?v=opening-95"></script>
+        <script src="./assets/js/startup.js?v=opening-107"></script>
         <noscript><style>#startupScreen{display:none}</style>Active JavaScript pour jouer à Warrenfall.</noscript>
         <!-- ===================== ÉCRAN D'ADOPTION ===================== -->
         <div id="adoptionScreen" class="adoption-screen">
@@ -175,71 +175,7 @@
                         </button>
                     </div>
                     <div class="modal-body">
-                        <ol>
-                            <li>
-                                <strong>Prends soin de ton compagnon.</strong> Utilise les pièces en bas :
-                                la Cuisine pour le nourrir, la Chambre pour le faire dormir et la Salle de bain
-                                pour le laver. Les soins remplissent ses besoins, mais ne donnent pas d’amitié.
-                            </li>
-                            <li>
-                                <strong>Chaque lapin a sa progression.</strong> Dans le Salon, sélectionne un
-                                compagnon pour jouer avec lui. Ses besoins, son amitié, son niveau, ses
-                                améliorations et sa progression dans les mini-jeux lui sont propres.
-                            </li>
-                            <li>
-                                <strong>Gagne de l’amitié et monte en niveau.</strong> Réussis les jeux du Salon,
-                                participe à l’agilité et remporte des combats. Chaque tranche de 25 points
-                                d’amitié cumulés fait gagner un niveau, jusqu’au niveau 100. Un œuf est offert
-                                tous les 20 niveaux.
-                            </li>
-                            <li>
-                                <strong>Améliore les pièces.</strong> Lorsqu’une amélioration est débloquée,
-                                achète-la pour 20 points d’amitié. Elle remplace l’objet de base et renforce
-                                son effet pour ce lapin. Après un achat, il faut gagner au moins un niveau
-                                avant d’acheter une autre amélioration. Dépenser de l’amitié ne retire pas de niveau.
-                            </li>
-                            <li>
-                                <strong>Joue dans le Salon.</strong> Ouvre le Coin jeux pour accéder aux
-                                Puzzles, au Memory (retrouver les paires) et au Lapidoku (compléter une grille
-                                4 × 4 avec les chiffres 1 à 4 dans chaque ligne, colonne et bloc 2 × 2).
-                                Les puzzles et leurs difficultés se débloquent progressivement.
-                            </li>
-                            <li>
-                                <strong>Teste ton agilité dans le Jardin.</strong> Saute par-dessus les obstacles
-                                avec Espace, la flèche ↑ ou un clic. Le parcours s’arrête après trois collisions.
-                                La distance parcourue rapporte de l’amitié ; la course consomme de la nourriture,
-                                de l’énergie et de la propreté, et les collisions salissent davantage ton lapin.
-                            </li>
-                            <li>
-                                <strong>Affronte les boss légumes.</strong> Depuis le Jardin, compose une équipe
-                                de trois lapins au maximum. Choisis leurs techniques en mode manuel ou active
-                                le combat automatique. Le pouvoir ultime devient disponible à 100 % de charge.
-                                Une victoire rapporte des carottes et de l’amitié à l’équipe. Après le combat,
-                                pense à soigner les besoins de chaque participant.
-                            </li>
-                            <li>
-                                <strong>Agrandis ta collection.</strong> Achète des œufs avec tes carottes dans
-                                le Salon, puis ouvre-les pour découvrir des compagnons. Un doublon peut être
-                                échangé contre des carottes, conservé sous forme de fragment ou utilisé pour
-                                améliorer une attaque. Les fragments se dépensent dans la fiche du lapin,
-                                jusqu’à cinq améliorations par attaque.
-                            </li>
-                            <li>
-                                <strong>Découvre les événements.</strong> Halloween, Noël et Pâques rendent
-                                certains lapins disponibles dans les œufs et font apparaître leurs puzzles
-                                pendant la période correspondante. Les lapins déjà obtenus restent dans ta collection.
-                            </li>
-                            <li>
-                                <strong>Consulte l’Encyclopédie 📖.</strong> Retrouve les fiches des lapins et des
-                                boss découverts, leurs pouvoirs et les attaques de tes compagnons.
-                            </li>
-                            <li>
-                                <strong>Garde ta partie 💾.</strong> La progression est sauvegardée automatiquement
-                                dans ce navigateur. Le menu Sauvegardes permet aussi de créer des sauvegardes
-                                nommées et d’exporter ou d’importer un fichier JSON. Exporte ta partie pour la
-                                transférer ou la conserver avant d’effacer les données du navigateur.
-                            </li>
-                        </ol>
+                        <p>Le carnet illustré présente les soins, les mini-jeux et les accompagnateurs. Les mini-jeux rapportent surtout de l’amitié, avec 2 à 3 carottes par niveau récompensé. Les combats donnent davantage de carottes et parfois un ingrédient.</p><p>Les évolutions sont communes à la sauvegarde. Les ingrédients se trouvent dans la Cuisine ; les soins, chez l’apothicaire.</p>
                     </div>
                 </div>
             </div>
@@ -446,15 +382,16 @@
         <script src="./assets/js/dashboard-access.js"></script>
         <script src="./assets/js/lapidoku.js?v=mistakes-87"></script>
         <script src="./assets/js/achievements.js?v=achievements-83"></script>
-        <script src="./assets/js/shop.js?v=counter-85"></script>
+        <script src="./assets/js/shop.js?v=inventory-106"></script>
         <script src="./assets/js/quiz.js?v=rabbit-quiz-55"></script>
         <script src="./assets/js/save-validation.js?v=salon-favorites-44"></script>
         <script src="./assets/js/pantry.js?v=mobile-shelves-79"></script>
         <script src="./assets/js/scene-preload.js?v=scene-loading-78"></script>
+        <script src="./assets/js/game-economy.js?v=rules-107"></script>
         <script src="./assets/js/welcome-gift.js?v=welcome-104"></script>
-        <script src="./assets/js/script.js?v=welcome-104"></script>
+        <script src="./assets/js/script.js?v=rules-106"></script>
         <script src="./assets/js/installer.js?v=phone-install-104"></script>
-        <script src="./assets/js/mobile-ui.js?v=phone-scenes-84"></script>
+        <script src="./assets/js/mobile-ui.js?v=eggs-106"></script>
         <!-- Brouillons juridiques masqués pendant leur finalisation. -->
         <template id="legalDrafts">
         <button id="legalTrigger" class="legal-trigger" type="button" aria-haspopup="dialog" aria-controls="legalDialog" aria-label="Informations juridiques et conditions" title="Informations juridiques et conditions">⚖️</button>
@@ -481,6 +418,6 @@
         <script src="./assets/js/legal.js?v=evolution-market-31"></script>
     <script src="./assets/js/image-interactions.js?v=favorites-stars-46"></script>
     <script src="./assets/js/connection-notice.js?v=errors-97"></script>
-<script src="./assets/js/game-guide.js?v=guide-105"></script>
+<script src="./assets/js/game-guide.js?v=guide-107"></script>
 </body>
 </html>

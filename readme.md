@@ -16,7 +16,7 @@ Documentation actualisée le **8 octobre 2026**. Après chaque évolution, mettr
 ## ✨ Fonctionnalités
 
 - **Adoption** : choisis un lapin commun au démarrage ou découvre certains compagnons particuliers.
-- **Progression indépendante par lapin** : nourriture, sommeil, propreté, amitié, niveau, améliorations et progression dans les mini-jeux sont propres à chaque compagnon.
+- **Progression indépendante par lapin** : nourriture, sommeil, propreté, amitié, niveau, techniques et progression dans les mini-jeux sont propres à chaque compagnon. Les évolutions des pièces et leurs bonus sont communs à toute la sauvegarde ; la migration garde le meilleur palier déjà acheté pour chaque pièce.
 - **Salon vivant** : les lapins possédés apparaissent directement dans la pièce et peuvent devenir le compagnon actif.
 - **5 pièces principales** : Salon, Cuisine, Chambre, Salle de bain et Jardin.
 - **Besoins du lapin** : nourriture, sommeil, propreté et amitié.
@@ -635,3 +635,12 @@ Le service worker conserve les fichiers publics du jeu et les 120 dernières ima
 Une seule tâche Windows existante à **20 h Europe/Paris** lance Cloudinary puis, dès sa fin, le bilan Python, même si la synchronisation échoue. Le rapport complet couvre Cloudinary, Git, Trello, README, A_FAIRE, quarantaine et erreurs, puis part sur Discord. Aucun bilan indépendant. La chaîne corrigée a passé le test réel autorisé du 15 octobre et est active, avec mises à jour Trello autorisées après validation du 15 octobre, simulation en lecture seule et suppressions Cloudinary bloquées ; consulter `tools/agent_lapinous/README_INSTALLATION.md`.
 
 Le serveur `tools/serve-game.py` renvoie les illustrations Warrenfall avec les vrais codes HTTP 403/404, même sans service worker installé. Après remplacement d’un ancien serveur `python -m http.server`, arrêter celui-ci (Ctrl+C dans son terminal), puis lancer la commande ci-dessus. GitHub Pages utilise le fichier racine `404.html` après publication.
+
+## Règles et présentation — 19 octobre 2026
+
+- Mini-jeux : 2 carottes par partie réussie, 3 à partir du quatrième niveau, y compris en rejouant un niveau. L’amitié reste la récompense principale. Quiz : paliers de score ; agilité : paliers de distance à partir de 20 m.
+- Victoires sur les boss : max(6, arrondi(difficulté × 0,45)) carottes et 35 % de chance de recevoir un ingrédient du Marché. Le butin rejoint l’inventaire partagé utilisé par la Cuisine.
+- Évolutions des pièces : communes à tous les lapins, palier maximum existant conservé lors de la migration. Besoins, amitié, techniques et niveaux restent individuels.
+- Ingrédients et repas : réserve de Cuisine. Soins : tiroirs de l’apothicaire. Les deux stocks sont communs à la partie.
+- Le GIF d’introduction est joué une fois dans une nouvelle session d’onglet ; un rechargement affiche directement le fond de chargement. Les ressources nécessaires à l’accueil, aux soins, au magasin et aux animations des accompagnateurs sont préparées avant l’entrée. Une ressource requise indisponible maintient l’écran de chargement avec un bouton Réessayer ; les décors alternatifs inutilisés ne sont pas tous téléchargés.
+- Les sons d’événement suspendent temporairement l’ambiance. Le tutoriel utilise le parchemin du jeu et présente le mage des fragments.

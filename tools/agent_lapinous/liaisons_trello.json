@@ -26,7 +26,8 @@
       "chemins": [
         "assets/js/shop.js",
         "assets/css/shop.css",
-        "lapinous-shop.json"
+        "lapinous-shop.json",
+        "assets/js/game-economy.js"
       ],
       "preuves": [
         {
@@ -1155,7 +1156,8 @@
         "assets/css/phone.css",
         "assets/js/mobile-ui.js",
         "tools/test-landscape-game.mjs",
-        "assets/css/shop-polish.css"
+        "assets/css/shop-polish.css",
+        "assets/js/game-economy.js"
       ],
       "preuves": [
         {

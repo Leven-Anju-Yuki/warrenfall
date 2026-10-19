@@ -77,3 +77,42 @@ body.game-running #mainNav #installInNav:not([hidden]){left:170px;top:18px;flex-
 body.game-running #mainNav #installInNav .tab-emoji{font-size:18px;line-height:20px}body.game-running #mainNav #installInNav>span:not(.tab-emoji){font-size:12px;line-height:18px}
 html.phone-ui body.game-running #mainNav #installInNav:not([hidden]){left:106px;top:6px}
 @media(min-width:1000px) and (min-height:600px) and (pointer:fine){body.game-running.default #gameArea .egg-shop{position:absolute;top:130px;bottom:auto;left:20px;right:auto;transform:none;translate:none;max-width:340px;width:340px}}
+
+/* Un livre ancien, des stocks au sol et des titres de conte. */
+body{font-family:'Trebuchet MS',Verdana,sans-serif}
+h1,h2,h3,.console-title,.modal-title,.shop-dialog h2{font-family:Georgia,'Palatino Linotype',serif;letter-spacing:.025em}
+.scene-label{display:none!important}
+.agility-runner-rabbit img{display:block;width:100%;height:100%;object-fit:contain}.agility-runner-rabbit{font-size:0!important;width:100px!important;height:100px!important}
+#myModal.warrenfall-guide .modal-content{background:linear-gradient(90deg,#84613a33,transparent 5%,#fff5dcaa 48%,#7e543a3b 50%,#fff5dcaa 52%,transparent 95%,#84613a33),url('./../img/page.jpg') center/cover;border:5px double #8b673c;box-shadow:inset 0 0 25px #71431a66,0 18px 70px #271b27a8}
+#myModal.warrenfall-guide .modal-header{background:#533b2bec;color:#ffe9bc}.guide-copy{background:#fff8e5c9;padding:14px;border-radius:6px}.guide-art{background:#f8ebc7ad;box-shadow:inset 0 0 18px #a5794533}.guide-tip{background:#e5e7ccdc}
+.inventory-dialog #shopBody{background-size:contain!important;background-repeat:no-repeat!important;background-position:center bottom!important;background-color:#dacaa8;overflow:auto}
+.inventory-dialog .herbalist-workshop{height:100%!important;min-height:0!important;display:block}
+.inventory-dialog .inventory-cabinet{bottom:3%!important;max-height:90%!important;height:90%;display:flex;flex-direction:column;overflow:visible}
+.inventory-dialog .inventory-drawers{flex:1;min-height:0;grid-auto-rows:minmax(0,1fr)}.inventory-dialog .inventory-drawer{min-height:0;max-height:100%}.inventory-dialog .inventory-empty{flex:none;font-size:clamp(11px,1.2vw,16px)}
+.inventory-dialog .inventory-herbalist{bottom:4%!important;max-height:65%}.inventory-dialog .inventory-herbalist img{max-height:42dvh;object-fit:contain}.inventory-dialog #inventorySpeech{top:auto!important;bottom:100%!important;margin:0 0 8px!important}
+@media(min-width:1000px) and (min-height:600px) and (pointer:fine){body.game-running.default #gameArea .egg-shop{top:auto;bottom:3%;left:50%;translate:-50% 0;max-width:390px;width:390px}body.game-running.default .salon-active-rabbit-spot{bottom:23%}}
+
+#sceneLoading{z-index:2147483640}.inventory-dialog .inventory-cabinet-feet{flex:none}.inventory-dialog .inventory-drawer img{max-height:70%;object-fit:contain}
+
+.agility-runner{background-size:cover!important;background-position:center 75%!important;border:5px solid #92704b!important;border-radius:18px!important;box-shadow:inset 0 -38px 0 #7c925a88,0 8px 20px #32221c33}.agility-ground{background:linear-gradient(#a6ad67,#75603f)!important;height:35px!important;border-top:4px solid #c0b37c}
+.agility-obstacle{width:40px;height:35px;filter:drop-shadow(0 4px 2px #0005)}.agility-log{border:3px solid #644528;border-radius:35%;background:repeating-linear-gradient(8deg,#866039 0 7px,#a87949 8px 11px)}.agility-rock{background:linear-gradient(135deg,#b2aaa1,#625f5b);border:2px solid #59574c;clip-path:polygon(0 100%,9% 38%,40% 6%,80% 14%,100% 100%)}
+
+@media(min-width:1000px) and (min-height:600px) and (pointer:fine){body.game-running.default .salon-active-rabbit-spot{bottom:12%}#phoneEggButton{position:static;min-height:44px;min-width:70px;padding:8px 12px;border:0;border-radius:14px;background:#fff8e8;color:#574132}}
+
+.inventory-dialog .inventory-cabinet{height:76%!important;max-height:650px!important;bottom:3%!important}
+.inventory-dialog .inventory-drawers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));align-content:stretch;gap:7px}
+.inventory-dialog .inventory-drawer{height:100%!important;width:100%;box-sizing:border-box}.inventory-dialog .inventory-cabinet-heading{font-size:clamp(12px,1.2vw,19px)}
+.inventory-dialog .inventory-herbalist{height:auto!important;max-height:none!important}.inventory-dialog .inventory-herbalist img{height:min(46dvh,480px)!important;max-height:none!important;width:100%;object-fit:contain}
+@media(max-height:500px){.inventory-dialog .inventory-cabinet{height:85%!important;max-height:90%!important}.inventory-dialog .inventory-herbalist img{height:43dvh!important}.inventory-dialog .inventory-drawers{gap:4px}.inventory-dialog .inventory-drawer{padding:3px 3px 12px}.inventory-dialog .inventory-empty{margin:4px 0}.inventory-dialog .inventory-cabinet-heading{font-size:11px}}
+
+/* Le parcours est une vraie scène de jeu, sans les commandes de la maison par-dessus. */
+body:has(.agility-runner-wrap) :is(#friendshipBarContainer,#statusBars,#rabbitImage,.brand,.rules-btn,.encyclopedia-btn,.save-btn,.shop-trigger,#installInNav,.records-toggle,.legal-trigger,.admin-test-toggle){display:none!important}
+body.game-running #gameArea:has(.agility-runner-wrap){position:fixed!important;inset:0 0 80px!important;display:block!important;padding:12px!important;width:auto!important;height:auto!important;box-sizing:border-box;overflow:hidden!important}
+.agility-runner-wrap{position:static!important;display:flex!important;flex-direction:column!important;width:100%!important;height:100%!important;min-height:0!important;box-sizing:border-box;padding:12px!important;background:#fff5e5eb;border-radius:20px;gap:8px}
+.agility-runner-head{flex:none;display:flex;gap:16px;justify-content:space-between;font-size:16px}.agility-runner{flex:1!important;min-height:0!important;height:auto!important;width:100%!important;position:relative;overflow:hidden}
+.agility-runner-controls{flex:none;display:flex;justify-content:center;gap:12px}.agility-runner-controls button{min-width:100px!important;width:auto!important;min-height:44px;max-height:50px;padding:8px 15px!important;font-size:14px!important}.agility-runner-wrap>small{flex:none;text-align:center;font-size:12px;line-height:16px}
+.agility-runner-rabbit{width:110px!important;height:90px!important;bottom:32px!important}.agility-start-hint{font-size:13px!important}
+html.phone-ui body.game-running #gameArea:has(.agility-runner-wrap){bottom:46px!important;padding:5px!important}
+@media(max-height:500px){.agility-runner-wrap{padding:7px!important;gap:4px}.agility-runner-head{font-size:12px;gap:6px}.agility-runner-wrap>small{font-size:10px;line-height:12px}.agility-runner-rabbit{width:90px!important;height:72px!important}.agility-runner-controls button{font-size:12px!important;max-height:44px}}
+.inventory-dialog .inventory-herbalist img{scale:1.5;transform-origin:center bottom}.inventory-dialog .inventory-herbalist:has(.herbalist-walking) img{scale:1}.inventory-dialog #inventorySpeech{bottom:85%!important;max-width:300px}
+@media(max-height:500px){.inventory-dialog .inventory-herbalist{bottom:0!important}.inventory-dialog .inventory-herbalist img{scale:1!important;translate:0 8px}.inventory-dialog #inventorySpeech{bottom:90%!important}}

@@ -1,6 +1,6 @@
 /* Les caches sont propres à ce projet, y compris sur un domaine GitHub Pages partagé. */
 const PREFIX = 'lapinous-' + new URL(self.registration.scope).pathname + '-';
-const SHELL = PREFIX + 'shell-v3', IMAGES = PREFIX + 'images-v1';
+const SHELL = PREFIX + 'shell-v5', IMAGES = PREFIX + 'images-v1';
 const HOME = new URL('index.html', self.registration.scope).href;
 self.addEventListener('install', event => {
   event.waitUntil((async () => {

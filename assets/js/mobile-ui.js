@@ -28,7 +28,7 @@
       if(button.getAttribute('aria-pressed')!==String(zoom))button.setAttribute('aria-pressed',String(zoom));
     }
     const panel = area.querySelector('.egg-shop');
-    if (phone() && panel) {
+    if (panel) {
       if(!document.getElementById('phoneEggButton')){
         const trigger = document.createElement('button');
         trigger.id = 'phoneEggButton'; trigger.type = 'button';trigger.className='room-tab';
@@ -37,11 +37,6 @@
         document.getElementById('salonBtn').after(trigger);
       }
       eggs.querySelector('.phone-egg-content').replaceChildren(panel);
-    }
-    if (!phone() && eggs.querySelector('.egg-shop')) {
-      area.querySelector('.salon-world')?.append(eggs.querySelector('.egg-shop'));
-      document.getElementById('phoneEggButton')?.remove();
-      if (eggs.open) eggs.close();
     }
     area.querySelectorAll('.memory-grid').forEach(grid => {
       if (!grid.dataset.desktopColumns) grid.dataset.desktopColumns = grid.style.getPropertyValue('--memory-columns');
