@@ -11,7 +11,7 @@ if ($images.Count -ne 1) { throw 'Il faut exactement une tache Cloudinary exista
 $old=@($all | Where-Object { $_.TaskName -match '^Lapinous.*Bilan' -or (($_.Actions | Out-String) -match 'agent\.py.*bilan') })
 $task=$images[0]
 Write-Host ('Tache conservee : '+$task.TaskPath+$task.TaskName+' ; 20:00 Europe/Paris ; synchronisation puis bilan immediat.')
-Write-Host 'Reprise des executions manquees proposee ; anciennes taches de bilan uniquement desactivees.'
+Write-Host 'Aucun rattrapage des executions manquees ; anciennes taches de bilan uniquement desactivees.'
 if (-not $Appliquer) { Write-Host 'Simulation : aucune modification du Planificateur.'; return }
 if (@($all | Where-Object { $_.State -eq 'Running' -and ($_.TaskName -eq $task.TaskName -or $_ -in $old) }).Count) { throw 'Une execution est en cours : attendre sa fin avant reconfiguration.' }
 $root=Split-Path -Parent (Split-Path -Parent $PSScriptRoot)
@@ -23,7 +23,7 @@ $exe=(Get-Command powershell.exe -ErrorAction Stop).Source
 $action=New-ScheduledTaskAction -Execute $exe -Argument ('-NoProfile -WindowStyle Hidden -ExecutionPolicy Bypass -File "{0}" -AppliquerChaine' -f $script) -WorkingDirectory $root
 $trigger=New-ScheduledTaskTrigger -Daily -At '20:00'
 $settings=$task.Settings
-$settings.StartWhenAvailable=$true
+$settings.StartWhenAvailable=$false
 $settings.WakeToRun=$true
 $settings.MultipleInstances='IgnoreNew'
 # L etat active/desactive existant est preserve ; aucun lancement immediat.

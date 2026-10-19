@@ -1,0 +1,10 @@
+import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
+const source=fs.readFileSync('assets/js/welcome-gift.js','utf8');
+const storage=new Map();
+const context={window:{},localStorage:{getItem:key=>storage.get(key),setItem:(key,value)=>storage.set(key,value)}};
+vm.runInNewContext(source,context);
+const game={eggs:0};assert.equal(context.window.LapinousWelcomeGift(game),true);assert.equal(game.eggs,1);
+assert.equal(context.window.LapinousWelcomeGift(game),false);assert.equal(game.eggs,1);
+vm.runInNewContext(source,context);assert.equal(context.window.LapinousWelcomeGift({eggs:0}),false);
+storage.clear();assert.equal(context.window.LapinousWelcomeGift(game),false);
+console.log('Œuf bienvenue : une attribution, rechargement et sauvegarde déjà récompensée protégés.');

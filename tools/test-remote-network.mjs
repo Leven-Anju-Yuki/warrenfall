@@ -1,0 +1,10 @@
+import assert from 'node:assert/strict';
+import {remoteFetch,preflight,networkError} from './remote-network.mjs';
+let calls=0; const waits=[];const error=code=>Object.assign(Error('failure'),{cause:{code}});
+const result=await remoteFetch('https://invalid.test',{}, {wait:async ms=>waits.push(ms),fetch:async()=>{if(++calls<3)throw error('ECONNRESET');return {status:200};}});
+assert.equal(result.status,200);assert.deepEqual(waits,[1000,3000]);
+calls=0;await assert.rejects(remoteFetch('https://invalid.test',{}, {wait:async()=>{},fetch:async()=>{calls++;throw error('ETIMEDOUT');}}));assert.equal(calls,3);
+calls=0;await assert.rejects(remoteFetch('https://invalid.test',{}, {fetch:async()=>{calls++;throw error('CERT_HAS_EXPIRED');}}));assert.equal(calls,1);assert.match(networkError(error('CERT_HAS_EXPIRED')),/SSL/);
+calls=0;await assert.rejects(remoteFetch('https://invalid.test',{method:'POST'}, {fetch:async()=>{calls++;throw error('ECONNRESET');}}));assert.equal(calls,1);
+calls=0;await preflight('invalid.test',{wait:async()=>{},lookup:async()=>{if(++calls===1)throw Object.assign(Error(),{code:'EAI_AGAIN'});}});assert.equal(calls,2);
+console.log('Réseau simulé : reprise, coupure persistante, SSL sans contournement, DNS et écriture non rejouée OK.');

@@ -1,0 +1,23 @@
+#myModal.warrenfall-guide .modal-dialog{width:min(1000px,calc(100vw - 24px));margin:12px auto}
+#myModal.warrenfall-guide .modal-content{height:min(700px,calc(100dvh - 24px));border:2px solid #a68149;border-radius:26px;background:#fff9ed;box-shadow:0 18px 70px #271b27a8;overflow:hidden;color:#493625}
+#myModal.warrenfall-guide .modal-header{background:#493444;color:#ffe7ae;border-bottom:1px solid #b99358;padding:15px 22px}
+#myModal.warrenfall-guide .modal-title{font-family:Georgia,serif;font-size:25px;letter-spacing:.4px}
+#myModal.warrenfall-guide .modal-body{padding:20px;gap:14px;overflow:hidden}
+.warrenfall-guide .guide-progress{display:flex;justify-content:space-between;align-items:center;color:#786041;font-size:13px;text-transform:uppercase;letter-spacing:1.4px;margin:0}
+.warrenfall-guide .guide-progress span{background:#eee1c5;border-radius:30px;padding:5px 12px;letter-spacing:0}
+.guide-layout{display:grid;grid-template-columns:minmax(160px,34%) minmax(0,1fr);flex:1;min-height:0;gap:24px;overflow:auto}
+.guide-art{background:radial-gradient(ellipse at center,#fff7dd,#e5d8c4);border:1px solid #dbc594;border-radius:80px 80px 18px 18px;display:flex;flex-direction:column;align-items:center;justify-content:space-between;padding:20px 12px;min-height:0}
+.guide-art img{width:100%;height:100%;min-height:0;max-height:350px;object-fit:contain;filter:drop-shadow(0 10px 8px #49362524)}
+.guide-art>span{flex:none;padding-top:12px;font-size:12px;text-align:center;color:#695336}
+.guide-copy{padding:8px 6px 0 0;overflow:auto;min-height:0}.guide-copy h2{font:700 clamp(23px,2.4vw,34px)/1.15 Georgia,serif;margin:0 0 16px;color:#513343}
+.guide-copy p,.guide-copy li{font:16px/1.55 system-ui}.guide-copy ul{padding-left:22px;margin:14px 0}.guide-copy li{padding:4px 0}
+.guide-tip{background:#e8eddc;border-left:4px solid #80975f;padding:12px;border-radius:0 12px 12px 0;color:#435335}
+.warrenfall-guide .guide-actions{display:flex;justify-content:flex-end;gap:10px;background:transparent;border-top:1px solid #e4d6b9;padding-top:12px;flex-shrink:0}
+.warrenfall-guide .guide-actions button{background:#fff9ed;border:1px solid #b29a70;min-height:44px;border-radius:14px;padding:9px 16px;font-weight:600}
+.warrenfall-guide .guide-actions [data-next]{background:#657d4c;border-color:#657d4c;color:white}.warrenfall-guide button:focus-visible{outline:3px solid #9b73b5;outline-offset:2px}.warrenfall-guide button:disabled{opacity:.4}
+.warrenfall-guide button[hidden]{display:none!important}
+@media(max-height:450px){#myModal.warrenfall-guide .modal-header{padding:8px 16px}#myModal.warrenfall-guide .modal-title{font-size:19px}#myModal.warrenfall-guide .modal-body{padding:9px 12px;gap:6px}.guide-layout{grid-template-columns:125px minmax(0,1fr);gap:14px}.guide-art{padding:6px;border-radius:38px 38px 12px 12px}.guide-art img{max-height:160px}.guide-art>span{font-size:10px;padding-top:4px}.guide-copy{padding:0 4px 0 0}.guide-copy h2{font-size:20px;margin-bottom:8px}.guide-copy p,.guide-copy li{font-size:13px;line-height:1.4}.guide-copy ul{margin:8px 0}.guide-copy li{padding:2px 0}.guide-tip{padding:8px}.warrenfall-guide .guide-actions{padding-top:6px}.warrenfall-guide .guide-actions button{font-size:12px;padding:6px 10px}.warrenfall-guide .guide-progress{font-size:10px}}
+@media(max-width:480px) and (min-height:451px){.guide-layout{grid-template-columns:1fr}.guide-art{max-height:160px;border-radius:20px;flex-direction:row}.guide-art img{width:45%;height:130px}.guide-art>span{width:50%}.guide-copy{overflow:visible}.warrenfall-guide .guide-actions{gap:5px}.warrenfall-guide .guide-actions button{font-size:11px;padding:6px}}
+
+.guide-art img{flex:1;height:100%;min-height:50px}.guide-art>span{flex:0 0 auto}
+@media(max-height:450px){.guide-copy h2{font-size:18px;line-height:1.15}.guide-art img{min-height:60px}.guide-art>span{font-size:9px}}

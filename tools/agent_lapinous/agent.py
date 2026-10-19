@@ -15,6 +15,7 @@ from pathlib import Path
 from urllib.parse import quote
 
 import requests
+from reseau import diagnostic, sanitize, read_request
 from dotenv import load_dotenv
 from cloudinary_rapport import build as cloudinary_report
 from suivi_trello import collect, dirty_paths, evidence, progress, validate_tasks
@@ -40,15 +41,8 @@ def safe_error(exc):
     if isinstance(exc, requests.HTTPError):
         code = exc.response.status_code if exc.response is not None else '?'
         return f'Erreur HTTP {code} (vérifier identifiants, droits ou ID de carte)'
-    if isinstance(exc, requests.RequestException):
-        return f'Erreur réseau {type(exc).__name__} (détails masqués)'
-    message = str(exc)
-    for name in ('TRELLO_TOKEN', 'TRELLO_API_KEY'):
-        secret = os.getenv(name, '')
-        if secret:
-            message = message.replace(secret, '[MASQUÉ]')
-    message = re.sub(r'https://(?:api\.trello\.com|discord\.com/api/webhooks)/\S+', '[URL MASQUÉE]', message)
-    return f'{type(exc).__name__} : {message[:350]}'
+    return diagnostic(exc)
+
 
 
 def api(method, path, params=None):
@@ -65,7 +59,7 @@ def api(method, path, params=None):
     token = os.getenv('TRELLO_TOKEN', '').strip()
     if not key or not token:
         raise RuntimeError('TRELLO_API_KEY ou TRELLO_TOKEN absent du .env racine')
-    response = requests.request(
+    response = read_request(
         method, 'https://api.trello.com/1/' + path.lstrip('/'),
         params={**(params or {}), 'key': key, 'token': token}, timeout=25)
     if not response.ok:
@@ -353,7 +347,7 @@ def notify_all(jobs):
             if operation() is False:
                 raise RuntimeError('Webhook absent ou notification non envoyee.')
         except Exception as exc:
-            errors.append(label + ' : ' + safe_error(exc))
+            errors.append('Discord / ' + label + ' : ' + safe_error(exc))
     return errors
 
 
@@ -389,9 +383,9 @@ def bilan(apply, since=None, chain=None):
             try:
                 plans.append(plan_card(task, changes, todo, lists, cards_by_id.get(task['card_id'])))
             except Exception as exc:
-                errors.append(safe_error(exc))
+                errors.append("Trello : " + safe_error(exc))
     except Exception as exc:
-        errors.append(safe_error(exc))
+        errors.append("Trello : " + safe_error(exc))
     updates = [plan for plan in plans if plan['vers']]
     applied = []
     if apply and not trello_read_only and not errors:
@@ -407,7 +401,7 @@ def bilan(apply, since=None, chain=None):
                     apply_plan(plan, lists)
                     applied.append(plan['id'])
                 except Exception as exc:
-                    errors.append('Carte ' + plan['id'] + ' : ' + safe_error(exc))
+                    errors.append('Trello carte ' + plan['id'] + ' : ' + safe_error(exc))
         except Exception as exc:
             errors.append('Reprise Trello : ' + safe_error(exc))
         finally:
@@ -419,10 +413,10 @@ def bilan(apply, since=None, chain=None):
     if chain is not None:
         if not isinstance(chain, dict) or type(chain.get('syncExit')) is not int:
             raise ValueError('Contexte de chaine invalide.')
-        chain_errors = [safe_error(RuntimeError(str(item))) for item in chain.get('errors', [])]
+        chain_errors = ['Cloudinary/chaîne : ' + safe_error(RuntimeError(str(item))) for item in chain.get('errors', [])]
         if chain['syncExit'] != 0:
             cloud_ok = False
-            chain_errors.append('La synchronisation de cette execution a echoue : code ' + str(chain['syncExit']))
+            chain_errors.append('Cloudinary : la synchronisation de cette execution a echoue : code ' + str(chain['syncExit']))
         errors.extend(chain_errors)
     quarantine_text = quarantine_discord_summary()
     lines = ['# Bilan Warrenfall - ' + stamp,
@@ -492,10 +486,10 @@ def bilan(apply, since=None, chain=None):
             ('corbeille', lambda: discord('images', quarantine_text))]
     message = '\n'.join(plan['nom'] + ' : ' + ('applique' if plan['id'] in applied else 'non applique')
                         + ' ; ' + plan['raison'] for plan in updates)
-    message += f'\nCartes ignorees : {len(plans) - len(updates)} (motifs dans le rapport complet). Erreurs : {len(errors)}.'
+    message += f'\nCartes ignorees : {len(plans) - len(updates)} (motifs dans le rapport complet). Erreurs Trello : {sum('Trello' in error for error in errors)}. Erreurs globales : {len(errors)}.'
     jobs.append(('trello', lambda: discord('trello', message)))
     if not cloud_ok:
-        jobs.append(('alerte Cloudinary', lambda: discord('erreurs', 'Cloudinary : voir le rapport detaille.')))
+        jobs.append(('alerte Cloudinary', lambda: discord('erreurs', 'Cloudinary : ' + sanitize(cloud_text[:1400]))))
     if errors:
         jobs.append(('erreurs', lambda: discord('erreurs', '\n'.join(errors))))
     notification_errors = notify_all(jobs)

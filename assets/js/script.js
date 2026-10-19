@@ -1120,12 +1120,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 game.trait = pick.trait;
                 showToast(`Bienvenue ${name} ! 🎉`, "success");
             }
+            const welcomeEgg = window.LapinousWelcomeGift?.(game);
             game.speciesNames[game.species] = name;
             game.ownedSpecies = [game.species];
             game.speciesTraits = { [game.species]: game.trait };
             startGameUI();
             autoSave();
             spawnParticles("🎉", 8);
+            if (welcomeEgg) showToast("Un œuf de bienvenue t’attend dans Œufs ! Le livre explique tes premiers pas.", "success");
         });
 
         document

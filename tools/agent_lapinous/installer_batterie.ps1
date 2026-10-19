@@ -1,10 +1,17 @@
-# À lancer dans PowerShell, depuis tools\agent_lapinous.
-$ErrorActionPreference = 'Stop'
-$Script = Join-Path $PSScriptRoot 'surveillance_batterie.py'
-if (-not (Test-Path $Script)) { throw "Script introuvable : $Script" }
-$Python = (Get-Command python -ErrorAction Stop).Source
-$Action = New-ScheduledTaskAction -Execute $Python -Argument ('"{0}"' -f $Script) -WorkingDirectory $PSScriptRoot
-$Trigger = New-ScheduledTaskTrigger -Once -At (Get-Date).AddMinutes(1) -RepetitionInterval (New-TimeSpan -Minutes 30)
-$Settings = New-ScheduledTaskSettingsSet -StartWhenAvailable -WakeToRun -ExecutionTimeLimit (New-TimeSpan -Minutes 3) -MultipleInstances IgnoreNew
-Register-ScheduledTask -TaskName 'Lapinous - Surveillance batterie' -Action $Action -Trigger $Trigger -Settings $Settings -Description 'Batterie Warrenfall : contrôle adaptatif, alertes Discord uniques à 30/25/20/15 %' -Force | Out-Null
-Write-Host 'Surveillance batterie installée. Tâches Cloudinary et bilan inchangées.'
+﻿# Réutilise exclusivement la tâche existante ; simulation par défaut.
+param([switch]$Appliquer)
+$ErrorActionPreference='Stop'
+$task=Get-ScheduledTask -TaskName 'Lapinous - Surveillance batterie' -ErrorAction Stop
+$interval=@($task.Triggers | Where-Object {$_.Repetition.Interval -eq 'PT15M'})
+if($interval.Count -ne 1){throw 'La répétition existante doit être de 15 minutes ; aucun horaire modifié.'}
+Write-Host 'Proposition : autoriser démarrage et poursuite sur batterie. Déclencheur 15 minutes conservé.'
+if(-not $Appliquer){return}
+if($task.State -eq 'Running'){throw 'Contrôle déjà en cours ; attendre sa fin.'}
+$backup=Join-Path (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) '.cloudinary-local\scheduler-backups'
+New-Item -ItemType Directory -Force -Path $backup | Out-Null
+Export-ScheduledTask -TaskName $task.TaskName -TaskPath $task.TaskPath | Set-Content -LiteralPath (Join-Path $backup ((Get-Date -Format 'yyyyMMdd_HHmmss_fff')+'_batterie.xml')) -Encoding Unicode
+$settings=$task.Settings
+$settings.DisallowStartIfOnBatteries=$false
+$settings.StopIfGoingOnBatteries=$false
+Set-ScheduledTask -TaskName $task.TaskName -TaskPath $task.TaskPath -Settings $settings | Out-Null
+Write-Host 'Conditions batterie corrigées ; horaires, action et paramètres de réveil inchangés.'

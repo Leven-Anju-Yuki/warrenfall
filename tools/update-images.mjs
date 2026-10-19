@@ -18,11 +18,17 @@ function saveRun() {
 /** Exécute une étape et arrête la chaîne si elle échoue. Aucun secret n’est lu ici. */
 function run(file, args = []) {
   return new Promise((resolve, reject) => {
-    const child = spawn(process.execPath, [file, ...args], { stdio: 'inherit', windowsHide: true });
+    const child = spawn(process.execPath, [file, ...args], { stdio: ['ignore','pipe','pipe'], windowsHide: true });
+    let diagnostic = '';
+    for (const stream of [child.stdout, child.stderr]) stream.on('data', chunk => {
+      const safe = chunk.toString().replace(/https?:\/\/\S+/g, '[URL masquée]').replace(/(?:key|token|secret|signature)=[^&\s]+/gi, '[secret masqué]');
+      diagnostic = (diagnostic + safe).slice(-2000);
+      process.stdout.write(safe);
+    });
     child.on('error', reject);
     child.on('exit', code => {
-      runDetails.steps.push({ file, args, exitCode: code, at: new Date().toISOString() });
-      code === 0 ? resolve() : reject(new Error(`Étape interrompue : ${file} (code ${code})`));
+      runDetails.steps.push({ file, args, exitCode: code, diagnostic: code === 0 ? null : diagnostic.trim(), at: new Date().toISOString() });
+      code === 0 ? resolve() : reject(new Error(`Étape interrompue : ${file} (code ${code}) — ${diagnostic.trim().slice(-700) || "aucun diagnostic du processus"}`));
     });
   });
 }

@@ -22,7 +22,7 @@ if ($global:writes.Count) {throw 'Simulation avec effets secondaires'}
 & $installer -Appliquer
 if ($global:writes.Count -ne 2) {throw 'Nombre de modifications incorrect'}
 $change=$global:writes[0]
-if ($change.Type -ne 'Set' -or $change.Name -ne $fixtures[0].TaskName -or $change.Hour -ne '20:00' -or $change.Args -notmatch '-AppliquerChaine' -or -not $change.Catchup) {throw 'Action ou horaire incorrect'}
+if ($change.Type -ne 'Set' -or $change.Name -ne $fixtures[0].TaskName -or $change.Hour -ne '20:00' -or $change.Args -notmatch '-AppliquerChaine' -or $change.Catchup) {throw 'Action ou horaire incorrect'}
 if ($global:writes[1].Type -ne 'Disable') {throw 'Ancien bilan non desactive'}
 $global:writes.Clear()
 $fixtures[0].Settings.Enabled=$false

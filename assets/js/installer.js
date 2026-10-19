@@ -48,6 +48,7 @@
   gameButton.remove();
   const navButton = document.createElement('button');
   navButton.id = 'installInNav'; navButton.type = 'button'; navButton.className = 'room-tab';
+  navButton.dataset.installButton = 'true';
   navButton.innerHTML = '<span class="tab-emoji">📲</span><span>Installer</span>';
   document.getElementById('mainNav')?.append(navButton);
   let installationConfirmed = false;
@@ -68,7 +69,7 @@
     } else help.showModal();
   }
   [button, savedButton, gameButton, navButton].forEach(item => item.addEventListener('click', install));
-  addEventListener('beforeinstallprompt', event => { event.preventDefault(); installPrompt = event; });
+  addEventListener('beforeinstallprompt', event => { event.preventDefault(); installPrompt = event; installationConfirmed = false; try { localStorage.removeItem('lapinous_installed'); } catch {} visibility(); });
   addEventListener('appinstalled', () => { installationConfirmed = true; visibility(); if (help.open) help.close(); });
   matchMedia('(display-mode:standalone)').addEventListener?.('change', visibility);
   visibility();

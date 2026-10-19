@@ -3,12 +3,14 @@ import ctypes
 import datetime as dt
 import json
 import os
+import ssl
 import urllib.request
 import urllib.error
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parents[2]  # tools/agent_lapinous/surveillance_batterie.py
 STATE = Path(__file__).with_name('etat_batterie.json')
+LOG = ROOT / '.cloudinary-local' / 'logs' / 'batterie.jsonl'
 
 class SYSTEM_POWER_STATUS(ctypes.Structure):
     _fields_ = [('ACLineStatus', ctypes.c_byte), ('BatteryFlag', ctypes.c_byte),
@@ -54,45 +56,66 @@ def envoyer(message):
         with urllib.request.urlopen(request, timeout=20) as response:
             if response.status not in (200, 204):
                 raise RuntimeError(f'Discord HTTP {response.status}')
+            return response.status
 
     except urllib.error.HTTPError as erreur:
-        contenu = erreur.read().decode("utf-8", errors="replace")
-        print(f"Erreur Discord HTTP {erreur.code}")
-        print(f"Réponse Discord : {contenu[:500]}")
-        raise RuntimeError("Envoi de l'alerte batterie impossible") from None
+        error = RuntimeError(f'Discord HTTP {erreur.code} : alerte non confirmée')
+        error.http_status = erreur.code
+        raise error from None
+
+def journal(event):
+    LOG.parent.mkdir(parents=True, exist_ok=True)
+    with LOG.open('a', encoding='utf-8') as stream:
+        stream.write(json.dumps(event, ensure_ascii=False) + '\n')
+
 
 def main():
     now = dt.datetime.now().astimezone()
-    pct, plugged = lire_batterie()
-    if pct is None:
-        print('Batterie non disponible : aucune alerte')
-        return
+    event = {'checked_at': now.isoformat(), 'percent': None, 'plugged': None,
+             'thresholds_due': [], 'discord_accepted': False}
     try:
-        state = json.loads(STATE.read_text(encoding='utf-8'))
-    except (FileNotFoundError, ValueError):
-        state = {}
-    # Toujours examiner les seuils : un ancien next_check ne doit jamais bloquer
-    # une alerte si la batterie a baissé rapidement.
-    sent = set(state.get('sent', []))
-    if pct >= 50:
-        sent.clear()  # Réinitialiser uniquement après une recharge suffisante
-    elif pct <= 30:
-        crossed = [threshold for threshold in (30, 25, 20, 15) if pct <= threshold and threshold not in sent]
-        if crossed:
-            severity = '🚨 CRITIQUE' if pct <= 15 else '🔋 Batterie faible'
-            envoyer(f'{severity} — Warrenfall : batterie à **{pct} %**, chargeur débranché. '
-                    f'Seuil(s) atteint(s) : {", ".join(map(str, crossed))} %. '
-                    'Branche le PC dès que possible pour protéger la synchronisation Cloudinary.')
-            sent.update(crossed)  # Enregistrer seulement après envoi réussi
-    # Information indicative : le rythme réel dépend de la tâche Windows.
-    interval = 180 if pct >= 50 else 30
-    state = {'sent': sorted(sent), 'last_check': now.isoformat(),
-             'next_check': (now + dt.timedelta(minutes=interval)).isoformat(),
-             'last_percent': pct, 'plugged': plugged}
-    temp = STATE.with_suffix('.tmp')
-    temp.write_text(json.dumps(state, indent=2), encoding='utf-8')
-    temp.replace(STATE)
-    print(f'Batterie {pct} %, secteur={plugged}, seuils déjà signalés={sorted(sent)}; contrôle Windows à sa prochaine échéance')
+        pct, plugged = lire_batterie()
+        event.update(percent=pct, plugged=plugged)
+        if pct is None or plugged is None:
+            event['result'] = 'battery_unavailable'
+            return 0
+        try:
+            state = json.loads(STATE.read_text(encoding='utf-8'))
+        except (FileNotFoundError, ValueError):
+            state = {}
+        sent = set(state.get('sent', []))
+        if plugged and pct >= 50:
+            sent.clear()
+        if not plugged:
+            crossed = [threshold for threshold in (30, 25, 20, 15) if pct <= threshold and threshold not in sent]
+            event['thresholds_due'] = crossed
+            if crossed:
+                severity = '🚨 CRITIQUE' if pct <= 15 else '🔋 Batterie faible'
+                accepted_status = envoyer(f'{severity} — Warrenfall : batterie à **{pct} %**, chargeur débranché. '
+                        f'Seuil(s) atteint(s) : {", ".join(map(str, crossed))} %. '
+                        'Branche le PC dès que possible pour protéger la synchronisation Cloudinary.')
+                event['discord_accepted'] = True
+                event['discord_http_status'] = accepted_status
+                sent.update(crossed)
+        state = {'sent': sorted(sent), 'last_check': now.isoformat(), 'last_percent': pct, 'plugged': plugged}
+        temp = STATE.with_suffix('.tmp')
+        temp.write_text(json.dumps(state, indent=2), encoding='utf-8')
+        temp.replace(STATE)
+        event['result'] = 'ok'
+        return 0
+    except Exception as error:
+        # Never include raw HTTP exception text: it may contain the webhook URL.
+        event['result'] = 'failed'
+        event['error_type'] = type(error).__name__
+        event['http_status'] = getattr(error, 'http_status', None)
+        reason = getattr(error, 'reason', error)
+        event['category'] = 'SSL' if isinstance(reason, ssl.SSLError) else 'Discord/réseau ou script'
+        if isinstance(reason, ssl.SSLCertVerificationError):
+            event['certificate_code'] = reason.verify_code
+        print('Contrôle batterie en échec : ' + type(error).__name__)
+        return 1
+    finally:
+        journal(event)
 
 if __name__ == '__main__':
-    main()
+    raise SystemExit(main())

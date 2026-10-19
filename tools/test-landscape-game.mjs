@@ -8,9 +8,9 @@ const polishAudit=process.argv.includes("--polish");
 const sudokuAudit=process.argv.includes("--lapidoku");
 const achievementAudit=process.argv.includes("--achievements");
 
-const script=`<script>window.mobileErrors=[];addEventListener('error',e=>{if(e.message)mobileErrors.push(e.message)});</script>`;
+const script=`<script>${process.argv.includes('--guide-auto')?'':"localStorage.setItem('lapinous_guide_seen_v2','1');"}window.mobileErrors=[];addEventListener('error',e=>{if(e.message)mobileErrors.push(e.message)});</script>`;
 
-const audit=`<script>addEventListener('load',async()=>{const pause=ms=>new Promise(r=>setTimeout(r,ms));for(let i=0;i<100&&!window.openMemory;i++)await pause(200);if(!document.body.classList.contains('game-running'))document.getElementById('adoptBtn').click();await pause(2500);if(location.search.includes('family')&&!sessionStorage.familyFixture){const saved=JSON.parse(localStorage.getItem('lapinous_autosave'));saved.ownedSpecies=['azur','caramel','mocha','bambou'];saved.salonFavorites=['caramel','mocha','bambou'];saved.species='azur';if(location.search.includes('brand')){saved.speciesNames||={};saved.speciesNames.azur='Ancienne sauvegarde';}localStorage.setItem('lapinous_autosave',JSON.stringify(saved));sessionStorage.familyFixture='1';location.reload();return;}window.visualReady=true;});</script>`;
+const audit=`<script>addEventListener('load',async()=>{const pause=ms=>new Promise(r=>setTimeout(r,ms));for(let i=0;i<100&&!window.openMemory;i++)await pause(200);if(location.search.includes('guideauto')){for(let i=0;i<100&&!document.getElementById('startupScreen')?.hidden;i++)await pause(200);if(!document.querySelector('#myModal.show'))throw Error('Tutoriel non ouvert automatiquement');window.guideAutoVerified=true;bootstrap.Modal.getOrCreateInstance(document.getElementById('myModal')).hide();await pause(400);}if(!document.body.classList.contains('game-running'))document.getElementById('adoptBtn').click();await pause(2500);if(location.search.includes('family')&&!sessionStorage.familyFixture){const saved=JSON.parse(localStorage.getItem('lapinous_autosave'));saved.ownedSpecies=['azur','caramel','mocha','bambou'];saved.salonFavorites=['caramel','mocha','bambou'];saved.species='azur';if(location.search.includes('brand')){saved.speciesNames||={};saved.speciesNames.azur='Ancienne sauvegarde';}localStorage.setItem('lapinous_autosave',JSON.stringify(saved));sessionStorage.familyFixture='1';location.reload();return;}window.visualReady=true;});</script>`;
 
 const server=http.createServer(async(req,res)=>{try{const url=new URL(req.url,'http://local');const media=url.pathname.startsWith('/test-media/');const base=media?path.resolve(root,'../clikergame_avec_image'):root;let file=path.resolve(base,'.'+decodeURIComponent(media?url.pathname.replace('/test-media/','/'):url.pathname==='/'?'/index.html':url.pathname));if(!file.startsWith(base+path.sep))return res.writeHead(403).end();let text=await fs.readFile(file);if(file.endsWith('index.html'))text=text.toString().replace('<head>','<head>'+script).replace('</body>',audit+'</body>');if(file.endsWith('image-manifest.js'))text=text.toString().replace(/("assets\/img\/[^"]+"):\s*"https:[^"]+"/g,(all,key)=>key+': '+JSON.stringify('/test-media/'+JSON.parse(key)));res.setHeader('Content-Type',file.endsWith('.js')?'text/javascript; charset=utf-8':file.endsWith('.css')?'text/css':file.endsWith('.html')?'text/html; charset=utf-8':file.endsWith('.png')?'image/png':file.endsWith('.gif')?'image/gif':'application/json');res.end(text);}catch{res.writeHead(404).end();}});await new Promise(r=>server.listen(0,'127.0.0.1',r));try{for(const size of (desktop?(process.argv.includes('--quick')?[[1920,1080]]:[[1920,1080],[2560,1440],[3440,1440]]):process.argv.includes('--quick')?[[568,280]]:[[844,390],[740,320],[568,280]])){
 
@@ -22,7 +22,7 @@ try{let port;for(let i=0;i<100;i++){try{port=(await fs.readFile(path.join(profil
 
 const tabs=await (await fetch('http://127.0.0.1:'+port+'/json')).json();const socket=new WebSocket(tabs.find(x=>x.type==='page').webSocketDebuggerUrl);await new Promise(r=>socket.addEventListener('open',r,{once:true}));let seq=0;const pending=new Map();socket.addEventListener('message',event=>{const msg=JSON.parse(event.data);if(pending.has(msg.id)){pending.get(msg.id)(msg);pending.delete(msg.id);}});const send=(method,params={})=>new Promise(resolve=>{const id=++seq;pending.set(id,resolve);socket.send(JSON.stringify({id,method,params}));});
 
-await send('Emulation.setDeviceMetricsOverride',{width:size[0],height:size[1],deviceScaleFactor:1,mobile:!desktop});await send('Emulation.setTouchEmulationEnabled',{enabled:!desktop});await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});await send('Page.navigate',{url:'http://127.0.0.1:'+server.address().port+'/'+(process.argv.includes('--family')?'?family=1'+(process.argv.includes('--brand')?'&brand=1':''):'')});
+await send('Emulation.setDeviceMetricsOverride',{width:size[0],height:size[1],deviceScaleFactor:1,mobile:!desktop});await send('Emulation.setTouchEmulationEnabled',{enabled:!desktop});await send('Emulation.setEmulatedMedia',{features:[{name:'prefers-reduced-motion',value:'reduce'}]});await send('Page.navigate',{url:'http://127.0.0.1:'+server.address().port+'/'+(process.argv.includes('--family')?'?family=1'+(process.argv.includes('--brand')?'&brand=1':'')+(process.argv.includes('--guide-auto')?'&guideauto=1':''):(process.argv.includes('--guide-auto')?'?guideauto=1':''))});
 
 if(process.argv.includes('--startup')){
  await new Promise(r=>setTimeout(r,950));
@@ -31,7 +31,14 @@ if(process.argv.includes('--startup')){
 }
 for(let i=0;i<150;i++){const response=await send('Runtime.evaluate',{expression:"window.visualReady",returnByValue:true});if(response.result?.result?.value)break;await new Promise(r=>setTimeout(r,200));}
 
+if(process.argv.includes('--guide-auto')){const auto=await send('Runtime.evaluate',{expression:'window.guideAutoVerified===true',returnByValue:true});if(!auto.result?.result?.value)throw Error('Ouverture automatique non vérifiée');console.log('Tutoriel automatique vérifié après chargement.');}
 for(const [name,expression] of (polishAudit?[
+['salon-appuis',"document.getElementById('salonBtn').click()"],
+['guide',"bootstrap.Modal.getOrCreateInstance(document.getElementById('myModal')).show();document.querySelector('#myModal [data-next]').click()"],
+['guide-carottes',"document.querySelector('#myModal [data-next]').click()"],
+['guide-marchande',"document.querySelector('#myModal [data-next]').click()"],
+['guide-fin',"for(let i=0;i<6;i++)document.querySelector('#myModal [data-next]').click()"],
+['retour-guide',"bootstrap.Modal.getOrCreateInstance(document.getElementById('myModal')).hide()"],
 ['cuisine',"document.getElementById('cuisineBtn').click()"],
 ['chambre',"document.getElementById('chambreBtn').click()"],
 ['salle-de-bain',"document.getElementById('sdbBtn').click();"],
@@ -56,6 +63,7 @@ for(const [name,expression] of (polishAudit?[
 ['couture',"startPuzzle(0,0);selectPuzzlePiece(0);placePuzzlePiece(0);selectPuzzlePiece(1);placePuzzlePiece(1)"]
 ]:achievementAudit?[['salon','void 0'],['succes',"showLapinousRecords()"],['succes-long-terme',"document.querySelector('[data-records-tab=longterm]').click()"],['records',"document.querySelector('[data-records-tab=records]').click()"],['installer',"(async()=>{document.querySelector('.records-close').click();const b=document.getElementById('installInNav');if(b.hidden||!b.getBoundingClientRect().width)throw Error('Installer invisible');dispatchEvent(Object.assign(new Event('beforeinstallprompt',{cancelable:true}),{prompt:async()=>{window.installTestTriggered=true},userChoice:Promise.resolve({outcome:'dismissed'})}));b.click();await new Promise(r=>setTimeout(r,50));if(!window.installTestTriggered)throw Error('Installation non declenchee');})()"]]:desktop?[['salon','void 0'],['cuisine',"document.getElementById('cuisineBtn').click()"],['chambre',"document.getElementById('chambreBtn').click()"],['sdb',"document.getElementById('sdbBtn').click()"]]:[['salon','void 0'],['oeufs',"document.getElementById('phoneEggButton').click()"],['cuisine',"document.getElementById('phoneEggDialog').close();document.getElementById('cuisineBtn').click()"],['puzzle',"startPuzzle(0,0)"],['puzzle-zoom',"document.querySelector('[data-phone-puzzle-zoom]').click()"],['memory',"startMemory(0);flipMemory(0)"],['jardin',"document.getElementById('jardinBtn').click()"],['boss',"openAdventure()"],['preparation',"document.querySelector('[onclick^=prepareFight]').click()"],['marche',"leaveAdventure();document.getElementById('salonBtn').click();openLapinousMarket()"],['panier-rempli',"(async()=>{for(let i=0;i<3;i++){document.querySelectorAll('.shop-consumable [data-shop-add]')[i].click();await new Promise(r=>setTimeout(r,900));}document.querySelector('[data-shop-tab=cart]').click();await new Promise(r=>setTimeout(r,1100));if(!document.querySelector('.zone-cart'))throw Error('Panier non ouvert');})()"],['options-panier',"document.querySelector('[data-cart-inspect]').click()"],['evolution',"document.querySelector('[data-shop-tab=evolution]').click()"],['fragments',"document.querySelector('[data-shop-tab=fragments]').click()"],['panier',"document.querySelector('[data-shop-tab=cart]').click()"],['inventaire','openLapinousInventory()'],['frigo',"document.getElementById('shopDialog').close();document.getElementById('cuisineBtn').click();openKitchenFridge()"],['tactique',"(async()=>{document.getElementById('kitchenFridgeDialog').close();document.getElementById('jardinBtn').click();openAdventure();document.querySelector('[onclick^=prepareFight]').click();await new Promise(r=>setTimeout(r,50));document.querySelector('[onclick^=startTacticalFight]').click();})()"]])){
 
+ if(process.argv.includes('--onboarding')&&!['salon-appuis','guide','guide-carottes','guide-marchande','guide-fin','retour-guide'].includes(name))continue;
  const action=await send('Runtime.evaluate',{expression,awaitPromise:true});if(action.result?.exceptionDetails)throw Error(name+': '+action.result.exceptionDetails.text);await new Promise(r=>setTimeout(r,2500));
 
  if(name==='salle-de-bain'){
@@ -68,7 +76,7 @@ for(const [name,expression] of (polishAudit?[
 
  }
 
-if(polishAudit){
+if(polishAudit&&!process.argv.includes('--onboarding')){
  await send('Page.reload');
  let installed;
  for(let attempt=0;attempt<60;attempt++){

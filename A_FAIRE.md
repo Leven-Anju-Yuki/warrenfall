@@ -1096,3 +1096,31 @@ Suivi du 16 octobre : tableau [Warrenfall](https://trello.com/b/5VmsAFi7/warrenf
 - [x] Serveur local dédié : vraie réponse HTTP 404 illustrée même à la première visite sur /iindex.html ou un chemin imbriqué ; 403 pour fichiers cachés. README corrigé pour remplacer le serveur Python standard. [trello:6ac39db1a134b35f03b17940:code:local-errors-98]
 
 - [x] Bouton Nettoyer rétabli : panneau des actions de bain positionné explicitement dans la scène, largeur bornée et défilement interne sur petit écran. [trello:6ac39d846f4f8d11b7da6ab0:code:wash-button-99]
+
+## Fiabilisation des automatisations — 17 octobre 2026
+
+- [x] Diagnostic documenté dans FIABILISATION_AUTOMATISATIONS.md : timeout VM inventaire, SSL Trello distinct et conditions Windows batterie contradictoires. [trello:6ac39f30bfe4848ec3eca940:code:automation-diagnostic-100]
+- [x] Reprises réseau limitées, certificats vérifiés, diagnostic enfant conservé et compteurs d’erreurs séparés. Tests isolés sans service réel. [trello:6ac39f30bfe4848ec3eca940:code:automation-network-100]
+- [x] Contrôle batterie à chaque appel, secteur exclu, seuils confirmés après HTTP accepté, journal local ; installateur limité à la tâche existante. [trello:6ac39f30bfe4848ec3eca940:code:battery-reliability-100]
+- [ ] Valider les simulations puis appliquer uniquement les conditions Windows batterie ; historique opérationnel et test de veille contrôlé à effectuer. Aucun horaire ni réglage d’alimentation modifié. [trello:6ac39f30bfe4848ec3eca940:manuel:automation-windows-100]
+
+## Réveil S0 — diagnostic et essai réel à poursuivre
+
+- [x] Capacités S0, capot, minuteurs AC/DC et tâches vérifiés en lecture seule ; protocole et tâche temporaire préparés sans opération distante. Voir DIAGNOSTIC_REVEIL_S0.md. [trello:6ac39f30bfe4848ec3eca940:code:wake-s0-diagnostic-101]
+- [ ] Armer puis effectuer réellement le test sur secteur, capot fermé ; corréler horodatage et événements S0 avant de conclure. Aucun succès présumé. [trello:6ac39f30bfe4848ec3eca940:manuel:wake-s0-real-101]
+
+- [x] 19/10 : seule activation RTCWAKE sur batterie autorisée et appliquée ; tâches existantes inchangées. Test ponctuel armé à 09:32:22, résultat en attente de vérification après essai capot fermé. [trello:6ac39f30bfe4848ec3eca940:code:wake-s0-armed-102]
+
+- [x] Essai S0 réel du 19/10 vérifié : capot fermé à 09:27:50, échéance 09:32:22, aucun horodatage ; dernier lancement déclaré 11:57:01 après ouverture, code 0x41306. Action de contrôle éveillé OK à 11:59:30. Test temporaire désactivé, production inchangée. [trello:6ac39f30bfe4848ec3eca940:code:wake-s0-result-103]
+- [ ] Réveil autonome sur batterie non validé : diagnostic SleepStudy administrateur nécessaire, puis essai corrigé ou architecture sur machine toujours disponible. [trello:6ac39f30bfe4848ec3eca940:manuel:wake-s0-followup-103]
+
+## Accueil et premiers pas — 19 octobre 2026
+
+- [x] Lapins abaissés dans le Salon, la Cuisine, la douche et sur téléphone ; bouton Installer sorti des onglets serrés et rétabli quand le navigateur propose une nouvelle installation. [trello:6ac39d846f4f8d11b7da6ab0:code:floor-install-104]
+- [x] Guide illustré en cinq étapes, phrases courtes, boutons précédent/suivant ; règles Lapidoku et sauvegardes actualisées. [trello:6ac39daf6e132da85a61925d:code:guide-104]
+- [x] Œuf de bienvenue unique à la première adoption sur ce navigateur ; mêmes probabilités que les œufs habituels, aucune rareté élevée garantie. Protection dans le navigateur et la sauvegarde ; absence de serveur : effacer toutes les données du navigateur supprime cette protection locale. [trello:6ac39daf6e132da85a61925d:code:welcome-egg-104]
+- [ ] Valider sur téléphone réel les appuis au sol, l’installation et la lisibilité du guide. [trello:6ac39d846f4f8d11b7da6ab0:manuel:onboarding-phone-104]
+
+- [x] Carnet illustré enrichi : trois sources réelles de carottes, portraits et rôles des six accompagnateurs (marchande, Chef, apothicaire, artisan, spécialiste des fragments, couturière), lieux et étapes pratiques ; ouverture automatique au premier chargement après cette mise à jour, relecture par le livre. [trello:6ac39daf6e132da85a61925d:code:guide-companions-105]
+
+- [x] Guide 105 vérifié en navigateur : ouverture automatique après chargement, navigation et portraits sur 568×280 et 1920×1080 ; bouton Lire le texte pour les pages défilantes. PWA testée avec le nouveau style. [trello:6ac39daf6e132da85a61925d:code:guide-105-tests]

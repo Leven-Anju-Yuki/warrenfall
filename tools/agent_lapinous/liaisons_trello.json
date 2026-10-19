@@ -993,7 +993,10 @@
       "card_id": "6ac39daf6e132da85a61925d",
       "nom": "P2 — Guide de démarrage",
       "chemins": [
-        "index.html"
+        "index.html",
+        "assets/js/game-guide.js",
+        "assets/js/welcome-gift.js",
+        "assets/css/game-guide.css"
       ],
       "preuves": [
         {

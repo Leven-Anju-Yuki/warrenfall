@@ -1,3 +1,4 @@
+import { preflight, remoteFetch, networkError } from './remote-network.mjs';
 import { readImageMap, writeImageMap } from './image-manifest-store.mjs';
 import fs from 'node:fs/promises';
 import path from 'node:path';
@@ -86,7 +87,7 @@ async function inventory() {
   const end = gameCode.indexOf('function backgroundPath(', start);
   if (start < 0 || end < 0) throw new Error('Règles de décors introuvables : inventaire interrompu.');
   const context = vm.createContext({ adminTesting: false, adminTime: 'auto', adminSeason: 'auto' });
-  vm.runInContext(gameCode.slice(start, end) + '\nthis.candidates=backgroundCandidates; this.zones=Object.keys(BACKGROUND_FILES);', context, { timeout: 1000 });
+  vm.runInContext(gameCode.slice(start, end) + '\nthis.candidates=backgroundCandidates; this.zones=Object.keys(BACKGROUND_FILES);', context, { timeout: 10000 });
   for (const zone of context.zones) for (const hour of [0, 12]) for (const season of ['printemps', 'ete', 'automne', 'hiver'])
     for (const candidate of context.candidates(zone, ['halloween', 'noel', 'paques', 'nouvel_an_chinois'], hour, season)) {
       const normal = canonical(candidate);
@@ -115,7 +116,8 @@ async function inventory() {
 }
 /** Appelle l’API avec authentification en en-tête et erreurs sans données sensibles. */
 async function api(env, route, options = {}) {
-  const response = await fetch(`https://api.cloudinary.com/v1_1/${env.CLOUDINARY_CLOUD_NAME}/${route}`, {
+  await preflight("api.cloudinary.com");
+  const response = await remoteFetch(`https://api.cloudinary.com/v1_1/${env.CLOUDINARY_CLOUD_NAME}/${route}`, {
     ...options, signal: AbortSignal.timeout(120000), headers: { Authorization: 'Basic ' + Buffer.from(env.CLOUDINARY_API_KEY + ':' + env.CLOUDINARY_API_SECRET).toString('base64') },
   });
   const data = await response.json();
@@ -136,7 +138,7 @@ async function quota(env, bytes) {
 /** Vérifie une URL sans télécharger systématiquement son contenu. */
 async function verify(url) {
   if (!url?.startsWith('https://res.cloudinary.com/dgrszi9wf/')) return false;
-  const r = await fetch(url, { method: 'HEAD', signal: AbortSignal.timeout(30000) }); return r.ok;
+  const r = await remoteFetch(url, { method: 'HEAD', signal: AbortSignal.timeout(30000) }); return r.ok;
 }
 /** Transfère sans transformation ni écrasement ; reprend uniquement les versions manquantes. */
 async function sync(inv, env, pilot) {
@@ -206,4 +208,4 @@ async function main() {
   console.log(JSON.stringify({ selected: inv.selected.length, excluded: inv.excluded.length, missing: inv.missing.length, bytes: inv.totalBytes }));
   if (mode !== 'dry-run') await sync(inv, await credentials(), mode === 'pilot');
 }
-main().catch(e => { console.error(e.message); process.exitCode = 1; });
+main().catch(e => { console.error(networkError(e) + " — " + String(e.message).replace(/https?:\/\/\S+/g, "[URL masquée]").slice(0,400)); process.exitCode = 1; });
