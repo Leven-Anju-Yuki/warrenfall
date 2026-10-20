@@ -6,6 +6,7 @@ import { spawn } from 'node:child_process';
 const watchMode = process.argv.includes('--watch');
 const backupMode = process.argv.includes('--backup-local');
 let running = false, pending = false, timer;
+let beforeAssets = null;
 const runStarted = new Date();
 const runDetails = { startedAt: runStarted.toISOString(), steps: [], status: 'running' };
 function saveRun() {
@@ -40,12 +41,15 @@ async function update() {
   runDetails.startedAt = new Date().toISOString();
   runDetails.steps = [];
   runDetails.status = 'running';
+  beforeAssets = null;
+  delete runDetails.images;
   saveRun();
   try {
     await run('tools/cloudinary-sync.mjs', ['dry-run']);
     const inventory = JSON.parse(fs.readFileSync('.cloudinary-local/inventory.json', 'utf8'));
     let manifest = { assets: {} };
     try { manifest = JSON.parse(fs.readFileSync('.cloudinary-local/manifest.json', 'utf8')); } catch (e) { if (e.code !== 'ENOENT') throw e; }
+    beforeAssets = structuredClone(manifest.assets || {});
     // Historique des versions connues AVANT leur remplacement dans le manifeste.
     const ledgerFile = '.cloudinary-local/versions-connues.json';
     let ledger = { assets: {} };
@@ -99,6 +103,13 @@ async function update() {
     try {
       const inv = JSON.parse(fs.readFileSync('.cloudinary-local/inventory.json', 'utf8'));
       runDetails.inventory = inv;
+      const after = JSON.parse(fs.readFileSync('.cloudinary-local/manifest.json', 'utf8')).assets || {};
+      runDetails.images = {added:[],modified:[],unchanged:[],failed:[]};
+      for (const item of (beforeAssets ? inv.selected : [])) {
+        const latest=after[item.path], previous=beforeAssets[item.path];
+        const kind=latest?.status!=='verified'||(item.hash&&latest.hash!==item.hash)?'failed':!previous?'added':previous.hash!==latest.hash?'modified':'unchanged';
+        runDetails.images[kind].push({path:item.path,public_id:latest?.public_id||null});
+      }
     } catch {}
     if (runDetails.steps.some(step => step.file === 'tools/cloudinary-corbeille.mjs')) {
       try { runDetails.corbeille = JSON.parse(fs.readFileSync('.cloudinary-local/corbeille-report.json', 'utf8')); } catch {}

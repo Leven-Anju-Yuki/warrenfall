@@ -15,6 +15,19 @@ from test_suivi_trello import repo, TASK, LISTS, CID, scratch
 
 
 class ChainReports(unittest.TestCase):
+    def test_image_changes_and_quarantine_are_named(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as folder:
+            root=Path(folder)
+            (root/'.cloudinary-local').mkdir()
+            now=dt.datetime.now(dt.timezone.utc).isoformat()
+            report={'startedAt':now,'status':'success','images':{'added':[{'path':'new.png'}],'modified':[{'path':'changed.gif'}]},'corbeille':{'pending':[{'path':'unused.png','daysRemaining':7}]}}
+            (root/'.cloudinary-local/nightly-report.json').write_text(json.dumps(report),encoding='utf-8')
+            text,ok=cloudinary_rapport.build(root,now)
+            self.assertTrue(ok)
+            for expected in ('Nouvelles images envoyées : 1','Images modifiées envoyées : 1','new.png','changed.gif','unused.png','jours restants : 7','Suppression définitive SUSPENDUE'):
+                self.assertIn(expected,text)
+
     def test_read_only_blocks_api_writes_even_when_application_is_allowed(self):
         with patch.dict(os.environ, {'LAPINOUS_TRELLO_READ_ONLY':'true'}), \
              patch.object(agent, 'REMOTE_WRITES', True), \

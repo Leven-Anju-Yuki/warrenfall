@@ -309,6 +309,12 @@ def quarantine_discord_summary():
         lines = ['📦 **Corbeille Cloudinary — suivi quotidien J-X**',
                  f'Images en attente : **{len(items)}**',
                  'Quarantaine logique : URL et public_id inchangés.']
+        try:
+            hold = json.loads((ROOT / 'tools/cloudinary-deletion-policy.json').read_text(encoding='utf-8')).get('suspended') is not False
+        except (OSError, ValueError, AttributeError):
+            hold = True
+        if hold:
+            lines.append('🔒 Suppression définitive suspendue : validation humaine des sauvegardes et autorisations requise.')
         for ident, item in sorted(items.items(), key=lambda pair: pair[1].get('since', '')):
             entered = datetime.fromisoformat(item['since'].replace('Z', '+00:00'))
             if entered.tzinfo is None:

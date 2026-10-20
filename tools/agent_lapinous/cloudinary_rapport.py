@@ -30,6 +30,11 @@ def build(root: Path, expected_start=None):
              f'Erreur : {run.get("error", "aucune")}', '', '## Étapes exécutées']
     for step in run.get('steps', []):
         lines.append(f'- {step.get("file")} {" ".join(step.get("args", []))} : code {step.get("exitCode")} à {step.get("at")}')
+    for kind, title in [('added', 'Nouvelles images envoyées'), ('modified', 'Images modifiées envoyées'), ('unchanged', 'Images inchangées'), ('failed', 'Images non vérifiées')]:
+        entries = (run.get('images') or {}).get(kind, [])
+        lines.extend(['', f'## {title} : {len(entries)}'])
+        if kind != 'unchanged':
+            lines.extend(f'- {entry.get("path", "?")}' for entry in entries)
     inv = run.get('inventory') or {}
     lines.extend(['', '## Inventaire complet', f'Sélectionnées : {len(inv.get("selected", []))}',
                   f'Exclues : {len(inv.get("excluded", []))}', f'Introuvables : {len(inv.get("missing", []))}'])
@@ -38,6 +43,12 @@ def build(root: Path, expected_start=None):
         for item in inv.get(kind, []):
             lines.append(f'- {item.get("path")} | présente : {item.get("sourceExists", "?")} | motif : {item.get("reason", item.get("reasons", item.get("sources", "")))}')
     trash = run.get('corbeille') or {}
+    try:
+        hold = json.loads((root / 'tools/cloudinary-deletion-policy.json').read_text(encoding='utf-8')).get('suspended') is not False
+    except (OSError, ValueError, AttributeError):
+        hold = True
+    if hold or trash.get('deletionSuspended'):
+        lines.append('\nSuppression définitive SUSPENDUE : sauvegardes et autorisations humaines à vérifier.')
     for kind, title in [('quarantine', 'Entrées en corbeille'), ('pending', 'En attente'), ('restored', 'Réactivées'),
                         ('deleted', 'Supprimées définitivement'), ('blocked', 'Suppressions bloquées'), ('errors', 'Erreurs corbeille')]:
         items = trash.get(kind, [])

@@ -121,7 +121,14 @@ async function api(env, route, options = {}) {
     ...options, signal: AbortSignal.timeout(120000), headers: { Authorization: 'Basic ' + Buffer.from(env.CLOUDINARY_API_KEY + ':' + env.CLOUDINARY_API_SECRET).toString('base64') },
   });
   const data = await response.json();
-  if (!response.ok) throw new Error(`Cloudinary HTTP ${response.status} : ${response.status === 401 ? 'identifiants refusés (unknown api_key ou secret incorrect)' : 'requête refusée ; vérifier les permissions et quotas'}`);
+  if (!response.ok) {
+    let detail=String(data.error?.message||'requête refusée');
+    for(const value of [env.CLOUDINARY_API_KEY,env.CLOUDINARY_API_SECRET]) if(value) detail=detail.split(value).join('[secret masqué]');
+    detail=detail.replace(/https?:\/\/\S+/g,'[URL masquée]').slice(0,500);
+    const error=new Error(`Cloudinary HTTP ${response.status} : ${detail}`);
+    error.status=response.status;
+    throw error;
+  }
   return data;
 }
 /** Contrôle le quota avant tout transfert ; seuls les comptes gratuits documentés sont autorisés. */
@@ -149,6 +156,7 @@ async function sync(inv, env, pilot) {
     throw new Error('Exécuter le pilote PNG/GIF/SVG avant le transfert complet.');
   await quota(env, chosen.filter(x => x.sourceExists !== false).reduce((n, x) => n + x.bytes, 0));
   let transferred = 0, reused = 0;
+  const failedPaths = [];
   // Séquentiel : concurrence bornée à 1, manifestes cohérents et consommation prévisible.
   for (const entry of chosen) {
     const old = manifest.assets[entry.path];
@@ -161,6 +169,11 @@ async function sync(inv, env, pilot) {
     let failure;
     for (let attempt = 0; attempt < 3; attempt++) {
       try {
+        // Limite image constatée pour ce compte : refus local, sans réduire l’original.
+        if (entry.bytes > 10485760) {
+          const error=new Error(`Image trop volumineuse : ${entry.bytes} octets, limite constatée 10485760. Original conservé ; préparer une version sans perte ou revoir le forfait.`);
+          error.status=413;throw error;
+        }
         const form = new FormData();
         form.append('file', new Blob([await fs.readFile(path.join(root, entry.path))]), path.posix.basename(entry.path));
         form.append('public_id', entry.public_id); form.append('overwrite', 'false');
@@ -172,14 +185,15 @@ async function sync(inv, env, pilot) {
         }
         if (!await verify(data.secure_url)) throw new Error('URL HTTPS non vérifiée.');
         manifest.assets[entry.path] = { ...entry, url: data.secure_url, status: 'verified', date: stamp() }; failure = null; break;
-      } catch (e) { failure = e.message; if (attempt < 2) await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1))); }
+      } catch (e) { failure = e.message; if(e.status>=400 && e.status<500 && e.status!==429) break; if (attempt < 2) await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1))); }
     }
     if (failure) manifest.assets[entry.path] = { ...entry, status: 'failed', date: stamp(), error: failure };
     await save(manifestFile, manifest);
     transferred++;
     console.log(`${manifest.assets[entry.path].status}: ${entry.path}`);
-    if (failure) throw new Error('Transfert arrêté après échec ; reprise disponible dans le manifeste privé.');
+    if (failure) failedPaths.push(entry.path);
   }
+  if (failedPaths.length) throw new Error('Images refusées : '+failedPaths.join(', ')+' ; autres transferts conservés, activation et quarantaine suspendues.');
   // Enregistre chaque version vérifiée, y compris la version qui vient d'être transférée.
   // Ne supprime jamais l'historique : il sert à détecter les remplacements futurs.
   const ledgerFile = path.join(stateDir, 'versions-connues.json');

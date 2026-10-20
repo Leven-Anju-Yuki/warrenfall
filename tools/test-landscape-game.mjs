@@ -37,7 +37,7 @@ for(const [name,expression] of (polishAudit?[
 ['guide',"bootstrap.Modal.getOrCreateInstance(document.getElementById('myModal')).show();document.querySelector('#myModal [data-next]').click()"],
 ['guide-carottes',"document.querySelector('#myModal [data-next]').click()"],
 ['guide-marchande',"document.querySelector('#myModal [data-next]').click()"],
-['guide-fin',"for(let i=0;i<6;i++)document.querySelector('#myModal [data-next]').click()"],
+['guide-fin',"while(!document.querySelector('#myModal [data-next]').hidden)document.querySelector('#myModal [data-next]').click()"],
 ['retour-guide',"bootstrap.Modal.getOrCreateInstance(document.getElementById('myModal')).hide()"],
 ['cuisine',"document.getElementById('cuisineBtn').click()"],
 ['chambre',"document.getElementById('chambreBtn').click()"],

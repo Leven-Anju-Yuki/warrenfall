@@ -105,3 +105,8 @@ Le fichier `trello_automatisation.json` contient `actif: true`, après accord ex
 L’agent ne crée aucune carte. Il ne cible que En cours et À valider en jeu, avec preuves précises et correspondances explicites. Réalisé, Bloqué et Idées à sélectionner restent protégés. Les cartes déjà à valider ne sont pas rétrogradées. Le journal local `.cloudinary-local/trello-transitions.json` reprend les commentaires interrompus, sans déplacer une seconde fois les cartes déjà déplacées. Une erreur Trello empêche l’avancement du point de reprise Git. Les erreurs Discord ne rejouent pas les transitions Trello réussies.
 
 Simulation du 15 octobre : 71 cartes analysées, zéro déplacement proposé, aucune erreur Trello ; aucun message Discord envoyé. L’alerte Cloudinary avant 20 h est attendue dans le bilan manuel sans contexte de synchronisation.
+
+
+## Réglage actuel du rattrapage — 19 octobre 2026
+
+À la demande explicite de Florie, `StartWhenAvailable=True` a été réactivé sur la tâche existante « Lapinous - Images Cloudinary 20h ». L’export XML avant/après confirme que seule cette propriété a changé. Prochaine échéance relevée : 19 octobre 2026 à 20:00, tâche active, `MultipleInstances=IgnoreNew`. Le verrou exclusif de la chaîne protège aussi contre les doubles exécutions. Aucune synchronisation de test ; actions, déclencheurs, compte, alimentation, quarantaine et autres tâches inchangés. Le rattrapage peut avoir lieu le lendemain selon disponibilité de Windows ; ce n’est pas une garantie de réveil en veille S0. L’ancien installateur contient toujours `StartWhenAvailable=$false` : ne pas le relancer pour appliquer ce réglage isolé.

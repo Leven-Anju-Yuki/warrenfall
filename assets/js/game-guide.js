@@ -3,9 +3,113 @@
   if (!modal) return;
   const seenKey = 'lapinous_guide_seen_v4';
   modal.classList.add('warrenfall-guide');
-  modal.querySelector('.modal-content').style.backgroundImage=`linear-gradient(90deg,#79512633,transparent 5%,#fff5dcaa 48%,#79512633 50%,#fff5dcaa 52%,transparent 95%),url("${window.LapinousImages?.url('./assets/img/page.jpg')||'./assets/img/page.jpg'}")`;
-  modal.querySelector('.modal-title').textContent = 'Le carnet du terrier';
-  const steps = [{"section": "Bienvenue", "title": "Un terrier, des rencontres, ton aventure.", "image": "./assets/img/Ouverture_du_jeu/logo/Warrenfall_logo_transparent.png", "where": "Commence ici", "text": "Adopte ton premier compagnon, donne-lui un nom, puis découvre le Salon. Tu n’as pas besoin de tout apprendre maintenant.", "points": ["Les pièces en bas te permettent de te déplacer.", "Le livre rouvre ce guide à tout moment.", "Un œuf de bienvenue est offert à la première adoption sur ce navigateur."], "tip": "Ton premier objectif : adopter ton lapin et regarder ses trois jauges."}, {"section": "Les besoins", "title": "Un compagnon en forme, c’est le début de tout.", "image": "./assets/img/Zone_cuisine/faim.png", "where": "Cuisine · Chambre · Bain", "text": "Nourriture, sommeil et propreté : chaque lapin a ses propres besoins.", "points": ["Cuisine : Carotte ou Pomme pour le nourrir.", "Chambre : Dodo pour récupérer de l’énergie.", "Bain : Nettoyer pour faire sa toilette."], "tip": "Essaie un soin : la jauge remonte et ton lapin s’anime."}, {"section": "Les carottes", "title": "Comment gagner des carottes ?", "image": "./assets/img/Zone_cuisine/carotte.png", "where": "Jardin · Succès · Œufs", "text": "Les carottes servent à acheter des œufs, des aliments et des articles du magasin. Les mini-jeux donnent 2 à 3 carottes à chaque partie réussie, même en rejouant un niveau. Tu peux aussi :", "points": ["Gagne un combat contre un boss légume dans le Jardin.", "Ouvre les Succès avec le trophée et récupère les récompenses débloquées.", "Lorsqu’un œuf donne un lapin déjà possédé, choisis les carottes parmi les options du doublon."], "tip": "L’amitié reste la récompense principale des mini-jeux. Les combats rapportent plus de carottes et peuvent laisser un ingrédient du Marché. Rejouer un niveau ne redonne pas ses carottes."}, {"section": "Les rencontres", "title": "La marchande prépare tes achats.", "image": "assets/img/accompagnateurs/caissier/05_attente_droite.png", "where": "Magasin → Marché", "text": "Elle te présente les aliments et garde tes articles sur la table pendant tes achats.", "points": ["Choisis des fruits, légumes, herbes ou du foin.", "Ouvre le panier pour vérifier les quantités et le prix.", "Confirme le paiement : les ingrédients vont dans la réserve de la Cuisine ; les soins achetés dans les autres rayons vont chez l’apothicaire."], "tip": "Ajouter un article au panier ne le paie pas : vérifie le total avant de confirmer."}, {"section": "Les rencontres", "title": "Le Chef transforme tes ingrédients.", "image": "assets/img/accompagnateurs/Chef/05_attente_droite.png", "where": "Cuisine → Ouvrir le frigo", "text": "Le garde-manger te permet de retrouver tes provisions et de préparer les recettes disponibles.", "points": ["Choisis un plat : sa liste d’ingrédients apparaît.", "Les quantités indiquent ce que tu possèdes et ce qui manque.", "Quand tu as tout, prépare le plat pour disposer d’un repas."], "tip": "Un ingrédient manque ? Retourne au Marché plutôt que de chercher dans les soins."}, {"section": "Les rencontres", "title": "L’apothicaire prend soin de tes réserves.", "image": "assets/img/accompagnateurs/Apothicaire/05_attente_droite.png", "where": "Bouton feuille → Inventaire", "text": "Ses tiroirs contiennent les soins que tu as achetés. Elle te remet le produit choisi pour ton compagnon actif.", "points": ["Regarde les jauges avant d’utiliser un soin.", "Choisis un tiroir contenant un produit.", "Le produit est consommé et restaure le besoin correspondant."], "tip": "La Cuisine garde les ingrédients et les repas ; l’apothicaire garde les soins. Ces stocks appartiennent à toute la sauvegarde."}, {"section": "Les rencontres", "title": "L’artisan améliore ton quotidien.", "image": "assets/img/accompagnateurs/Artisan/Lapin forgeron brun, pose confiante-4.png", "where": "Magasin → Évolution", "text": "Il présente les évolutions des pièces pour toute ta partie. Une évolution achetée reste débloquée quand tu changes de lapin.", "points": ["Chaque amélioration affiche ses conditions et son coût.", "Les premières améliorations se débloquent avec les niveaux.", "Lis l’effet et le prix avant d’acheter : les besoins et techniques restent propres à chaque lapin, mais les évolutions sont communes."], "tip": "Commence par faire progresser ton compagnon dans les jeux pour débloquer de nouvelles possibilités."}, {"section": "Les rencontres", "title": "Le mage veille sur tes fragments.", "image": "assets/img/accompagnateurs/Fragments/Lapin mystique blanc, bras croisés-5.png", "where": "Magasin → Fragments", "text": "Les fragments servent à la progression des techniques de combat. Tu peux notamment en garder lorsqu’un œuf donne un doublon.", "points": ["Choisis d’abord le lapin concerné.", "Les fragments conservés se dépensent depuis sa fiche pour ses techniques.", "L’extracteur réinitialise une technique choisie et rend les fragments prévus ; les autres techniques restent intactes."], "tip": "Lis le remboursement affiché avant d’utiliser un extracteur."}, {"section": "Les rencontres", "title": "La couturière assemble tes réussites.", "image": "assets/img/accompagnateurs/couturiere/couturiere.png", "where": "Salon → Coin jeux → Puzzles", "text": "Elle accompagne la construction du puzzle et coud les pièces voisines bien placées.", "points": ["Choisis une pièce dans la coupelle, puis sa place sur le plateau.", "Les pièces correctement posées restent fixées.", "Observe la couturière quand les bonnes voisines se rejoignent."], "tip": "Le Coin jeux propose aussi Memory, quiz et Lapidoku, avec une progression par niveaux."}, {"section": "À toi de jouer", "title": "Fais éclore la suite de ton histoire.", "image": "./assets/img/oeuf/rare.png", "where": "Œufs · Sauvegardes", "text": "Ton œuf de bienvenue t’attend après la première adoption. Son contenu est aléatoire selon les taux affichés, sans rareté élevée garantie.", "points": ["Ouvre Œufs, puis Ouvrir un œuf et touche sa coquille.", "Choisis ton compagnon actif au Salon ou dans l’encyclopédie.", "Exporte régulièrement une sauvegarde avec la disquette. Sur téléphone, joue en paysage et utilise Installer pour ajouter le jeu à l’écran d’accueil."], "tip": "Tu peux fermer ce guide quand tu veux et le retrouver avec le livre."}];
+  modal.querySelector('.modal-content').style.setProperty('--guide-page-image', `url("${window.LapinousImages?.url('./assets/img/page.jpg')||'./assets/img/page.jpg'}")`);
+  modal.querySelector('.modal-title').textContent = 'Les petits secrets du terrier';
+  const steps = [
+  {
+    "section": "Bienvenue",
+    "title": "Bienvenue dans ton petit terrier !",
+    "image": "./assets/img/Ouverture_du_jeu/logo/Warrenfall_logo_transparent.png",
+    "where": "Commence ici",
+    "text": "Choisis ton premier lapin et donne-lui un petit nom.",
+    "points": [
+      "Découvre les pièces avec les boutons du bas.",
+      "Un œuf de bienvenue t’attend après l’adoption."
+    ],
+    "tip": "Touche le livre pour retrouver ces conseils quand tu veux."
+  },
+  {
+    "section": "Les besoins",
+    "title": "Un lapin bien dans ses pattes.",
+    "image": "./assets/img/Zone_cuisine/faim.png",
+    "where": "Cuisine · Chambre · Bain",
+    "text": "Trois petites habitudes pour prendre soin de lui.",
+    "points": [
+      "Cuisine : donne-lui à manger.",
+      "Chambre : laisse-le se reposer.",
+      "Bain : lave-le."
+    ],
+    "tip": "Regarde ses trois jauges pour savoir ce dont il a besoin."
+  },
+  {
+    "section": "L’amitié",
+    "title": "De jolis moments ensemble.",
+    "image": "./assets/img/Zone_jardin/entrainement.gif",
+    "where": "Salon → Coin jeux · Jardin",
+    "text": "Les jeux et les victoires font gagner de l’amitié à ton lapin.",
+    "points": [
+      "Au Salon : puzzles, jeu des paires, quiz et Lapidoku.",
+      "Au Jardin : cours et remporte des combats.",
+      "L’amitié gagnée fait monter son niveau."
+    ],
+    "tip": "Chaque lapin a son niveau. Les améliorations des pièces profitent à tous."
+  },
+  {
+    "section": "Les carottes",
+    "title": "Quelques carottes pour se faire plaisir.",
+    "image": "./assets/img/Zone_cuisine/carotte.png",
+    "where": "Jardin · Succès · Œufs",
+    "text": "Elles servent à acheter des œufs et des articles au magasin.",
+    "points": [
+      "Une partie réussie : 2 ou 3 carottes, même si tu rejoues.",
+      "Une victoire au combat rapporte davantage.",
+      "Pense à récupérer tes récompenses avec le trophée."
+    ],
+    "tip": "Le plus beau cadeau des jeux reste l’amitié !"
+  },
+  {
+    "section": "Ton premier combat",
+    "title": "Prêt à défier les légumes ?",
+    "image": "./assets/img/boss/oignon_face.png",
+    "where": "Jardin → Aventure → Choisir un boss",
+    "text": "Choisis un adversaire dans Jardin → Aventure.",
+    "points": [
+      "Prépare des lapins nourris, reposés et propres.",
+      "Compare les points de vie, la puissance et les pouvoirs.",
+      "Une victoire offre amitié, carottes et parfois un ingrédient."
+    ],
+    "tip": "Tu peux choisir tes actions ou laisser jouer ton équipe. Après une défaite, prends soin de tes lapins."
+  },
+  {
+    "section": "Les rencontres",
+    "title": "De bonnes choses pour tes lapins.",
+    "image": "assets/img/accompagnateurs/caissier/05_attente_droite.png",
+    "where": "Magasin → Marché",
+    "text": "La marchande, le Chef et l’apothicaire t’accompagnent.",
+    "points": [
+      "Marchande : choisis tes articles, puis règle ton panier.",
+      "Chef : retrouve tes ingrédients dans le frigo. Les recettes sont en pause.",
+      "Apothicaire : utilise tes soins pour le lapin choisi."
+    ],
+    "tip": "Les provisions et les soins sont partagés entre tous tes lapins."
+  },
+  {
+    "section": "Les rencontres",
+    "title": "Des amis pleins de savoir-faire.",
+    "image": "assets/img/accompagnateurs/Apothicaire/05_attente_droite.png",
+    "where": "Bouton feuille → Inventaire",
+    "text": "Trois autres rencontres t’attendent.",
+    "points": [
+      "Artisan : améliore les pièces pour toute ta partie.",
+      "Mage : aide-toi des fragments pour renforcer les techniques.",
+      "Couturière : elle assemble les pièces bien placées du puzzle."
+    ],
+    "tip": "Les besoins, le niveau et les techniques restent propres à chaque lapin."
+  },
+  {
+    "section": "À toi de jouer",
+    "title": "À toi les petites aventures !",
+    "image": "./assets/img/oeuf/rare.png",
+    "where": "Œufs · Sauvegardes",
+    "text": "Prends ton temps : ton terrier se découvre petit à petit.",
+    "points": [
+      "Ouvre ton œuf depuis le bouton Œufs.",
+      "Garde une copie de ta partie avec la disquette.",
+      "Si le bouton Installer est proposé, ajoute le jeu à ton écran d’accueil."
+    ],
+    "tip": "Commence par un petit jeu avec ton nouveau compagnon."
+  }
+];
   let index = 0;
   const body = modal.querySelector('.modal-body');
   function render() {
@@ -18,7 +122,12 @@
     body.querySelector('[data-prev]').onclick = () => { index--; render(); };
     body.querySelector('[data-next]').onclick = () => { index++; render(); };
   }
-  modal.addEventListener('show.bs.modal', () => { index = 0; render(); });
+  modal.addEventListener('show.bs.modal', () => {
+    index = 0; render();
+    modal.classList.remove('book-opening');
+    requestAnimationFrame(() => { if(modal.classList.contains('show')) modal.classList.add('book-opening'); });
+  });
+  modal.addEventListener('hidden.bs.modal',()=>modal.classList.remove('book-opening'));
   modal.addEventListener('shown.bs.modal', () => { try { localStorage.setItem(seenKey,'1'); } catch {} });
   function firstVisit() {
     let seen=false; try { seen=localStorage.getItem(seenKey)==='1'; } catch {}

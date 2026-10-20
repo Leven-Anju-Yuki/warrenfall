@@ -8,6 +8,7 @@
 import fs from 'node:fs/promises';
 import path from 'node:path';
 import crypto from 'node:crypto';
+import { deletionSuspended } from './cloudinary-deletion-policy.mjs';
 
 const root = process.cwd();
 const dir = path.join(root, '.cloudinary-local');
@@ -100,7 +101,9 @@ async function api(method, id) {
   if (!response.ok) throw Error(`Cloudinary HTTP ${response.status} (${method})`);
   return json;
 }
-const deletionEnabled = mode === 'appliquer' && process.env.LAPINOUS_CLOUDINARY_DELETE_DISABLED !== 'true' && (await credentials()).LAPINOUS_CLOUDINARY_DELETE_ENABLED === 'true';
+const deletionHold = await deletionSuspended(path.join(root,'tools/cloudinary-deletion-policy.json'));
+report.deletionSuspended = deletionHold;
+const deletionEnabled = !deletionHold && mode === 'appliquer' && process.env.LAPINOUS_CLOUDINARY_DELETE_DISABLED !== 'true' && (await credentials()).LAPINOUS_CLOUDINARY_DELETE_ENABLED === 'true';
 const nextQueue = structuredClone(queue);
 const nextLedger = structuredClone(ledger);
 for (const [id, item] of known) {
@@ -134,7 +137,7 @@ for (const [id, item] of known) {
     continue;
   }
   if (!deletionEnabled) {
-    report.blocked.push({ id, path: item.path, reason: '7 jours écoulés : suppression distante désactivée (LAPINOUS_CLOUDINARY_DELETE_ENABLED)' });
+    report.blocked.push({ id, path: item.path, reason: deletionHold ? 'Suppression suspendue : sauvegarde exacte et autorisation humaine à vérifier.' : '7 jours écoulés : suppression distante désactivée (LAPINOUS_CLOUDINARY_DELETE_ENABLED)' });
     continue;
   }
   try {

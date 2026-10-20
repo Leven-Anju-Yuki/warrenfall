@@ -9,7 +9,7 @@ assert.equal(manifest.id, './');
 assert.equal(manifest.orientation, 'landscape');
 assert.equal(manifest.scope, './');
 for (const icon of manifest.icons) {
-  const bytes = await fs.readFile(icon.src);
+  const bytes = await fs.readFile(icon.src.split('?')[0]);
   const size = Number(icon.sizes.split('x')[0]);
   assert.equal(bytes.readUInt32BE(16), size);
   assert.equal(bytes.readUInt32BE(20), size);

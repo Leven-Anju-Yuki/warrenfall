@@ -354,19 +354,91 @@ Inventaire et compte rendu détaillé : `docs/RENOMMAGE_WARRENFALL.md`. Les noms
 <!-- LAPINOUS_AGENT_DEBUT -->
 ### Suivi automatique du projet
 
-Dernier bilan : 17/10/2026 20:42
+Dernier bilan : 19/10/2026 20:11
 
-# Bilan Warrenfall - 17/10/2026 20:42
+# Bilan Warrenfall - 19/10/2026 20:11
 Mode : APPLICATION
-Fichiers nouveaux depuis le point de reprise : 100
-Cartes analysees : 0
-Deplacements proposes : 0
-Transitions traitees avec succes (reprises comprises) : 0
+Fichiers nouveaux depuis le point de reprise : 129
+Cartes analysees : 71
+Deplacements proposes : 1
+Transitions traitees avec succes (reprises comprises) : 1
 
 ## Deplacements
-Aucun deplacement justifie.
+- P2 — Guide de démarrage [6ac39daf6e132da85a61925d] : P2 — Confort et découverte -> En cours ; Lignes modifiees pertinentes : index.html
+  Preuve : index.html ; demarrage|guide|Prends soin de ton compagnon|regles du jeu
 
 ## Suivi detaille
+- Améliorations de soin — ancienne piste à réévaluer [6661a537b3df7e377ba31643] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 0/0. Parent coche : False.
+- P3 — Techniques uniques [6ac39dc1946e5c8a5488c49b] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 0/0. Parent coche : False.
+- P3 — Nouveaux consommables et équilibre des prix [6ac39dc482f20ad66d405a8b] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 1/1. Parent coche : False.
+- P3 — Décorations plaçables [6ac39e052e962c5a09b17704] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 0/0. Parent coche : False.
+- P3 — Branches d’amélioration [6ac39e08cece9041c78cab09] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 0/0. Parent coche : False.
+- P3 — Records supplémentaires [6ac39e0b9caa6864a646e480] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
+- P3 — Mode pixel art [6ac39e0ec39e56083669ea25] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 0/0. Parent coche : False.
+- P3 — Nouvelles grilles de Lapidoku [6ac39e11e324891dfc4c501a] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 6/9. Parent coche : False.
+- Publication — juridique, droits et paiement [6ac75d44734881469f896152] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
+- P1 — Progression et déblocage des équipements [6661a5d73e3f5fce205eae72] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- P1 — Placement des lapins et commandes [6ac39d846f4f8d11b7da6ab0] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 11/16. Parent coche : False.
+- P1 — Préparation du combat [6ac39d8793f1039486b67a20] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 1/1. Parent coche : False.
+- P1 — Sauvegardes [6ac39d911abc6a7d2a71273e] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- P1 — Sons [6ac39d93be4e45379ca8247f] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- P2 — Notifications [6ac39dbef4faf8125adc099b] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Équipes favorites [6ac39e147db15f1edab9c326] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- faire une modal qui souvre avec un bouton image livre pour afficher les regles du jeu [6661a8eefa746159ea2700da] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- faire le clicker pour lui donner a manger le brosser [6661a4b7b41cd821c331d689] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Barres de besoins et niveau d’amitié [6661a5ec1e0c59351bd18a52] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- trouver un gif de lapin heureux [6661a91283b1bf3c205e457c] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Retour au Salon et informations du lapin [6669758ceb6d2b877ef431fa] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- trouver les images [6661b309ac71b719ebc63fd7] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- faire une zone soin alimentation sommeil et jeu avec des fond différent [6661a6149952d95e5c048f9a] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- thème sur les lapins [6661a423f3b0f23f486d3590] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- faire un salon avec des bouton de base  pour les diffèrent lieu et une fleche pour revenir en arriere [6661b4124754141925b73499] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Adoption, traits, collection et encyclopédie [6ac39e3c28d335cd92c8cc95] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Progression indépendante par lapin [6ac39e3f09478ebeda38c92d] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Combat tactique — équipe, mode manuel et automatique [6ac39e4258234f0f6df5def5] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Ultimes et barres de charge — lapins et boss [6ac39e452732a48b7581df6e] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Listes de 1 à 6 attaques selon la rareté [6ac39e5cff0d2d466b27ecbb] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Fragments — amélioration de la technique choisie [6ac39e5fd921b05e95245ff0] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Œufs illustrés — ouverture individuelle et par 10 [6ac39e61cbe7415819b24df8] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Décors de saisons jour/nuit et événements prioritaires [6ac39efb4988b40cec255170] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Admin local — tests rapides et Dashboard [6ac39efeb8e60614e640ad49] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Dashboard — graphiques de rareté harmonisés [6ac39f0129a42ce3c535a196] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Sauvegardes nommées, datées et remplacement confirmé [6ac39f0465d01dcee2c8411d] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Mini-jeux — Memory 30 niveaux et puzzles cousus [6ac39f1ffd16599635e62ae9] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Défis quotidiens, succès et récompenses [6ac39f233ae89c6d7a24fb0c] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 2/3. Parent coche : True.
+- Audio — soins courts, volumes et défaite [6ac39f2681968bcd0d9b086d] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Audio original livré — ambiance et sommeil [6ac39f295fcf0100cf51e1cd] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Notifications et combat lisible — corrections livrées [6ac39f2b43bb87374c9f2e22] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Salon — compagnons ensemble et placement corrigé [6ac39f2fa02c69b499e17ea8] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Repères — feuille de route du 08-10-2026 [6ac39f30bfe4848ec3eca940] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 30/39. Parent coche : False.
+- P1 — Équilibrage des boss [6ac39d8a40c2a66ada563abc] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
+- P1 — Indicateur de difficulté plus fiable [6ac39d8ef2a33d8d5e748be8] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
+- P2 — SEO [6ac39d99f4eb044b2a42d449] : Deja dans la liste correspondante. Lignes modifiees pertinentes : index.html Sous-taches : 0/0. Parent coche : False.
+- P2 — Guide de démarrage [6ac39daf6e132da85a61925d] : Lignes modifiees pertinentes : index.html Sous-taches : 5/5. Parent coche : False.
+- P2 — Accessibilité [6ac39db1a134b35f03b17940] : Deja dans la liste correspondante. Lignes modifiees pertinentes : index.html, assets/js/installer.js Sous-taches : 10/12. Parent coche : False.
+- P2 — Performance [6ac39db49bd7456ac00b5038] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 7/8. Parent coche : False.
+- P2 — Relations des personnages [6ac39dbb2c736f2180aee1ec] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
+- À valider — Puzzle à coupelle et couturière [6ac39db7ff0d2d466b26fe7b] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 1/1. Parent coche : True.
+- À valider — Boutique et apothicaire [6ac75d423df6f3af4d7dffa3] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 7/9. Parent coche : False.
+- À valider — Memory 30 niveaux [6ac75d4306880ab48923dd1c] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- À valider — Besoins admin et jeux adaptés à l’écran [6ac75fbda79c4c777508987e] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 1/3. Parent coche : False.
+- Valider accueil apothicaire, bouclier et visibilité du Dashboard [6ac761f58b664d27cb2e9cd5] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Valider puzzles verrouillés et Memory compact [6ac763f9346a0a7e6149d7fb] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Valider accès Admin aux derniers niveaux et noms après rechargement [6ac7652bc8ce084387e31ecc] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Valider cartes puzzles Dashboard et taux des œufs [6ac76646894f17c16d8646d1] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Valider Dashboard en accordéons et catalogue magasin [6ac76741ba45b4cc22e9893c] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Valider Dashboard visuel, taux des œufs et poids README [6ac76ac51940e93ee2c2d397] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Valider cuisine, Marché et évolutions progressives [6ac775a5d9cc9195c78cfc47] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Valider frigo cliquable et nouveaux aliments du Marché [6ac7808c657c947629f42e6e] : Liste protegee (À valider en jeu) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Boss à comportements distincts [6ac39e1702dcc73d8bd079c2] : Liste protegee (Idées à sélectionner) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Défis de combat [6ac39e1aaf413db2ee993e59] : Liste protegee (Idées à sélectionner) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Journal de collection [6ac39e2f7f2924d04ff78274] : Liste protegee (Idées à sélectionner) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Expéditions courtes [6ac39e33093ac1a6041de63f] : Liste protegee (Idées à sélectionner) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Albums saisonniers [6ac39e3688258482918621e0] : Liste protegee (Idées à sélectionner) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- Sauvegarde de secours [6ac39e3935def311b21d9772] : Liste protegee (Idées à sélectionner) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : False.
+- README et arborescence — actualisés le 08-10-2026 [6ac39d96335bf1dad3b0d2f2] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Magasin et inventaire — code livré [6ac75d3f821f8ecfbfefd1b3] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
+- Accompagnateurs et lapins — médias centralisés [6ac75d402925f959a3e9afbc] : Liste protegee (Réalisé — code et historique) : aucun deplacement automatique. Sous-taches : 0/0. Parent coche : True.
 
 ## Git
 - .gitignore
@@ -374,6 +446,8 @@ Aucun deplacement justifie.
 - 404.html
 - AGENTS.md
 - A_FAIRE.md
+- DIAGNOSTIC_REVEIL_S0.md
+- FIABILISATION_AUTOMATISATIONS.md
 - Lapinous_documents_juridiques/00_LIRE_AVANT_PUBLICATION.md
 - Lapinous_documents_juridiques/01_CGU.html
 - Lapinous_documents_juridiques/02_CGV_carottes.html
@@ -382,12 +456,19 @@ Aucun deplacement justifie.
 - Lapinous_documents_juridiques/05_credits_IA_licences.html
 - Lapinous_documents_juridiques/06_retractation_remboursement.html
 - Lapinous_documents_juridiques/07_suppression_donnees.html
+- assets/css/game-guide.css
 - assets/css/lapidoku.css
 - assets/css/shop-polish.css
 - assets/css/startup.css
+- assets/fonts/CinzelDecorative-Bold.ttf
+- assets/fonts/CinzelDecorative-OFL.txt
+- assets/fonts/EBGaramond-OFL.txt
+- assets/fonts/EBGaramond.ttf
 - assets/icons/error-403.png
 - assets/icons/error-404.png
 - assets/icons/error-offline.png
+- assets/icons/lapinous-192.png
+- assets/icons/lapinous-512.png
 - assets/icons/warrenfall-192.png
 - assets/icons/warrenfall-48.png
 - assets/icons/warrenfall-512.png
@@ -434,12 +515,16 @@ Aucun deplacement justifie.
 - assets/img/Zone_jardin/entrainement.png
 - assets/img/lapin_soin.gif
 - assets/js/connection-notice.js
+- assets/js/game-economy.js
+- assets/js/game-guide.js
 - assets/js/installer.js
 - assets/js/lapidoku.js
 - assets/js/local-files.js
+- assets/js/mobile-ui.js
 - assets/js/script.js
 - assets/js/shop.js
 - assets/js/startup.js
+- assets/js/welcome-gift.js
 - dashboard.html
 - docs/AUDIT_SEO.md
 - docs/AUDIT_VISUELS_GOOGLE_PLAY.md
@@ -448,6 +533,7 @@ Aucun deplacement justifie.
 - docs/RENOMMAGE_WARRENFALL.md
 - index.html
 - lapinous-quiz.json
+- lapinous-shop.json
 - liste de futur création/futur_lapin.md
 - manifest.json
 - offline.html
@@ -459,62 +545,87 @@ Aucun deplacement justifie.
 - tools/agent_lapinous/bot_discord.py
 - tools/agent_lapinous/etat_batterie.json
 - tools/agent_lapinous/installer_batterie.ps1
+- tools/agent_lapinous/installer_taches.ps1
 - tools/agent_lapinous/liaisons_trello.json
+- tools/agent_lapinous/reseau.py
 - tools/agent_lapinous/surveillance_batterie.py
+- tools/agent_lapinous/test_fiabilisation.py
+- tools/agent_lapinous/test_installateur.ps1
+- tools/cloudinary-sync.mjs
+- tools/diagnostic-reveil-admin.ps1
+- tools/remote-network.mjs
 - tools/serve-game.py
+- tools/test-audio-events.mjs
+- tools/test-game-economy.mjs
+- tools/test-image-chain-safety.mjs
 - tools/test-landscape-game.mjs
 - tools/test-lapidoku.mjs
 - tools/test-pwa.mjs
+- tools/test-remote-network.mjs
+- tools/test-reveil-horodatage.ps1
+- tools/test-reveil-s0.ps1
 - tools/test-save-picker.mjs
 - tools/test-startup.mjs
+- tools/test-welcome-gift.mjs
 - tools/test_serve_game.py
+- tools/update-images.mjs
 - tools/update-readme-sizes.mjs
 
 ## Points de vigilance
 Les commits depuis le dernier point de reprise sont inclus par comparaison des contenus.
 
 ## Chaine de cette execution
-{"startedAt": "2026-10-17T20:27:32.4635898+02:00", "syncExit": 1, "bilanExit": 1, "errors": ["Synchronisation echouee (code 1)."], "trelloReadOnly": false, "cloudinaryDeleteDisabled": true, "syncFinishedAt": "2026-10-17T20:33:49.5712499+02:00"}
+{"startedAt": "2026-10-19T20:10:51.5879321+02:00", "syncExit": 1, "bilanExit": 1, "errors": ["Synchronisation echouee (code 1)."], "trelloReadOnly": false, "cloudinaryDeleteDisabled": true, "syncFinishedAt": "2026-10-19T20:11:17.5261837+02:00"}
 
 ## Cloudinary — rapport complet
 # Cloudinary — ÉCHEC
-Début : 2026-10-17T20:31:27.669000+02:00
-Fin : 2026-10-17T18:32:41.136Z
+Début : 2026-10-19T20:10:53.347000+02:00
+Fin : 2026-10-19T18:11:16.801Z
 État déclaré : failed
-Erreur : Étape interrompue : tools/cloudinary-sync.mjs (code 1)
+Erreur : Étape interrompue : tools/cloudinary-sync.mjs (code 1) — {"selected":326,"excluded":169,"missing":0,"bytes":516727066}
+failed: assets/img/Ouverture_du_jeu/animations/Warrenfall_ouverture_8_secondes.gif
+Script : Error — Transfert arrêté après échec ; reprise disponible dans le manifeste privé.
 
 ## Étapes exécutées
-- tools/cloudinary-sync.mjs dry-run : code 1 à 2026-10-17T18:32:41.048Z
+- tools/cloudinary-sync.mjs dry-run : code 0 à 2026-10-19T18:10:54.689Z
+- tools/cloudinary-sync.mjs sync : code 1 à 2026-10-19T18:11:16.798Z
 
 ## Inventaire complet
-Sélectionnées : 323
-Exclues : 166
+Sélectionnées : 326
+Exclues : 169
 Introuvables : 0
 
 ### Images utilisées
-- assets/img/Ouverture_du_jeu/animations/azazel_course.gif | présente : True | motif : ['Référence : index.html', 'Référence : assets/js/startup.js']
+- assets/img/Ouverture_du_jeu/animations/azazel_course.gif | présente : True | motif : ['Référence : index.html', 'Référence : assets/js/script.js', 'Référence : assets/js/startup.js']
 - assets/img/Ouverture_du_jeu/animations/carotte_course.gif | présente : True | motif : ['Référence : index.html', 'Référence : assets/js/startup.js']
 - assets/img/Ouverture_du_jeu/animations/Warrenfall_ouverture_8_secondes.gif | présente : True | motif : ['Référence : assets/js/startup.js']
 - assets/img/Ouverture_du_jeu/fonds_4K/05_chargement_3840x2160.jpg | présente : True | motif : ['Référence : index.html', 'Référence : assets/js/startup.js']
-- assets/img/Ouverture_du_jeu/logo/Warrenfall_logo_transparent.png | présente : True | motif : ['Référence : index.html', 'Référence : assets/js/startup.js']
+- assets/img/Ouverture_du_jeu/logo/Warrenfall_logo_transparent.png | présente : True | motif : ['Référence : index.html', 'Référence : assets/js/game-guide.js', 'Référence : assets/js/startup.js']
 - assets/img/Ouverture_du_jeu/poses/azazel_course/01.png | présente : True | motif : ['Référence : index.html']
 - assets/img/Ouverture_du_jeu/poses/carotte_course/01.png | présente : True | motif : ['Référence : index.html']
+- assets/img/Zone_Chambre/sommeil.gif | présente : True | motif : ['Référence : assets/js/script.js']
+- assets/img/Zone_Chambre/sommeil.png | présente : True | motif : ['Référence : assets/js/script.js']
+- assets/img/Zone_cuisine/faim.gif | présente : True | motif : ['Référence : assets/js/script.js']
+- assets/img/Zone_cuisine/faim.png | présente : True | motif : ['Référence : assets/js/game-guide.js', 'Référence : assets/js/script.js']
+- assets/img/Zone_jardin/entrainement.gif | présente : True | motif : ['Référence : assets/js/script.js']
+- assets/img/Zone_SdB/toilette_oreilles.gif | présente : True | motif : ['Référence : assets/js/script.js']
+- assets/img/Zone_SdB/toilette_oreilles.png | présente : True | motif : ['Référence : assets/js/script.js']
 - assets/img/accompagnateurs/Fragments/marche_droite.gif | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Fragments/assemblage_cristaux.gif | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/caissier/01_accroupie.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/caissier/02_attraper_haut.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/caissier/03_attraper_hauteur.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/caissier/04_bonjour.png | présente : False | motif : ['Référence : lapinous-shop.json']
-- assets/img/accompagnateurs/caissier/05_attente_droite.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/caissier/05_attente_droite.png | présente : False | motif : ['Référence : lapinous-shop.json', 'Référence : assets/js/game-guide.js']
 - assets/img/accompagnateurs/caissier/06_remise_produit.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/caissier/07_marche_lapine_artisane.gif | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Artisan/Cycle de marche en six poses-7.png | présente : False | motif : ['Référence : lapinous-shop.json']
-- assets/img/accompagnateurs/Artisan/Lapin forgeron brun, pose confiante-4.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Artisan/Lapin forgeron brun, pose confiante-4.png | présente : False | motif : ['Référence : lapinous-shop.json', 'Référence : assets/js/game-guide.js']
 - assets/img/accompagnateurs/Artisan/Lapin forgeron en salut respectueux-1.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Artisan/Le lapin forgeron présente son engrenage-3.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Artisan/Sprite sheet d’un lapin forgeron-9.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Fragments/Artisan lapin mystique en révérence-2.png | présente : False | motif : ['Référence : lapinous-shop.json']
-- assets/img/accompagnateurs/Fragments/Lapin mystique blanc, bras croisés-5.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Fragments/Lapin mystique blanc, bras croisés-5.png | présente : False | motif : ['Référence : lapinous-shop.json', 'Référence : assets/js/game-guide.js']
 - assets/img/accompagnateurs/Fragments/Lapin mystique offrant un cristal d’améthyste-6.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/fond/Magasin/Comptoir.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/fond/Magasin/Atelier de forge mystique au terrier-2.png | présente : False | motif : ['Référence : lapinous-shop.json']
@@ -533,7 +644,7 @@ Introuvables : 0
 - assets/img/accompagnateurs/Chef/02_attraper_haut.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Chef/03_attraper_hauteur.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Chef/04_bonjour.png | présente : False | motif : ['Référence : lapinous-shop.json']
-- assets/img/accompagnateurs/Chef/05_attente_droite.png | présente : False | motif : ['Référence : lapinous-shop.json', 'Référence : assets/js/pantry.js']
+- assets/img/accompagnateurs/Chef/05_attente_droite.png | présente : False | motif : ['Référence : lapinous-shop.json', 'Référence : assets/js/game-guide.js', 'Référence : assets/js/pantry.js']
 - assets/img/accompagnateurs/Chef/06_remise_produit.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Chef/07_marche.gif | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Chef/08_decoupe_legumes.gif | présente : False | motif : ['Référence : lapinous-shop.json']
@@ -576,15 +687,15 @@ Introuvables : 0
 - assets/img/accompagnateurs/Apothicaire/02_attraper_haut.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Apothicaire/03_attraper_hauteur.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Apothicaire/04_bonjour.png | présente : False | motif : ['Référence : lapinous-shop.json']
-- assets/img/accompagnateurs/Apothicaire/05_attente_droite.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/Apothicaire/05_attente_droite.png | présente : False | motif : ['Référence : lapinous-shop.json', 'Référence : assets/js/game-guide.js']
 - assets/img/accompagnateurs/Apothicaire/06_remise_produit.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Apothicaire/07_marche.gif | présente : False | motif : ['Référence : lapinous-shop.json']
-- assets/img/accompagnateurs/couturiere/couturiere.png | présente : False | motif : ['Référence : lapinous-shop.json']
+- assets/img/accompagnateurs/couturiere/couturiere.png | présente : False | motif : ['Référence : lapinous-shop.json', 'Référence : assets/js/game-guide.js']
 - assets/img/accompagnateurs/couturiere/couturiere_felicitation.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/couturiere/cout_les_pieces.gif | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/couturiere/deplace_tabouret.gif | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/couturiere/marche_vers.gif | présente : False | motif : ['Référence : lapinous-shop.json']
-- assets/img/az/az_assis_de_face.png | présente : False | motif : ['Référence : index.html', 'Référence : dashboard.html']
+- assets/img/az/az_assis_de_face.png | présente : False | motif : ['Référence : index.html']
 - assets/img/boss/ail_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
 - assets/img/boss/ail_face.png | présente : False | motif : ['Référence : lapinous-content.json']
 - assets/img/boss/aubergine_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
@@ -781,8 +892,8 @@ Introuvables : 0
 - assets/img/oeuf/epique.png | présente : False | motif : ['Chemin dynamique EGG_IMAGES']
 - assets/img/oeuf/legendaire.png | présente : False | motif : ['Chemin dynamique EGG_IMAGES']
 - assets/img/oeuf/mythique.png | présente : False | motif : ['Chemin dynamique EGG_IMAGES']
-- assets/img/oeuf/rare.png | présente : False | motif : ['Chemin dynamique EGG_IMAGES']
-- assets/img/page.jpg | présente : False | motif : ['Référence : assets/css/style.css']
+- assets/img/oeuf/rare.png | présente : False | motif : ['Référence : assets/js/game-guide.js', 'Chemin dynamique EGG_IMAGES']
+- assets/img/page.jpg | présente : False | motif : ['Référence : assets/js/game-guide.js', 'Référence : assets/js/startup.js', 'Référence : assets/css/game-guide.css', 'Référence : assets/css/shop-polish.css', 'Référence : assets/css/style.css']
 - assets/img/puzzle/de_base/les_aventuriers.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
 - assets/img/puzzle/de_base/les_communs.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
 - assets/img/puzzle/de_base/les_scientifiques.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
@@ -803,18 +914,14 @@ Introuvables : 0
 - assets/img/puzzle/Nouvel_An_Chinois/Wushi, le lapin tigre en fête-5.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
 - assets/img/puzzle/Paques/pacques.png | présente : False | motif : ['Référence : lapinous-puzzles.json']
 - assets/img/regle.png | présente : False | motif : ['Référence : index.html']
-- assets/img/Zone_Chambre/dodo.png | présente : False | motif : ['Référence : assets/js/script.js']
 - assets/img/Zone_Chambre/lit.png | présente : False | motif : ['Référence : assets/js/script.js']
 - assets/img/Zone_Chambre/panier.png | présente : False | motif : ['Référence : assets/js/script.js']
-- assets/img/Zone_cuisine/carotte.png | présente : False | motif : ['Référence : lapinous-shop.json', 'Référence : assets/js/script.js']
+- assets/img/Zone_cuisine/carotte.png | présente : False | motif : ['Référence : lapinous-shop.json', 'Référence : assets/js/game-guide.js', 'Référence : assets/js/script.js']
 - assets/img/Zone_cuisine/pomme.png | présente : False | motif : ['Référence : lapinous-shop.json', 'Référence : assets/js/script.js']
 - assets/img/Zone_jardin/agilite.png | présente : False | motif : ['Référence : assets/js/script.js']
 - assets/img/Zone_jardin/cliker.png | présente : False | motif : ['Référence : assets/js/script.js']
-- assets/img/Zone_jardin/entrenement.png | présente : False | motif : ['Référence : assets/js/script.js']
 - assets/img/Zone_SdB/brosse.png | présente : False | motif : ['Référence : assets/js/script.js']
-- assets/img/Zone_SdB/lapin_SdB.png | présente : False | motif : ['Référence : assets/js/script.js']
 - assets/img/Zone_SdB/pommeau.png | présente : False | motif : ['Référence : assets/js/script.js']
-- assets/img/Zone_cuisine/lapin_cuisine.png | présente : False | motif : ['Référence : assets/js/script.js']
 
 ### Images exclues
 - assets/img/accompagnateurs/caissier/exec-030757bc-ec79-452d-83d8-00b99494ec7f.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
@@ -951,11 +1058,13 @@ Introuvables : 0
 - assets/img/lapins_jouables/sans_evenements/Designer (1).png | présente : ? | motif : Aucune référence active ou dynamique identifiée
 - assets/img/lapins_jouables/sans_evenements/Designer.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
 - assets/img/lapins_jouables/sans_evenements/fleur.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
-- assets/img/lapin_soin.gif | présente : ? | motif : Aucune référence active ou dynamique identifiée
 - assets/img/magasin/aliments/Cinq bouquets floraux fantastiques colorés.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
 - assets/img/magasin/aliments/Planche botanique d’herbes et fleurs remarquables (1).png | présente : ? | motif : Aucune référence active ou dynamique identifiée
 - assets/img/magasin/aliments/Planche d’icônes culinaires fleuries et colorées.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
 - assets/img/magasin/aliments/Planche d’icônes gourmandes et fleuries.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/Ouverture_du_jeu/erreur/Azazel devant la porte interdite-2.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/Ouverture_du_jeu/erreur/Azazel et le signal interrompu-3.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/Ouverture_du_jeu/erreur/Le chemin perdu d’Azazel-1.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
 - assets/img/Ouverture_du_jeu/fonds_4K/01_apparition_3840x2160.jpg | présente : ? | motif : Aucune référence active ou dynamique identifiée
 - assets/img/Ouverture_du_jeu/fonds_4K/02_illumination_3840x2160.jpg | présente : ? | motif : Aucune référence active ou dynamique identifiée
 - assets/img/Ouverture_du_jeu/fonds_4K/03_ouverture_terrier_3840x2160.jpg | présente : ? | motif : Aucune référence active ou dynamique identifiée
@@ -981,6 +1090,7 @@ Introuvables : 0
 - assets/img/Ouverture_du_jeu/sources_animation/carotte_course_planche.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
 - assets/img/Zone_Chambre/dodo.gif | présente : ? | motif : Aucune référence active ou dynamique identifiée
 - assets/img/Zone_cuisine/lapin_cuisine.gif | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/Zone_jardin/entrainement.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
 - assets/img/Zone_jardin/entrenement.gif | présente : ? | motif : Aucune référence active ou dynamique identifiée
 - assets/img/Zone_SdB/lapin_SdB.gif | présente : ? | motif : Aucune référence active ou dynamique identifiée
 
@@ -1003,12 +1113,12 @@ Introuvables : 0
 📦 **Corbeille Cloudinary — suivi quotidien J-X**
 Images en attente : **6**
 Quarantaine logique : URL et public_id inchangés.
-• **caissier_merci.png** — **J-3** — échéance : 20/10/2026 15:17
-• **caissier_presentation.png** — **J-3** — échéance : 20/10/2026 15:17
-• **Pomme_surprise_au_foin.png** — **J-3** — échéance : 20/10/2026 15:17
-• **Comptoir vide dans un terrier chaleureux-4.png** — **J-3** — échéance : 20/10/2026 15:17
-• **Cycle de marche à droite-8.png** — **J-3** — échéance : 20/10/2026 15:17
-• **Lapin assemblant des cristaux violets-10.png** — **J-3** — échéance : 20/10/2026 15:17
+• **caissier_merci.png** — **J-1** — échéance : 20/10/2026 15:17
+• **caissier_presentation.png** — **J-1** — échéance : 20/10/2026 15:17
+• **Pomme_surprise_au_foin.png** — **J-1** — échéance : 20/10/2026 15:17
+• **Comptoir vide dans un terrier chaleureux-4.png** — **J-1** — échéance : 20/10/2026 15:17
+• **Cycle de marche à droite-8.png** — **J-1** — échéance : 20/10/2026 15:17
+• **Lapin assemblant des cristaux violets-10.png** — **J-1** — échéance : 20/10/2026 15:17
 Images bloquées : **1** ; erreurs : **0**.
 🔒 chef.svg : Version exacte absente de la sauvegarde permanente
 J-0 ne signifie pas supprimée : la suppression doit être autorisée et confirmée.
@@ -1020,9 +1130,8 @@ J-0 ne signifie pas supprimée : la suppression doit être autorisée et confirm
 - erreurs : configure
 
 ## Erreurs
-Erreur réseau SSLError (détails masqués)
-RuntimeError : Synchronisation echouee (code 1).
-La synchronisation de cette execution a echoue : code 1
+Cloudinary/chaîne : RuntimeError : Synchronisation echouee (code 1).
+Cloudinary : la synchronisation de cette execution a echoue : code 1
 <!-- LAPINOUS_AGENT_FIN -->
 
 ## Audit Trello et agent - 15 octobre 2026
@@ -1138,3 +1247,30 @@ Suivi du 16 octobre : tableau [Warrenfall](https://trello.com/b/5VmsAFi7/warrenf
 - [x] Œufs regroupés dans leur fenêtre dédiée sur PC et téléphone, ouverte depuis la navigation ; le panneau ne flotte plus au-dessus du décor et ne cache plus le lapin principal. [trello:6ac39d846f4f8d11b7da6ab0:code:eggs-dialog-106]
 
 - [x] Ouverture corrigée : GIF avant le fond et la barre de chargement, aucun écran de chargement visible avant l’introduction ; petites récompenses des mini-jeux renouvelées à chaque partie réussie. [trello:6ac39db49bd7456ac00b5038:code:opening-order-107]
+
+
+## Suivi et pistes futures — 19 octobre 2026
+
+- [x] README : technologies réellement utilisées, rôle et justification de chaque choix.
+- [x] Rattrapage réactivé sur la seule tâche « Lapinous - Images Cloudinary 20h » : StartWhenAvailable=True ; définition identique hors ce réglage, tâche active, IgnoreNew conservé, prochaine échéance vérifiée le 19 octobre à 20 h. Aucun lancement réel. Verrou de chaîne et bilan après synchronisation conservés.
+- [ ] Idée à sélectionner : **Carnet de recettes et provenance des ingrédients**. Illustrer les ingrédients découverts, leur provenance Marché/butin et les stocks communs ; distinguer remèdes et Cuisine. Recettes visibles seulement après réactivation de leur système. [Trello](https://trello.com/c/5ylq7dy5) [trello:6ad614b6c2174ac0a58bd80f:manuel:idea-recipe-book]
+- [ ] Idée à sélectionner : **Bilan illustré après chaque mini-jeu**. Afficher amitié, carottes, record et progression avec Rejouer/Niveau suivant ; ne jamais réattribuer une récompense en rouvrant le bilan. [Trello](https://trello.com/c/qIuP9Rh6) [trello:6ad614b7842b0f94ee39e8d5:manuel:idea-minigame-summary]
+
+Ces deux idées sont enregistrées dans « Idées à sélectionner » après lecture des cartes existantes ; elles ne sont pas développées ni validées. Aucun déplacement des cartes existantes.
+
+- [x] Carnet 108 : panneaux colorés et texture jaune retirés, pages crème et reliure ; Cinzel Decorative pour les titres, EB Garamond pour le texte, polices locales sous licence OFL et en cache PWA. Police approchante du logo, source exacte du lettrage non fournie. À valider visuellement sur téléphone.
+
+- [x] Carnet 109 : fond restauré avec l’image de page fournie ; texte et illustrations directement sur le papier, sans panneaux colorés superposés.
+
+- [x] Carnet 110 : 14 étapes illustrées, amitié via mini-jeux et victoires, besoins distincts de l’amitié, progression individuelle/évolutions communes, présentation PV/puissance/pouvoir des boss et premier combat. Couverture animée à l’ouverture, désactivée si mouvement réduit ; recettes décrites comme suspendues. Validation humaine du confort de lecture restante.
+
+- [x] Carnet 111 « Les petits secrets du terrier » : 8 pages au lieu de 14, phrases naturelles, conseils sans répétition, contraste renforcé. Références des nouvelles icônes actualisées pour les caches d’installation. Rapport Cloudinary : listes des images ajoutées/modifiées, quarantaine et jours restants conservés.
+
+- [x] Cloudinary réel 19 octobre : 12 nouveaux fichiers envoyés sur les passes successives ; 326 URL vérifiées. GIF original 42,2 Mo conservé, version web de 7,8 Mo / 8 s / 15 images/s raccordée. Quatre anciens visuels de pièces placés en quarantaine J-7 ; six entrées précédentes à J-1. Aucune suppression définitive. Ancien chef.svg bloqué : version exacte absente de la sauvegarde permanente, intervention manuelle nécessaire. Rapport détaillé ajouté/modifié/quarantaine testé.
+
+- [x] Diagnostic 19/10 à 20 h 11 : GIF valide de 42 157 845 octets refusé par limite Cloudinary de 10 485 760 ; contrôle local ajouté, reprises et notifications testées sans réseau. Voir docs/DIAGNOSTIC_CLOUDINARY_2026-10-19.md.
+- [x] Suppression définitive suspendue explicitement via tools/cloudinary-deletion-policy.json ; six sauvegardes exactes vérifiées, échéance du 20/10 à 15 h 17 conservée ; aucune autorisation de suppression et aucune image supprimée.
+
+- [ ] Livraison pleine qualité de l’ouverture : essai WebP sans perte conforme aux 96 images/8 s/pixels mais 54,5 Mo, supérieur aux 10 Mo Cloudinary. Copie non intégrée, original inchangé ; choisir un hébergement adapté ou qualifier un format vidéo sans perte avant tout transfert.
+
+- [x] Nouvelle consigne du 19/10 : gel levé, suppression Cloudinary automatique après sept jours réactivée dans la chaîne réelle. Sauvegarde exacte, absence de référence, identité distante et succès de synchronisation obligatoires ; simulation sans suppression. Aucune suppression exécutée pendant ce changement.

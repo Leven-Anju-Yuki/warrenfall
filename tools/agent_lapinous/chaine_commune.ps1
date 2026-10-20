@@ -14,7 +14,7 @@ function Invoke-LapinousSteps {
         try {
             try { & $Journal 'BILAN debut' } catch { $state.errors += 'Journal indisponible au debut du bilan.' }
             $state.bilanExit = [int](& $Execute 'bilan' $state)
-            if ($state.bilanExit -ne 0) { $state.errors += "Bilan ou notification en echec (code $($state.bilanExit))." }
+            if ($state.bilanExit -ne 0) { $state.errors += "Bilan termine avec erreurs (code $($state.bilanExit)) ; consulter les etapes et confirmations Discord." }
         } catch { $state.bilanExit=1; $state.errors += "Bilan interrompu : $($_.Exception.Message)" }
         try { & $Journal "BILAN fin : code $($state.bilanExit)" } catch { $state.errors += 'Journal indisponible apres bilan.' }
     }
@@ -33,7 +33,7 @@ function Start-LapinousChain {
         if ($trelloMode.actif -isnot [bool]) { throw 'Configuration Trello invalide : actif doit etre un booleen.' }
         if ($AppliquerChaine -and $trelloMode.actif) { $env:LAPINOUS_TRELLO_READ_ONLY='false' }
     }
-    $env:LAPINOUS_CLOUDINARY_DELETE_DISABLED='true'
+    $env:LAPINOUS_CLOUDINARY_DELETE_DISABLED=if ($AppliquerChaine) {'false'} else {'true'}
     [Console]::OutputEncoding=[Text.UTF8Encoding]::new($false)
     Set-Location -LiteralPath $ProjectRoot
     $agent=Join-Path $ProjectRoot 'tools\agent_lapinous\agent.py'

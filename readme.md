@@ -615,9 +615,9 @@ Mise à jour cuisine : réserve ouverte uniquement au clic sur le frigo ; March�
 
 | Dossier | Fichiers | Taille |
 |---|---:|---:|
-| `assets/` | 279 | 319.84 Mo |
+| `assets/` | 285 | 320.55 Mo |
 | `docs/` | 15 | 0.17 Mo |
-| `tools/` | 53 | 0.27 Mo |
+| `tools/` | 64 | 0.29 Mo |
 
 _Inventaire local uniquement : les images déjà archivées ne sont pas considérées manquantes._
 <!-- LAPINOUS_AGENT_FIN -->
@@ -644,3 +644,38 @@ Le serveur `tools/serve-game.py` renvoie les illustrations Warrenfall avec les v
 - Ingrédients et repas : réserve de Cuisine. Soins : tiroirs de l’apothicaire. Les deux stocks sont communs à la partie.
 - Le GIF d’introduction est joué une fois dans une nouvelle session d’onglet ; un rechargement affiche directement le fond de chargement. Les ressources nécessaires à l’accueil, aux soins, au magasin et aux animations des accompagnateurs sont préparées avant l’entrée. Une ressource requise indisponible maintient l’écran de chargement avec un bouton Réessayer ; les décors alternatifs inutilisés ne sont pas tous téléchargés.
 - Les sons d’événement suspendent temporairement l’ambiance. Le tutoriel utilise le parchemin du jeu et présente le mage des fragments.
+
+
+## Technologies utilisées et raisons de ces choix
+
+| Technologie | Rôle dans Warrenfall | Pourquoi ce choix |
+| --- | --- | --- |
+| HTML5 et CSS3 (Grid, Flexbox, media queries) | Écrans, décors, modales et adaptations aux dimensions | Garder un jeu accessible dans un navigateur et adapter les commandes au téléphone comme au PC. |
+| JavaScript natif | Règles, mini-jeux, économie, animations et Dashboard | Partager directement les données et fonctions du jeu, sans chaîne de compilation obligatoire. |
+| Bootstrap local | Structure des dialogues et composants d’interface | Réutiliser les composants existants sans dépendre de leur CDN au lancement. |
+| JSON | Catalogues, niveaux, réglages, manifeste des images et exports de sauvegarde | Séparer contenu et logique ; rendre les données éditables et exportables. |
+| localStorage, IndexedDB et File System Access API selon disponibilité | Conservation locale et accès aux sauvegardes | Reprendre la partie et mémoriser les accès autorisés ; prévoir export/import lorsque le navigateur ne permet pas l’accès aux dossiers. |
+| PWA : manifeste, Service Worker et Cache API | Installation et cache des ressources | Ouvrir le jeu comme une application et réutiliser les ressources mises en cache ; cela ne garantit pas que tout le catalogue soit disponible hors connexion. |
+| GIF, PNG/JPEG et API audio du navigateur | Décors, personnages animés, effets et ambiances | Employer les créations visuelles et sonores du projet, avec préchargement et gestion de la superposition. |
+| Node.js et scripts `.mjs` | Préparation des médias, synchronisation et tests | Automatiser les outils du projet en JavaScript, séparément du jeu exécuté dans le navigateur. |
+| Cloudinary | Hébergement et distribution des images | Centraliser les médias distants et leurs versions ; sauvegarde locale permanente et quarantaine logique de sept jours conservées. |
+| Python (`requests`, `python-dotenv`) | Agent de bilan, suivi Git/Trello, rapports Discord et surveillance batterie | Regrouper les contrôles, diagnostics réseau et rapports ; isoler les secrets dans l’environnement. |
+| PowerShell et Planificateur Windows | Chaîne quotidienne et démarrage des scripts | Réutiliser les tâches existantes, leurs journaux et protections contre les exécutions simultanées. |
+| Git, API Trello et webhooks Discord | Historique, suivi des cartes et notifications | Relier le suivi aux modifications prouvées et transmettre les résultats sans publier automatiquement le code. |
+| Tests Node/Python/PowerShell et Chrome headless | Tests de règles, simulations et contrôles de rendu | Vérifier les régressions avec des doublures des services distants, sans synchronisation réelle. |
+
+### Rattrapage Windows réactivé — 19 octobre 2026
+
+La tâche existante « Lapinous - Images Cloudinary 20h » conserve son déclenchement quotidien à 20 h Europe/Paris. `StartWhenAvailable=True` permet de rattraper une exécution manquée dès que Windows le permet, y compris le lendemain. Ce réglage ne garantit ni le réveil de la veille S0 ni l’exécution capot fermé ; les autres conditions Windows restent applicables.
+
+La seule modification de la définition Windows est ce booléen, vérifiée par comparaison XML. La tâche reste active, `MultipleInstances=IgnoreNew` est conservé et la chaîne garde son verrou exclusif `chaine.lock`. Cloudinary reste suivi immédiatement du bilan global, de Trello et de Discord, même en cas d’échec. Aucune synchronisation n’a été lancée pour ce contrôle. Quarantaine, sauvegardes, actions et autres tâches inchangées. Attention : l’ancien installateur fixe encore le rattrapage à faux ; ne pas le réappliquer pour ce seul réglage.
+
+Typographie : Cinzel Decorative (titres fantasy proches du lettrage du logo) et EB Garamond (texte de livre), fichiers locaux dans `assets/fonts/`, licences SIL OFL conservées. Le tutoriel utilise l’image de page fournie comme fond, sans panneaux colorés superposés.
+
+« Les petits secrets du terrier » accompagne la découverte en 8 courtes étapes illustrées : soins, sources d’amitié, niveaux, carottes, boss et préparation de combat, puis rôles des accompagnateurs. Une couverture se déplie à l’ouverture (sans animation si mouvement réduit). Les soins restaurent les besoins ; l’amitié est gagnée en jouant et lors des victoires.
+
+Le GIF d’ouverture utilise une copie web de 7,8 Mo (640 × 360, 15 images/s, 8 secondes) compatible avec la limite de transfert Cloudinary de 10 Mo constatée ; original intact. Le bilan distingue les nouvelles images, les versions modifiées, les échecs et la quarantaine avec jours restants. Un transfert partiellement refusé conserve les autres réussites mais interdit activation et quarantaine jusqu’à une synchronisation complète.
+
+Sécurité du 19 octobre : les suppressions Cloudinary sont explicitement suspendues par `tools/cloudinary-deletion-policy.json`, y compris si le fichier est absent ou illisible. Les échéances de quarantaine ne valent pas autorisation de suppression. Voir `docs/DIAGNOSTIC_CLOUDINARY_2026-10-19.md` pour la limite de taille de l’ouverture et les tests de qualité sans transfert.
+
+Consigne actuelle confirmée le 19 octobre : suppression Cloudinary automatique réactivée après sept jours de quarantaine, sans nouvelle confirmation par image. Elle reste conditionnée à une synchronisation réussie, une sauvegarde exacte et tous les contrôles techniques ; les simulations restent sans suppression. Cette autorisation remplace le gel demandé plus tôt le même jour.

@@ -1,6 +1,6 @@
 /* Les caches sont propres à ce projet, y compris sur un domaine GitHub Pages partagé. */
 const PREFIX = 'lapinous-' + new URL(self.registration.scope).pathname + '-';
-const SHELL = PREFIX + 'shell-v5', IMAGES = PREFIX + 'images-v1';
+const SHELL = PREFIX + 'shell-v7', IMAGES = PREFIX + 'images-v1';
 const HOME = new URL('index.html', self.registration.scope).href;
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
@@ -11,7 +11,7 @@ self.addEventListener('install', event => {
     const assets = [...html.matchAll(/(?:src|href)=["']([^"']+\.(?:js|css)(?:\?[^"']*)?)["']/g)]
       .map(match => new URL(match[1], HOME).href).filter(url => new URL(url).origin === self.location.origin);
     await cache.put(HOME, response);
-    await cache.addAll([...new Set([...assets, '403.html', '404.html', 'offline.html', 'assets/icons/error-403.png', 'assets/icons/error-404.png', 'assets/icons/error-offline.png', 'assets/icons/warrenfall-48.png', 'assets/icons/warrenfall-192.png', 'assets/icons/warrenfall-512.png', 'manifest.json', 'lapinous-content.json', 'lapinous-shop.json', 'lapinous-puzzles.json', 'lapinous-quiz.json'].map(url => new URL(url, HOME).href))]);
+    await cache.addAll([...new Set([...assets, '403.html', '404.html', 'offline.html', 'assets/icons/error-403.png', 'assets/icons/error-404.png', 'assets/icons/error-offline.png', 'assets/icons/warrenfall-48.png', 'assets/icons/warrenfall-192.png', 'assets/icons/warrenfall-512.png', 'assets/fonts/CinzelDecorative-Bold.ttf', 'assets/fonts/EBGaramond.ttf', 'manifest.json', 'lapinous-content.json', 'lapinous-shop.json', 'lapinous-puzzles.json', 'lapinous-quiz.json'].map(url => new URL(url, HOME).href))]);
   })());
 });
 self.addEventListener('activate', event => event.waitUntil((async () => {
@@ -25,7 +25,7 @@ self.addEventListener('fetch', event => {
   const image = event.request.destination === 'image' && (url.hostname === 'res.cloudinary.com' || (url.origin === self.location.origin && (url.pathname.startsWith(new URL('assets/img/Ouverture_du_jeu/', self.registration.scope).pathname) || /^Zone_(?:cuisine|Chambre|SdB|jardin)\//.test(url.pathname.slice(new URL('assets/img/', self.registration.scope).pathname.length)))));
   const local = url.origin === self.location.origin && url.href.startsWith(self.registration.scope);
   const relative = url.pathname.slice(new URL(self.registration.scope).pathname.length);
-  const allowed = local && (relative === '' || relative === 'index.html' || /^assets\/(?:js|css|icons)\//.test(relative) || /^lapinous-(?:content|shop|puzzles|quiz)\.json$/.test(relative));
+  const allowed = local && (relative === '' || relative === 'index.html' || /^assets\/(?:js|css|icons|fonts)\//.test(relative) || /^lapinous-(?:content|shop|puzzles|quiz)\.json$/.test(relative));
   const navigation = local && event.request.mode === 'navigate' && relative !== 'dashboard.html' && !relative.startsWith('assets/') && !relative.startsWith('.') && !relative.includes('Sauvegardes');
   if (!allowed && !image && !navigation) return;
   event.respondWith((async () => {

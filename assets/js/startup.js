@@ -7,7 +7,7 @@
     const status = document.getElementById('startupStatus');
     window.LapinousStartupError=()=>{screen.classList.remove('startup-opening');screen.hidden=false;status.textContent='Le jeu n’a pas pu terminer son chargement. Vérifie la connexion puis réessaie.';const retry=document.createElement('button');retry.type='button';retry.textContent='Recharger le jeu';retry.onclick=()=>location.reload();status.after(retry);};
     const intro = document.getElementById('startupIntro');
-    const introSource = './assets/img/Ouverture_du_jeu/animations/Warrenfall_ouverture_8_secondes.gif';
+    const introSource = './assets/img/Ouverture_du_jeu/animations/Warrenfall_ouverture_web.gif';
     let introSeen=false;try{introSeen=sessionStorage.getItem('warrenfall_intro_seen')==='1';}catch{}
     const isReload=performance.getEntriesByType('navigation')[0]?.type==='reload';
     const reducedMotion = introSeen || isReload || window.matchMedia?.('(prefers-reduced-motion: reduce)').matches || false;

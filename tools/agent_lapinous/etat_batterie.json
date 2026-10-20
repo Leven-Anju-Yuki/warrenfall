@@ -1,6 +1,9 @@
 {
-  "sent": [],
-  "last_check": "2026-10-19T14:46:36.515912+02:00",
-  "last_percent": 84,
-  "plugged": true
+  "sent": [
+    25,
+    30
+  ],
+  "last_check": "2026-10-19T23:01:25.343765+02:00",
+  "last_percent": 25,
+  "plugged": false
 }
