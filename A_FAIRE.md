@@ -1274,3 +1274,5 @@ Ces deux idées sont enregistrées dans « Idées à sélectionner » après lec
 - [ ] Livraison pleine qualité de l’ouverture : essai WebP sans perte conforme aux 96 images/8 s/pixels mais 54,5 Mo, supérieur aux 10 Mo Cloudinary. Copie non intégrée, original inchangé ; choisir un hébergement adapté ou qualifier un format vidéo sans perte avant tout transfert.
 
 - [x] Nouvelle consigne du 19/10 : gel levé, suppression Cloudinary automatique après sept jours réactivée dans la chaîne réelle. Sauvegarde exacte, absence de référence, identité distante et succès de synchronisation obligatoires ; simulation sans suppression. Aucune suppression exécutée pendant ce changement.
+
+- [x] Téléphone 112 : une ancienne confirmation d’installation ne masque plus définitivement l’accès dans le navigateur ; bouton Application si installation mémorisée, Installer sinon, masqué dans l’application autonome. Aide avec aperçu de la nouvelle icône Warrenfall et précaution de sauvegarde.

@@ -32,7 +32,7 @@
   orient();
   const help = document.createElement('dialog');
   help.className = 'install-help';
-  help.innerHTML = '<h2>Installer Warrenfall</h2><p>Sur Android, ouvre le jeu dans Chrome puis choisis « Installer l’application » ou « Ajouter à l’écran d’accueil » dans le menu ⋮.</p><p>Sur iPhone ou iPad : Safari → Partager → Sur l’écran d’accueil.</p><p>Après une première visite, les écrans et images déjà chargés restent disponibles hors connexion. Les images encore jamais ouvertes demandent Internet.</p><button type="button">Fermer</button>';
+  help.innerHTML = '<h2>Warrenfall sur ton téléphone</h2><img src="./assets/icons/warrenfall-192.png?v=logo-111" width="88" height="88" alt="Nouvelle icône Warrenfall"><p>Voici l’icône actuelle du jeu. Si ton ancien raccourci montre encore Azazel sur fond blanc, vérifie d’abord que ta partie est sauvegardée et exportée. Chrome ou Android peut conserver une ancienne icône après une mise à jour ; ne supprime pas les données du jeu.</p><p>Sur Android, ouvre le jeu dans Chrome puis choisis « Installer l’application » ou « Ajouter à l’écran d’accueil » dans le menu ⋮.</p><p>Sur iPhone ou iPad : Safari → Partager → Sur l’écran d’accueil.</p><p>Après une première visite, les écrans et images déjà chargés restent disponibles hors connexion. Les images encore jamais ouvertes demandent Internet.</p><button type="button">Fermer</button>';
   document.body.append(help);
   help.querySelector('button').onclick = () => help.close();
   const button = document.createElement('button');
@@ -52,15 +52,18 @@
   navButton.innerHTML = '<span class="tab-emoji">📲</span><span>Installer</span>';
   document.getElementById('mainNav')?.append(navButton);
   let installationConfirmed = false;
-  try { installationConfirmed = localStorage.getItem('lapinous_installed') === 'true'; } catch {}
+  // Une ancienne confirmation ne prouve pas que l’application est encore installée.
+  let installationRemembered = false;
+  try { installationRemembered = localStorage.getItem('lapinous_installed') === 'true'; } catch {}
   function visibility() {
     const installed = installationConfirmed || matchMedia('(display-mode:standalone)').matches || navigator.standalone;
     if (installed) { installationConfirmed = true; try { localStorage.setItem('lapinous_installed','true'); } catch {} }
     [button, savedButton, gameButton].forEach(item => { item.hidden = !!installed; });
     navButton.hidden = !!installed;
     navButton.disabled = !!installed;
-    navButton.setAttribute('aria-label', installed ? 'Warrenfall est déjà installé' : 'Installer Warrenfall');
-    navButton.lastElementChild.textContent = installed ? 'Installé' : 'Installer';
+    navButton.setAttribute('aria-label', installed ? 'Warrenfall est déjà installé' : installationRemembered ? 'Installation et icône de Warrenfall' : 'Installer Warrenfall');
+    navButton.lastElementChild.textContent = installed ? 'Installé' : installationRemembered ? 'Application' : 'Installer';
+    savedButton.textContent = installationRemembered ? 'Application et icône' : 'Installer le jeu';
   }
   async function install() {
     if (installPrompt) {
@@ -69,8 +72,8 @@
     } else help.showModal();
   }
   [button, savedButton, gameButton, navButton].forEach(item => item.addEventListener('click', install));
-  addEventListener('beforeinstallprompt', event => { event.preventDefault(); installPrompt = event; installationConfirmed = false; try { localStorage.removeItem('lapinous_installed'); } catch {} visibility(); });
-  addEventListener('appinstalled', () => { installationConfirmed = true; visibility(); if (help.open) help.close(); });
+  addEventListener('beforeinstallprompt', event => { event.preventDefault(); installPrompt = event; installationConfirmed = false; installationRemembered = false; try { localStorage.removeItem('lapinous_installed'); } catch {} visibility(); });
+  addEventListener('appinstalled', () => { installationConfirmed = true; installationRemembered = true; visibility(); if (help.open) help.close(); });
   matchMedia('(display-mode:standalone)').addEventListener?.('change', visibility);
   visibility();
   addEventListener('resize', visibility);

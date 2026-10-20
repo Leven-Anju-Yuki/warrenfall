@@ -82,12 +82,12 @@ if(polishAudit&&!process.argv.includes('--onboarding')){
  await send('Page.reload');
  let installed;
  for(let attempt=0;attempt<60;attempt++){
-  installed=await send('Runtime.evaluate',{expression:"document.getElementById('installInNav')?.hidden===true&&localStorage.getItem('lapinous_installed')==='true'",returnByValue:true});
+  installed=await send('Runtime.evaluate',{expression:"document.getElementById('installInNav')?.lastElementChild.textContent==='Application'&&localStorage.getItem('lapinous_installed')==='true'",returnByValue:true});
   if(installed.result?.result?.value)break;
   await new Promise(r=>setTimeout(r,200));
  }
- if(!installed.result?.result?.value)throw Error('Installation proposee apres rechargement');
- console.log('Installation masquee apres confirmation et rechargement.');
+ if(!installed.result?.result?.value)throw Error('Acces Application absent apres rechargement');
+ console.log('Acces Application disponible dans le navigateur apres rechargement.');
 }
 if(!desktop&&!process.argv.includes("--ui-only")){
 await send('Emulation.setDeviceMetricsOverride',{width:390,height:844,deviceScaleFactor:1,mobile:true});await new Promise(r=>setTimeout(r,200));
