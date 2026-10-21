@@ -1012,6 +1012,24 @@ document.addEventListener("DOMContentLoaded", () => {
             paques: "🐣 Pâques",
             nouvel_an_chinois: "🏮 Nouvel An chinois",
         };
+        const reminderMemory = new Map();
+        const reminderStorage = {
+            getItem(key) { try { return reminderMemory.get(key) || localStorage.getItem(key); } catch { return reminderMemory.get(key); } },
+            setItem(key,value) { reminderMemory.set(key,value); try { localStorage.setItem(key,value); } catch {} }
+        };
+        function checkEventReminders() {
+            if (adminTesting || document.hidden || !body.classList.contains("game-running") || !document.getElementById("startupScreen")?.hidden || body.classList.contains("battle-scene") || document.querySelector(".modal.show,dialog[open]")) return;
+            const events = window.LapinousEventReminders.upcoming(new Date(),loadEventWindows(),getEasterDate,getChineseNewYearDate);
+            window.LapinousEventReminders.deliver(events,reminderStorage,event=>{
+                if(!toastContainer)return false;
+                const date=event.start.toLocaleDateString("fr-FR",{day:"numeric",month:"long"});
+                showToast(EVENT_LABELS[event.event]+" arrive dans "+event.days+" jour"+(event.days>1?"s":"")+" ! Début le "+date+" : des lapins de saison t'attendent dans les œufs.","info",12000);
+                return true;
+            });
+        }
+        window.addEventListener("lapinous:startup-complete",checkEventReminders);
+        document.addEventListener("visibilitychange",checkEventReminders);
+        setInterval(checkEventReminders,60000);
         function eventLabelFor(s) {
             const required = Array.isArray(s.event)
                 ? s.event
@@ -1212,7 +1230,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <p><strong>Aime :</strong> ${(s.likes || []).join(", ") || "—"}</p>
                     <p><strong>N'aime pas :</strong> ${(s.dislikes || []).join(", ") || "—"}</p>
                     <p><strong>Ultime (coup critique) :</strong> ${s.power}</p>
-                    ${encyclopediaProgressHtml(key)}
+                    <p><strong>Amis :</strong> ${(s.friends || []).map(k=>getSpecies()[k]?.name).filter(Boolean).join(", ") || "Aucun connu"}</p><p><strong>Rivalités :</strong> ${(s.rivals || []).map(k=>getSpecies()[k]?.name).filter(Boolean).join(", ") || "Aucune connue"}</p>${encyclopediaProgressHtml(key)}
                     <button class="action-btn" onclick="switchActiveSpecies('${key}'); bootstrap.Modal.getOrCreateInstance(document.querySelector('#encyclopediaModal')).hide();">🐰 Choisir ce lapin</button>
                     <p class="entry-quote">« ${s.quote} »</p>
                 </div>
@@ -1257,7 +1275,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const species = getSpecies();
             const discovered = localStorage.getItem("lapinous_az_discovered") === "1";
             grid.innerHTML = "";
-            Object.entries(species).forEach(([key, s]) => {
+            window.LapinousTeamRules.eventFirst(Object.entries(species), currentActiveEvents()).forEach(([key, s]) => {
                 if (s.hidden && !discovered && key !== game.species) return;
                 const owned = (game.ownedSpecies || []).includes(key);
                 const card = document.createElement("button");
@@ -1267,8 +1285,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 const imgSrc =
                     realImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg";
                 const eventBadge =
-                    s.event && !isSpeciesAvailableNow(s)
-                        ? `<span class="event-badge">${eventLabelFor(s).split(" ")[0]}</span>`
+                    s.event
+                        ? `<span class="event-badge">${window.LapinousTeamRules.eventActive(s,currentActiveEvents()) ? "En ce moment" : eventLabelFor(s).split(" ")[0]}</span>`
                         : "";
                 card.innerHTML = `<img class="${owned ? "" : realImg ? "rabbit-silhouette" : ""}" src="${imgSrc}" alt="${owned ? s.name : "???"}" onerror="this.onerror=null;this.classList.remove('rabbit-silhouette');this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';"><span class="card-name">${owned ? s.name : "???"}</span>${owned ? '<span class="owned-badge">✓</span>' : ""}${eventBadge}`;
                 card.addEventListener("click", () => {
@@ -1570,7 +1588,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // ne fait que choisir lequel te représente (et son trait bonus/malus).
         let collectionCarouselIndex = 0;
         function collectionSwitcherHtml() {
-            const owned = (game.ownedSpecies || []).filter((k) => getSpecies()[k]);
+            const owned = window.LapinousTeamRules.eventFirst((game.ownedSpecies || []).filter(k=>getSpecies()[k]).map(k=>[k,getSpecies()[k]]),currentActiveEvents()).map(x=>x[0]);
             if (owned.length <= 1) return "";
             const activeIndex = Math.max(0, owned.indexOf(game.species));
             if (collectionCarouselIndex >= owned.length || collectionCarouselIndex < 0)
@@ -1585,7 +1603,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return `<div class="collection-switcher collection-carousel"><p class="upgrade-locked-note">Tes lapins (${collectionCarouselIndex + 1}/${owned.length}) :</p><div class="collection-carousel-main"><button class="collection-arrow" onclick="moveCollectionCarousel(-1)">‹</button><button class="collection-card carousel-big ${key === game.species ? "active" : ""}" onclick="switchActiveSpecies('${key}')"><img src="${img}" alt="${name}" onerror="this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg'"><span>${name}${key === game.species ? " · actif" : ""}</span></button><button class="collection-arrow" onclick="moveCollectionCarousel(1)">›</button></div></div>`;
         }
         window.moveCollectionCarousel = function (dir) {
-            const owned = (game.ownedSpecies || []).filter((k) => getSpecies()[k]);
+            const owned = window.LapinousTeamRules.eventFirst((game.ownedSpecies || []).filter(k=>getSpecies()[k]).map(k=>[k,getSpecies()[k]]),currentActiveEvents()).map(x=>x[0]);
             if (!owned.length) return;
             collectionCarouselIndex = (collectionCarouselIndex + dir + owned.length) % owned.length;
             refreshCurrentZone();
@@ -3132,11 +3150,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             body.classList.add("battle-scene");
-            const bosses = getBosses();
+            const bosses = getOpponents();
             const owned = game.ownedSpecies || [game.species];
             const comparisonTeam = selectedFightTeam.filter((key) => owned.includes(key));
             const teamKeys = comparisonTeam.length ? comparisonTeam : owned.slice(0, 3);
-            const power = teamKeys.reduce((total, key) => total + rabbitCombatStats(key).power, 0);
+            const power = teamKeys.reduce((total, key) => total + rabbitCombatStats(key, teamKeys).power, 0);
             const rows = Object.entries(bosses)
                 .sort((a, b) => a[1].difficulty - b[1].difficulty)
                 .map(([key, b]) => {
@@ -3150,7 +3168,7 @@ document.addEventListener("DOMContentLoaded", () => {
                               : "🙂 Faisable";
                     return `<button class="boss-card" onclick="prepareFight('${key}')">
                     <img src="${b.faceImg || b.coteImg}" alt="${b.name}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';">
-                    <div class="boss-name">${b.name}</div>
+                    <div class="boss-name">${b.name}</div><small>${b.kind === "vegetable" ? "Petit adversaire : +3 amitié, "+b.rewardCarrots+" carottes, sans butin" : "Boss : défi plus corsé"}</small>
                     <div class="boss-power">⚔️ Puissance ${stats.power}</div>
                     <div class="boss-power">❤️ ${stats.maxHp} PV</div>
                     <div class="boss-diff">${label}</div>
@@ -3175,7 +3193,7 @@ document.addEventListener("DOMContentLoaded", () => {
         // Le boss est marqué comme "découvert" dès qu'on le rencontre (visible ensuite
         // dans l'encyclopédie), pas seulement en cas de victoire.
         window.prepareFight = function (key) {
-            const boss = getBosses()[key];
+            const boss = getOpponents()[key];
             const s = getSpecies()[game.species];
             if (!boss) return;
 
@@ -3279,7 +3297,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         window.fightBoss = async function (key) {
-            const boss = getBosses()[key];
+            const boss = getOpponents()[key];
             const s = getSpecies()[game.species];
             if (!boss) return;
             const fightButton = gameArea.querySelector(".fight-actions .action-btn");
@@ -3384,11 +3402,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 bossHp > 0 || playerHp <= Math.max(10, Math.round(playerMaxHp * 0.1));
 
             if (bossHp <= 0) {
-                const reward = window.LapinousEconomy.combatReward(boss.difficulty);
+                const rewards = window.LapinousTeamRules.victory(boss);
+                const reward = rewards.carrots;
                 game.carrots += reward;
-                awardBattleLoot();
+                if (rewards.loot) awardBattleLoot();
                 ensureNewSystems();
-                recordAchievement("bossesDefeated");
+                if (rewards.bossAchievement) recordAchievement("bossesDefeated");
                 playSfx("victory");
                 gainFriendship(3);
                 if (log) log.textContent = `🏆 Victoire ! +${reward} 🥕 et +3 💛`;
@@ -3492,7 +3511,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 ] || 1
             );
         }
-        function rabbitCombatStats(key) {
+        function rabbitCombatStats(key, teamKeys = []) {
             const sp = getSpecies()[key] || {},
                 pr = progressForSpecies(key),
                 tr = ensureAttackTraining(pr);
@@ -3505,7 +3524,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 pr,
                 maxHp: 80 + pr.currentLevel * 10,
                 hp: 80 + pr.currentLevel * 10,
-                power: Math.round(basePower * (1 + mealBonus(key, "combat"))),
+                affinity: window.LapinousTeamRules.affinity(teamKeys, getSpecies()).bonuses[key] || 0,
+                power: Math.max(1, Math.round(basePower * (1 + mealBonus(key, "combat")) * (1 + (window.LapinousTeamRules.affinity(teamKeys, getSpecies()).bonuses[key] || 0)/100))),
                 charge: 0,
                 azTier,
                 guard: 0,
@@ -3574,6 +3594,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return `<div class="fight-preview-stats"><div class="fight-stat-chips"><span>❤️ ${r.maxHp} PV</span><span>⚔️ ${r.power} puissance</span></div><ul>${skills}<li class="preview-ultimate"><b>🌟 ${powerName(r.sp)}</b><span>${Math.round(r.power * config.multiplier)}–${Math.round(r.power * config.multiplier + 12)} dégâts · +${config.chargePerTurn} % charge/tour${powerMode(r.sp) === "heal" ? " · soin équipe 25 %" : powerMode(r.sp) === "support" ? " · protection équipe 55 %" : ""}</span></li></ul></div>`;
         }
         function bossCombatStats(boss) {
+            if (boss.kind === "vegetable") return {power:boss.combatPower,maxHp:boss.maxHp,attackBase:boss.combatPower*.85,attackSpread:2};
             const difficulty = Math.max(1, Number(boss.difficulty) || 20);
             const power = Math.round(18 + difficulty * 1.2);
             return {
@@ -3585,12 +3606,19 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         function fightPowerComparisonHtml(boss) {
             const teamPower = selectedFightTeam.reduce(
-                (total, key) => total + rabbitCombatStats(key).power,
+                (total, key) => total + rabbitCombatStats(key, selectedFightTeam).power,
                 0,
             );
             const bossPower = bossCombatStats(boss).power;
             const share = (teamPower / (teamPower + bossPower)) * 100;
             return `<div class="fight-power-comparison"><div class="fight-power-values"><span>🐰 Équipe <b>${teamPower}</b></span><strong>Puissance totale</strong><span>🥕 ${boss.name} <b>${bossPower}</b></span></div><div class="fight-power-meter" role="img" aria-label="Puissance de l’équipe ${teamPower}, puissance du boss ${bossPower}"><i style="width:${share}%"></i></div><small>Somme de la puissance des lapins sélectionnés. Les PV, techniques et protections comptent aussi dans le combat.</small></div>`;
+        }
+        function fightAffinityHtml() {
+            const species = getSpecies();
+            const { pairs, bonuses } = window.LapinousTeamRules.affinity(selectedFightTeam, species);
+            const pairText = pairs.map(p => `${p.value > 0 ? '💛' : '⚡'} ${species[p.a].name} et ${species[p.b].name} : ${p.value > 0 ? '+' : ''}${p.value} % chacun`).join(' · ');
+            const totals = selectedFightTeam.map(key => `${species[key]?.name} : ${bonuses[key] > 0 ? '+' : ''}${bonuses[key] || 0} %`).join(' · ');
+            return `<aside class="fight-affinities" aria-live="polite"><strong>Les liens de ton équipe</strong><p>${pairText || 'Pas de lien particulier dans cette équipe.'}</p><small>${totals}. Effet sur la puissance seulement, limité à ±10 % par lapin. Les niveaux et l’amitié restent inchangés.</small></aside>`;
         }
         function bossFightPreviewHtml(boss) {
             const stats = bossCombatStats(boss),
@@ -3616,17 +3644,17 @@ document.addEventListener("DOMContentLoaded", () => {
             prepareFight(bossKey);
         };
         window.prepareFight = function (key) {
-            const boss = getBosses()[key];
+            const boss = getOpponents()[key];
             if (!boss) return;
             if (!game.discoveredBosses) game.discoveredBosses = [];
-            if (!game.discoveredBosses.includes(key)) game.discoveredBosses.push(key);
-            const owned = (game.ownedSpecies || [game.species]).slice();
+            if (boss.kind !== "vegetable" && !game.discoveredBosses.includes(key)) game.discoveredBosses.push(key);
+            const owned = window.LapinousTeamRules.eventFirst((game.ownedSpecies || [game.species]).map(k=>[k,getSpecies()[k]]).filter(x=>x[1]),currentActiveEvents()).map(x=>x[0]);
             if (!selectedFightTeam.length)
                 selectedFightTeam = owned.slice(0, Math.min(3, owned.length));
             selectedFightTeam = selectedFightTeam.filter((k) => owned.includes(k)).slice(0, 3);
             const teamCards = owned
                 .map((k) => {
-                    const r = rabbitCombatStats(k),
+                    const r = rabbitCombatStats(k, selectedFightTeam),
                         { sp, pr } = r,
                         on = selectedFightTeam.includes(k);
                     return `<button class="fight-team-card ${on ? "selected" : ""}" aria-pressed="${on}" onclick="toggleFightTeam('${k}','${key}')"><img src="${sp.faceImg || sp.coteImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg"}"><span>${rabbitDisplayName(r)}<small>Niv. ${pr.currentLevel} · ${RARITY_META[sp.rarity]?.label || sp.rarity || "Commun"}</small><small class="fight-card-power">❤️ ${r.maxHp} PV · ⚔️ ${r.power} puissance</small></span></button>`;
@@ -3634,18 +3662,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 .join("");
             const preview = selectedFightTeam
                 .map((k, i) => {
-                    const r = rabbitCombatStats(k),
+                    const r = rabbitCombatStats(k, selectedFightTeam),
                         sp = r.sp;
                     return `<div class="team-preview-rabbit slot-${i + 1}"><img style="${combatSpriteStyle(sp, "rabbit", r.key)}" src="${sp.coteImg || sp.faceImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg"}"><strong>${rabbitDisplayName(r)}</strong>${rabbitFightPreviewHtml(r)}</div>`;
                 })
                 .join("");
-            gameArea.innerHTML = `<div class="fight-stage fight-preparation"><div class="console-title">⚔️ Prépare ton équipe contre ${boss.name}</div>${fightPowerComparisonHtml(boss)}<div class="fight-team-select">${teamCards}</div><div class="battlefield-preview"><div class="team-preview-side">${preview || "<span>Choisis ton équipe</span>"}</div><div class="vs-mark">VS</div><div class="preview-boss"><img style="${combatSpriteStyle(boss, "boss")}" src="${boss.coteImg || boss.faceImg}" onerror="this.src='./assets/img/boss/mystery_boss.svg'"><strong>${boss.name}</strong>${bossFightPreviewHtml(boss)}</div></div><div class="action-row"><label>Combat <select onchange="setFightMode(this.value)"><option value="manual" ${fightMode === "manual" ? "selected" : ""}>Manuel</option><option value="auto" ${fightMode === "auto" ? "selected" : ""}>Automatique</option></select></label><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${fightSpeed === 1 ? "selected" : ""}>×1</option><option value="3" ${fightSpeed === 3 ? "selected" : ""}>×3</option></select></label><button class="action-btn adventure" onclick="startTacticalFight('${key}')" ${selectedFightTeam.length ? "" : "disabled"}>⚔️ Commencer</button><button class="ghost-btn" onclick="openAdventure()">← Boss</button></div></div>`;
+            gameArea.innerHTML = `<div class="fight-stage fight-preparation"><div class="console-title">⚔️ Prépare ton équipe contre ${boss.name}</div>${fightPowerComparisonHtml(boss)}${fightAffinityHtml()}<div class="fight-team-select">${teamCards}</div><div class="battlefield-preview"><div class="team-preview-side">${preview || "<span>Choisis ton équipe</span>"}</div><div class="vs-mark">VS</div><div class="preview-boss"><img style="${combatSpriteStyle(boss, "boss")}" src="${boss.coteImg || boss.faceImg}" onerror="this.src='./assets/img/boss/mystery_boss.svg'"><strong>${boss.name}</strong>${bossFightPreviewHtml(boss)}</div></div><div class="action-row"><label>Combat <select onchange="setFightMode(this.value)"><option value="manual" ${fightMode === "manual" ? "selected" : ""}>Manuel</option><option value="auto" ${fightMode === "auto" ? "selected" : ""}>Automatique</option></select></label><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${fightSpeed === 1 ? "selected" : ""}>×1</option><option value="3" ${fightSpeed === 3 ? "selected" : ""}>×3</option></select></label><button class="action-btn adventure" onclick="startTacticalFight('${key}')" ${selectedFightTeam.length ? "" : "disabled"}>⚔️ Commencer</button><button class="ghost-btn" onclick="openAdventure()">← Boss</button></div></div>`;
             autoSave();
         };
         window.startTacticalFight = function (key) {
-            const boss = getBosses()[key];
+            const boss = getOpponents()[key];
             if (!boss || !selectedFightTeam.length) return;
-            const team = selectedFightTeam.map(rabbitCombatStats);
+            const team = selectedFightTeam.map(key => rabbitCombatStats(key, selectedFightTeam));
             tacticalFight = {
                 key,
                 boss,
@@ -3826,12 +3854,14 @@ document.addEventListener("DOMContentLoaded", () => {
         function finishTacticalFight(win) {
             clearTimeout(autoFightTimer);
             const f = tacticalFight;
-            if (!f) return;
+            if (!f || f.finished) return;
+            f.finished = true;
             if (win) {
-                const reward = window.LapinousEconomy.combatReward(f.boss.difficulty);
+                const rewards = window.LapinousTeamRules.victory(f.boss);
+                const reward = rewards.carrots;
                 game.carrots += reward;
-                awardBattleLoot();
-                recordAchievement("bossesDefeated");
+                if (rewards.loot) awardBattleLoot();
+                if (rewards.bossAchievement) recordAchievement("bossesDefeated");
                 f.team.forEach((x) => {
                     const old = game.species;
                     game.species = x.key;
@@ -4365,6 +4395,14 @@ document.addEventListener("DOMContentLoaded", () => {
             }
         }
 
+        let eventBannerTimer;
+        const eventBannerSeen = new Set();
+        try { for (const id of JSON.parse(sessionStorage.getItem('warrenfall_event_banner_seen_v1') || '[]')) eventBannerSeen.add(id); } catch {}
+        function closeEventBanner() {
+            clearTimeout(eventBannerTimer);
+            const banner = document.getElementById('eventBanner');
+            if (banner) banner.style.display = 'none';
+        }
         function updateSeasonalDecor() {
             const active = currentActiveEvents();
             ["halloween", "noel", "paques", "nouvel_an_chinois"].forEach((e) =>
@@ -4378,7 +4416,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 lastSeasonSound = "";
                 return;
             }
-            banner.innerHTML = active
+            const fresh = active.filter(event => !eventBannerSeen.has(`${new Date().getFullYear()}:${event}`));
+            if (!fresh.length) return;
+            if (!body.classList.contains('game-running') || !document.getElementById('startupScreen')?.hidden || body.classList.contains('battle-scene') || document.querySelector('.modal.show,dialog[open]')) {
+                closeEventBanner();
+                return;
+            }
+            banner.innerHTML = fresh
                 .map(
                     (e) => `
             <div class="event-banner-line event-${e}">
@@ -4389,11 +4433,24 @@ document.addEventListener("DOMContentLoaded", () => {
                 )
                 .join("");
             banner.style.display = "flex";
+            banner.setAttribute('role', 'status');
+            const close = document.createElement('button');
+            close.type = 'button'; close.className = 'event-banner-close';
+            close.textContent = '×'; close.setAttribute('aria-label', 'Fermer le bandeau de l’événement');
+            close.onclick = closeEventBanner;
+            banner.append(close);
+            fresh.forEach(event => eventBannerSeen.add(`${new Date().getFullYear()}:${event}`));
+            try { sessionStorage.setItem('warrenfall_event_banner_seen_v1', JSON.stringify([...eventBannerSeen])); } catch {}
+            clearTimeout(eventBannerTimer);
+            eventBannerTimer = setTimeout(closeEventBanner, 7000);
             banner.querySelectorAll("[data-event-sound]").forEach((btn) => {
                 btn.addEventListener("click", () => playSeasonSound(btn.dataset.eventSound, true));
             });
         }
         updateSeasonalDecor();
+        window.addEventListener('lapinous:startup-complete', updateSeasonalDecor);
+        document.addEventListener('hidden.bs.modal', updateSeasonalDecor);
+        document.getElementById('adoptBtn')?.addEventListener('click', () => setTimeout(updateSeasonalDecor, 500));
         setInterval(updateSeasonalDecor, 5 * 60 * 1000);
 
         // Les navigateurs interdisent l'audio automatique avant une interaction.

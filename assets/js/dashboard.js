@@ -318,6 +318,7 @@ document.addEventListener("DOMContentLoaded", () => {
             exportedAt: Date.now(),
             species: getSpecies(),
             bosses: getBosses(),
+            opponents: Object.fromEntries(Object.entries(getOpponents()).filter(([,enemy])=>enemy.kind === "vegetable")),
             eggRates: loadEggRates(),
             eventWindows: loadEventWindows(),
             visibility: window.LapinousVisibility.get(),
@@ -335,6 +336,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const bundle = JSON.parse(reader.result);
                 const species = bundle.species || bundle.customSpecies; // compat anciens exports
                 const bosses = bundle.bosses || bundle.customBosses;
+                if (bundle.opponents) localStorage.setItem("lapinous_custom_opponents", JSON.stringify(bundle.opponents));
                 if (species) localStorage.setItem(CUSTOM_SPECIES_KEY, JSON.stringify(species));
                 if (bosses) localStorage.setItem(CUSTOM_BOSSES_KEY, JSON.stringify(bosses));
                 if (bundle.visibility) { window.LapinousVisibility.save(bundle.visibility); renderVisibility(); }

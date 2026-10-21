@@ -61,12 +61,12 @@
     "section": "Ton premier combat",
     "title": "Prêt à défier les légumes ?",
     "image": "./assets/img/boss/oignon_face.png",
-    "where": "Jardin → Aventure → Choisir un boss",
+    "where": "Jardin → Aventure",
     "text": "Choisis un adversaire dans Jardin → Aventure.",
     "points": [
       "Prépare des lapins nourris, reposés et propres.",
-      "Compare les points de vie, la puissance et les pouvoirs.",
-      "Une victoire offre amitié, carottes et parfois un ingrédient."
+      "Commence avec les petits légumes : amitié et 4 ou 5 carottes, sans ingrédient.",
+      "Regarde les liens de ton équipe : les amis s’encouragent, les rivaux se gênent. Les boss sont plus forts et peuvent donner un ingrédient."
     ],
     "tip": "Tu peux choisir tes actions ou laisser jouer ton équipe. Après une défaite, prends soin de tes lapins."
   },

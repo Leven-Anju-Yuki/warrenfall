@@ -1,0 +1,26 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const context={window:{},Date};vm.createContext(context);
+vm.runInContext(fs.readFileSync('assets/js/event-reminders.js','utf8'),context);
+const {upcoming,deliver}=context.window.LapinousEventReminders;
+const windows={halloween:10,noel:12,paques:10,nouvel_an_chinois:10};
+const easter=year=>new Date(year,3,5),lunar=year=>new Date(year,year===2027?1:1,year===2027?6:17);
+const events=date=>upcoming(date,windows,easter,lunar);
+assert.equal(events(new Date(2026,9,15)).length,0);
+const first=events(new Date(2026,9,16));assert.equal(first[0].event,'halloween');assert.equal(first[0].days,5);assert.equal(first[0].start.getDate(),21);
+assert.equal(events(new Date(2026,9,18))[0].days,3);
+assert.equal(events(new Date(2026,9,21)).length,0);
+assert.equal(events(new Date(2026,11,8))[0].event,'noel');
+assert.equal(events(new Date(2026,2,21))[0].event,'paques');
+assert.equal(events(new Date(2027,0,22))[0].event,'nouvel_an_chinois');
+assert.equal(upcoming(new Date(2026,9,21),{halloween:5},easter,lunar)[0].days,5); // changement heure hiver
+assert.equal(upcoming(new Date(2026,11,23),{nouvel_an_chinois:40},easter,lunar)[0].id,'nouvel_an_chinois:2027');
+assert.equal(upcoming(new Date(2026,9,16),{halloween:-1},easter,lunar).length,0);
+const data=new Map(),storage={getItem:k=>data.get(k),setItem:(k,v)=>data.set(k,v)};
+assert.equal(deliver(first,storage,()=>false).length,0);assert.equal(data.size,0);
+assert.equal(deliver(first,storage,()=>true).length,1);
+assert.equal(deliver(events(new Date(2026,9,18)),storage,()=>{throw Error('Doublon');}).length,0);
+const next=events(new Date(2027,9,16));assert.equal(deliver(next,storage,()=>true).length,1);
+assert.equal(deliver(first,{getItem:()=>'{broken',setItem(){}},()=>true).length,1);
+console.log('Rappels : J-5 avant début réel, rattrapage J-4/J-1, dates mobiles, année suivante, changement heure et absence de doublons OK. Aucun envoi réel.');

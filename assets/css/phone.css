@@ -7,6 +7,15 @@ body.game-running #installInGame:not([hidden]){display:block;position:fixed;left
 #phoneEggDialog .action-row{display:flex;flex-wrap:wrap;gap:8px}#phoneEggDialog .action-btn{flex:1;min-width:110px;padding:10px;font-size:13px;min-height:44px}#phoneEggDialog .action-icon-emoji{font-size:22px}#phoneEggDialog .carrot-counter{font-size:16px;margin:10px auto}#phoneEggDialog .egg-rate-guide{font-size:14px}#phoneEggDialog .upgrade-locked-note{font-size:12px}
 .cart-counter-options[hidden]{display:none!important}
 #installInNav[hidden]{display:none!important}
+#installInGame[hidden], #orientationGate button[hidden]{display:none!important}
+body.game-running #installInGame:not([hidden]){left:108px;top:max(6px,env(safe-area-inset-top));padding:5px 9px;min-height:40px;font-size:12px;background:#fff0c7;color:#493423;box-shadow:0 2px 8px #35200c40}
+.install-help{width:min(520px,calc(100vw - 24px));max-height:calc(100dvh - 20px);overflow:auto;padding:20px;background:#fff8e8;color:#493423;border:2px solid #b99a67;border-radius:20px}
+.install-help button{min-height:44px;margin:5px;padding:8px 14px}
+#orientationGate button+button{display:block;margin:12px auto 0;font-size:16px}
+.fight-affinities{background:#fff8e8;color:#493423;border:1px solid #b99a67;border-radius:12px;padding:8px 12px;margin:8px 0;text-align:left;font-size:14px}
+.fight-affinities p{margin:4px 0}.fight-affinities small{display:block;line-height:1.4}
+body.battle-scene #eventBanner{display:none!important}
+
 @media(pointer:coarse) and (max-width:1000px), (pointer:coarse) and (max-height:700px){
  body.game-running #mainNav #installInNav{position:static!important;flex:1;min-width:0;min-height:44px;padding:2px;border:1px solid #b99a67;border-radius:10px;background:#fff1cc;color:#574132;font-size:11px}
  .records-overlay{padding:6px;box-sizing:border-box}
@@ -215,3 +224,15 @@ body.game-running #installInGame:not([hidden]){display:block;position:fixed;left
  html.phone-ui .memory-panel .memory-play{max-height:calc(100dvh - 142px)!important;overflow:auto!important;overscroll-behavior:contain;align-items:start!important}
  html.phone-ui .memory-panel .memory-collection{position:sticky;top:0}
 }
+
+@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){
+ html.phone-ui .fight-preparation>.fight-affinities{grid-column:2!important;grid-row:3!important;min-width:0;margin:0;font-size:12px}
+ html.phone-ui .fight-preparation>.phone-fight-preview,html.phone-ui .fight-preparation>.battlefield-preview{grid-row:4!important}
+ html.phone-ui .fight-preparation>.action-row{grid-row:5!important}
+ html.phone-ui .fight-preparation>.fight-team-select{grid-row:1/6!important}
+}
+
+/* Annonce de saison courte et refermable, jamais un panneau permanent. */
+body.game-running #eventBanner{width:min(390px,calc(100vw - 24px));max-width:calc(100vw - 24px);max-height:90px;padding:0 42px 0 0;box-sizing:border-box;overflow:auto;border-radius:14px}
+#eventBanner .event-banner-line{min-height:42px;box-sizing:border-box;padding:6px 8px;gap:6px}#eventBanner .event-banner-icons{font-size:18px;letter-spacing:0}#eventBanner .event-banner-line strong{font-size:12px;line-height:1.3}#eventBanner .event-sound-btn{width:36px;height:36px;min-width:36px;font-size:16px}
+#eventBanner .event-banner-close{position:absolute;right:0;top:0;width:40px;height:42px;border:0;background:#fff8e8;color:#493423;font-size:26px;cursor:pointer}

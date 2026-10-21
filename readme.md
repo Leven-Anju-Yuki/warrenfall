@@ -681,3 +681,21 @@ Sécurité du 19 octobre : les suppressions Cloudinary sont explicitement suspen
 Consigne actuelle confirmée le 19 octobre : suppression Cloudinary automatique réactivée après sept jours de quarantaine, sans nouvelle confirmation par image. Elle reste conditionnée à une synchronisation réussie, une sauvegarde exacte et tous les contrôles techniques ; les simulations restent sans suppression. Cette autorisation remplace le gel demandé plus tôt le même jour.
 
 Interface 113 : catalogue actuel avec recettes activées ; sélecteur de plats en fiches, présentation séparée des plats prêts. Tiroirs : une touche décrit le soin, double touche rapide l’utilise. Œuf de bienvenue confirmé par reçu dans chaque sauvegarde ; rattrapage unique des anciennes parties dont le verrou navigateur bloquait le cadeau. Le trophée signale les récompenses disponibles avec un point d’exclamation. Chargement limité à quatre images simultanées, nouvelle tentative automatique puis bouton de reprise ; visuels non répertoriés du catalogue exclus du préchargement anticipé.
+
+### Premières aventures et affinités — 21 octobre 2026
+
+Dans Jardin → Aventure, les petits légumes précèdent les boss : Radis Fripon, Navet Bougon et Petit Pois Malicieux. Ils sont adaptés aux premiers niveaux. Une victoire donne 3 points d’amitié par participant et 4, 4 ou 5 carottes ; aucun ingrédient ni succès de boss. Les boss conservent leurs propres récompenses.
+
+Avant le combat, « Les liens de ton équipe » affiche les amis et les rivalités : +5 % ou −5 % de puissance pour chaque paire concernée, limité à ±10 % par lapin. Cela ne modifie pas les niveaux, les besoins ou l’amitié de la sauvegarde. Les effets sont identiques en manuel et en automatique. Exemples : Azur/Bambou et Caramel/Flamme s’encouragent ; Azur/Flamme et Mocha/Spark ont des rivalités. Les lapins d’un événement actif remontent dans les listes, sans changer les taux d’œufs.
+
+Visuels à fournir : dans `lapinous-content.json`, rubrique `opponents`, remplacer `faceImg` et `coteImg` par les futurs chemins d’images. Les champs `imageSlot` identifient les trois emplacements (`radis`, `navet`, `petit_pois`). Chemins suggérés pour les futures images : `assets/img/adversaires/radis.png`, `navet.png`, `petit_pois.png`. Ces fichiers ne sont pas encore requis : une image neutre « Visuel à venir » est affichée en attendant. L’export/import du Dashboard conserve cette rubrique.
+
+Installation mobile : le bouton Installer est accessible sur l’écran de rotation et en haut du jeu, hors de la navigation encombrée. Il déclenche l’invitation native si le navigateur la fournit ; sinon l’aide donne le menu à utiliser et permet de copier le lien. Une ancienne confirmation enregistrée ne suffit plus à cacher l’installation. Dans l’application autonome, aucune nouvelle installation n’est proposée. Les fichiers locaux doivent être publiés avant de tester le correctif sur le site public ; ne pas effacer les données ou les sauvegardes pour corriger une icône.
+
+Vérifications : `node tools/test-team-rules.mjs`, `node tools/test-install-visibility.mjs`, `node tools/test-pwa.mjs`, puis `node tools/test-landscape-game.mjs --quick --family --ui-only --adventure` (ajouter `--desktop` pour le PC). Les tests utilisent un profil isolé ; aucune partie réelle ni service distant n’est modifié.
+
+### Rappels des événements
+
+À partir de cinq jours avant le début de chaque période événementielle, un rappel apparaît dans le jeu avec la date de début. Il respecte les fenêtres du Dashboard, Pâques et le Nouvel An chinois. Si le jeu était fermé à J−5, le rappel peut encore apparaître à la prochaine visite avant le début. Un seul rappel par événement et par année est mémorisé dans le navigateur, quel que soit le lapin ; effacer les données du navigateur efface aussi cette mémoire. Pas de notification système jeu fermé : un service push serait nécessaire. Tests : `node tools/test-event-reminders.mjs`.
+
+Le bandeau d’annonce de saison est compact et refermable ; il disparaît après sept secondes et ne réapparaît pas à chaque actualisation dans la même session. Les décors et lapins d’événement restent actifs. Test : `node tools/test-season-banner.mjs`.

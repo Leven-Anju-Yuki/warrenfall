@@ -227,7 +227,10 @@
         "tools/test-mobile-game.mjs",
         "assets/css/phone.css",
         "assets/js/mobile-ui.js",
-        "tools/test-landscape-game.mjs"
+        "tools/test-landscape-game.mjs",
+        "assets/js/team-rules.js",
+        "lapinous-content.json",
+        "tools/test-team-rules.mjs"
       ],
       "preuves": [
         {
@@ -313,7 +316,10 @@
       "card_id": "6ac39dbef4faf8125adc099b",
       "nom": "P2 — Notifications",
       "chemins": [
-        "assets/js/script.js"
+        "assets/js/script.js",
+        "assets/js/event-reminders.js",
+        "tools/test-event-reminders.mjs",
+        "tools/test-season-banner.mjs"
       ],
       "preuves": [
         {
@@ -1025,7 +1031,8 @@
         "assets/icons/",
         "tools/test-pwa.mjs",
         "assets/css/phone.css",
-        "assets/css/shop-polish.css"
+        "assets/css/shop-polish.css",
+        "tools/test-install-visibility.mjs"
       ],
       "preuves": [
         {
@@ -1094,7 +1101,9 @@
       "chemins": [
         "assets/js/species-data.js",
         "lapinous-content.json",
-        "assets/js/script.js"
+        "assets/js/script.js",
+        "assets/js/team-rules.js",
+        "tools/test-team-rules.mjs"
       ],
       "preuves": [
         {

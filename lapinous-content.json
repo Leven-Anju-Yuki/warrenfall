@@ -25,7 +25,9 @@
       "friends": [
         "bambou"
       ],
-      "rivals": [],
+      "rivals": [
+        "flamme"
+      ],
       "attacks": [
         {
           "id": "azur-attack-1",
@@ -55,7 +57,9 @@
       "power": "Cherche-Trésor : augmente les récompenses obtenues.",
       "faceImg": "./assets/img/lapins_jouables/sans_evenements/caramel_face.png",
       "coteImg": "./assets/img/lapins_jouables/sans_evenements/caramel_cote.png",
-      "friends": [],
+      "friends": [
+        "flamme"
+      ],
       "rivals": [],
       "follows": [
         "flamme"
@@ -89,8 +93,12 @@
       "power": "Précision parfaite : réduit les temps de recharge.",
       "faceImg": "./assets/img/lapins_jouables/sans_evenements/chocolat_face.png",
       "coteImg": "./assets/img/lapins_jouables/sans_evenements/chocolat_cote.png",
-      "friends": [],
-      "rivals": [],
+      "friends": [
+        "koda"
+      ],
+      "rivals": [
+        "spark"
+      ],
       "helps": [
         "koda"
       ],
@@ -124,7 +132,8 @@
       "faceImg": "./assets/img/lapins_jouables/sans_evenements/panda_face.png",
       "coteImg": "./assets/img/lapins_jouables/sans_evenements/panda_cote.png",
       "friends": [
-        "azur"
+        "azur",
+        "nopal"
       ],
       "rivals": [],
       "attacks": [
@@ -162,8 +171,12 @@
       "power": "Vision secrète : révèle les coffres cachés.",
       "faceImg": "./assets/img/lapins_jouables/sans_evenements/renard_face.png",
       "coteImg": "./assets/img/lapins_jouables/sans_evenements/renard_cote.png",
-      "friends": [],
-      "rivals": [],
+      "friends": [
+        "caramel"
+      ],
+      "rivals": [
+        "azur"
+      ],
       "curiousAbout": [
         "nova"
       ],
@@ -202,7 +215,9 @@
       "power": "Cri du gardien : augmente les dégâts de l'équipe.",
       "faceImg": "./assets/img/lapins_jouables/sans_evenements/tigre_face.png",
       "coteImg": "./assets/img/lapins_jouables/sans_evenements/tigre_cote.png",
-      "friends": [],
+      "friends": [
+        "mocha"
+      ],
       "rivals": [],
       "protects": "les plus faibles",
       "attacks": [
@@ -246,7 +261,9 @@
       "power": "Pluie d'étoiles : invoque des météores magiques.",
       "faceImg": "./assets/img/lapins_jouables/sans_evenements/etoile_face.png",
       "coteImg": "./assets/img/lapins_jouables/sans_evenements/etoile_cote.png",
-      "friends": [],
+      "friends": [
+        "spark"
+      ],
       "rivals": [],
       "guides": true,
       "attacks": [
@@ -290,8 +307,12 @@
       "power": "Pétales Curatifs : soigne progressivement les alliés.",
       "faceImg": "./assets/img/lapins_jouables/sans_evenements/fleur_face.png",
       "coteImg": "./assets/img/lapins_jouables/sans_evenements/fleur_cote.png",
-      "friends": [],
-      "rivals": [],
+      "friends": [
+        "myco"
+      ],
+      "rivals": [
+        "corsaire"
+      ],
       "attacks": [
         {
           "id": "sakura-attack-1",
@@ -327,8 +348,12 @@
       "power": "Turbo Éclair : augmente temporairement sa vitesse.",
       "faceImg": "./assets/img/lapins_jouables/sans_evenements/eclair_face.png",
       "coteImg": "./assets/img/lapins_jouables/sans_evenements/eclair_cote.png",
-      "friends": [],
-      "rivals": [],
+      "friends": [
+        "nova"
+      ],
+      "rivals": [
+        "mocha"
+      ],
       "attacks": [
         {
           "id": "spark-attack-1",
@@ -364,7 +389,9 @@
       "power": "Spores Protectrices : augmente la défense de l'équipe.",
       "faceImg": "./assets/img/lapins_jouables/sans_evenements/champi_face.png",
       "coteImg": "./assets/img/lapins_jouables/sans_evenements/champi_cote.png",
-      "friends": [],
+      "friends": [
+        "sakura"
+      ],
       "rivals": [],
       "attacks": [
         {
@@ -396,7 +423,9 @@
       "faceImg": "./assets/img/lapins_jouables/sans_evenements/pirate_face.png",
       "coteImg": "./assets/img/lapins_jouables/sans_evenements/pirate_cote.png",
       "friends": [],
-      "rivals": [],
+      "rivals": [
+        "sakura"
+      ],
       "attacks": [
         {
           "id": "corsaire-attack-1",
@@ -426,7 +455,9 @@
       "power": "Résistance du Désert : réduit les dégâts subis.",
       "faceImg": "./assets/img/lapins_jouables/sans_evenements/cactus_face.png",
       "coteImg": "./assets/img/lapins_jouables/sans_evenements/cactus_cote.png",
-      "friends": [],
+      "friends": [
+        "bambou"
+      ],
       "rivals": [],
       "attacks": [
         {
@@ -463,8 +494,12 @@
       "power": "Voile Nocturne : devient temporairement impossible à cibler.",
       "faceImg": "./assets/img/lapins_jouables/sans_evenements/lune_face.png",
       "coteImg": "./assets/img/lapins_jouables/sans_evenements/lune_cote.png",
-      "friends": [],
-      "rivals": [],
+      "friends": [
+        "archy"
+      ],
+      "rivals": [
+        "solaria"
+      ],
       "attacks": [
         {
           "id": "umbra-attack-1",
@@ -506,7 +541,9 @@
       "power": "Potion Chaotique : effet aléatoire positif.",
       "faceImg": "./assets/img/lapins_jouables/sans_evenements/archy_face.png",
       "coteImg": "./assets/img/lapins_jouables/sans_evenements/archy_cote.png",
-      "friends": [],
+      "friends": [
+        "umbra"
+      ],
       "rivals": [],
       "attacks": [
         {
@@ -552,8 +589,12 @@
       "power": "Une fois par combat, Solaria peut empêcher un allié de tomber K.O.",
       "faceImg": "./assets/img/lapins_jouables/sans_evenements/soleil_face.png",
       "coteImg": "./assets/img/lapins_jouables/sans_evenements/soleil_cote.png",
-      "friends": [],
-      "rivals": [],
+      "friends": [
+        "meli"
+      ],
+      "rivals": [
+        "umbra"
+      ],
       "attacks": [
         {
           "id": "solaria-attack-1",
@@ -595,7 +636,9 @@
       "power": "Essaim Protecteur : invoque des abeilles qui défendent l'équipe.",
       "faceImg": "./assets/img/lapins_jouables/sans_evenements/abeille_face.png",
       "coteImg": "./assets/img/lapins_jouables/sans_evenements/abeille_cote.png",
-      "friends": [],
+      "friends": [
+        "solaria"
+      ],
       "rivals": [],
       "attacks": [
         {
@@ -960,7 +1003,9 @@
         "toothFairy",
         "santaLegend"
       ],
-      "rivals": [],
+      "rivals": [
+        "cauchemar"
+      ],
       "attacks": [
         {
           "id": "sandman-attack-1",
@@ -1261,7 +1306,9 @@
           "kind": "guard",
           "mult": 0.85
         }
-      ]
+      ],
+      "friends": [],
+      "rivals": []
     },
     "vampireRabbit": {
       "name": "Lord Noctis",
@@ -1286,8 +1333,8 @@
       "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/vampi_face.png",
       "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/vampi_cote.png",
       "friends": [
-        "ladyEtheria",
-        "kingOssarium"
+        "ghostRabbit",
+        "skeletonRabbit"
       ],
       "rivals": [],
       "attacks": [
@@ -1346,8 +1393,8 @@
       "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/fantome_face.png",
       "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/fantome_cote.png",
       "friends": [
-        "lordNoctis",
-        "kingOssarium"
+        "vampireRabbit",
+        "skeletonRabbit"
       ],
       "rivals": [],
       "attacks": [
@@ -1406,7 +1453,7 @@
       "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/squelette_face.png",
       "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/squelette_cote.png",
       "friends": [
-        "lordNoctis"
+        "vampireRabbit"
       ],
       "rivals": [],
       "attacks": [
@@ -1465,7 +1512,7 @@
       "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/frank_face.png",
       "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/frank_cote.png",
       "friends": [
-        "fenrabbit"
+        "werebunnyRabbit"
       ],
       "rivals": [],
       "attacks": [
@@ -1524,7 +1571,7 @@
       "faceImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/bete_face.png",
       "coteImg": "./assets/img/lapins_jouables/lapin_evenement/Halloween/bete_cote.png",
       "friends": [
-        "doctorStitch"
+        "frankensteinRabbit"
       ],
       "rivals": [],
       "attacks": [
@@ -2317,5 +2364,55 @@
     "favorites": "public",
     "records": "public",
     "quiz": "admin"
+  },
+  "opponents": {
+    "debut_radis": {
+      "name": "Radis Fripon",
+      "kind": "vegetable",
+      "difficulty": 1,
+      "maxHp": 40,
+      "power": "Petite bousculade",
+      "rewardCarrots": 4,
+      "faceImg": "./assets/icons/vegetable-placeholder.svg",
+      "coteImg": "./assets/icons/vegetable-placeholder.svg",
+      "imageSlot": "radis",
+      "critical": {
+        "chargePerTurn": 10,
+        "multiplier": 1.2
+      },
+      "combatPower": 5
+    },
+    "debut_navet": {
+      "name": "Navet Bougon",
+      "kind": "vegetable",
+      "difficulty": 2,
+      "maxHp": 55,
+      "power": "Petite bousculade",
+      "rewardCarrots": 4,
+      "faceImg": "./assets/icons/vegetable-placeholder.svg",
+      "coteImg": "./assets/icons/vegetable-placeholder.svg",
+      "imageSlot": "navet",
+      "critical": {
+        "chargePerTurn": 10,
+        "multiplier": 1.2
+      },
+      "combatPower": 7
+    },
+    "debut_petit_pois": {
+      "name": "Petit Pois Malicieux",
+      "kind": "vegetable",
+      "difficulty": 3,
+      "maxHp": 70,
+      "power": "Petite bousculade",
+      "rewardCarrots": 5,
+      "faceImg": "./assets/icons/vegetable-placeholder.svg",
+      "coteImg": "./assets/icons/vegetable-placeholder.svg",
+      "imageSlot": "petit_pois",
+      "critical": {
+        "chargePerTurn": 10,
+        "multiplier": 1.2
+      },
+      "combatPower": 9
+    }
   }
 }

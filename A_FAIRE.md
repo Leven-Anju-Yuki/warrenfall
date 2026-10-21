@@ -2,6 +2,33 @@
 
 Mise a jour : 21 octobre 2026.
 
+## Publication autorisée et bandeau de saison — 21 octobre 2026
+
+- [x] Florie autorise explicitement le commit et le push des correctifs 114/115/116. Message de publication en français, descriptif et naturel ; aucun état privé de batterie ajouté au lot.
+- [x] Bandeau Halloween et autres événements compact, bouton de fermeture accessible et disparition automatique après sept secondes ; annonce une seule fois par événement/année dans la session, sans réapparition toutes les cinq minutes ou au rechargement. Affiché après chargement et hors fenêtres bloquantes ; décors et disponibilité événementiels conservés. [trello:6ac39dbef4faf8125adc099b:code:season-banner-116]
+- [x] Tests : `tools/test-season-banner.mjs`, rappels J−5, affinités/petits légumes, visibilité installation et cache PWA réussis. Le lot regroupe installation mobile, événements prioritaires, petits adversaires, affinités d’équipe et rappels dans le jeu. Notification push jeu fermé non implémentée.
+
+## Rappels des événements — 21 octobre 2026
+
+- [x] Rappel local à partir de J−5 avant le début de la période configurée (date de fête moins fenêtre du Dashboard), avec nom, date de début et jours restants. Halloween, Noël, Pâques mobile et Nouvel An chinois ; passage d’année et changement d’heure pris en compte. [trello:6ac39dbef4faf8125adc099b:code:event-reminder-115]
+- [x] Un rappel par événement/année dans ce navigateur, indépendant du lapin sélectionné ; rattrapage à l’ouverture entre J−4 et J−1 si absent à J−5. Enregistrement seulement après affichage, pas de rappel une fois l’événement commencé. Le mode d’aperçu admin n’envoie pas de rappel. Attente de la fin du chargement, de la fermeture des fenêtres et de la sortie du combat. [trello:6ac39dbef4faf8125adc099b:code:event-reminder-dedup-115]
+- [x] Tests sans envoi réel : J−6/J−5/J−3/début, quatre événements, année suivante, heure d’hiver, échec d’affichage, persistance et absence de doublon ; cache PWA vérifié. Fichiers : `assets/js/event-reminders.js`, `assets/js/script.js`, `index.html`, `sw.js`, `tools/test-event-reminders.mjs`. [trello:6ac39dbef4faf8125adc099b:code:event-reminder-tests-115]
+- [ ] Publier et valider le rappel sur téléphone. Notification système lorsque le jeu est fermé : périmètre à confirmer, infrastructure push non présente ; ne pas promettre un réveil ou un envoi en arrière-plan par un simple minuteur JavaScript. [trello:6ac39dbef4faf8125adc099b:manuel:event-reminder-phone-115]
+
+## Installation mobile et premières aventures — 21 octobre 2026
+
+- [x] Installation 114 : accès mobile séparé des onglets serrés et accessible sur l’écran de rotation ; bouton Installer conservé quand une ancienne installation est seulement mémorisée. Invitation native utilisée si disponible, aide de navigateur et copie du lien sinon ; échec de prompt traité. Une application réellement ouverte en mode autonome ne propose pas une nouvelle installation. [trello:6ac39db1a134b35f03b17940:code:install-114]
+- [x] Version distante contrôlée en lecture seule : `installer.js?phone-install-112` / `script.js?rules-106`, différente des correctifs locaux. Florie signale une installation possible en version ordinateur mais pas en affichage mobile. Aucune publication GitHub automatique effectuée. [trello:6ac39db1a134b35f03b17940:code:published-install-114]
+- [x] Les lapins des événements actifs remontent dans l’encyclopédie, le choix de collection et la sélection d’équipe, sans modifier l’ordre enregistré ni augmenter les probabilités des œufs. Badge « En ce moment ». [trello:6ac39dbb2c736f2180aee1ec:code:event-order-114]
+- [x] Petits adversaires de début : Radis Fripon (40 PV, puissance 5), Navet Bougon (55 PV, puissance 7), Petit Pois Malicieux (70 PV, puissance 9). Victoire : 3 amitié par participant et respectivement 4/4/5 carottes, sans ingrédient ni compteur de boss. Boss existants conservés. Emplacements visuels dans `lapinous-content.json > opponents`, image neutre provisoire ; Florie fournira les images. [trello:6ac39d8793f1039486b67a20:code:starter-enemies-114]
+- [x] Affinités : amitiés et rivalités ajoutées au catalogue, identifiants anciens corrigés. Chaque paire donne +5 % ou −5 % de puissance aux deux lapins, cumul limité à ±10 % ; priorité aux rivalités en cas de données contradictoires, protection noMalus d’Azazel respectée. Effets montrés et appliqués dans la préparation et le combat manuel/automatique, sans modifier niveaux ou amitié sauvegardés. [trello:6ac39dbb2c736f2180aee1ec:code:team-affinities-114]
+- [x] Carnet et README expliquent les petits légumes et les liens d’équipe ; bandeau événementiel masqué pendant le combat. Export/import Dashboard préserve les petits adversaires. Cache PWA actualisé. [trello:6ac39daf6e132da85a61925d:code:guide-adventure-114]
+- [ ] Publier puis valider sur téléphone physique : installation en affichage mobile, accès portrait, priorité des événements et lisibilité/équilibre des nouvelles équipes. Les tests navigateur et l’invitation simulée ne prouvent pas l’installation Android réelle. [trello:6ac39db1a134b35f03b17940:manuel:phone-install-114]
+- [x] Vérifications 114 réussies : règles/affinités et récompenses sans doublon, visibilité de l’installation et cache PWA ; Chrome isolé 568×280, accès Installer portrait 390×844 et PC 1920×1080. Victoire contre le radis : +4 carottes, pas de butin ni compteur boss. Inventaire Cloudinary en dry-run uniquement : 326 sélectionnées, zéro référence manquante, aucun transfert.
+- [x] Trello réel relu après mise à jour : quatre descriptions actualisées (Accessibilité, Relations, Préparation du combat, Guide). Relations déplacée vers « À valider en jeu » avec commentaire et preuves de fichiers ; aucune carte créée, 73 cartes conservées, aucun passage en Réalisé.
+
+Fichiers explicites : `assets/js/installer.js`, `assets/js/team-rules.js`, `assets/js/species-data.js`, `assets/js/script.js`, `assets/js/dashboard.js`, `assets/js/game-guide.js`, `assets/css/phone.css`, `lapinous-content.json`, `assets/icons/vegetable-placeholder.svg`, `index.html`, `sw.js`, `tools/test-team-rules.mjs`, `tools/test-install-visibility.mjs`, `tools/test-landscape-game.mjs`, `tools/test-pwa.mjs`.
+
 ## Synchronisation Trello manuelle — 21 octobre 2026
 
 - [x] Tableau Warrenfall réel actualisé à la demande de Florie : dix descriptions mises à jour depuis ce suivi (repères/automatisations, performance, guide, accessibilité, placement, boutique/apothicaire, économie, Lapidoku, jeux adaptés et cuisine/Marché).

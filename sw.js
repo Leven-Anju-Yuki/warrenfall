@@ -1,6 +1,6 @@
 /* Les caches sont propres à ce projet, y compris sur un domaine GitHub Pages partagé. */
 const PREFIX = 'lapinous-' + new URL(self.registration.scope).pathname + '-';
-const SHELL = PREFIX + 'shell-v9', IMAGES = PREFIX + 'images-v1';
+const SHELL = PREFIX + 'shell-v12', IMAGES = PREFIX + 'images-v1';
 const HOME = new URL('index.html', self.registration.scope).href;
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
@@ -11,7 +11,7 @@ self.addEventListener('install', event => {
     const assets = [...html.matchAll(/(?:src|href)=["']([^"']+\.(?:js|css)(?:\?[^"']*)?)["']/g)]
       .map(match => new URL(match[1], HOME).href).filter(url => new URL(url).origin === self.location.origin);
     await cache.put(HOME, response);
-    await cache.addAll([...new Set([...assets, '403.html', '404.html', 'offline.html', 'assets/icons/error-403.png', 'assets/icons/error-404.png', 'assets/icons/error-offline.png', 'assets/icons/warrenfall-48.png', 'assets/icons/warrenfall-192.png', 'assets/icons/warrenfall-512.png', 'assets/fonts/CinzelDecorative-Bold.ttf', 'assets/fonts/EBGaramond.ttf', 'manifest.json', 'lapinous-content.json', 'lapinous-shop.json', 'lapinous-puzzles.json', 'lapinous-quiz.json'].map(url => new URL(url, HOME).href))]);
+    await cache.addAll([...new Set([...assets, '403.html', '404.html', 'offline.html', 'assets/icons/error-403.png', 'assets/icons/error-404.png', 'assets/icons/error-offline.png', 'assets/icons/warrenfall-48.png', 'assets/icons/warrenfall-192.png', 'assets/icons/warrenfall-512.png', 'assets/fonts/CinzelDecorative-Bold.ttf', 'assets/fonts/EBGaramond.ttf', 'assets/icons/vegetable-placeholder.svg', 'manifest.json', 'lapinous-content.json', 'lapinous-shop.json', 'lapinous-puzzles.json', 'lapinous-quiz.json'].map(url => new URL(url, HOME).href))]);
   })());
 });
 self.addEventListener('activate', event => event.waitUntil((async () => {

@@ -132,6 +132,7 @@ function getSpecies() {
     return base;
 }
 function getBosses() { return { ...BASE_BOSSES, ...JSON_BOSSES, ...loadCustomBosses() }; }
+function getOpponents() { let custom={}; try { custom=JSON.parse(localStorage.getItem("lapinous_custom_opponents")||"{}"); } catch {} return { ...getBosses(), ...JSON_OPPONENTS, ...custom }; }
 
 // ============================================================
 // CHARGEMENT DE lapinous-content.json (déposé à la racine du projet)
@@ -143,6 +144,7 @@ function getBosses() { return { ...BASE_BOSSES, ...JSON_BOSSES, ...loadCustomBos
 // locales, sans planter — mais sans le contenu principal.
 let JSON_SPECIES = {};
 let JSON_BOSSES = {};
+let JSON_OPPONENTS = {};
 let JSON_EGG_RATES = null;
 let JSON_EVENT_WINDOWS = null;
 
@@ -153,6 +155,7 @@ window.LapinousContentReady = fetch("./lapinous-content.json", { cache: "no-stor
             window.LapinousVisibility.setBase(data.visibility || {});
             JSON_SPECIES = data.species || {};
             JSON_BOSSES = data.bosses || {};
+            JSON_OPPONENTS = data.opponents || {};
             JSON_EGG_RATES = data.eggRates || null;
             JSON_EVENT_WINDOWS = data.eventWindows || null;
         }
