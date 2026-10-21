@@ -1405,3 +1405,5 @@ Ces deux idées sont enregistrées dans « Idées à sélectionner » après lec
 - [x] Interface 120 : bouton d?installation mobile redessin? avec la nouvelle ic?ne Warrenfall, finition cr?me et dor?e, texte lisible et cible tactile de 44 px. Fonctionnement et masquage apr?s installation conserv?s ; ? valider sur t?l?phone apr?s publication.
 
 - [x] Interface 121 : succ?s accomplis en t?te (r?compenses disponibles en premier), d?fis quotidiens non r?cup?r?s expir?s ? minuit sans retirer les gains d?j? re?us ; historique conserv?. Bloc nom/renommage/d?connexion ancr? en bas ? gauche au-dessus de la navigation, largeur stable. ? valider sur t?l?phone r?el.
+
+- [x] Installation 122 : aucun bouton d?installation ni aide Android/iOS propos? dans l?application autonome ; aide du navigateur remani?e en deux parcours courts avec la nouvelle ic?ne et une pr?sentation assortie au terrier.
