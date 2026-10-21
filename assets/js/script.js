@@ -572,6 +572,7 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         }
         function autoSave() {
+            if(body.classList.contains("game-running")) renderRecordsButton();
             try {
                 localStorage.setItem(AUTOSAVE_KEY, serializeGame());
             } catch (e) {}
@@ -1375,7 +1376,9 @@ document.addEventListener("DOMContentLoaded", () => {
         // ============================================================
         // DÉMARRAGE DU JEU
         // ============================================================
+        window.LapinousWelcomeGiftStatus=()=>({adopted:body.classList.contains('game-running'),granted:game.welcomeEggReceipt==='v2',eggs:Number(game.eggs)||0});
         function startGameUI() {
+            if(window.LapinousWelcomeGift?.(game)) autoSave();
             body.classList.add("game-running");
             adoptionScreen.style.display = "none";
             gameRoot.style.display = "flex";
@@ -2603,6 +2606,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 b.onclick = window.showLapinousRecords;
                 document.body.appendChild(b);
             }
+            const entries=window.LapinousAchievements.list(game);
+            const available=[...entries.today,...entries.pending,...entries.permanent].filter(row=>!row.claimed&&row.value>=row.target).length;
+            b.classList.toggle('has-rewards',available>0);
+            b.innerHTML='🏆'+(available?'<span class="achievement-alert" aria-hidden="true">!</span>':'');
+            b.title=available?`${available} récompense(s) à récupérer`:'Succès et records';
+            b.setAttribute('aria-label',b.title);
         }
 
         // ============================================================

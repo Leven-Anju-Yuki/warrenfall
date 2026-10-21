@@ -1,13 +1,10 @@
 (() => {
-  const key = 'lapinous_welcome_egg_v1';
   window.LapinousWelcomeGift = game => {
-    if (game.welcomeEggGranted) return false;
-    try {
-      if (localStorage.getItem(key)) { game.welcomeEggGranted = true; return false; }
-      localStorage.setItem(key, 'claimed');
-    } catch { return false; }
+    if (game.welcomeEggReceipt === 'v2') return false;
+    // Rattrapage unique des anciennes parties dont l’ancien verrou navigateur pouvait bloquer le cadeau.
     game.eggs = (Number(game.eggs) || 0) + 1;
     game.welcomeEggGranted = true;
+    game.welcomeEggReceipt = 'v2';
     return true;
   };
 })();

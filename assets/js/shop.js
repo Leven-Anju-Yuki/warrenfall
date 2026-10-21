@@ -119,6 +119,7 @@
         const content=dialog.querySelector('#shopBody'),message=dialog.querySelector('#shopMessage'),speech=dialog.querySelector('#shopCashierSpeech'),image=dialog.querySelector('#shopCashierImage');
         // Les rayons partagent la ligne du titre plutôt qu’une rangée supplémentaire.
         dialog.querySelector('.shop-header').insertBefore(dialog.querySelector('.shop-tabs'),dialog.querySelector('.shop-close'));
+        let inspectedItem='', inspectedAt=0;
         let tab='items',target='',chosenIndex=0,cart=[],cartGame=api.game(),thankTimer,apothecaryTimer,retrieveAnimation,retrieveVersion=0,retrieving=false;
         let drawerSlots=null;
         const herbalistPoses=catalog.apothecary||{};
@@ -315,7 +316,7 @@
                 }
                 const items=Array(drawerSlots.length).fill(null);
                 remedies.forEach((item,i)=>{if((game.inventory?.[item.id]||0)>0)items[drawerSlots[i]]=item;});
-                content.innerHTML=`<div class="herbalist-workshop"><section class="inventory-cabinet" aria-label="Tes soins disponibles"><div class="inventory-cabinet-heading">Les réserves du terrier</div><div class="inventory-drawers">${items.map(item=>item?`<button type="button" class="inventory-drawer" data-shop-use="${escape(item.id)}" ${retrieving?'disabled':''} aria-disabled="${pr[item.stat]>=100}" aria-label="Utiliser ${escape(item.name)} sur ${escape(name(active))}"><img src="${escape(item.image)}" alt="${escape(item.name)}"><strong>${escape(item.emoji)} ${escape(item.name)}</strong><span class="inventory-quantity">×${game.inventory[item.id]}</span><span class="inventory-handle" aria-hidden="true"></span><span class="inventory-drawer-details"><b>${escape(item.emoji)} ${escape(item.name)}</b><span>${escape(item.description)}</span><em>${pr[item.stat]>=100?'Barre déjà pleine':`Utiliser sur ${escape(name(active))}`} · Stock : ${game.inventory[item.id]}</em></span></button>`:'<div class="inventory-drawer inventory-drawer-empty" aria-label="Tiroir vide"><span class="inventory-handle" aria-hidden="true"></span></div>').join('')}</div>${!items.some(Boolean)?'<p class="inventory-empty">Tes tiroirs sont vides pour le moment.</p>':''}<div class="inventory-cabinet-feet" aria-hidden="true"></div></section><aside class="inventory-herbalist"><img id="inventoryHerbalist" src="${escape(herbalistPoses.idle)}" alt="La lapine apothicaire"><p id="inventorySpeech" aria-live="polite">De quoi as-tu besoin, ${escape(name(active))} ?</p></aside></div><div class="shop-needs"><span>🥕 ${Math.round(pr.food)} %</span><span>😴 ${Math.round(pr.energy)} %</span><span>🫧 ${Math.round(pr.cleanliness)} %</span></div>`;
+                content.innerHTML=`<div class="herbalist-workshop"><section class="inventory-cabinet" aria-label="Tes soins disponibles"><div class="inventory-cabinet-heading">Les réserves du terrier</div><div class="inventory-drawers">${items.map(item=>item?`<button type="button" class="inventory-drawer" data-shop-use="${escape(item.id)}" ${retrieving?'disabled':''} aria-disabled="${pr[item.stat]>=100}" aria-label="${escape(item.name)} : une touche pour la description, deux pour utiliser"><img src="${escape(item.image)}" alt="${escape(item.name)}"><strong>${escape(item.emoji)} ${escape(item.name)}</strong><span class="inventory-quantity">×${game.inventory[item.id]}</span><span class="inventory-handle" aria-hidden="true"></span><span class="inventory-drawer-details"><b>${escape(item.emoji)} ${escape(item.name)}</b><span>${escape(item.description)}</span><em>${pr[item.stat]>=100?'Barre déjà pleine':`Utiliser sur ${escape(name(active))}`} · Stock : ${game.inventory[item.id]}</em></span></button>`:'<div class="inventory-drawer inventory-drawer-empty" aria-label="Tiroir vide"><span class="inventory-handle" aria-hidden="true"></span></div>').join('')}</div>${!items.some(Boolean)?'<p class="inventory-empty">Tes tiroirs sont vides pour le moment.</p>':''}<div class="inventory-cabinet-feet" aria-hidden="true"></div></section><aside class="inventory-herbalist"><img id="inventoryHerbalist" src="${escape(herbalistPoses.idle)}" alt="La lapine apothicaire"><p id="inventorySpeech" aria-live="polite">De quoi as-tu besoin, ${escape(name(active))} ?</p></aside></div><div class="shop-needs"><span>🥕 ${Math.round(pr.food)} %</span><span>😴 ${Math.round(pr.energy)} %</span><span>🫧 ${Math.round(pr.cleanliness)} %</span></div>`;
                 return;
             }
             if(tab==='carrots'){content.innerHTML='<section class="shop-coming"><span>🥕</span><h3>Des carottes pour tes aventures</h3><p>Les achats avec de l’argent réel ne sont pas encore disponibles.</p><p>Gagne tes carottes en jouant et en affrontant les boss.</p></section>';return;}
@@ -458,7 +459,18 @@
                 const active=api.game().species,currentGame=api.game(),item=getItem(clicked.dataset.shopUse);
                 try {
                     if(api.inCombat()||cartGame!==currentGame||!owned().includes(active))throw new Error('Rouvre l’inventaire avec ton compagnon actif après le combat.');
-                    if(!item||!(currentGame.inventory?.[item.id]>0)||api.progress(active)[item.stat]>=100)return;
+                    if(!item||!(currentGame.inventory?.[item.id]>0))return;
+                    const now=Date.now();
+                    if(inspectedItem!==item.id||now-inspectedAt>900||!clicked.classList.contains('drawer-selected')){
+                        inspectedItem=item.id;inspectedAt=now;
+                        content.querySelectorAll('[data-shop-use]').forEach(node=>node.classList.toggle('drawer-selected',node.dataset.shopUse===item.id));
+                        let description=content.querySelector('.inventory-description');
+                        if(!description){description=document.createElement('div');description.className='inventory-description';description.setAttribute('role','status');content.append(description);}
+                        description.innerHTML=`<strong>${escape(item.name)} · ×${currentGame.inventory[item.id]}</strong><p>${escape(item.description)}</p><small>${api.progress(active)[item.stat]>=100?'Ce besoin est déjà rempli.':'Touche deux fois le tiroir pour utiliser ce soin.'}</small>`;
+                        return;
+                    }
+                    inspectedItem='';inspectedAt=0;
+                    if(api.progress(active)[item.stat]>=100)return;
                     clearTimeout(apothecaryTimer);retrieving=true;requestAnimationFrame(actorBounds);render();
                     const version=++retrieveVersion;
                     const valid=()=>version===retrieveVersion&&dialog.open&&tab==='inventory'&&api.game()===currentGame&&api.game().species===active&&!api.inCombat();

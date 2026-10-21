@@ -89,7 +89,7 @@ h1,h2,h3,.console-title,.modal-title,.shop-dialog h2{font-family:Georgia,'Palati
 .inventory-dialog .herbalist-workshop{height:100%!important;min-height:0!important;display:block}
 .inventory-dialog .inventory-cabinet{bottom:3%!important;max-height:90%!important;height:90%;display:flex;flex-direction:column;overflow:visible}
 .inventory-dialog .inventory-drawers{flex:1;min-height:0;grid-auto-rows:minmax(0,1fr)}.inventory-dialog .inventory-drawer{min-height:0;max-height:100%}.inventory-dialog .inventory-empty{flex:none;font-size:clamp(11px,1.2vw,16px)}
-.inventory-dialog .inventory-herbalist{bottom:4%!important;max-height:65%}.inventory-dialog .inventory-herbalist img{max-height:42dvh;object-fit:contain}.inventory-dialog #inventorySpeech{top:auto!important;bottom:100%!important;margin:0 0 8px!important}
+.inventory-dialog .inventory-herbalist{bottom:4%!important;max-height:65%}.inventory-dialog .inventory-herbalist #inventoryHerbalist{max-height:42dvh;object-fit:contain}.inventory-dialog #inventorySpeech{top:auto!important;bottom:100%!important;margin:0 0 8px!important}
 @media(min-width:1000px) and (min-height:600px) and (pointer:fine){body.game-running.default #gameArea .egg-shop{top:auto;bottom:3%;left:50%;translate:-50% 0;max-width:390px;width:390px}body.game-running.default .salon-active-rabbit-spot{bottom:23%}}
 
 #sceneLoading{z-index:2147483640}.inventory-dialog .inventory-cabinet-feet{flex:none}.inventory-dialog .inventory-drawer img{max-height:70%;object-fit:contain}
@@ -102,8 +102,8 @@ h1,h2,h3,.console-title,.modal-title,.shop-dialog h2{font-family:Georgia,'Palati
 .inventory-dialog .inventory-cabinet{height:76%!important;max-height:650px!important;bottom:3%!important}
 .inventory-dialog .inventory-drawers{display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-template-rows:repeat(3,minmax(0,1fr));align-content:stretch;gap:7px}
 .inventory-dialog .inventory-drawer{height:100%!important;width:100%;box-sizing:border-box}.inventory-dialog .inventory-cabinet-heading{font-size:clamp(12px,1.2vw,19px)}
-.inventory-dialog .inventory-herbalist{height:auto!important;max-height:none!important}.inventory-dialog .inventory-herbalist img{height:min(46dvh,480px)!important;max-height:none!important;width:100%;object-fit:contain}
-@media(max-height:500px){.inventory-dialog .inventory-cabinet{height:85%!important;max-height:90%!important}.inventory-dialog .inventory-herbalist img{height:43dvh!important}.inventory-dialog .inventory-drawers{gap:4px}.inventory-dialog .inventory-drawer{padding:3px 3px 12px}.inventory-dialog .inventory-empty{margin:4px 0}.inventory-dialog .inventory-cabinet-heading{font-size:11px}}
+.inventory-dialog .inventory-herbalist{height:auto!important;max-height:none!important}.inventory-dialog .inventory-herbalist #inventoryHerbalist{height:min(46dvh,480px)!important;max-height:none!important;width:100%;object-fit:contain}
+@media(max-height:500px){.inventory-dialog .inventory-cabinet{height:85%!important;max-height:90%!important}.inventory-dialog .inventory-herbalist #inventoryHerbalist{height:43dvh!important}.inventory-dialog .inventory-drawers{gap:4px}.inventory-dialog .inventory-drawer{padding:3px 3px 12px}.inventory-dialog .inventory-empty{margin:4px 0}.inventory-dialog .inventory-cabinet-heading{font-size:11px}}
 
 /* Le parcours est une vraie scène de jeu, sans les commandes de la maison par-dessus. */
 body:has(.agility-runner-wrap) :is(#friendshipBarContainer,#statusBars,#rabbitImage,.brand,.rules-btn,.encyclopedia-btn,.save-btn,.shop-trigger,#installInNav,.records-toggle,.legal-trigger,.admin-test-toggle){display:none!important}
@@ -114,5 +114,57 @@ body.game-running #gameArea:has(.agility-runner-wrap){position:fixed!important;i
 .agility-runner-rabbit{width:110px!important;height:90px!important;bottom:32px!important}.agility-start-hint{font-size:13px!important}
 html.phone-ui body.game-running #gameArea:has(.agility-runner-wrap){bottom:46px!important;padding:5px!important}
 @media(max-height:500px){.agility-runner-wrap{padding:7px!important;gap:4px}.agility-runner-head{font-size:12px;gap:6px}.agility-runner-wrap>small{font-size:10px;line-height:12px}.agility-runner-rabbit{width:90px!important;height:72px!important}.agility-runner-controls button{font-size:12px!important;max-height:44px}}
-.inventory-dialog .inventory-herbalist img{scale:1.5;transform-origin:center bottom}.inventory-dialog .inventory-herbalist:has(.herbalist-walking) img{scale:1}.inventory-dialog #inventorySpeech{bottom:85%!important;max-width:300px}
-@media(max-height:500px){.inventory-dialog .inventory-herbalist{bottom:0!important}.inventory-dialog .inventory-herbalist img{scale:1!important;translate:0 8px}.inventory-dialog #inventorySpeech{bottom:90%!important}}
+.inventory-dialog .inventory-herbalist #inventoryHerbalist{scale:1.5;transform-origin:center bottom}.inventory-dialog .inventory-herbalist:has(.herbalist-walking) img{scale:1}.inventory-dialog #inventorySpeech{bottom:85%!important;max-width:300px}
+@media(max-height:500px){.inventory-dialog .inventory-herbalist{bottom:0!important}.inventory-dialog .inventory-herbalist #inventoryHerbalist{scale:1!important;translate:0 8px}.inventory-dialog #inventorySpeech{bottom:90%!important}}
+
+/* Disposition 113 : objets dans la pièce, consultation avant utilisation. */
+.shop-dialog.market-illustrated .market-purchase-table{right:4%!important;width:25%!important;bottom:7%!important;height:24%!important;z-index:3!important}
+.shop-dialog.market-illustrated .shop-cashier{right:1%!important;z-index:6!important}
+.market-purchase-table::after{box-shadow:calc(100vw * .15) 0 0 #8c592c}
+.inventory-dialog #shopBody{background-size:cover!important;background-position:center bottom!important}
+.inventory-dialog .inventory-cabinet{left:5%!important;width:50%!important;height:62%!important;max-height:500px!important;bottom:6%!important}
+.inventory-dialog .inventory-herbalist{right:6%!important;width:25%!important;bottom:2%!important}
+.inventory-dialog .inventory-herbalist #inventoryHerbalist{height:48dvh!important;max-height:none!important;scale:1!important;translate:0 0!important;object-position:center bottom}
+.inventory-dialog #inventorySpeech{bottom:90%!important;width:min(280px,26vw)!important;max-width:none!important}
+.inventory-dialog .inventory-drawer-details{display:none!important}
+.inventory-dialog .drawer-selected{outline:3px solid #ffe09c;outline-offset:-4px}
+.inventory-description{position:absolute;left:5%;top:3%;width:50%;max-height:26%;overflow:auto;padding:8px 12px;border:1px solid #ac8751;border-radius:10px;background:#fff8e9f5;color:#392818;z-index:12;box-sizing:border-box;font-size:14px;line-height:1.3}.inventory-description p{margin:4px 0}.inventory-description small{font-size:12px}
+.inventory-dialog .inventory-empty{font-size:14px;margin:7px}
+.pantry-illustrated .pantry-ready{top:19%!important;height:56%!important;display:flex;flex-direction:column;gap:6px}
+.pantry-illustrated .pantry-ready h3{position:static!important;flex:none;font-size:clamp(12px,1.2vw,20px)!important;line-height:1.3!important;margin:0!important;padding:4px!important}
+.pantry-illustrated .pantry-ready-shelves{min-height:0!important;flex:1;height:auto!important;align-content:start}
+.pantry-ready-shelves>p{grid-row:2;align-self:start!important;margin:0;padding:8px!important;font-size:clamp(11px,1vw,16px)!important;line-height:1.3;background:#fff8e8bb}
+.pantry-recipe-choices{display:flex;gap:6px;overflow:auto;max-width:100%;padding:2px}.pantry-recipe-choices button{flex:none;min-height:44px;border:1px solid #b69261;border-radius:10px;background:#fff8eb;color:#493224;padding:6px 10px;font:inherit;white-space:nowrap}.pantry-recipe-choices [aria-pressed=true]{background:#edf0d9;border-color:#596f42;box-shadow:inset 0 -3px #596f42}
+#pantryRecipe[hidden]{display:none!important}.pantry-workshop>.pantry-meals>label{min-width:0}
+#lapinousRecordsBtn .achievement-alert{position:absolute;top:1px;right:1px;width:23px;height:23px;display:grid;place-items:center;background:#9d302d;color:#fff8e7;border:2px solid #fff8e7;border-radius:50%;font:bold 17px/1 system-ui;box-shadow:0 2px 4px #0005}.records-toggle.has-rewards{outline:3px solid #d6a449;outline-offset:2px}
+.guide-gift-status{color:#365020!important;font-weight:bold!important;border-top:1px solid #ad9668;padding-top:7px}
+.agility-runner{box-shadow:0 5px 15px #32221c33!important}.agility-ground{height:4px!important;bottom:32px!important;background:#a18956!important;border-top:0!important}
+html.phone-ui body.game-running #mainNav #installInNav:not([hidden]){position:fixed!important;left:106px!important;top:6px!important;bottom:auto!important;right:auto!important;width:auto!important;min-width:84px!important;min-height:44px!important;padding:4px 8px!important;z-index:1200!important;flex-direction:row!important}
+#startupScreen button{display:inline-block!important;position:relative;z-index:5;min-height:44px;padding:8px 14px;margin-top:7px;border:1px solid #e1bb73;border-radius:10px;background:#fff0d2;color:#34221b}
+@media(max-height:500px){.inventory-dialog .inventory-cabinet{height:60%!important;bottom:7%!important}.inventory-dialog .inventory-herbalist #inventoryHerbalist{height:46dvh!important}.inventory-dialog .inventory-empty{font-size:10px;margin:3px}.inventory-description{font-size:11px;padding:5px 8px}.inventory-description small{font-size:10px}.pantry-recipe-choices button{font-size:10px;padding:3px 6px}.pantry-ready-shelves>p{font-size:11px!important}}
+
+html.phone-ui .shop-dialog.market-illustrated .market-purchase-table{right:4%!important;bottom:7%!important;width:25%!important;z-index:3!important}
+html.phone-ui .shop-dialog.market-illustrated .shop-body{background-size:100% 185%!important;background-position:center 60%!important}
+html.phone-ui .shop-dialog.market-illustrated .shop-body::after{display:none!important}
+html.phone-ui .shop-dialog.market-illustrated .shop-items{position:absolute!important;inset:0!important;display:block!important}
+html.phone-ui .shop-dialog.market-illustrated .market-stall{position:absolute!important;top:25%!important;height:34%!important;min-height:0!important;width:17.5%!important;max-width:none!important}
+html.phone-ui .shop-dialog.market-illustrated .market-stall:nth-child(1){left:2.6%!important}
+html.phone-ui .shop-dialog.market-illustrated .market-stall:nth-child(2){left:25.3%!important;width:18.9%!important}
+html.phone-ui .shop-dialog.market-illustrated .market-stall:nth-child(3){left:49%!important;width:17.4%!important}
+html.phone-ui .shop-dialog.market-illustrated .market-stall>h3{font-size:8px!important;line-height:1.1!important;padding:2px!important;min-width:0!important}
+html.phone-ui .shop-dialog.market-illustrated .shop-cashier{right:1%!important;bottom:3%!important}
+html.phone-ui .market-purchase-table>strong{font-size:9px;white-space:nowrap;top:-30%}
+html.phone-ui .pantry-illustrated .pantry-ready{top:30%!important;height:45%!important}
+html.phone-ui .pantry-stage.pantry-illustrated{inset:0 0 86px!important;bottom:86px!important}
+html.phone-ui .pantry-workshop>.pantry-meals{height:82px!important;max-height:82px!important;overflow:visible!important}
+html.phone-ui .pantry-recipe-choices button{min-height:34px!important;font-size:10px!important}
+html.phone-ui .pantry-workshop>.pantry-meals>label{display:block!important;font-size:11px!important;overflow:hidden}
+
+html.phone-ui .shop-dialog.market-illustrated .shop-items{width:100%!important;max-width:none!important;transform:none!important}
+html.phone-ui .shop-dialog.market-illustrated .market-stall-products{display:grid!important;width:100%!important;height:100%!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:repeat(2,minmax(0,1fr))!important;gap:0 3px!important;padding:0!important}
+html.phone-ui .shop-dialog.market-illustrated .market-stall .shop-consumable{position:relative!important;display:block!important;width:100%!important;height:100%!important;max-width:none!important;min-width:0!important;min-height:0!important;padding:0!important;border:0!important}
+html.phone-ui .shop-dialog.market-illustrated .market-stall .shop-consumable>img{position:absolute!important;top:0!important;left:5%!important;width:90%!important;height:70%!important;max-height:70%!important;max-width:90%!important;object-fit:contain!important}
+html.phone-ui .shop-dialog.market-illustrated .market-price-tag{left:0!important;right:0!important;bottom:0!important;width:auto!important;padding:0!important;font-size:8px!important;line-height:10px!important;white-space:nowrap!important}
+
+.inventory-dialog .inventory-herbalist .herbalist-gift{position:absolute!important;width:64px!important;height:64px!important;max-width:64px!important;max-height:64px!important;left:15%!important;bottom:30%!important;top:auto!important;object-fit:contain;scale:1!important;translate:0 0!important;pointer-events:none}
+.inventory-dialog .shop-needs{position:absolute!important;left:3%;bottom:1%;z-index:8;display:flex!important;gap:5px;padding:3px!important;margin:0!important}

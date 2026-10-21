@@ -1,10 +1,6 @@
-import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
-const source=fs.readFileSync('assets/js/welcome-gift.js','utf8');
-const storage=new Map();
-const context={window:{},localStorage:{getItem:key=>storage.get(key),setItem:(key,value)=>storage.set(key,value)}};
-vm.runInNewContext(source,context);
-const game={eggs:0};assert.equal(context.window.LapinousWelcomeGift(game),true);assert.equal(game.eggs,1);
-assert.equal(context.window.LapinousWelcomeGift(game),false);assert.equal(game.eggs,1);
-vm.runInNewContext(source,context);assert.equal(context.window.LapinousWelcomeGift({eggs:0}),false);
-storage.clear();assert.equal(context.window.LapinousWelcomeGift(game),false);
-console.log('Œuf bienvenue : une attribution, rechargement et sauvegarde déjà récompensée protégés.');
+import vm from 'node:vm';import fs from 'node:fs';import assert from 'node:assert/strict';
+const context={window:{}};vm.runInNewContext(fs.readFileSync('assets/js/welcome-gift.js','utf8'),context);
+const gift=context.window.LapinousWelcomeGift,game={eggs:0};assert.equal(gift(game),true);assert.equal(game.eggs,1);assert.equal(gift(game),false);
+const restored=JSON.parse(JSON.stringify(game));assert.equal(gift(restored),false);assert.equal(restored.eggs,1);
+const old={eggs:0,welcomeEggGranted:true};assert.equal(gift(old),true);assert.equal(gift(old),false);assert.equal(old.eggs,1);
+assert.equal(gift({eggs:0}),true);console.log('Cadeau : nouvelle partie, reprise JSON, ancien cadeau bloqué réparé une fois, aucun stockage navigateur requis.');

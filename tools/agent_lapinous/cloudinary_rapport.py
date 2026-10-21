@@ -25,7 +25,16 @@ def build(root: Path, expected_start=None):
             fresh = False
     ok = fresh and run.get('status') == 'success'
     status = 'RÉUSSITE' if ok else ('ÉCHEC' if fresh else 'JOURNAL ABSENT POUR CE SOIR')
-    lines = [f'# Cloudinary — {status}', f'Début : {when.isoformat()}',
+    sync_status = run.get('syncStatus')
+    if not sync_status:
+        steps = run.get('steps', [])
+        trash_step = next((s for s in steps if s.get('file') == 'tools/cloudinary-corbeille.mjs'), None)
+        sync_status = 'success' if trash_step and all(s.get('exitCode') == 0 for s in steps if s is not trash_step) else run.get('status', 'unknown')
+    trash_status = run.get('trashStatus') or ('failed' if (run.get('corbeille') or {}).get('errors') else 'non précisé')
+    trash_status = {'success': 'RÉUSSI', 'failed': 'ÉCHEC', 'not-run': 'NON EXÉCUTÉ', 'running': 'EN COURS'}.get(trash_status, trash_status)
+    lines = [f'# Cloudinary — {status}',
+             f'Synchronisation des images : {"RÉUSSIE" if sync_status == "success" else sync_status}',
+             f'Traitement de la corbeille : {trash_status}', f'Début : {when.isoformat()}',
              f'Fin : {run.get("finishedAt", "inconnue")}', f'État déclaré : {run.get("status", "inconnu")}',
              f'Erreur : {run.get("error", "aucune")}', '', '## Étapes exécutées']
     for step in run.get('steps', []):

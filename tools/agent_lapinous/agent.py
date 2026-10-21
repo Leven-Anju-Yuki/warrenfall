@@ -422,7 +422,7 @@ def bilan(apply, since=None, chain=None):
         chain_errors = ['Cloudinary/chaîne : ' + safe_error(RuntimeError(str(item))) for item in chain.get('errors', [])]
         if chain['syncExit'] != 0:
             cloud_ok = False
-            chain_errors.append('Cloudinary : la synchronisation de cette execution a echoue : code ' + str(chain['syncExit']))
+            chain_errors.append('Cloudinary : la chaîne images comporte une erreur (transfert ou corbeille) : code ' + str(chain['syncExit']) + ' ; consulter les états séparés du rapport Cloudinary.')
         errors.extend(chain_errors)
     quarantine_text = quarantine_discord_summary()
     lines = ['# Bilan Warrenfall - ' + stamp,

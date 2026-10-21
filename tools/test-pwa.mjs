@@ -59,7 +59,7 @@ assert.equal(await request('Lapinous_Sauvegardes/partie.json'),undefined);
 assert.equal(await request('dashboard.html'),undefined);
 offline = true;
 assert((await (await request('index.html',{mode:'navigate',destination:'document'})).text()).includes('gameRoot'));
-assert((await (await request('assets/js/installer.js?v=phone-install-112')).text()).includes('orientationGate'));
+assert((await (await request('assets/js/installer.js?v=ui-113')).text()).includes('orientationGate'));
 offline = false;
 for(let i=0;i<123;i++) await request('https://res.cloudinary.com/demo/image/upload/'+i+'.png',{destination:'image'});
 const images=[...stores.entries()].find(([name])=>name.endsWith('images-v1'))[1];

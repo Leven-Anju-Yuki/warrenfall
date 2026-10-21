@@ -41,6 +41,10 @@ async function update() {
   runDetails.startedAt = new Date().toISOString();
   runDetails.steps = [];
   runDetails.status = 'running';
+  runDetails.syncStatus = 'running';
+  runDetails.trashStatus = 'not-run';
+  delete runDetails.error;
+  delete runDetails.corbeille;
   beforeAssets = null;
   delete runDetails.images;
   saveRun();
@@ -90,10 +94,15 @@ async function update() {
     fs.writeFileSync(ledgerFile + '.tmp', JSON.stringify(latestLedger, null, 2));
     fs.renameSync(ledgerFile + '.tmp', ledgerFile);
     // La corbeille n'est traitée qu'après une synchronisation et une activation réussies.
+    runDetails.syncStatus = 'success';
+    runDetails.trashStatus = 'running';
     await run('tools/cloudinary-corbeille.mjs', ['appliquer']);
+    runDetails.trashStatus = 'success';
     console.log(changed ? 'Images synchronisées et raccordées.' : 'Images déjà synchronisées ; raccordement à jour.');
     runDetails.status = 'success';
   } catch (e) {
+    if (runDetails.syncStatus === 'success') runDetails.trashStatus = 'failed';
+    else runDetails.syncStatus = 'failed';
     runDetails.status = 'failed';
     runDetails.error = e.message;
     console.error(e.message);

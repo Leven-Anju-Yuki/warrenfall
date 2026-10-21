@@ -15,6 +15,20 @@ from test_suivi_trello import repo, TASK, LISTS, CID, scratch
 
 
 class ChainReports(unittest.TestCase):
+    def test_successful_transfer_with_failed_trash_is_distinguished(self):
+        import tempfile
+        with tempfile.TemporaryDirectory() as folder:
+            root = Path(folder)
+            (root / '.cloudinary-local').mkdir()
+            now = dt.datetime.now(dt.timezone.utc).isoformat()
+            report = {'startedAt': now, 'status': 'failed', 'syncStatus': 'success',
+                      'trashStatus': 'failed', 'corbeille': {'errors': [{'id': 'old', 'reason': 'HTTP 404'}]}}
+            (root / '.cloudinary-local/nightly-report.json').write_text(json.dumps(report), encoding='utf-8')
+            text, ok = cloudinary_rapport.build(root, now)
+            self.assertFalse(ok)
+            self.assertIn('Synchronisation des images : RÉUSSIE', text)
+            self.assertIn('Traitement de la corbeille : ÉCHEC', text)
+
     def test_image_changes_and_quarantine_are_named(self):
         import tempfile
         with tempfile.TemporaryDirectory() as folder:

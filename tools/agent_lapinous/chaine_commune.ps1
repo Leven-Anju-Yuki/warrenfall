@@ -5,7 +5,7 @@ function Invoke-LapinousSteps {
     try {
         try { & $Journal 'SYNC debut' } catch { $state.errors += 'Journal indisponible au debut de la synchronisation.' }
         $state.syncExit = [int](& $Execute 'sync' $null)
-        if ($state.syncExit -ne 0) { $state.errors += "Synchronisation echouee (code $($state.syncExit))." }
+        if ($state.syncExit -ne 0) { $state.errors += "Chaine images en erreur (code $($state.syncExit)) : consulter les etats distincts synchronisation et corbeille." }
     } catch { $state.syncExit=1; $state.errors += "Synchronisation interrompue : $($_.Exception.Message)" }
     finally {
         $state.syncFinishedAt=(Get-Date).ToString('o')

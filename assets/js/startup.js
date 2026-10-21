@@ -75,15 +75,24 @@
         const extras=new Set(['./assets/img/page.jpg']);
         function assets(value){if(typeof value==='string'&&/\.(png|gif|webp|jpe?g|svg)$/i.test(value))extras.add(value);else if(value&&typeof value==='object')Object.values(value).forEach(assets);}
         // Prepare all companion movements and care animations before exposing the game.
-        if(catalogue){assets(catalogue.companions);assets(catalogue.cashier);assets(catalogue.apothecary);assets(catalogue.backgrounds);assets(catalogue.items);assets(catalogue.gameBoxes);}
+        if(catalogue){assets(catalogue.companions);assets(catalogue.cashier);assets(catalogue.apothecary);assets(catalogue.backgrounds);assets(catalogue.items.filter(item=>!item.disabled));assets(catalogue.gameBoxes);}
         ['Zone_cuisine/faim','Zone_Chambre/sommeil','Zone_SdB/toilette_oreilles','Zone_jardin/entrainement'].forEach(path=>{extras.add('./assets/img/'+path+'.png');extras.add('./assets/img/'+path+'.gif');});
-        let resources=[...new Set([...images.map(img=>img.currentSrc||img.src),...backgrounds,...extras])];
+        const manifest=window.LapinousImageManifest;
+        const knownExtras=[...extras].filter(source=>!manifest||manifest[source.replace(/^\.\//,'')]||/^https?:/.test(source));
+        let resources=[...new Set([...images.map(img=>img.currentSrc||img.src),...backgrounds,...knownExtras,...sources,...decorations].map(source=>window.LapinousImages?.url(source)||source))];
+        async function batch(list){
+            const outcomes=Array(list.length);let cursor=0;
+            await Promise.all(Array.from({length:Math.min(4,list.length)},async()=>{while(cursor<list.length){const index=cursor++;outcomes[index]=await load(list[index]);}}));
+            return outcomes;
+        }
         sceneStage=true;total+=resources.length;
-        let pending=resources;
+        let pending=resources, automaticRetry=0;
         while(pending.length){
-            const outcomes=await Promise.all(pending.map(load));
+            const outcomes=await batch(pending);
             pending=pending.filter((_,index)=>!outcomes[index]);
             if(pending.length){
+                if(automaticRetry++<1){completed-=pending.length;status.textContent='Connexion lente : nouvelle tentative de chargement…';continue;}
+                window.LapinousStartupDiagnostics={failed:[...pending]};
                 status.textContent=`${pending.length} ressource(s) indisponible(s). Le jeu attend leur chargement.`;
                 await new Promise(resolve=>{const retry=document.createElement('button');retry.type='button';retry.textContent='Réessayer le chargement';retry.onclick=()=>{retry.remove();resolve();};status.after(retry);window.addEventListener('online',()=>{retry.remove();resolve();},{once:true});});
                 completed-=pending.length;

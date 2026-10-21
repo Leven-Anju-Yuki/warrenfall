@@ -59,10 +59,10 @@
     const installed = installationConfirmed || matchMedia('(display-mode:standalone)').matches || navigator.standalone;
     if (installed) { installationConfirmed = true; try { localStorage.setItem('lapinous_installed','true'); } catch {} }
     [button, savedButton, gameButton].forEach(item => { item.hidden = !!installed; });
-    navButton.hidden = !!installed;
-    navButton.disabled = !!installed;
+    navButton.hidden = false;
+    navButton.disabled = false;
     navButton.setAttribute('aria-label', installed ? 'Warrenfall est déjà installé' : installationRemembered ? 'Installation et icône de Warrenfall' : 'Installer Warrenfall');
-    navButton.lastElementChild.textContent = installed ? 'Installé' : installationRemembered ? 'Application' : 'Installer';
+    navButton.lastElementChild.textContent = installed || installationRemembered ? 'Application' : 'Installer';
     savedButton.textContent = installationRemembered ? 'Application et icône' : 'Installer le jeu';
   }
   async function install() {

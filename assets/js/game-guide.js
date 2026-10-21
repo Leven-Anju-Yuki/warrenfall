@@ -78,7 +78,7 @@
     "text": "La marchande, le Chef et l’apothicaire t’accompagnent.",
     "points": [
       "Marchande : choisis tes articles, puis règle ton panier.",
-      "Chef : retrouve tes ingrédients dans le frigo. Les recettes sont en pause.",
+      "Chef : retrouve tes ingrédients dans le frigo et choisis un plat à préparer.",
       "Apothicaire : utilise tes soins pour le lapin choisi."
     ],
     "tip": "Les provisions et les soins sont partagés entre tous tes lapins."
@@ -114,7 +114,9 @@
   const body = modal.querySelector('.modal-body');
   function render() {
     const step = steps[index];
-    body.innerHTML = `<div class="guide-progress" role="status">${step.section} <span>${index + 1} / ${steps.length}</span></div><div class="guide-layout"><aside class="guide-art"><img src="${step.image}" alt="${step.title}"><span>${step.where}</span></aside><article class="guide-copy"><h2>${step.title}</h2><p>${step.text}</p><ul>${step.points.map(point=>`<li>${point}</li>`).join('')}</ul><p class="guide-tip">${step.tip}</p></article></div><nav class="guide-actions" aria-label="Étapes du tutoriel"><button type="button" data-read hidden>Lire le texte ↓</button><button type="button" data-prev ${index===0?'disabled':''}>← Retour</button><button type="button" data-next ${index===steps.length-1?'hidden':''}>La suite →</button><button type="button" data-bs-dismiss="modal">${index===steps.length-1?'Entrer dans le terrier':'Explorer maintenant'}</button></nav>`;
+    const gift=window.LapinousWelcomeGiftStatus?.();
+    const receipt=(index===0||index===steps.length-1)?`<p class="guide-gift-status" role="status">${gift?.granted?'✓ Œuf de bienvenue offert ! Retrouve-le dans Œufs (sauf si tu l’as déjà ouvert).':'Ton œuf sera offert après l’adoption de ton premier lapin.'}</p>`:'';
+    body.innerHTML = `<div class="guide-progress" role="status">${step.section} <span>${index + 1} / ${steps.length}</span></div><div class="guide-layout"><aside class="guide-art"><img src="${step.image}" alt="${step.title}"><span>${step.where}</span></aside><article class="guide-copy"><h2>${step.title}</h2><p>${step.text}</p><ul>${step.points.map(point=>`<li>${point}</li>`).join('')}</ul><p class="guide-tip">${step.tip}</p>${receipt}</article></div><nav class="guide-actions" aria-label="Étapes du tutoriel"><button type="button" data-read hidden>Lire le texte ↓</button><button type="button" data-prev ${index===0?'disabled':''}>← Retour</button><button type="button" data-next ${index===steps.length-1?'hidden':''}>La suite →</button><button type="button" data-bs-dismiss="modal">${index===steps.length-1?'Entrer dans le terrier':'Explorer maintenant'}</button></nav>`;
     const copy=body.querySelector('.guide-copy'), read=body.querySelector('[data-read]');
     const more=()=>{read.hidden=copy.scrollHeight-copy.scrollTop-copy.clientHeight<8;};
     read.onclick=()=>copy.scrollBy({top:Math.max(60,copy.clientHeight*.8),behavior:'smooth'});

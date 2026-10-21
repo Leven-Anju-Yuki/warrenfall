@@ -92,9 +92,12 @@ async function credentials() {
 async function api(method, id) {
   const cfg = await credentials();
   if (!cfg.CLOUDINARY_CLOUD_NAME || !cfg.CLOUDINARY_API_KEY || !cfg.CLOUDINARY_API_SECRET) throw Error('Configuration Cloudinary incomplète.');
-  const endpoint = id.split('/').map(encodeURIComponent).join('/');
-  const response = await fetch(`https://api.cloudinary.com/v1_1/${encodeURIComponent(cfg.CLOUDINARY_CLOUD_NAME)}/resources/image/upload/${endpoint}`, {
+  // GET vise une ressource ; DELETE utilise la collection et un ID explicite.
+  const endpoint = method === 'GET' ? '/' + id.split('/').map(encodeURIComponent).join('/') : '';
+  const body = method === 'DELETE' ? new URLSearchParams({ 'public_ids[]': id, invalidate: 'true' }) : undefined;
+  const response = await fetch(`https://api.cloudinary.com/v1_1/${encodeURIComponent(cfg.CLOUDINARY_CLOUD_NAME)}/resources/image/upload${endpoint}`, {
     method, headers: { Authorization: 'Basic ' + Buffer.from(`${cfg.CLOUDINARY_API_KEY}:${cfg.CLOUDINARY_API_SECRET}`).toString('base64') },
+    body,
     signal: AbortSignal.timeout(60000)
   });
   const json = await response.json().catch(() => ({}));
@@ -147,7 +150,7 @@ for (const [id, item] of known) {
       throw Error('Identité / URL de la ressource distante non confirmée.');
     }
     const result = await api('DELETE', id);
-    if (result.result !== 'ok') throw Error('Suppression non confirmée par Cloudinary.');
+    if (result.deleted?.[id] !== 'deleted' || result.partial === true) throw Error('Suppression non confirmée par Cloudinary.');
     delete nextQueue.items[id];
     delete nextLedger.assets[id];
     report.deleted.push({ id, path: item.path, since: existing.since });

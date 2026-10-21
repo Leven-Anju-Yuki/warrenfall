@@ -1,6 +1,21 @@
 # Warrenfall - suivi des travaux et validations
 
-Mise a jour : 16 octobre 2026.
+Mise a jour : 21 octobre 2026.
+
+## Synchronisation Trello manuelle — 21 octobre 2026
+
+- [x] Tableau Warrenfall réel actualisé à la demande de Florie : dix descriptions mises à jour depuis ce suivi (repères/automatisations, performance, guide, accessibilité, placement, boutique/apothicaire, économie, Lapidoku, jeux adaptés et cuisine/Marché).
+- [x] Guide de démarrage et nouvelles grilles Lapidoku déplacés vers « À valider en jeu » ; Performance et nouveaux consommables/équilibre des prix vers « En cours ». Commentaire explicatif ajouté sur chacune des quatre cartes déplacées, avec fichiers précis et validations restantes.
+- [x] Relecture distante : dix descriptions confirmées ; 73 cartes avant/après, aucune création. Cartes Réalisé, Bloqué et Idées à sélectionner conservées sans changement de description, de liste ou de validation. Aucun passage automatique en Réalisé. Les 30 validations humaines restent respectées.
+- [x] Résultats S0/S4 consignés comme échecs de réveil autonome ; problème non résolu. Corbeille : six suppressions confirmées, quatre échéances conservées au 26/10, chef.svg bloqué. Aucun envoi Discord, lancement Cloudinary ou changement Windows pendant cette synchronisation Trello ; point de reprise automatique Git conservé.
+
+## Corbeille Cloudinary — correction du 21 octobre 2026
+
+- [x] Politique humaine confirmée : suppression automatique après sept jours sans nouvelle demande, sous réserve des sauvegardes exactes et des contrôles techniques. Les dates ne sont ni réinitialisées ni prolongées. Le traitement reste exécuté par la chaîne quotidienne/rattrapée : une échéance passée est traitée à sa prochaine exécution, pas nécessairement à la minute exacte si le PC dort.
+- [x] Corriger les six HTTP 404 DELETE : utiliser la collection Admin API avec `public_ids[]` et vérifier `deleted[id]`, au lieu de la route de lecture individuelle.
+- [x] Six ressources expirées supprimées avec confirmation Cloudinary ; six sauvegardes permanentes revérifiées par SHA-256. Quatre ressources restent jusqu’au 26 octobre avec dates inchangées ; chef.svg reste bloqué faute de sauvegarde exacte.
+- [x] Distinguer le succès de synchronisation de l’échec de corbeille dans les prochains rapports. Aucun envoi Discord ni modification Trello pendant cette intervention. Preuves : `.cloudinary-local/corbeille-fix-20261021/verification.json`.
+- [x] Test S4 réel du 21 octobre : batterie 56 %, hibernation effective confirmée par Kernel-Power 42 (TargetState/EffectiveState 5) à 10:00:23. Réveil prévu à 10:04:50 non exécuté (aucun horodatage, résultat 0x41303 : tâche jamais exécutée). Reprise à 10:20:51, motif Power Button ; confirmation humaine : appui sur le bouton pour rallumer le PC vers 10 h 21. Retour automatique S4 non testé puisque la tâche n’a pas démarré. Tâche temporaire supprimée, trois tâches de production strictement inchangées. Preuves : `.cloudinary-local/wake-test/s4-20261021/`. Aucun réveil autonome démontré ; l’utilisateur confirme avoir ouvert lui-même le PC lors des essais précédents.
 
 - [x] Correspondances des fichiers renseignees pour les cartes existantes qui ont du code.
 - [x] Reperes `[trello:ID]` ajoutes aux taches ci-dessous.
@@ -11,21 +26,42 @@ Les cases principales des cartes restent ouvertes tant que leur validation ou le
 
 ## Validations humaines reprises de l’export Trello
 
-Export fourni par l’utilisateur : `5VmsAFi7 - clikergame.json`, intégré le 15 octobre 2026. Les 71 identifiants correspondent aux liaisons locales ; aucune nouvelle carte ni correspondance à inventer.
+Export fourni par l’utilisateur : `5VmsAFi7 - clikergame.json`, relu le 21 octobre 2026. Les 30 cartes placées par l’utilisateur dans Réalisé sont reconnues comme validations humaines, dont 28 également marquées terminées (dueComplete). Les cases principales correspondantes étaient déjà cochées ; le résumé ancien ne recensait que neuf cartes.
 
-Neuf cases principales ont été cochées localement d’après la liste « Réalisé — code et historique » :
+- [x] Équipes favorites [trello:6ac39e147db15f1edab9c326]
+- [x] faire une modal qui souvre avec un bouton image livre pour afficher les regles du jeu [trello:6661a8eefa746159ea2700da]
+- [x] faire le clicker pour lui donner a manger le brosser [trello:6661a4b7b41cd821c331d689]
+- [x] Barres de besoins et niveau d’amitié [trello:6661a5ec1e0c59351bd18a52]
+- [x] trouver un gif de lapin heureux [trello:6661a91283b1bf3c205e457c]
+- [x] Retour au Salon et informations du lapin [trello:6669758ceb6d2b877ef431fa]
+- [x] trouver les images [trello:6661b309ac71b719ebc63fd7]
+- [x] faire une zone soin alimentation sommeil et jeu avec des fond différent [trello:6661a6149952d95e5c048f9a]
+- [x] thème sur les lapins [trello:6661a423f3b0f23f486d3590]
+- [x] faire un salon avec des bouton de base  pour les diffèrent lieu et une fleche pour revenir en arriere [trello:6661b4124754141925b73499]
+- [x] Adoption, traits, collection et encyclopédie [trello:6ac39e3c28d335cd92c8cc95]
+- [x] Progression indépendante par lapin [trello:6ac39e3f09478ebeda38c92d]
+- [x] Combat tactique — équipe, mode manuel et automatique [trello:6ac39e4258234f0f6df5def5]
+- [x] Ultimes et barres de charge — lapins et boss [trello:6ac39e452732a48b7581df6e]
+- [x] Listes de 1 à 6 attaques selon la rareté [trello:6ac39e5cff0d2d466b27ecbb]
+- [x] Fragments — amélioration de la technique choisie [trello:6ac39e5fd921b05e95245ff0]
+- [x] Œufs illustrés — ouverture individuelle et par 10 [trello:6ac39e61cbe7415819b24df8]
+- [x] Décors de saisons jour/nuit et événements prioritaires [trello:6ac39efb4988b40cec255170]
+- [x] Admin local — tests rapides et Dashboard [trello:6ac39efeb8e60614e640ad49]
+- [x] Dashboard — graphiques de rareté harmonisés [trello:6ac39f0129a42ce3c535a196]
+- [x] Sauvegardes nommées, datées et remplacement confirmé [trello:6ac39f0465d01dcee2c8411d]
+- [x] Mini-jeux — Memory 30 niveaux et puzzles cousus [trello:6ac39f1ffd16599635e62ae9]
+- [x] Défis quotidiens, succès et récompenses [trello:6ac39f233ae89c6d7a24fb0c]
+- [x] Audio — soins courts, volumes et défaite [trello:6ac39f2681968bcd0d9b086d]
+- [x] Audio original livré — ambiance et sommeil [trello:6ac39f295fcf0100cf51e1cd]
+- [x] Notifications et combat lisible — corrections livrées [trello:6ac39f2b43bb87374c9f2e22]
+- [x] Salon — compagnons ensemble et placement corrigé [trello:6ac39f2fa02c69b499e17ea8]
+- [x] README et arborescence — actualisés le 08-10-2026 [trello:6ac39d96335bf1dad3b0d2f2]
+- [x] Magasin et inventaire — code livré [trello:6ac75d3f821f8ecfbfefd1b3]
+- [x] Accompagnateurs et lapins — médias centralisés [trello:6ac75d402925f959a3e9afbc]
 
-- Équipes favorites — carte marquée terminée et dans Réalisé.
-- faire une modal qui souvre avec un bouton image livre pour afficher les regles du jeu — carte marquée terminée et dans Réalisé.
-- faire le clicker pour lui donner a manger le brosser — carte marquée terminée et dans Réalisé.
-- Barres de besoins et niveau d’amitié — carte marquée terminée et dans Réalisé.
-- trouver un gif de lapin heureux — carte marquée terminée et dans Réalisé.
-- Retour au Salon et informations du lapin — dans Réalisé, sans marque de fin dueComplete.
-- trouver les images — dans Réalisé, sans marque de fin dueComplete.
-- faire une zone soin alimentation sommeil et jeu avec des fond différent — carte marquée terminée et dans Réalisé.
-- thème sur les lapins — carte marquée terminée et dans Réalisé.
+Les cartes « Retour au Salon et informations du lapin » et « trouver les images » sont dans Réalisé sans dueComplete : leur placement humain est respecté. La checklist « niveau » conserve ses trois éléments non cochés ; aucune sous-tâche n’est validée par déduction. Les correctifs et régressions signalés séparément restent ouverts. Aucun déplacement distant, aucune création de carte, aucun changement des automatismes ni du point de reprise Git.
 
-La checklist Trello « niveau » de « Barres de besoins et niveau d’amitié » conserve trois éléments non cochés (niveaux 1, 2 et 3). La validation de la carte ne les coche pas automatiquement. Les validations mobiles et les autres travaux ouverts restent à vérifier. Aucun appel Trello ou Discord, aucune modification du point de reprise Git ni du réglage d’automatisation.
+Empreinte SHA-256 de l’export : `974CE8F34592602E367737A06750AFD6585C49F90F9B29BF1310320BBAEC606C`. Le tableau porte encore le nom « clikergame » dans ce fichier ; cet export ne permet pas de confirmer son nom actuel en ligne.
 
 ## Correctifs téléphone et installation — 15 octobre 2026
 
@@ -354,18 +390,17 @@ Inventaire et compte rendu détaillé : `docs/RENOMMAGE_WARRENFALL.md`. Les noms
 <!-- LAPINOUS_AGENT_DEBUT -->
 ### Suivi automatique du projet
 
-Dernier bilan : 19/10/2026 20:11
+Dernier bilan : 21/10/2026 09:33
 
-# Bilan Warrenfall - 19/10/2026 20:11
+# Bilan Warrenfall - 21/10/2026 09:33
 Mode : APPLICATION
-Fichiers nouveaux depuis le point de reprise : 129
+Fichiers nouveaux depuis le point de reprise : 128
 Cartes analysees : 71
-Deplacements proposes : 1
-Transitions traitees avec succes (reprises comprises) : 1
+Deplacements proposes : 0
+Transitions traitees avec succes (reprises comprises) : 0
 
 ## Deplacements
-- P2 — Guide de démarrage [6ac39daf6e132da85a61925d] : P2 — Confort et découverte -> En cours ; Lignes modifiees pertinentes : index.html
-  Preuve : index.html ; demarrage|guide|Prends soin de ton compagnon|regles du jeu
+Aucun deplacement justifie.
 
 ## Suivi detaille
 - Améliorations de soin — ancienne piste à réévaluer [6661a537b3df7e377ba31643] : Suivi manuel : aucune regle automatique explicite. Sous-taches : 0/0. Parent coche : False.
@@ -414,7 +449,7 @@ Transitions traitees avec succes (reprises comprises) : 1
 - P1 — Équilibrage des boss [6ac39d8a40c2a66ada563abc] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
 - P1 — Indicateur de difficulté plus fiable [6ac39d8ef2a33d8d5e748be8] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
 - P2 — SEO [6ac39d99f4eb044b2a42d449] : Deja dans la liste correspondante. Lignes modifiees pertinentes : index.html Sous-taches : 0/0. Parent coche : False.
-- P2 — Guide de démarrage [6ac39daf6e132da85a61925d] : Lignes modifiees pertinentes : index.html Sous-taches : 5/5. Parent coche : False.
+- P2 — Guide de démarrage [6ac39daf6e132da85a61925d] : Deja dans la liste correspondante. Lignes modifiees pertinentes : index.html Sous-taches : 5/5. Parent coche : False.
 - P2 — Accessibilité [6ac39db1a134b35f03b17940] : Deja dans la liste correspondante. Lignes modifiees pertinentes : index.html, assets/js/installer.js Sous-taches : 10/12. Parent coche : False.
 - P2 — Performance [6ac39db49bd7456ac00b5038] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 7/8. Parent coche : False.
 - P2 — Relations des personnages [6ac39dbb2c736f2180aee1ec] : Aucune preuve precise dans les nouvelles modifications : aucun deplacement. Sous-taches : 0/0. Parent coche : False.
@@ -473,8 +508,6 @@ Transitions traitees avec succes (reprises comprises) : 1
 - assets/icons/warrenfall-48.png
 - assets/icons/warrenfall-512.png
 - assets/img/Ouverture_du_jeu/animations/Warrenfall_ouverture_8_secondes.gif
-- assets/img/Ouverture_du_jeu/animations/azazel_course.gif
-- assets/img/Ouverture_du_jeu/animations/carotte_course.gif
 - assets/img/Ouverture_du_jeu/erreur/Azazel devant la porte interdite-2.png
 - assets/img/Ouverture_du_jeu/erreur/Azazel et le signal interrompu-3.png
 - assets/img/Ouverture_du_jeu/erreur/Le chemin perdu d’Azazel-1.png
@@ -482,12 +515,9 @@ Transitions traitees avec succes (reprises comprises) : 1
 - assets/img/Ouverture_du_jeu/fonds_4K/02_illumination_3840x2160.jpg
 - assets/img/Ouverture_du_jeu/fonds_4K/03_ouverture_terrier_3840x2160.jpg
 - assets/img/Ouverture_du_jeu/fonds_4K/04_transition_3840x2160.jpg
-- assets/img/Ouverture_du_jeu/fonds_4K/05_chargement_3840x2160.jpg
-- assets/img/Ouverture_du_jeu/logo/Warrenfall_logo_transparent.png
 - assets/img/Ouverture_du_jeu/logo/icone_192.png
 - assets/img/Ouverture_du_jeu/logo/icone_48.png
 - assets/img/Ouverture_du_jeu/logo/icone_512.png
-- assets/img/Ouverture_du_jeu/poses/azazel_course/01.png
 - assets/img/Ouverture_du_jeu/poses/azazel_course/02.png
 - assets/img/Ouverture_du_jeu/poses/azazel_course/03.png
 - assets/img/Ouverture_du_jeu/poses/azazel_course/04.png
@@ -495,7 +525,6 @@ Transitions traitees avec succes (reprises comprises) : 1
 - assets/img/Ouverture_du_jeu/poses/azazel_course/06.png
 - assets/img/Ouverture_du_jeu/poses/azazel_course/07.png
 - assets/img/Ouverture_du_jeu/poses/azazel_course/08.png
-- assets/img/Ouverture_du_jeu/poses/carotte_course/01.png
 - assets/img/Ouverture_du_jeu/poses/carotte_course/02.png
 - assets/img/Ouverture_du_jeu/poses/carotte_course/03.png
 - assets/img/Ouverture_du_jeu/poses/carotte_course/04.png
@@ -505,22 +534,17 @@ Transitions traitees avec succes (reprises comprises) : 1
 - assets/img/Ouverture_du_jeu/poses/carotte_course/08.png
 - assets/img/Ouverture_du_jeu/sources_animation/azazel_course_planche.png
 - assets/img/Ouverture_du_jeu/sources_animation/carotte_course_planche.png
-- assets/img/Zone_Chambre/sommeil.gif
-- assets/img/Zone_Chambre/sommeil.png
-- assets/img/Zone_SdB/toilette_oreilles.gif
-- assets/img/Zone_SdB/toilette_oreilles.png
-- assets/img/Zone_cuisine/faim.gif
-- assets/img/Zone_cuisine/faim.png
-- assets/img/Zone_jardin/entrainement.gif
 - assets/img/Zone_jardin/entrainement.png
 - assets/img/lapin_soin.gif
 - assets/js/connection-notice.js
 - assets/js/game-economy.js
 - assets/js/game-guide.js
+- assets/js/image-manifest.js
 - assets/js/installer.js
 - assets/js/lapidoku.js
 - assets/js/local-files.js
 - assets/js/mobile-ui.js
+- assets/js/pantry.js
 - assets/js/script.js
 - assets/js/shop.js
 - assets/js/startup.js
@@ -543,21 +567,31 @@ Transitions traitees avec succes (reprises comprises) : 1
 - tools/agent_lapinous/README_INSTALLATION.md
 - tools/agent_lapinous/agent.py
 - tools/agent_lapinous/bot_discord.py
+- tools/agent_lapinous/chaine_commune.ps1
+- tools/agent_lapinous/cloudinary_rapport.py
 - tools/agent_lapinous/etat_batterie.json
 - tools/agent_lapinous/installer_batterie.ps1
 - tools/agent_lapinous/installer_taches.ps1
 - tools/agent_lapinous/liaisons_trello.json
 - tools/agent_lapinous/reseau.py
 - tools/agent_lapinous/surveillance_batterie.py
+- tools/agent_lapinous/test_chaine_agent.py
 - tools/agent_lapinous/test_fiabilisation.py
 - tools/agent_lapinous/test_installateur.ps1
+- tools/cloudinary-corbeille.mjs
+- tools/cloudinary-deletion-policy.json
+- tools/cloudinary-deletion-policy.mjs
 - tools/cloudinary-sync.mjs
 - tools/diagnostic-reveil-admin.ps1
+- tools/prepare-lossless-opening.py
 - tools/remote-network.mjs
 - tools/serve-game.py
 - tools/test-audio-events.mjs
+- tools/test-cloudinary-deletion-policy.mjs
+- tools/test-cloudinary-partial.mjs
 - tools/test-game-economy.mjs
 - tools/test-image-chain-safety.mjs
+- tools/test-install-visibility.mjs
 - tools/test-landscape-game.mjs
 - tools/test-lapidoku.mjs
 - tools/test-pwa.mjs
@@ -575,41 +609,50 @@ Transitions traitees avec succes (reprises comprises) : 1
 Les commits depuis le dernier point de reprise sont inclus par comparaison des contenus.
 
 ## Chaine de cette execution
-{"startedAt": "2026-10-19T20:10:51.5879321+02:00", "syncExit": 1, "bilanExit": 1, "errors": ["Synchronisation echouee (code 1)."], "trelloReadOnly": false, "cloudinaryDeleteDisabled": true, "syncFinishedAt": "2026-10-19T20:11:17.5261837+02:00"}
+{"startedAt": "2026-10-21T09:30:42.9903093+02:00", "syncExit": 1, "bilanExit": 1, "errors": ["Synchronisation echouee (code 1)."], "trelloReadOnly": false, "cloudinaryDeleteDisabled": false, "syncFinishedAt": "2026-10-21T09:31:29.2412728+02:00"}
 
 ## Cloudinary — rapport complet
 # Cloudinary — ÉCHEC
-Début : 2026-10-19T20:10:53.347000+02:00
-Fin : 2026-10-19T18:11:16.801Z
+Début : 2026-10-21T09:30:59.230000+02:00
+Fin : 2026-10-21T07:31:24.258Z
 État déclaré : failed
-Erreur : Étape interrompue : tools/cloudinary-sync.mjs (code 1) — {"selected":326,"excluded":169,"missing":0,"bytes":516727066}
-failed: assets/img/Ouverture_du_jeu/animations/Warrenfall_ouverture_8_secondes.gif
-Script : Error — Transfert arrêté après échec ; reprise disponible dans le manifeste privé.
+Erreur : Étape interrompue : tools/cloudinary-corbeille.mjs (code 1) — {"quarantine":0,"restored":0,"deleted":0,"pending":4,"blocked":1,"errors":6}
 
 ## Étapes exécutées
-- tools/cloudinary-sync.mjs dry-run : code 0 à 2026-10-19T18:10:54.689Z
-- tools/cloudinary-sync.mjs sync : code 1 à 2026-10-19T18:11:16.798Z
+- tools/cloudinary-sync.mjs dry-run : code 0 à 2026-10-21T07:31:03.566Z
+- tools/backup-transferred-images.mjs  : code 0 à 2026-10-21T07:31:08.849Z
+- tools/cloudinary-sync.mjs dry-run : code 0 à 2026-10-21T07:31:13.643Z
+- tools/cloudinary-activate.mjs  : code 0 à 2026-10-21T07:31:14.388Z
+- tools/cloudinary-corbeille.mjs appliquer : code 1 à 2026-10-21T07:31:24.214Z
+
+## Nouvelles images envoyées : 0
+
+## Images modifiées envoyées : 0
+
+## Images inchangées : 326
+
+## Images non vérifiées : 0
 
 ## Inventaire complet
 Sélectionnées : 326
-Exclues : 169
+Exclues : 170
 Introuvables : 0
 
 ### Images utilisées
-- assets/img/Ouverture_du_jeu/animations/azazel_course.gif | présente : True | motif : ['Référence : index.html', 'Référence : assets/js/script.js', 'Référence : assets/js/startup.js']
-- assets/img/Ouverture_du_jeu/animations/carotte_course.gif | présente : True | motif : ['Référence : index.html', 'Référence : assets/js/startup.js']
-- assets/img/Ouverture_du_jeu/animations/Warrenfall_ouverture_8_secondes.gif | présente : True | motif : ['Référence : assets/js/startup.js']
-- assets/img/Ouverture_du_jeu/fonds_4K/05_chargement_3840x2160.jpg | présente : True | motif : ['Référence : index.html', 'Référence : assets/js/startup.js']
-- assets/img/Ouverture_du_jeu/logo/Warrenfall_logo_transparent.png | présente : True | motif : ['Référence : index.html', 'Référence : assets/js/game-guide.js', 'Référence : assets/js/startup.js']
-- assets/img/Ouverture_du_jeu/poses/azazel_course/01.png | présente : True | motif : ['Référence : index.html']
-- assets/img/Ouverture_du_jeu/poses/carotte_course/01.png | présente : True | motif : ['Référence : index.html']
-- assets/img/Zone_Chambre/sommeil.gif | présente : True | motif : ['Référence : assets/js/script.js']
-- assets/img/Zone_Chambre/sommeil.png | présente : True | motif : ['Référence : assets/js/script.js']
-- assets/img/Zone_cuisine/faim.gif | présente : True | motif : ['Référence : assets/js/script.js']
-- assets/img/Zone_cuisine/faim.png | présente : True | motif : ['Référence : assets/js/game-guide.js', 'Référence : assets/js/script.js']
-- assets/img/Zone_jardin/entrainement.gif | présente : True | motif : ['Référence : assets/js/script.js']
-- assets/img/Zone_SdB/toilette_oreilles.gif | présente : True | motif : ['Référence : assets/js/script.js']
-- assets/img/Zone_SdB/toilette_oreilles.png | présente : True | motif : ['Référence : assets/js/script.js']
+- assets/img/Ouverture_du_jeu/animations/azazel_course.gif | présente : False | motif : ['Référence : index.html', 'Référence : assets/js/script.js', 'Référence : assets/js/startup.js']
+- assets/img/Ouverture_du_jeu/animations/carotte_course.gif | présente : False | motif : ['Référence : index.html', 'Référence : assets/js/startup.js']
+- assets/img/Ouverture_du_jeu/animations/Warrenfall_ouverture_web.gif | présente : False | motif : ['Référence : assets/js/startup.js']
+- assets/img/Ouverture_du_jeu/fonds_4K/05_chargement_3840x2160.jpg | présente : False | motif : ['Référence : index.html', 'Référence : assets/js/startup.js']
+- assets/img/Ouverture_du_jeu/logo/Warrenfall_logo_transparent.png | présente : False | motif : ['Référence : index.html', 'Référence : assets/js/game-guide.js', 'Référence : assets/js/startup.js']
+- assets/img/Ouverture_du_jeu/poses/azazel_course/01.png | présente : False | motif : ['Référence : index.html']
+- assets/img/Ouverture_du_jeu/poses/carotte_course/01.png | présente : False | motif : ['Référence : index.html']
+- assets/img/Zone_Chambre/sommeil.gif | présente : False | motif : ['Référence : assets/js/script.js']
+- assets/img/Zone_Chambre/sommeil.png | présente : False | motif : ['Référence : assets/js/script.js']
+- assets/img/Zone_cuisine/faim.gif | présente : False | motif : ['Référence : assets/js/script.js']
+- assets/img/Zone_cuisine/faim.png | présente : False | motif : ['Référence : assets/js/game-guide.js', 'Référence : assets/js/script.js']
+- assets/img/Zone_jardin/entrainement.gif | présente : False | motif : ['Référence : assets/js/game-guide.js', 'Référence : assets/js/script.js']
+- assets/img/Zone_SdB/toilette_oreilles.gif | présente : False | motif : ['Référence : assets/js/script.js']
+- assets/img/Zone_SdB/toilette_oreilles.png | présente : False | motif : ['Référence : assets/js/script.js']
 - assets/img/accompagnateurs/Fragments/marche_droite.gif | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Fragments/assemblage_cristaux.gif | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/caissier/01_accroupie.png | présente : False | motif : ['Référence : lapinous-shop.json']
@@ -620,12 +663,12 @@ Introuvables : 0
 - assets/img/accompagnateurs/caissier/06_remise_produit.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/caissier/07_marche_lapine_artisane.gif | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Artisan/Cycle de marche en six poses-7.png | présente : False | motif : ['Référence : lapinous-shop.json']
-- assets/img/accompagnateurs/Artisan/Lapin forgeron brun, pose confiante-4.png | présente : False | motif : ['Référence : lapinous-shop.json', 'Référence : assets/js/game-guide.js']
+- assets/img/accompagnateurs/Artisan/Lapin forgeron brun, pose confiante-4.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Artisan/Lapin forgeron en salut respectueux-1.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Artisan/Le lapin forgeron présente son engrenage-3.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Artisan/Sprite sheet d’un lapin forgeron-9.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Fragments/Artisan lapin mystique en révérence-2.png | présente : False | motif : ['Référence : lapinous-shop.json']
-- assets/img/accompagnateurs/Fragments/Lapin mystique blanc, bras croisés-5.png | présente : False | motif : ['Référence : lapinous-shop.json', 'Référence : assets/js/game-guide.js']
+- assets/img/accompagnateurs/Fragments/Lapin mystique blanc, bras croisés-5.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Fragments/Lapin mystique offrant un cristal d’améthyste-6.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/fond/Magasin/Comptoir.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/fond/Magasin/Atelier de forge mystique au terrier-2.png | présente : False | motif : ['Référence : lapinous-shop.json']
@@ -644,7 +687,7 @@ Introuvables : 0
 - assets/img/accompagnateurs/Chef/02_attraper_haut.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Chef/03_attraper_hauteur.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Chef/04_bonjour.png | présente : False | motif : ['Référence : lapinous-shop.json']
-- assets/img/accompagnateurs/Chef/05_attente_droite.png | présente : False | motif : ['Référence : lapinous-shop.json', 'Référence : assets/js/game-guide.js', 'Référence : assets/js/pantry.js']
+- assets/img/accompagnateurs/Chef/05_attente_droite.png | présente : False | motif : ['Référence : lapinous-shop.json', 'Référence : assets/js/pantry.js']
 - assets/img/accompagnateurs/Chef/06_remise_produit.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Chef/07_marche.gif | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Chef/08_decoupe_legumes.gif | présente : False | motif : ['Référence : lapinous-shop.json']
@@ -690,7 +733,7 @@ Introuvables : 0
 - assets/img/accompagnateurs/Apothicaire/05_attente_droite.png | présente : False | motif : ['Référence : lapinous-shop.json', 'Référence : assets/js/game-guide.js']
 - assets/img/accompagnateurs/Apothicaire/06_remise_produit.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/Apothicaire/07_marche.gif | présente : False | motif : ['Référence : lapinous-shop.json']
-- assets/img/accompagnateurs/couturiere/couturiere.png | présente : False | motif : ['Référence : lapinous-shop.json', 'Référence : assets/js/game-guide.js']
+- assets/img/accompagnateurs/couturiere/couturiere.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/couturiere/couturiere_felicitation.png | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/couturiere/cout_les_pieces.gif | présente : False | motif : ['Référence : lapinous-shop.json']
 - assets/img/accompagnateurs/couturiere/deplace_tabouret.gif | présente : False | motif : ['Référence : lapinous-shop.json']
@@ -711,7 +754,7 @@ Introuvables : 0
 - assets/img/boss/mais_face.png | présente : False | motif : ['Référence : lapinous-content.json']
 - assets/img/boss/mystery_boss.svg | présente : False | motif : ['Référence : assets/js/script.js']
 - assets/img/boss/oignon_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
-- assets/img/boss/oignon_face.png | présente : False | motif : ['Référence : lapinous-content.json']
+- assets/img/boss/oignon_face.png | présente : False | motif : ['Référence : lapinous-content.json', 'Référence : assets/js/game-guide.js']
 - assets/img/boss/patate_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
 - assets/img/boss/patate_face.png | présente : False | motif : ['Référence : lapinous-content.json']
 - assets/img/boss/piment_cote.png | présente : False | motif : ['Référence : lapinous-content.json']
@@ -1062,6 +1105,7 @@ Introuvables : 0
 - assets/img/magasin/aliments/Planche botanique d’herbes et fleurs remarquables (1).png | présente : ? | motif : Aucune référence active ou dynamique identifiée
 - assets/img/magasin/aliments/Planche d’icônes culinaires fleuries et colorées.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
 - assets/img/magasin/aliments/Planche d’icônes gourmandes et fleuries.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
+- assets/img/Ouverture_du_jeu/animations/Warrenfall_ouverture_8_secondes.gif | présente : ? | motif : Aucune référence active ou dynamique identifiée
 - assets/img/Ouverture_du_jeu/erreur/Azazel devant la porte interdite-2.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
 - assets/img/Ouverture_du_jeu/erreur/Azazel et le signal interrompu-3.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
 - assets/img/Ouverture_du_jeu/erreur/Le chemin perdu d’Azazel-1.png | présente : ? | motif : Aucune référence active ou dynamique identifiée
@@ -1098,29 +1142,50 @@ Introuvables : 0
 
 ### Entrées en corbeille : 0
 
-### En attente : 0
+### En attente : 4
+- assets/img/Zone_Chambre/dodo.png | ID : lapinous/Zone_Chambre/dodo__png_8654ebe5cc174563 | date : 2026-10-19T20:32:59.011Z | jours restants : 6 | motif :
+- assets/img/Zone_cuisine/lapin_cuisine.png | ID : lapinous/Zone_cuisine/lapin_cuisine__png_dcd1e94ee86f7e8b | date : 2026-10-19T20:32:59.011Z | jours restants : 6 | motif :
+- assets/img/Zone_jardin/entrenement.png | ID : lapinous/Zone_jardin/entrenement__png_e07b626b7e71e4d3 | date : 2026-10-19T20:32:59.011Z | jours restants : 6 | motif :
+- assets/img/Zone_SdB/lapin_SdB.png | ID : lapinous/Zone_SdB/lapin_SdB__png_13a37177c86e6f7c | date : 2026-10-19T20:32:59.011Z | jours restants : 6 | motif :
 
 ### Réactivées : 0
 
 ### Supprimées définitivement : 0
 
-### Suppressions bloquées : 0
+### Suppressions bloquées : 1
+- assets/img/accompagnateurs/Chef/chef.svg | ID : lapinous/accompagnateurs/Chef/chef__svg_999aae9fe436d669 | date : ? | jours restants : ? | motif : Version exacte absente de la sauvegarde permanente
 
-### Erreurs corbeille : 0
+### Erreurs corbeille : 6
+- ? | ID : lapinous/accompagnateurs/caissier/caissier_merci__png_3a50d99790389868 | date : ? | jours restants : ? | motif : Cloudinary HTTP 404 (DELETE)
+- ? | ID : lapinous/accompagnateurs/caissier/caissier_presentation__png_16a7d977d327ee7e | date : ? | jours restants : ? | motif : Cloudinary HTTP 404 (DELETE)
+- ? | ID : lapinous/magasin/produits/Pomme_surprise_au_foin__png_34f8c52883e83a77 | date : ? | jours restants : ? | motif : Cloudinary HTTP 404 (DELETE)
+- ? | ID : lapinous/fond/Magasin/Comptoir vide dans un terrier chaleureux-4__png_e43304e1c5dfb3f0 | date : ? | jours restants : ? | motif : Cloudinary HTTP 404 (DELETE)
+- ? | ID : lapinous/accompagnateurs/Fragments/Cycle de marche à droite-8__png_d94c0b915f3d201c | date : ? | jours restants : ? | motif : Cloudinary HTTP 404 (DELETE)
+- ? | ID : lapinous/accompagnateurs/Fragments/Lapin assemblant des cristaux violets-10__png_b67bd11a69b2f15f | date : ? | jours restants : ? | motif : Cloudinary HTTP 404 (DELETE)
 
 
 ## Quarantaine
 📦 **Corbeille Cloudinary — suivi quotidien J-X**
-Images en attente : **6**
+Images en attente : **10**
 Quarantaine logique : URL et public_id inchangés.
-• **caissier_merci.png** — **J-1** — échéance : 20/10/2026 15:17
-• **caissier_presentation.png** — **J-1** — échéance : 20/10/2026 15:17
-• **Pomme_surprise_au_foin.png** — **J-1** — échéance : 20/10/2026 15:17
-• **Comptoir vide dans un terrier chaleureux-4.png** — **J-1** — échéance : 20/10/2026 15:17
-• **Cycle de marche à droite-8.png** — **J-1** — échéance : 20/10/2026 15:17
-• **Lapin assemblant des cristaux violets-10.png** — **J-1** — échéance : 20/10/2026 15:17
-Images bloquées : **1** ; erreurs : **0**.
+• **caissier_merci.png** — **J-0 (échéance atteinte)** — échéance : 20/10/2026 15:17
+• **caissier_presentation.png** — **J-0 (échéance atteinte)** — échéance : 20/10/2026 15:17
+• **Pomme_surprise_au_foin.png** — **J-0 (échéance atteinte)** — échéance : 20/10/2026 15:17
+• **Comptoir vide dans un terrier chaleureux-4.png** — **J-0 (échéance atteinte)** — échéance : 20/10/2026 15:17
+• **Cycle de marche à droite-8.png** — **J-0 (échéance atteinte)** — échéance : 20/10/2026 15:17
+• **Lapin assemblant des cristaux violets-10.png** — **J-0 (échéance atteinte)** — échéance : 20/10/2026 15:17
+• **dodo.png** — **J-6** — échéance : 26/10/2026 21:32
+• **lapin_cuisine.png** — **J-6** — échéance : 26/10/2026 21:32
+• **entrenement.png** — **J-6** — échéance : 26/10/2026 21:32
+• **lapin_SdB.png** — **J-6** — échéance : 26/10/2026 21:32
+Images bloquées : **1** ; erreurs : **6**.
 🔒 chef.svg : Version exacte absente de la sauvegarde permanente
+⚠️ caissier_merci__png_3a50d99790389868 : erreur (voir rapport)
+⚠️ caissier_presentation__png_16a7d977d327ee7e : erreur (voir rapport)
+⚠️ Pomme_surprise_au_foin__png_34f8c52883e83a77 : erreur (voir rapport)
+⚠️ Comptoir vide dans un terrier chaleureux-4__png_e43304e1c5dfb3f0 : erreur (voir rapport)
+⚠️ Cycle de marche à droite-8__png_d94c0b915f3d201c : erreur (voir rapport)
+⚠️ Lapin assemblant des cristaux violets-10__png_b67bd11a69b2f15f : erreur (voir rapport)
 J-0 ne signifie pas supprimée : la suppression doit être autorisée et confirmée.
 
 ## Notifications prevues
@@ -1276,3 +1341,16 @@ Ces deux idées sont enregistrées dans « Idées à sélectionner » après lec
 - [x] Nouvelle consigne du 19/10 : gel levé, suppression Cloudinary automatique après sept jours réactivée dans la chaîne réelle. Sauvegarde exacte, absence de référence, identité distante et succès de synchronisation obligatoires ; simulation sans suppression. Aucune suppression exécutée pendant ce changement.
 
 - [x] Téléphone 112 : une ancienne confirmation d’installation ne masque plus définitivement l’accès dans le navigateur ; bouton Application si installation mémorisée, Installer sinon, masqué dans l’application autonome. Aide avec aperçu de la nouvelle icône Warrenfall et précaution de sauvegarde.
+
+- [ ] Veille S0 / capot fermé : diagnostic Windows actualisé le 20/10 dans DIAGNOSTIC_REVEIL_S0.md. Réveil, rattrapage et batterie déjà autorisés ; aucune fiabilité capot fermé démontrée. Nouveau test local de vingt minutes en attente de disponibilité de Florie ; aucun paramètre système ni tâche de production modifié.
+
+- [x] Interface 113 : table décalée dans le renfoncement derrière la marchande ; apothicairerie sans bandes latérales, tiroirs réduits, consultation avant double touche d’utilisation ; cuisine avec plats prêts séparés et choix par fiches ; cadeau de bienvenue confirmé dans la sauvegarde et coché dans le carnet ; badge ! sur succès à récupérer ; accès Application maintenu dans la PWA.
+- [x] Chargement 113 : concurrence limitée à quatre, délai réseau adapté, tentative automatique et reprise explicite. Audit CDN en lecture seule : 90 images accessibles sur 91 références du catalogue ; tartelette.png non répertoriée, exclue du préchargement anticipé. Aucun transfert ni suppression effectué.
+- [ ] Valider ces dispositions et gestes sur téléphone réel après publication ; vérifier récupération unique du cadeau et disparition du badge après réclamation des succès.
+
+- [x] Vérifications 113 : navigateur 568×280 et 1920×1080 ; premier clic descriptif sans consommation, double touche consommant un seul soin, cadeau confirmé après rechargement, badge de succès visible. Tests cadeau/chargement/installation/PWA/succès réussis. Contrôle visuel des trois comptoirs effectué ; aucun transfert ni suppression Cloudinary pendant ces corrections.
+
+- [x] Test réel S0 sur batterie du 20/10 vérifié : capot fermé 14:56:40–15:22:40, échéance 15:04:18, aucun horodatage ; tentative Windows 15:11:45 refusée (0x800710E0). Alerte batterie 30 % reçue seulement à 15:23:26 après réouverture. Tâche temporaire désactivée ; trois tâches de production inchangées.
+- [ ] Surveillance fiable capot fermé sur batterie non résolue : deux tests échoués. Rapports administrateur SleepStudy à recueillir ; choix d’une solution active écran éteint ou d’un hôte toujours disponible à valider, sans désactivation automatique des protections.
+
+- [x] Second test S4 du 21 octobre : hibernation à 10:43:50, réveil programmé à 10:48:21, aucune exécution ni horodatage. Reprise à 11:28:00 avec motif Power Button. Aucun réveil autonome démontré. Tâche temporaire supprimée ; trois tâches de production vérifiées inchangées. Preuves : `.cloudinary-local/wake-test/s4-retest-20261021-103826/`.

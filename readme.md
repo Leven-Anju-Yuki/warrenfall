@@ -615,9 +615,9 @@ Mise à jour cuisine : réserve ouverte uniquement au clic sur le frigo ; March�
 
 | Dossier | Fichiers | Taille |
 |---|---:|---:|
-| `assets/` | 285 | 320.55 Mo |
-| `docs/` | 15 | 0.17 Mo |
-| `tools/` | 64 | 0.29 Mo |
+| `assets/` | 272 | 312.89 Mo |
+| `docs/` | 16 | 0.18 Mo |
+| `tools/` | 70 | 0.31 Mo |
 
 _Inventaire local uniquement : les images déjà archivées ne sont pas considérées manquantes._
 <!-- LAPINOUS_AGENT_FIN -->
@@ -679,3 +679,5 @@ Le GIF d’ouverture utilise une copie web de 7,8 Mo (640 × 360, 15 images/s, 8
 Sécurité du 19 octobre : les suppressions Cloudinary sont explicitement suspendues par `tools/cloudinary-deletion-policy.json`, y compris si le fichier est absent ou illisible. Les échéances de quarantaine ne valent pas autorisation de suppression. Voir `docs/DIAGNOSTIC_CLOUDINARY_2026-10-19.md` pour la limite de taille de l’ouverture et les tests de qualité sans transfert.
 
 Consigne actuelle confirmée le 19 octobre : suppression Cloudinary automatique réactivée après sept jours de quarantaine, sans nouvelle confirmation par image. Elle reste conditionnée à une synchronisation réussie, une sauvegarde exacte et tous les contrôles techniques ; les simulations restent sans suppression. Cette autorisation remplace le gel demandé plus tôt le même jour.
+
+Interface 113 : catalogue actuel avec recettes activées ; sélecteur de plats en fiches, présentation séparée des plats prêts. Tiroirs : une touche décrit le soin, double touche rapide l’utilise. Œuf de bienvenue confirmé par reçu dans chaque sauvegarde ; rattrapage unique des anciennes parties dont le verrou navigateur bloquait le cadeau. Le trophée signale les récompenses disponibles avec un point d’exclamation. Chargement limité à quatre images simultanées, nouvelle tentative automatique puis bouton de reprise ; visuels non répertoriés du catalogue exclus du préchargement anticipé.

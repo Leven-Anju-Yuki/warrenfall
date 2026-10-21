@@ -11,7 +11,7 @@ for(const fail of [false,true]){
  const context={fs:fakeFs,path,spawn:(exe,args)=>{
   executions.push(args[0]);const child=new EventEmitter();child.stdout=new EventEmitter();child.stderr=new EventEmitter();
   queueMicrotask(()=>{if(fail)child.stderr.emit('data',Buffer.from('SSL/certificat : CERT_HAS_EXPIRED'));child.emit('exit',fail?1:0);});return child;
- },process:{argv:[],execPath:'fake-node',exitCode:0,stdout:{write(){}}},console:{log(){},error(){}},setTimeout,clearTimeout,Date,readImageMap(){return {};},writeImageMap(){}};
+ },process:{argv:[],execPath:'fake-node',exitCode:0,stdout:{write(){}}},console:{log(){},error(){}},setTimeout,clearTimeout,Date,structuredClone,readImageMap(){return {};},writeImageMap(){}};
  vm.runInNewContext(code,context);await context.finished;
  const report=JSON.parse(written.get('.cloudinary-local/nightly-report.json'));
  assert.equal(report.status,fail?'failed':'success');
