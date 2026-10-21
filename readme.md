@@ -699,3 +699,19 @@ Vérifications : `node tools/test-team-rules.mjs`, `node tools/test-install-visi
 À partir de cinq jours avant le début de chaque période événementielle, un rappel apparaît dans le jeu avec la date de début. Il respecte les fenêtres du Dashboard, Pâques et le Nouvel An chinois. Si le jeu était fermé à J−5, le rappel peut encore apparaître à la prochaine visite avant le début. Un seul rappel par événement et par année est mémorisé dans le navigateur, quel que soit le lapin ; effacer les données du navigateur efface aussi cette mémoire. Pas de notification système jeu fermé : un service push serait nécessaire. Tests : `node tools/test-event-reminders.mjs`.
 
 Le bandeau d’annonce de saison est compact et refermable ; il disparaît après sept secondes et ne réapparaît pas à chaque actualisation dans la même session. Les décors et lapins d’événement restent actifs. Test : `node tools/test-season-banner.mjs`.
+
+
+### Mettre à jour l’application Chrome sans la désinstaller
+
+Sauvegarde la partie, ouvre Warrenfall avec Internet pour récupérer les nouveaux fichiers, puis ferme complètement l’application et tous les onglets Warrenfall dans Chrome avant de rouvrir le jeu. Une nouvelle version du cache peut attendre la fermeture des anciennes fenêtres ; un second lancement peut donc être nécessaire. Le jeu essaie le réseau avant son cache hors connexion pour les scripts et pages. Ses mises à jour ne purgent ni localStorage ni IndexedDB des joueurs. Ne pas désinstaller ni effacer les données du site pour mettre à jour. L’icône et le nom Android suivent le mécanisme WebAPK de Chrome et peuvent changer plus tard que le contenu du jeu.
+
+Références : https://web.dev/articles/service-worker-lifecycle et https://web.dev/learn/pwa/update .
+
+
+### Compatibilité et protection des parties
+
+Les formats anciens, intermédiaires et actuels sont migrés sur une copie, avec conservation des champs inconnus et de la progression. Une archive source distincte est enregistrée avant chaque migration d’ancienne partie ; la sauvegarde précédente est conservée avant remplacement. Une autre fenêtre ayant modifié la partie ou une erreur de stockage bloque l’écriture et affiche une alerte.
+
+Un fichier illisible ou provenant d’une version future ne déclenche pas une partie neuve par-dessus : un écran permet de télécharger l’original et de restaurer la copie de secours. La déconnexion crée une sauvegarde nommée avant de retirer la reprise automatique ; elle est annulée si cette copie échoue. Le cache PWA ne purge pas les sauvegardes des joueurs.
+
+Ces protections ne remplacent pas un export JSON hors du navigateur : effacement des données du site, nettoyage du système ou panne du stockage peuvent détruire les copies locales. Conserver une copie externe avant une désinstallation ou un changement d’appareil. Tests : `node tools/test-save-safety.mjs` et `node tools/test-landscape-game.mjs --quick --ui-only --save-compat` ; ajouter `--save-corrupt` pour vérifier la récupération.

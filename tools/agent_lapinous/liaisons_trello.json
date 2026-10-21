@@ -271,7 +271,9 @@
         "assets/js/local-files.js",
         "index.html",
         "assets/css/mobile.css",
-        "tools/test-mobile-game.mjs"
+        "tools/test-mobile-game.mjs",
+        "assets/js/save-safety.js",
+        "tools/test-save-safety.mjs"
       ],
       "preuves": [
         {

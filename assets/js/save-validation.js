@@ -12,6 +12,10 @@
       }
     }
     inspect(data);
+    if(!data.species&&!data.status&&!data.progress)throw new Error('Le fichier ne contient pas de partie reconnue.');
+    if(data.species!==undefined&&(typeof data.species!=='string'||!data.species))throw new Error('Lapin actif incorrect.');
+    if(data.ownedSpecies!==undefined&&(!Array.isArray(data.ownedSpecies)||data.ownedSpecies.some(key=>typeof key!=='string'||!key)))throw new Error('Collection incorrecte.');
+    for(const field of ['speciesNames','speciesTraits','records','audio'])if(data[field]!==undefined&&(!data[field]||typeof data[field]!=='object'||Array.isArray(data[field])))throw new Error('Champ incorrect : '+field);
     const counter = (value, label) => {
       if (!Number.isSafeInteger(value) || value < 0) throw new Error('Quantité incorrecte : ' + label);
     };

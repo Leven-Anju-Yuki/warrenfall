@@ -60,8 +60,7 @@
         const state = ensure(game, date), today = dayKey(date);
         const row = (def, counts, claimed, day) => ({...def, day, value: Math.min(def.target, counts[def.metric] || 0), claimed: !!claimed[def.id]});
         const todayRows = daily.map(d => row(d, state.days[today].counts, state.days[today].claimed, today));
-        const pending = Object.entries(state.days).filter(([key]) => key !== today).flatMap(([key, entry]) =>
-            daily.map(d => row(d, entry.counts, entry.claimed, key)).filter(r => !r.claimed && r.value >= r.target));
+        const pending = []; // Historique conserv?, r?compenses quotidiennes expir?es.
         // Un seul palier par famille, sans masquer une récompense encore à récupérer.
         const families = [...new Set(milestones.map(d => d.metric))];
         const permanent = families.map(metric => {
@@ -69,10 +68,13 @@
             const current = steps.find(d => !state.claimed[d.id]) || steps[steps.length - 1];
             return { ...row(current, state.peaks, state.claimed, null), step: steps.indexOf(current) + 1, steps: steps.length };
         });
-        return { today: todayRows, pending, permanent };
+        const rank = a => a.value >= a.target ? (a.claimed ? 1 : 0) : 2;
+        const completedFirst = rows => rows.sort((a,b) => rank(a) - rank(b));
+        return { today: completedFirst(todayRows), pending, permanent: completedFirst(permanent) };
     }
     function claim(game, id, day = null, date = new Date()) {
         const state = ensure(game, date);
+        if (day !== null && day !== dayKey(date)) return 0;
         const def = (day === null ? milestones : daily).find(d => d.id === id);
         const entry = day === null ? { counts: state.peaks, claimed: state.claimed } : state.days[day];
         if (!def || !entry || entry.claimed[id] || (entry.counts[def.metric] || 0) < def.target) return 0;

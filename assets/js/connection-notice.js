@@ -2,7 +2,7 @@
     const notice = document.createElement('dialog');
     notice.id = 'connectionNotice';
     notice.setAttribute('aria-label', 'Connexion Internet interrompue');
-    notice.innerHTML = '<img src="./assets/icons/error-offline.png" alt="Pas de connexion Internet. Le lien avec le terrier est interrompu."><div class="connection-actions"><button type="button" data-retry>Réessayer</button><button type="button" data-continue>Continuer hors connexion</button><p role="status"></p></div>';
+    notice.innerHTML = '<div class="error-art error-art--offline"><img src="./assets/icons/error-offline.png" alt="Pas de connexion Internet. Le lien avec le terrier est interrompu."><button class="error-hotspot" type="button" data-retry aria-label="Réessayer" title="Réessayer"></button></div><button class="connection-close" type="button" data-continue aria-label="Fermer et continuer hors connexion" title="Continuer hors connexion">×</button><p role="status"></p>';
     document.body.append(notice);
     notice.querySelector('[data-continue]').onclick = () => notice.close();
     notice.querySelector('[data-retry]').onclick = () => {

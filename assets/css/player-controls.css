@@ -1,0 +1,14 @@
+/* Un emplacement commun aux pièces, indépendant de la longueur du nom. */
+body.game-running .brand,
+html.phone-ui body.game-running .brand{
+ position:fixed;top:auto!important;left:max(12px,env(safe-area-inset-left))!important;
+ bottom:calc(90px + env(safe-area-inset-bottom))!important;right:auto;
+ display:flex;align-items:center;flex-wrap:nowrap;gap:6px;margin:0;
+ width:230px;max-width:calc(100vw - 24px);box-sizing:border-box;padding:5px 7px;
+ border:1px solid #c9b58e;border-radius:24px;background:#fff8e9;color:#513923;
+}
+body.game-running .brand .brand-title{flex:1;min-width:0;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;font-size:14px}
+body.game-running .brand .rename-btn{flex:0 0 36px;width:36px;height:36px;margin:0}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){
+ html.phone-ui body.game-running .brand{bottom:calc(58px + env(safe-area-inset-bottom))!important;width:210px;padding:3px 5px}
+}

@@ -35,6 +35,9 @@
   help.innerHTML = '<h2>Warrenfall sur ton téléphone</h2><img src="./assets/icons/warrenfall-192.png?v=logo-111" width="88" height="88" alt="Nouvelle icône Warrenfall"><p>Voici l’icône actuelle du jeu. Si ton ancien raccourci montre encore Azazel sur fond blanc, vérifie d’abord que ta partie est sauvegardée et exportée. Chrome ou Android peut conserver une ancienne icône après une mise à jour ; ne supprime pas les données du jeu.</p><p>Sur Android, ouvre le jeu dans Chrome puis choisis « Installer l’application » ou « Ajouter à l’écran d’accueil » dans le menu ⋮.</p><p>Sur iPhone ou iPad : Safari → Partager → Sur l’écran d’accueil.</p><p>Après une première visite, les écrans et images déjà chargés restent disponibles hors connexion. Les images encore jamais ouvertes demandent Internet.</p><button type="button">Fermer</button>';
   document.body.append(help);
   help.querySelector('button').onclick = () => help.close();
+  const updatesHelp = document.createElement('p');
+  updatesHelp.textContent = 'Pour mettre le jeu à jour : sauvegarde ta partie, ouvre Warrenfall avec Internet, puis ferme complètement l’application et tous les onglets Warrenfall de Chrome avant de la rouvrir. Ne désinstalle pas le jeu et n’efface pas ses données. L’icône et le nom de l’application peuvent mettre plus longtemps à changer que le contenu du jeu.';
+  help.querySelector('button').before(updatesHelp);
   const installStatus = document.createElement('p');
   installStatus.setAttribute('role','status');
   help.querySelector('h2').after(installStatus);

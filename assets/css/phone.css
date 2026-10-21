@@ -236,3 +236,7 @@ body.battle-scene #eventBanner{display:none!important}
 body.game-running #eventBanner{width:min(390px,calc(100vw - 24px));max-width:calc(100vw - 24px);max-height:90px;padding:0 42px 0 0;box-sizing:border-box;overflow:auto;border-radius:14px}
 #eventBanner .event-banner-line{min-height:42px;box-sizing:border-box;padding:6px 8px;gap:6px}#eventBanner .event-banner-icons{font-size:18px;letter-spacing:0}#eventBanner .event-banner-line strong{font-size:12px;line-height:1.3}#eventBanner .event-sound-btn{width:36px;height:36px;min-width:36px;font-size:16px}
 #eventBanner .event-banner-close{position:absolute;right:0;top:0;width:40px;height:42px;border:0;background:#fff8e8;color:#493423;font-size:26px;cursor:pointer}
+
+#toastContainer .notification-game-icon,#eventBanner .notification-game-icon{width:32px;height:32px;min-width:32px;max-width:32px;object-fit:contain;border-radius:8px;flex:0 0 32px;align-self:center}
+
+.save-recovery-warning{width:min(620px,calc(100vw - 24px));box-sizing:border-box;padding:14px;border:2px solid #a15e3a;border-radius:14px;background:#fff4d8;color:#493423;font-size:16px;line-height:1.4}.save-recovery-warning button{min-height:44px;padding:8px;margin:4px;background:#fffdf5;color:#493423;border:1px solid #9e7b50;border-radius:8px}

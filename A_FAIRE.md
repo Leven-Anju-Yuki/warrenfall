@@ -2,6 +2,24 @@
 
 Mise a jour : 21 octobre 2026.
 
+## Conservation des sauvegardes — 21 octobre 2026
+
+- [x] Migration versionnée et non destructive des formats ancien (besoins partagés), intermédiaire et actuel. Copie profonde avant modification ; champs inconnus, noms, collection, compteurs, inventaire, fragments, mini-jeux, techniques supplémentaires et bonus historiques conservés. Champs nouveaux complétés sans remplacer les valeurs existantes. [trello:6ac39d911abc6a7d2a71273e:code:save-migration-118]
+- [x] Copie immuable de chaque source ancienne avant migration, originale et dernière copie de secours avant écrasement ; erreur de quota ou d’écriture signalée. Conflit détecté avec une autre fenêtre : refus d’écrasement. Sauvegarde supplémentaire à la mise en arrière-plan et à la fermeture. [trello:6ac39d911abc6a7d2a71273e:code:save-backups-118]
+- [x] Sauvegarde illisible, format futur ou catalogue actif absent : pas de remplacement par une nouvelle partie. Écran de récupération, téléchargement du contenu original et restauration explicite de la copie de secours ; adoption bloquée pour protéger la source. Les listes de sauvegardes illisibles ne sont plus converties silencieusement en listes vides. [trello:6ac39d911abc6a7d2a71273e:code:save-recovery-118]
+- [x] Déconnexion : copie nommée de la partie créée avant suppression de la reprise automatique ; si elle échoue, déconnexion annulée. Aucun effacement des archives de migration. [trello:6ac39d911abc6a7d2a71273e:code:logout-copy-118]
+- [x] Tests isolés : anciens/intermédiaires/actuels, dix cycles de migration, quota, concurrence de fenêtres, original illisible, version future, catalogue absent et sauvegardes nommées. Navigateur téléphone isolé : ancien fichier chargé et trois rechargements sans perte ; fichier illisible conservé puis copie restaurée et trois nouveaux rechargements sans perte. Tests cadeau, affinités et PWA réussis. [trello:6ac39d911abc6a7d2a71273e:code:save-tests-118]
+- [x] Vérification explicite des réserves demandée par Florie : nourriture 9, soins sommeil 11, soins propreté 7, carottes ingrédients 21, pommes 13, salade préparée 3 et ancien objet hors catalogue 6 conservés après migration, restauration et trois redémarrages. Bonus de repas et champs supplémentaires préservés dans les tests de migration. Aucun soin ni aliment consommé par le seul chargement. [trello:6ac39d911abc6a7d2a71273e:code:save-food-care-118]
+- [ ] Publication et vérification sur téléphone physique après accord ; export JSON externe recommandé. Limite explicite : les copies locales ne survivent pas à l’effacement des données du navigateur, à certains nettoyages système ou à une panne du support ; aucune garantie absolue hors sauvegarde externe. [trello:6ac39d911abc6a7d2a71273e:manuel:save-release-118]
+
+Fichiers : `assets/js/save-safety.js`, `assets/js/save-validation.js`, `assets/js/script.js`, `assets/css/phone.css`, `index.html`, `sw.js`, `tools/test-save-safety.mjs`, `tools/test-landscape-game.mjs`. Aucune sauvegarde utilisateur réelle utilisée dans les essais.
+
+## Icône des notifications et mises à jour Chrome — 21 octobre 2026
+
+- [x] Messages du jeu et annonces de saison illustrés par la nouvelle icône Warrenfall, décorative et bornée à 32 px ; fermeture et durée du bandeau conservées. Aucun envoi de notification système ajouté. [trello:6ac39dbef4faf8125adc099b:code:notification-icon-117]
+- [x] Aide d’installation et README : expliquer la mise à jour sans désinstallation (sauvegarder, ouvrir en ligne, fermer application et tous les onglets Warrenfall puis rouvrir), distinguer contenu du jeu et mise à jour des icônes Android. Ne pas effacer les données du joueur. [trello:6ac39db1a134b35f03b17940:code:update-help-117]
+- [x] Syntaxe, cache PWA et tests de fermeture/expiration du bandeau réussis. Fichiers : assets/js/script.js, assets/js/installer.js, assets/css/phone.css, index.html, sw.js. Correctif 117 local ; publication non effectuée dans cette intervention.
+
 ## Publication autorisée et bandeau de saison — 21 octobre 2026
 
 - [x] Florie autorise explicitement le commit et le push des correctifs 114/115/116. Message de publication en français, descriptif et naturel ; aucun état privé de batterie ajouté au lot.
@@ -1381,3 +1399,9 @@ Ces deux idées sont enregistrées dans « Idées à sélectionner » après lec
 - [ ] Surveillance fiable capot fermé sur batterie non résolue : deux tests échoués. Rapports administrateur SleepStudy à recueillir ; choix d’une solution active écran éteint ou d’un hôte toujours disponible à valider, sans désactivation automatique des protections.
 
 - [x] Second test S4 du 21 octobre : hibernation à 10:43:50, réveil programmé à 10:48:21, aucune exécution ni horodatage. Reprise à 11:28:00 avec motif Power Button. Aucun réveil autonome démontré. Tâche temporaire supprimée ; trois tâches de production vérifiées inchangées. Preuves : `.cloudinary-local/wake-test/s4-retest-20261021-103826/`.
+
+- [x] Interface 119 : boutons transparents align?s sur les boutons dessin?s des pages 403, 404 et hors connexion, avec actions correspondantes et focus clavier visible. Croix pour continuer hors connexion dans le jeu. Cache PWA actualis? ; validation sur t?l?phone r?el apr?s publication restante.
+
+- [x] Interface 120 : bouton d?installation mobile redessin? avec la nouvelle ic?ne Warrenfall, finition cr?me et dor?e, texte lisible et cible tactile de 44 px. Fonctionnement et masquage apr?s installation conserv?s ; ? valider sur t?l?phone apr?s publication.
+
+- [x] Interface 121 : succ?s accomplis en t?te (r?compenses disponibles en premier), d?fis quotidiens non r?cup?r?s expir?s ? minuit sans retirer les gains d?j? re?us ; historique conserv?. Bloc nom/renommage/d?connexion ancr? en bas ? gauche au-dessus de la navigation, largeur stable. ? valider sur t?l?phone r?el.

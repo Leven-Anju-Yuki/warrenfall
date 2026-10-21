@@ -153,7 +153,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 0,
                 Math.min(p.attackTraining.max, Number(p.attackTraining.points) || 0),
             );
-            p.attackTraining.bonus = p.attackTraining.points;
+            p.attackTraining.bonus = Math.max(Number(p.attackTraining.bonus) || 0, p.attackTraining.points);
             p.attackTraining.completed =
                 p.attackTraining.completed || p.attackTraining.points >= p.attackTraining.max;
             return p.attackTraining;
@@ -185,6 +185,11 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!toastContainer) return;
             const el = document.createElement("div");
             el.className = "toast readable-toast" + (type ? " " + type : "");
+            const icon = document.createElement('img');
+            icon.className = 'notification-game-icon';
+            icon.src = './assets/icons/warrenfall-192.png?v=logo-111';
+            icon.alt = ''; icon.setAttribute('aria-hidden', 'true');
+            icon.width = 32; icon.height = 32;
             const text = document.createElement("span");
             text.className = "toast-message";
             text.textContent = message;
@@ -202,7 +207,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 setTimeout(() => el.remove(), 260);
             };
             close.onclick = dismiss;
-            el.append(text, close);
+            el.append(icon, text, close);
             toastContainer.appendChild(el);
             // Toutes les notifications se ferment seules, y compris les avertissements.
             const duration = Math.min(
@@ -562,31 +567,44 @@ document.addEventListener("DOMContentLoaded", () => {
         // ============================================================
         const SAVES_KEY = "lapinous_saves";
         const AUTOSAVE_KEY = "lapinous_autosave";
+        let saveLoadBlocked=false, saveWarningShown=false, lastSavedRaw;
+        try { lastSavedRaw=localStorage.getItem(AUTOSAVE_KEY); } catch { saveLoadBlocked=true; }
 
         function serializeGame() {
             window.LapinousAchievements.ensure(game);
             return JSON.stringify({
                 ...game,
                 rabbitName: currentRabbitName(),
+                saveVersion: window.LapinousSaveSafety.VERSION,
                 savedAt: Date.now(),
             });
         }
         function autoSave() {
             if(body.classList.contains("game-running")) renderRecordsButton();
             try {
-                localStorage.setItem(AUTOSAVE_KEY, serializeGame());
-            } catch (e) {}
+                if(saveLoadBlocked)return false;
+                lastSavedRaw=window.LapinousSaveSafety.write(localStorage,AUTOSAVE_KEY,serializeGame(),lastSavedRaw);
+                saveWarningShown=false;return true;
+            } catch (e) {
+                if(!saveWarningShown){saveWarningShown=true;showToast("Sauvegarde non enregistrée : "+e.message+" Exporte ta partie en JSON avant de fermer le jeu.","warn",12000);}
+                return false;
+            }
         }
 
+        document.addEventListener("visibilitychange",()=>{if(document.hidden&&body.classList.contains("game-running"))autoSave();});
+        window.addEventListener("pagehide",()=>{if(body.classList.contains("game-running"))autoSave();});
         function loadSavesList() {
             try {
-                return JSON.parse(localStorage.getItem(SAVES_KEY) || "[]");
+                const list=JSON.parse(localStorage.getItem(SAVES_KEY) || "[]");
+                if(!Array.isArray(list))throw Error("Liste incorrecte");
+                return list;
             } catch (e) {
-                return [];
+                showToast("Liste de sauvegardes illisible : elle est conservée et ne sera pas remplacée.","warn",12000);
+                throw e;
             }
         }
         function writeSavesList(list) {
-            localStorage.setItem(SAVES_KEY, JSON.stringify(list));
+            window.LapinousSaveSafety.write(localStorage,SAVES_KEY,JSON.stringify(list),undefined,value=>{if(!Array.isArray(value))throw Error("Liste incorrecte");for(const entry of value)window.LapinousSaveValidation.validate(entry.data);});
         }
 
         function defaultSaveName() {
@@ -626,7 +644,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 showToast("Sauvegarde introuvable.", "warn");
                 return;
             }
-            applyLoadedGame(entry.data);
+            try { applyLoadedGame(entry.data); }
+            catch(error){showToast('Chargement refusé, sauvegarde conservée : '+error.message,'warn',12000);return;}
             showToast(`"${entry.name}" chargée ✨`, "success");
             bootstrap.Modal.getOrCreateInstance(document.querySelector("#saveModal")).hide();
         }
@@ -649,62 +668,17 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         function applyLoadedGame(data) {
-            window.LapinousSaveValidation.validate(data);
-            const fresh = freshGame();
-            const activeSpecies = data.species || "azur";
-            let migratedProgress = data.progress || null;
-
-            if (!migratedProgress) {
-                // Très ancienne sauvegarde : tout était partagé au lieu d'être propre à chaque lapin.
-                migratedProgress = {
-                    [activeSpecies]: {
-                        food: (data.status && data.status.food) ?? 25,
-                        energy: (data.status && data.status.energy) ?? 25,
-                        cleanliness: (data.status && data.status.cleanliness) ?? 25,
-                        friendship: (data.status && data.status.friendship) || 0,
-                        friendshipTotal: data.friendshipTotal || 0,
-                        currentLevel: data.currentLevel || 1,
-                        lastUpgradeLevel: data.lastUpgradeLevel || 0,
-                        boosts: { ...freshSpeciesProgress().boosts, ...(data.boosts || {}) },
-                        improvements: {
-                            ...freshSpeciesProgress().improvements,
-                            ...(data.improvements || {}),
-                        },
-                    },
-                };
-            } else if (
-                data.status &&
-                migratedProgress[activeSpecies] &&
-                migratedProgress[activeSpecies].food === undefined
-            ) {
-                // Sauvegarde intermédiaire : l'amitié était déjà propre à chaque lapin,
-                // mais faim/énergie/propreté étaient encore partagées. On les rapatrie.
-                migratedProgress[activeSpecies] = {
-                    ...freshSpeciesProgress(),
-                    ...migratedProgress[activeSpecies],
-                    food: data.status.food ?? 25,
-                    energy: data.status.energy ?? 25,
-                    cleanliness: data.status.cleanliness ?? 25,
-                };
-            }
-            // Complète les champs manquants (nouveaux champs) sur chaque entrée existante.
-            Object.keys(migratedProgress).forEach((key) => {
-                migratedProgress[key] = { ...freshSpeciesProgress(), ...migratedProgress[key] };
-            });
-
-            // Migrer le nom global seulement pour les sauvegardes antérieures aux noms par espèce.
-            const speciesNames = { ...(data.speciesNames || {}) };
-            if (!data.speciesNames && data.rabbitName && !speciesNames[activeSpecies])
-                speciesNames[activeSpecies] = data.rabbitName;
-
-            game = {
-                ...fresh,
-                ...data,
-                progress: migratedProgress,
-                speciesNames,
-            };
-            startGameUI();
-            autoSave();
+            const candidate=window.LapinousSaveSafety.migrate(data,freshGame(),freshSpeciesProgress());
+            if(!getSpecies()[candidate.species])throw Error("Le catalogue du lapin de cette sauvegarde n'est pas disponible. Recharge avec Internet : la sauvegarde est conservée.");
+            if(data.saveVersion!==window.LapinousSaveSafety.VERSION)window.LapinousSaveSafety.archiveMigration(localStorage,AUTOSAVE_KEY,JSON.stringify(data));
+            const oldGame=game;
+            try {
+                lastSavedRaw=localStorage.getItem(AUTOSAVE_KEY);
+                game=candidate;
+                saveLoadBlocked=false;
+                startGameUI();
+                autoSave();
+            } catch(error) { game=oldGame;saveLoadBlocked=true;throw error; }
         }
 
         function renderSavesList() {
@@ -2357,7 +2331,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 pr.attackLevels = Array(count).fill(0);
                 pr.attackLevels[0] = Math.min(5, Math.max(0, Number(legacy.points) || 0));
             }
-            pr.attackLevels = Array.from({ length: count }, (_, i) =>
+            pr.attackLevels = Array.from({ length: Math.max(count,pr.attackLevels.length) }, (_, i) =>
                 Math.min(5, Math.max(0, Math.floor(Number(pr.attackLevels[i]) || 0))),
             );
             pr.attackFragments = Math.max(0, Math.floor(Number(pr.attackFragments) || 0));
@@ -4274,11 +4248,9 @@ document.addEventListener("DOMContentLoaded", () => {
         // DÉCONNEXION — retour à l'écran de sélection des lapins
         // ============================================================
         document.getElementById("logoutBtn").addEventListener("click", () => {
-            const hasSave = loadSavesList().length > 0;
-            const warning = hasSave
-                ? "Te déconnecter ramène à l'écran de sélection des lapins. Pense à bien avoir sauvegardé dans un emplacement (💾) si tu veux le retrouver."
-                : "⚠️ Tu n'as AUCUNE sauvegarde dans un emplacement (💾) ! Si tu te déconnectes maintenant, ce lapin sera perdu définitivement. Continuer quand même ?";
-            if (!window.confirm(warning)) return;
+            if (!window.confirm("Revenir au choix des lapins ? Une copie de ta partie sera conservée dans les sauvegardes avant la déconnexion.")) return;
+            try { createSave("Partie conservée avant déconnexion"); }
+            catch (error) { showToast("Déconnexion annulée : la copie de ta partie n'a pas pu être enregistrée. Exporte-la en JSON.","warn",12000); return; }
 
             localStorage.removeItem(AUTOSAVE_KEY);
             game = freshGame();
@@ -4426,7 +4398,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 .map(
                     (e) => `
             <div class="event-banner-line event-${e}">
-                <span class="event-banner-icons" aria-hidden="true">${SEASON_ICONS[e]}</span>
+                <img class="notification-game-icon" src="./assets/icons/warrenfall-192.png?v=logo-111" width="32" height="32" alt="" aria-hidden="true">
                 <strong>${SEASON_BANNER_TEXT[e]}</strong>
                 <button type="button" class="event-sound-btn" data-event-sound="${e}" aria-label="Jouer le son de ${EVENT_LABELS[e] || e}" title="Jouer le son">🔊</button>
             </div>`,
@@ -4887,12 +4859,23 @@ document.addEventListener("DOMContentLoaded", () => {
         // ============================================================
         // INITIALISATION
         // ============================================================
-        const auto = localStorage.getItem(AUTOSAVE_KEY);
+        let auto=null;try{auto=localStorage.getItem(AUTOSAVE_KEY);}catch{saveLoadBlocked=true;showToast("Stockage local inaccessible : exporte ta partie pour la conserver.","warn",12000);}
         if (auto) {
             try {
                 applyLoadedGame(JSON.parse(auto));
                 checkComeback();
-            } catch (e) {}
+            } catch (e) {
+                saveLoadBlocked=true;
+                body.classList.remove('game-running');
+                gameRoot.style.display='none'; mainNav.style.display='none'; adoptionScreen.style.display='flex';
+                const recovery=document.createElement("div");recovery.className="save-recovery-warning";recovery.setAttribute("role","alert");
+                const message=document.createElement("p");message.textContent="Ta sauvegarde est conservée, mais son chargement a échoué : "+e.message;recovery.append(message);
+                const download=document.createElement("button");download.type="button";download.textContent="Récupérer le fichier original";download.onclick=()=>{const url=URL.createObjectURL(new Blob([auto],{type:"application/json"}));const link=document.createElement("a");link.href=url;link.download="Warrenfall-sauvegarde-a-recuperer.json";link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);};recovery.append(download);
+                let backup=null;try{backup=localStorage.getItem(AUTOSAVE_KEY+"_backup");}catch{}
+                if(backup){const restore=document.createElement("button");restore.type="button";restore.textContent="Restaurer la copie de secours";restore.onclick=()=>{try{applyLoadedGame(JSON.parse(backup));recovery.remove();}catch(error){message.textContent=error.message;}};recovery.append(restore);}
+                adoptionScreen.prepend(recovery);
+                document.getElementById("adoptBtn").disabled=true;
+            }
         }
         ensureNewSystems();
         renderAudioButton();
