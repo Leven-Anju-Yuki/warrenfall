@@ -1,0 +1,30 @@
+import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
+const context={window:{}};vm.createContext(context);vm.runInContext(fs.readFileSync('assets/js/exploration.js','utf8'),context);
+const api=context.window.LapinousExploration,config=JSON.parse(fs.readFileSync('lapinous-content.json','utf8')).exploration,items=JSON.parse(fs.readFileSync('lapinous-shop.json','utf8')).items;
+const now=Date.UTC(2026,9,22,12),fresh=()=>({species:'myco',ownedSpecies:['myco','nopal'],progress:{myco:{currentLevel:15,energy:100},nopal:{currentLevel:15,energy:100}},eggs:3,inventory:{market_apple:7},future:{preserve:true}});
+for(const zone of config.zones)for(const duration of config.durations){
+ const plan=api.plan(config,items,'myco',20,zone.id,duration.hours,now,()=>.9);
+ assert.equal(plan.endsAt-now,duration.hours*3600000);assert.equal(plan.loot.reduce((sum,x)=>sum+x.quantity,0),duration.rolls);
+ assert.ok(plan.loot.every(x=>zone.ingredients.includes(x.id)));
+ const rates=api.rates(zone,duration,'myco',100);assert.equal(rates.ingredient+rates.care+rates.rare+rates.egg,100);
+}
+const forest=config.zones.find(z=>z.id==='forest'),desert=config.zones.find(z=>z.id==='desert'),short=config.durations[0],long=config.durations.at(-1);
+assert.ok(api.rates(forest,short,'myco',1).rare>api.rates(forest,short,'nopal',1).rare);
+assert.ok(api.rates(desert,short,'nopal',1).rare>api.rates(desert,short,'myco',1).rare);
+assert.ok(api.rates(forest,long,'myco',1).egg>api.rates(forest,short,'myco',1).egg);
+assert.ok(api.rates(forest,short,'myco',80).rare>api.rates(forest,short,'myco',1).rare);
+const game=fresh(),planned=api.plan(config,items,'myco',15,'forest',1,now,()=>0);
+api.depart(game,'myco',planned,()=>true,now);assert.equal(game.progress.myco.energy,90);assert.ok(api.busy(game,'myco',now+3599999));
+assert.throws(()=>api.claim(game,'myco',items,()=>true,now+3599999));
+assert.throws(()=>api.depart(game,'myco',planned,()=>true,now+1));
+const reloaded=JSON.parse(JSON.stringify(game));assert.ok(!api.busy(reloaded,'myco',now+3600000));
+const frozen=JSON.stringify(reloaded);assert.throws(()=>api.claim(reloaded,'myco',items,()=>false,now+3600000));assert.equal(JSON.stringify(reloaded),frozen);
+api.claim(reloaded,'myco',items,()=>true,now+3600000);assert.equal(reloaded.eggs,5);assert.equal(reloaded.inventory.market_apple,7);assert.equal(reloaded.future.preserve,true);
+assert.throws(()=>api.claim(reloaded,'myco',items,()=>true,now+7200000));assert.equal(reloaded.eggs,5);
+const rollback=fresh(),before=JSON.stringify(rollback);assert.throws(()=>api.depart(rollback,'myco',planned,()=>false,now));assert.equal(JSON.stringify(rollback),before);
+const care=api.plan(config,items,'myco',15,'forest',1,now,()=>.08);assert.ok(care.loot.every(x=>forest.rare.includes(x.id)||forest.care.includes(x.id)));
+vm.runInContext(fs.readFileSync('assets/js/save-validation.js','utf8'),context);
+context.window.LapinousSaveValidation.validate(JSON.parse(JSON.stringify(game)));
+const corrupt=JSON.parse(JSON.stringify(game));corrupt.exploration.trips.myco.endsAt=corrupt.exploration.trips.myco.startedAt;
+assert.throws(()=>context.window.LapinousSaveValidation.validate(corrupt));
+console.log('Explorations : heure réelle exacte, reprise hors ligne, zones, affinités, niveaux, récompense unique et échecs de sauvegarde OK.');

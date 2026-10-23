@@ -15,6 +15,7 @@ Documentation actualisée le **8 octobre 2026**. Après chaque évolution, mettr
 
 ## ✨ Fonctionnalités
 
+- **Les escapades du terrier** : depuis le Jardin, le randonneur accompagne les lapins dans quatre zones. Une sortie dure 1, 3, 8 ou 12 heures réelles et continue lorsque le jeu est fermé. Chaque lieu possède ses ingrédients et soins ; les longues sorties, les paliers de niveau et les affinités (Myco en forêt, Nopal dans le désert…) améliorent les probabilités de trouvailles rares et d'œufs. Les taux et le coût en énergie sont affichés avant le départ. Le butin est fixé au départ puis récupérable une seule fois au retour. Configuration : `lapinous-content.json > exploration` ; logique : `assets/js/exploration.js`. Les échéances utilisent l'horloge de l'appareil, sans serveur.
 - **Adoption** : choisis un lapin commun au démarrage ou découvre certains compagnons particuliers.
 - **Progression indépendante par lapin** : nourriture, sommeil, propreté, amitié, niveau, techniques et progression dans les mini-jeux sont propres à chaque compagnon. Les évolutions des pièces et leurs bonus sont communs à toute la sauvegarde ; la migration garde le meilleur palier déjà acheté pour chaque pièce.
 - **Salon vivant** : les lapins possédés apparaissent directement dans la pièce et peuvent devenir le compagnon actif.
@@ -715,3 +716,10 @@ Les formats anciens, intermédiaires et actuels sont migrés sur une copie, avec
 Un fichier illisible ou provenant d’une version future ne déclenche pas une partie neuve par-dessus : un écran permet de télécharger l’original et de restaurer la copie de secours. La déconnexion crée une sauvegarde nommée avant de retirer la reprise automatique ; elle est annulée si cette copie échoue. Le cache PWA ne purge pas les sauvegardes des joueurs.
 
 Ces protections ne remplacent pas un export JSON hors du navigateur : effacement des données du site, nettoyage du système ou panne du stockage peuvent détruire les copies locales. Conserver une copie externe avant une désinstallation ou un changement d’appareil. Tests : `node tools/test-save-safety.mjs` et `node tools/test-landscape-game.mjs --quick --ui-only --save-compat` ; ajouter `--save-corrupt` pour vérifier la récupération.
+# Automatisations hybrides : préparation du relais GitHub Actions
+
+La migration Windows / GitHub Actions est préparée mais **désactivée**. Windows conserve les transferts Cloudinary, les sauvegardes permanentes et la batterie. Le workflow distant préparé reprend l'agent Python existant pour Trello et les bilans ; il ajoute un état dans un dépôt privé, des attestations HMAC-SHA256, un verrou partagé et un journal de reprise pour la quarantaine de sept jours.
+
+Technologies : Python (`requests`, `python-dotenv`, `zoneinfo`), Node.js pour les transferts existants, PowerShell pour le lanceur local, YAML GitHub Actions pour le cron `Europe/Paris`, API GitHub Contents/Blobs pour la persistance privée avec comparaison de SHA. Les images et sauvegardes privées ne sont pas envoyées à GitHub. Aucun push automatique du dépôt du jeu.
+
+Voir [l'architecture, les limites et la procédure de validation](docs/MIGRATION_GITHUB_ACTIONS.md). Les tâches Windows et leurs horaires restent inchangés ; aucune suppression Cloudinary, modification Trello ou notification Discord réelle pendant les tests de migration.

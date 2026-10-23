@@ -7,6 +7,7 @@
   const localDevelopment = ['localhost', '127.0.0.1', '::1', '[::1]'].includes(location.hostname) || location.protocol === 'file:';
   const reverse = new Map(Object.entries(map).map(([local, remote]) => [remote, local]));
   const failed = new Set();
+  const sprites = new Map();
   const checkedBackgrounds = new Set();
   const observed = new WeakSet();
   const nativeSrc = Object.getOwnPropertyDescriptor(HTMLImageElement.prototype, 'src');
@@ -29,6 +30,7 @@
   /** Fournit l’URL originale Cloudinary ou conserve le fichier local en cas d’échec. */
   function url(value) {
     const local = key(value);
+    if(local && sprites.has(local))return sprites.get(local);
     return local && map[local] && !failed.has(local) ? map[local] : local && failed.has(local) ? localSource(local) || value : value;
   }
   /** Les sauvegardes ignorées par Git sont utilisables seulement sur le poste local. */
@@ -120,6 +122,21 @@
       const resolved = css(style.backgroundImage); nativeSetProperty.call(style, 'background-image', resolved, style.getPropertyPriority('background-image'));
     });
   }
-  window.LapinousImages = Object.freeze({ url, local: value => key(value) ? './' + key(value) : value, css });
+  /** Découpe d'affichage en mémoire : aucun original ni catalogue sauvegardé n'est réécrit. */
+  async function registerSheet(source,entries){
+    const image=new Image();image.crossOrigin='anonymous';
+    await new Promise((resolve,reject)=>{image.onload=resolve;image.onerror=reject;image.src=url(source);});
+    const prepared=[];
+    for(const [local,box] of entries){
+      const [x,y,w,h]=box.map((n,i)=>Math.round(n*(i%2===0?image.naturalWidth:image.naturalHeight)));
+      const canvas=document.createElement('canvas');canvas.width=w;canvas.height=h;
+      canvas.getContext('2d').drawImage(image,x,y,w,h,0,0,w,h);
+      prepared.push([local,canvas.toDataURL('image/png')]);
+    }
+    for(const [local,data] of prepared)sprites.set(local,data);
+    for(const img of document.images){const local=key(img.getAttribute('src'));if(sprites.has(local))nativeSrc.set.call(img,sprites.get(local));}
+    return prepared.length;
+  }
+  window.LapinousImages = Object.freeze({ url, registerSheet, local: value => key(value) ? './' + key(value) : value, css });
   document.addEventListener('DOMContentLoaded', initialize, { once: true });
 })();

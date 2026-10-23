@@ -9,6 +9,7 @@ const id='lapinous/old/avec espace';
 const item={path:'assets/img/old.png',hash,url:'https://example.invalid/old.png'};
 for(const scenario of ['success','delete-refused','pending','no-backup','simulation']) {
  const calls=[],files=new Map();
+ files.set('config.json',{enabled:false});
  files.set('inventory.json',{date:new Date().toISOString(),selected:[{path:'assets/img/active.png',hash}],excluded:[],missing:[]});
  files.set('manifest.json',{assets:{'assets/img/active.png':{status:'verified',public_id:'lapinous/active',url:'https://example.invalid/active.png',hash}}});
  files.set('versions-connues.json',{assets:{[id]:item}});

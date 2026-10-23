@@ -1,0 +1,12 @@
+import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
+const context={window:{}};vm.createContext(context);
+for(const file of ['save-validation','auto-nests'])vm.runInContext(fs.readFileSync(`assets/js/${file}.js`,'utf8'),context);
+const api=context.window.LapinousAutoNests,map=new Map([['lapinous_saves','manual untouched']]);
+let quota=false;const storage={getItem:k=>map.get(k)??null,setItem(k,v){if(quota)throw Error('quota');map.set(k,v);}};
+const data={species:'azur',carrots:18,inventory:{market_mint:10},future:{keep:[1,2]}};
+const start=Date.UTC(2026,9,22,12);for(let i=0;i<4;i++)api.capture(storage,JSON.stringify({...data,carrots:18+i}),'Azur',start+i*api.INTERVAL);
+const entries=api.read(storage);assert.equal(entries.length,3);assert.equal(entries[0].data.carrots,21);assert.equal(entries[2].data.carrots,19);assert.ok(entries[0].name.includes('Petit nid de Azur'));assert.equal(entries[0].savedAt,start+3*api.INTERVAL);assert.equal(entries[0].data.inventory.market_mint,10);assert.equal(map.get('lapinous_saves'),'manual untouched');
+assert.equal(api.capture(storage,JSON.stringify(data),'Azur',start+3*api.INTERVAL+2000),null);
+const before=map.get(api.KEY);quota=true;assert.throws(()=>api.capture(storage,JSON.stringify(data),'Azur',start+4*api.INTERVAL));assert.equal(map.get(api.KEY),before);quota=false;
+map.set(api.KEY,'{broken');assert.throws(()=>api.capture(storage,JSON.stringify(data),'Azur',start+5*api.INTERVAL));assert.equal(map.get(api.KEY),'{broken');
+console.log('Petits nids : rotation de trois copies, dates, intervalle, inventaire, quota et données illisibles préservées OK.');

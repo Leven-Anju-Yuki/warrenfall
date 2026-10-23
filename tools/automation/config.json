@@ -1,0 +1,8 @@
+{
+  "version": 1,
+  "enabled": false,
+  "remote_apply_validated": false,
+  "timezone": "Europe/Paris",
+  "state_file": "warrenfall-state.json",
+  "state_branch": "main"
+}

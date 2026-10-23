@@ -34,6 +34,17 @@
         if (progress.attackLevels !== undefined && (!Array.isArray(progress.attackLevels) || progress.attackLevels.some(level => !Number.isInteger(level) || level < 0 || level > 5))) throw new Error('Amélioration incorrecte.');
       }
     }
+    if(data.exploration!==undefined){
+      if(!data.exploration||typeof data.exploration!=='object'||Array.isArray(data.exploration))throw Error('Explorations incorrectes, sauvegarde conservée.');
+      const trips=data.exploration.trips;
+      if(trips!==undefined){
+        if(!trips||typeof trips!=='object'||Array.isArray(trips))throw Error('Liste des explorations incorrecte.');
+        for(const [rabbit,trip] of Object.entries(trips)){
+          if(!trip||trip.rabbit!==rabbit||typeof trip.id!=='string'||typeof trip.zone!=='string'||!Number.isFinite(trip.startedAt)||!Number.isFinite(trip.endsAt)||trip.endsAt<=trip.startedAt||typeof trip.claimed!=='boolean'||!Array.isArray(trip.loot))throw Error('Exploration illisible : '+rabbit);
+          for(const entry of trip.loot)if(!entry||typeof entry.id!=='string'||!Number.isSafeInteger(entry.quantity)||entry.quantity<=0)throw Error('Trouvaille incorrecte : '+rabbit);
+        }
+      }
+    }
     return data;
   }
   window.LapinousSaveValidation = { validate };

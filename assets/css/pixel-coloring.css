@@ -1,0 +1,44 @@
+.coloring-hub,.coloring-game{position:fixed;inset:10px 10px 80px;z-index:2147483000;background:#fff7e7;color:#493a2b;padding:12px;border:2px solid #ae956b;border-radius:18px;box-sizing:border-box;overflow:auto}
+.coloring-hub button,.coloring-game button{border:1px solid #aa8c60;border-radius:12px;background:#fffaf0;color:#493a2b;padding:7px 10px;font:600 14px system-ui;cursor:pointer}
+.coloring-hub,.coloring-game{margin:0;width:auto;height:auto;max-width:none;max-height:none}.coloring-hub::backdrop,.coloring-game::backdrop{background:#231b1366}
+.coloring-game .coloring-tools button{background:#e9ddc1}.coloring-hub button:focus-visible,.coloring-game button:focus-visible{outline:3px solid #385e7a;outline-offset:2px}
+.coloring-difficulties,.coloring-tools{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+.coloring-difficulties button[aria-pressed=true]{background:#647f4d;color:white}
+.coloring-images{display:grid;grid-template-columns:repeat(auto-fill,minmax(140px,1fr));gap:12px;margin:14px 0;max-height:60vh;overflow:auto}
+.coloring-images button{display:grid;gap:5px;padding:8px}.coloring-images img{width:100%;height:110px;object-fit:contain}
+.coloring-game{display:grid;grid-template-columns:minmax(0,1fr) 100px;grid-template-rows:auto auto minmax(0,1fr) auto;gap:8px;overflow:hidden}
+.coloring-game header{display:flex;justify-content:space-between;gap:8px;align-items:center;grid-column:1/-1}.coloring-game h2{font-size:18px;margin:0}
+.coloring-tools,.coloring-status{grid-column:1/-1}.coloring-tools button{min-width:38px;min-height:34px}.coloring-tools small{font-size:12px}
+.coloring-viewport{position:relative;height:100%;overflow:hidden;touch-action:none;background:#e2d7c2;border:2px solid #967b54;border-radius:10px;min-width:0;min-height:0;box-sizing:border-box}
+.coloring-viewport canvas{position:absolute;left:0;top:0;transform-origin:0 0;max-width:none!important;max-height:none!important;touch-action:none;image-rendering:pixelated}
+.coloring-palette{display:flex;align-content:flex-start;flex-wrap:wrap;gap:6px;min-height:0;overflow:auto;padding:3px}
+.coloring-palette button{width:40px;height:40px;flex-shrink:0;border:2px solid #ae9b7e;border-radius:9px;font:bold 14px sans-serif;text-shadow:0 1px 2px #0005}
+.coloring-palette button[aria-pressed=true]{outline:3px solid #47321e;outline-offset:1px}.coloring-status{margin:0;font-weight:bold}
+@media(max-height:500px){.coloring-hub,.coloring-game{inset:4px 4px 56px}.coloring-game header h2{font-size:14px}.coloring-tools small{display:none}.coloring-game{padding:7px;gap:5px}.coloring-status{font-size:12px}.coloring-game header button{padding:4px 8px}}
+
+/* Un album centré, avec des images entières et une vraie place pour les titres. */
+dialog.coloring-hub{inset:18px 0 auto;width:min(1240px,calc(100vw - 40px));height:min(900px,calc(100dvh - 110px));margin:0 auto;padding:28px;display:flex;flex-direction:column;gap:18px;background:radial-gradient(ellipse at top left,#fffdf3,#f5e7cc);border:3px double #b7996a;box-shadow:0 18px 65px #24180b66}
+.coloring-album-heading{display:flex;justify-content:space-between;align-items:center;gap:18px}.coloring-album-heading small{color:#746244;letter-spacing:.1em;font-size:12px;text-transform:uppercase}.coloring-album-heading h2{margin:6px 0 0;font-size:clamp(23px,2.2vw,34px);color:#57364b}.coloring-album-heading button{flex-shrink:0;min-height:42px}
+.coloring-album-intro{margin:0;font-size:17px;line-height:1.4;color:#69523d}
+.coloring-hub .coloring-difficulties{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}
+.coloring-hub .coloring-difficulties button{display:grid;gap:6px;text-align:left;padding:14px 18px;border-radius:16px;background:#fffaf0;min-width:0;box-shadow:0 3px 0 #cfb89355}.coloring-difficulties strong{font-size:18px}.coloring-difficulties span{font-size:12px;font-weight:400}.coloring-hub .coloring-difficulties button[aria-pressed=true]{background:#60774e;border-color:#425a34;color:#fffdf1;box-shadow:0 3px 0 #3c512d}
+.coloring-hub .coloring-images{flex:1;min-height:0;max-height:none;margin:0;grid-template-columns:repeat(4,minmax(0,1fr));align-content:start;gap:18px;overflow:auto;padding:4px 6px 10px 3px}
+.coloring-hub .coloring-images button{display:flex;flex-direction:column;align-items:stretch;gap:9px;min-width:0;padding:9px 9px 13px;border:1px solid #c6aa7c;border-radius:17px;background:#fffbf1;box-shadow:0 4px 9px #654a2720;transition:box-shadow .15s,border-color .15s;text-align:center}.coloring-hub .coloring-images button:hover{border-color:#6b804f;box-shadow:0 5px 16px #654a2740}
+.coloring-picture{display:block;position:relative;aspect-ratio:1.55;background:#eee1c9;border-radius:11px;overflow:hidden}
+.coloring-hub .coloring-images .coloring-picture img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;object-fit:contain!important;object-position:center!important;transform:none!important;clip-path:none!important;opacity:1!important;margin:0!important}
+.coloring-images strong{font-size:17px;line-height:1.25;min-height:2.5em;display:grid;place-content:center;color:#563b2c}.coloring-images small{font-size:12px;color:#728054;margin-top:auto}
+@media(max-width:800px){dialog.coloring-hub{padding:16px;gap:12px}.coloring-hub .coloring-images{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.coloring-difficulties strong{font-size:15px}.coloring-hub .coloring-difficulties button{padding:10px}}
+@media(max-height:500px){dialog.coloring-hub{inset:4px 4px 56px;width:auto;height:auto;margin:0;padding:10px;gap:8px}.coloring-album-heading h2{font-size:19px;margin:0}.coloring-album-heading small,.coloring-album-intro{display:none}.coloring-hub .coloring-difficulties button{padding:5px 8px;gap:2px}.coloring-difficulties strong{font-size:13px}.coloring-difficulties span{font-size:10px}.coloring-hub .coloring-images{gap:10px}.coloring-images strong{font-size:13px}.coloring-album-heading button{min-height:32px;padding:4px 10px}}
+.coloring-categories{display:flex;gap:8px;flex-wrap:wrap}.coloring-categories button[aria-pressed=true]{background:#6c5165;color:#fffaf0}.coloring-difficulties button:disabled{opacity:.4;cursor:not-allowed}.coloring-tools small{color:#69523d}
+@media(max-height:500px){.coloring-categories button{font-size:11px;padding:4px 9px}.coloring-game .coloring-tools small{display:block;font-size:10px;flex-basis:100%}}
+@media(max-height:500px){
+ dialog.coloring-hub .coloring-difficulties button{padding:5px 8px}
+ .coloring-hub .coloring-difficulties span{display:none}
+ .coloring-hub .coloring-images{grid-template-columns:repeat(2,minmax(0,1fr))}
+ .coloring-hub .coloring-images button{display:grid;grid-template-columns:80px minmax(0,1fr);grid-template-rows:auto auto;gap:4px 8px;padding:7px;align-items:center}
+ .coloring-hub .coloring-picture{grid-row:1/3;width:80px;height:80px;aspect-ratio:auto}
+ .coloring-hub .coloring-images strong{min-height:0;font-size:12px}
+ .coloring-hub .coloring-images small{font-size:10px;margin:0}
+}
+.coloring-game .coloring-palette{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:7px;min-width:0;overflow-y:auto;overflow-x:hidden;scroll-padding:5px;box-sizing:border-box}
+.coloring-game .coloring-palette button{width:100%;min-width:0;height:40px;padding:3px;box-sizing:border-box}

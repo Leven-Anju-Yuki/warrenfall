@@ -6,6 +6,12 @@
 secours-images/
 docs/*
 !docs/RENOMMAGE_WARRENFALL.md
+!docs/MIGRATION_GITHUB_ACTIONS.md
+
+# Etats privés hybrides et preuves de sauvegarde (jamais dans le dépôt du jeu)
+hybrid-export*.json
+warrenfall-state*.json
+tools/automation/__pycache__/
 
 # Copies locales des catalogues et sauvegardes des joueurs
 /Sauvegardes JSON/

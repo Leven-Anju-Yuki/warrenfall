@@ -1,1 +1,1853 @@
-{"rabbitName":"azazel","species":"az","trait":"az_special","progress":{"az":{"food":100,"energy":100,"cleanliness":100,"friendship":100,"friendshipTotal":373,"currentLevel":15,"lastUpgradeLevel":8,"boosts":{"food":2,"energy":2,"cleanliness":2,"friendship":2},"improvements":{"cuisine":true,"chambre":true,"sdb":true,"jardin":true},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":1,"puzzles":{"communs":{"completed":true,"highestCompletedLevel":3,"bestMoves":{"0":1,"1":13,"2":16,"3":35}},"aventuriers":{"completed":false,"highestCompletedLevel":-1,"bestMoves":{}},"scientifiques":{"completed":false,"highestCompletedLevel":-1,"bestMoves":{}},"voie-lactee":{"completed":false,"highestCompletedLevel":-1,"bestMoves":{}},"nature":{"completed":false,"highestCompletedLevel":-1,"bestMoves":{}},"reve":{"completed":false,"highestCompletedLevel":-1,"bestMoves":{}},"noel":{"completed":false,"highestCompletedLevel":-1,"bestMoves":{}},"pacques":{"completed":false,"highestCompletedLevel":-1,"bestMoves":{}}}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"koda":{"food":75,"energy":45,"cleanliness":65,"friendship":54,"friendshipTotal":59,"currentLevel":3,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":2,"max":5,"bonus":2,"completed":false,"skillUnlocked":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"caramel":{"food":17,"energy":13,"cleanliness":20,"friendship":1,"friendshipTotal":1,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":5,"max":5,"bonus":5,"completed":true,"skillUnlocked":true},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"corsaire":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":5,"max":5,"bonus":5,"completed":true,"skillUnlocked":true},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"myco":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":5,"max":5,"bonus":5,"completed":true,"skillUnlocked":true},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"azur":{"food":17,"energy":13,"cleanliness":20,"friendship":1,"friendshipTotal":1,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":5,"max":5,"bonus":5,"completed":true,"skillUnlocked":true},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"mocha":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":5,"max":5,"bonus":5,"completed":true,"skillUnlocked":true},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"bambou":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":4,"max":5,"bonus":4,"completed":false,"skillUnlocked":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"flamme":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":1,"max":5,"bonus":1,"completed":false,"skillUnlocked":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"nova":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":2,"max":5,"bonus":2,"completed":false,"skillUnlocked":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"sakura":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":1,"max":5,"bonus":1,"completed":false,"skillUnlocked":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"spark":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":5,"max":5,"bonus":5,"completed":true,"skillUnlocked":true},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"nopal":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":5,"max":5,"bonus":5,"completed":true,"skillUnlocked":true},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"umbra":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"archy":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"solaria":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":1,"max":5,"bonus":1,"completed":false,"skillUnlocked":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"meli":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"cauchemar":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"santaLegend":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"easterKing":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"toothFairy":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"jackFrost":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"sandman":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"eggGuardian":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"santaRabbit":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"mrsClaus":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"elfRabbit":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"reindeerRabbit":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"krampus":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"vampireRabbit":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"ghostRabbit":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"skeletonRabbit":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"frankensteinRabbit":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}},"werebunnyRabbit":{"food":25,"energy":25,"cleanliness":25,"friendship":0,"friendshipTotal":0,"currentLevel":1,"lastUpgradeLevel":0,"boosts":{"food":0,"energy":0,"cleanliness":0,"friendship":0},"improvements":{"cuisine":false,"chambre":false,"sdb":false,"jardin":false},"attackTraining":{"points":0,"max":5,"bonus":0,"completed":false},"minigames":{"puzzle":{"unlockedPuzzle":0,"puzzles":{}},"memory":{"level":0,"completed":0},"lapidoku":{"level":0,"completed":0}}}},"speciesNames":{"az":"azazel","koda":"Koda","flamme":"Flamme","myco":"Myco"},"carrots":152,"eggs":137,"ownedSpecies":["az","azur","caramel","mocha","bambou","flamme","koda","nova","sakura","spark","myco","corsaire","nopal","umbra","archy","solaria","meli","cauchemar","santaLegend","easterKing","toothFairy","jackFrost","sandman","eggGuardian","santaRabbit","mrsClaus","elfRabbit","reindeerRabbit","krampus","vampireRabbit","ghostRabbit","skeletonRabbit","frankensteinRabbit","werebunnyRabbit"],"speciesTraits":{"flamme":"petit_dormeur","myco":"grand_sportif"},"discoveredBosses":["courgette","banane","piment","oignon","patate","aubergine","tomate","ail","mais","choux","carotte"],"duplicateCounts":{"caramel":7,"myco":11,"corsaire":8,"nopal":6,"spark":6,"azur":8,"bambou":5,"koda":2,"mocha":7,"nova":2,"sakura":2,"flamme":1,"solaria":1},"records":{"eggsOpened":63,"eggsBought":0,"bossesDefeated":1,"agilityPlayed":14,"puzzlesCompleted":0},"audio":{"muted":false,"ambience":true,"sfx":true},"status":{"food":90,"energy":65,"cleanliness":80,"friendship":84},"friendshipTotal":162,"currentLevel":7,"boosts":{"food":2,"energy":2,"cleanliness":0,"friendship":2},"improvements":{"cuisine":true,"chambre":true,"sdb":false,"jardin":true},"lastUpgradeLevel":5,"savedAt":1790798177265,"pendingDuplicate":null,"pendingDuplicates":[]}
+{
+  "rabbitName": "azazel",
+  "species": "az",
+  "trait": "az_special",
+  "progress": {
+    "az": {
+      "food": 100,
+      "energy": 100,
+      "cleanliness": 100,
+      "friendship": 100,
+      "friendshipTotal": 373,
+      "currentLevel": 15,
+      "lastUpgradeLevel": 8,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 1,
+          "puzzles": {
+            "communs": {
+              "completed": true,
+              "highestCompletedLevel": 3,
+              "bestMoves": {
+                "0": 1,
+                "1": 13,
+                "2": 16,
+                "3": 35
+              }
+            },
+            "aventuriers": {
+              "completed": false,
+              "highestCompletedLevel": -1,
+              "bestMoves": {}
+            },
+            "scientifiques": {
+              "completed": false,
+              "highestCompletedLevel": -1,
+              "bestMoves": {}
+            },
+            "voie-lactee": {
+              "completed": false,
+              "highestCompletedLevel": -1,
+              "bestMoves": {}
+            },
+            "nature": {
+              "completed": false,
+              "highestCompletedLevel": -1,
+              "bestMoves": {}
+            },
+            "reve": {
+              "completed": false,
+              "highestCompletedLevel": -1,
+              "bestMoves": {}
+            },
+            "noel": {
+              "completed": false,
+              "highestCompletedLevel": -1,
+              "bestMoves": {}
+            },
+            "pacques": {
+              "completed": false,
+              "highestCompletedLevel": -1,
+              "bestMoves": {}
+            }
+          }
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "koda": {
+      "food": 75,
+      "energy": 45,
+      "cleanliness": 65,
+      "friendship": 54,
+      "friendshipTotal": 59,
+      "currentLevel": 3,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 2,
+        "max": 5,
+        "bonus": 2,
+        "completed": false,
+        "skillUnlocked": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        2
+      ],
+      "attackFragments": 0
+    },
+    "caramel": {
+      "food": 17,
+      "energy": 13,
+      "cleanliness": 20,
+      "friendship": 1,
+      "friendshipTotal": 1,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 5,
+        "max": 5,
+        "bonus": 5,
+        "completed": true,
+        "skillUnlocked": true
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        5
+      ],
+      "attackFragments": 0
+    },
+    "corsaire": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 5,
+        "max": 5,
+        "bonus": 5,
+        "completed": true,
+        "skillUnlocked": true
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        5
+      ],
+      "attackFragments": 0
+    },
+    "myco": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 5,
+        "max": 5,
+        "bonus": 5,
+        "completed": true,
+        "skillUnlocked": true
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        5
+      ],
+      "attackFragments": 0
+    },
+    "azur": {
+      "food": 17,
+      "energy": 13,
+      "cleanliness": 20,
+      "friendship": 1,
+      "friendshipTotal": 1,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 5,
+        "max": 5,
+        "bonus": 5,
+        "completed": true,
+        "skillUnlocked": true
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        5
+      ],
+      "attackFragments": 0
+    },
+    "mocha": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 5,
+        "max": 5,
+        "bonus": 5,
+        "completed": true,
+        "skillUnlocked": true
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        5
+      ],
+      "attackFragments": 0
+    },
+    "bambou": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 4,
+        "max": 5,
+        "bonus": 4,
+        "completed": false,
+        "skillUnlocked": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        4
+      ],
+      "attackFragments": 0
+    },
+    "flamme": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 1,
+        "max": 5,
+        "bonus": 1,
+        "completed": false,
+        "skillUnlocked": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        1
+      ],
+      "attackFragments": 0
+    },
+    "nova": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 2,
+        "max": 5,
+        "bonus": 2,
+        "completed": false,
+        "skillUnlocked": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        2,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "sakura": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 1,
+        "max": 5,
+        "bonus": 1,
+        "completed": false,
+        "skillUnlocked": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        1,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "spark": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 5,
+        "max": 5,
+        "bonus": 5,
+        "completed": true,
+        "skillUnlocked": true
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        5,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "nopal": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 5,
+        "max": 5,
+        "bonus": 5,
+        "completed": true,
+        "skillUnlocked": true
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        5,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "umbra": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "archy": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "solaria": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 1,
+        "max": 5,
+        "bonus": 1,
+        "completed": false,
+        "skillUnlocked": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        1,
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "meli": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "cauchemar": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "santaLegend": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "easterKing": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "toothFairy": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "jackFrost": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "sandman": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0,
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "eggGuardian": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "santaRabbit": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "mrsClaus": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "elfRabbit": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "reindeerRabbit": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "krampus": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "vampireRabbit": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "ghostRabbit": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "skeletonRabbit": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "frankensteinRabbit": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "attackFragments": 0
+    },
+    "werebunnyRabbit": {
+      "food": 25,
+      "energy": 25,
+      "cleanliness": 25,
+      "friendship": 0,
+      "friendshipTotal": 0,
+      "currentLevel": 1,
+      "lastUpgradeLevel": 0,
+      "boosts": {
+        "food": 2,
+        "energy": 2,
+        "cleanliness": 2,
+        "friendship": 2
+      },
+      "improvements": {
+        "cuisine": 1,
+        "chambre": 1,
+        "sdb": 1,
+        "jardin": 1
+      },
+      "attackTraining": {
+        "points": 0,
+        "max": 5,
+        "bonus": 0,
+        "completed": false
+      },
+      "minigames": {
+        "puzzle": {
+          "unlockedPuzzle": 0,
+          "puzzles": {}
+        },
+        "memory": {
+          "level": 0,
+          "completed": 0
+        },
+        "lapidoku": {
+          "level": 0,
+          "completed": 0
+        }
+      },
+      "attackLevels": [
+        0,
+        0,
+        0,
+        0,
+        0
+      ],
+      "attackFragments": 0
+    }
+  },
+  "speciesNames": {
+    "az": "azazel",
+    "koda": "Koda",
+    "flamme": "Flamme",
+    "myco": "Myco"
+  },
+  "carrots": 99580,
+  "eggs": 138,
+  "ownedSpecies": [
+    "az",
+    "azur",
+    "caramel",
+    "mocha",
+    "bambou",
+    "flamme",
+    "koda",
+    "nova",
+    "sakura",
+    "spark",
+    "myco",
+    "corsaire",
+    "nopal",
+    "umbra",
+    "archy",
+    "solaria",
+    "meli",
+    "cauchemar",
+    "santaLegend",
+    "easterKing",
+    "toothFairy",
+    "jackFrost",
+    "sandman",
+    "eggGuardian",
+    "santaRabbit",
+    "mrsClaus",
+    "elfRabbit",
+    "reindeerRabbit",
+    "krampus",
+    "vampireRabbit",
+    "ghostRabbit",
+    "skeletonRabbit",
+    "frankensteinRabbit",
+    "werebunnyRabbit"
+  ],
+  "speciesTraits": {
+    "flamme": "petit_dormeur",
+    "myco": "grand_sportif",
+    "az": "az_special"
+  },
+  "discoveredBosses": [
+    "courgette",
+    "banane",
+    "piment",
+    "oignon",
+    "patate",
+    "aubergine",
+    "tomate",
+    "ail",
+    "mais",
+    "choux",
+    "carotte"
+  ],
+  "duplicateCounts": {
+    "caramel": 7,
+    "myco": 11,
+    "corsaire": 8,
+    "nopal": 6,
+    "spark": 6,
+    "azur": 8,
+    "bambou": 5,
+    "koda": 2,
+    "mocha": 7,
+    "nova": 2,
+    "sakura": 2,
+    "flamme": 1,
+    "solaria": 1
+  },
+  "records": {
+    "eggsOpened": 63,
+    "eggsBought": 0,
+    "bossesDefeated": 1,
+    "agilityPlayed": 14,
+    "puzzlesCompleted": 0,
+    "gamesWon": 0
+  },
+  "audio": {
+    "muted": false,
+    "ambience": true,
+    "sfx": true
+  },
+  "status": {
+    "food": 90,
+    "energy": 65,
+    "cleanliness": 80,
+    "friendship": 84
+  },
+  "friendshipTotal": 162,
+  "currentLevel": 7,
+  "boosts": {
+    "food": 2,
+    "energy": 2,
+    "cleanliness": 0,
+    "friendship": 2
+  },
+  "improvements": {
+    "cuisine": true,
+    "chambre": true,
+    "sdb": false,
+    "jardin": true
+  },
+  "lastUpgradeLevel": 5,
+  "savedAt": 1792587253632,
+  "pendingDuplicate": null,
+  "pendingDuplicates": [],
+  "welcomeEggGranted": true,
+  "welcomeEggReceipt": "v2",
+  "achievements": {
+    "days": {
+      "2026-10-21": {
+        "counts": {
+          "visit": 1,
+          "gamesFinished": 0
+        },
+        "claimed": {}
+      }
+    },
+    "claimed": {},
+    "peaks": {
+      "eggsOpened": 63,
+      "eggsBought": 0,
+      "bossesDefeated": 1,
+      "agilityPlayed": 14,
+      "puzzlesCompleted": 0,
+      "gamesWon": 0,
+      "memoryCompleted": 0,
+      "quizCompleted": 0,
+      "collection": 34,
+      "gamesFinished": 14,
+      "level": 15
+    },
+    "earnedCarrots": 0
+  },
+  "saveVersion": 2,
+  "roomUpgrades": {
+    "cuisine": 1,
+    "chambre": 1,
+    "sdb": 1,
+    "jardin": 1
+  },
+  "roomBoosts": {
+    "food": 2,
+    "energy": 2,
+    "cleanliness": 2,
+    "friendship": 2
+  },
+  "inventory": {
+    "food": 10,
+    "cleanliness": 10,
+    "energy": 10,
+    "market_apple": 10,
+    "market_strawberry": 10,
+    "market_pear": 10,
+    "market_blueberry": 10,
+    "market_carrot": 10,
+    "market_lettuce": 10,
+    "market_celery": 10,
+    "market_cucumber": 10,
+    "market_courgette": 10,
+    "market_fennel": 10,
+    "market_herbs": 10,
+    "market_cornflower": 10,
+    "market_calendula": 10,
+    "market_hay": 10,
+    "market_chamomile": 10,
+    "market_dandelion": 10,
+    "market_rose": 10,
+    "market_mint": 10,
+    "market_dill": 10,
+    "market_cilantro": 10,
+    "potion_vitality": 10,
+    "elixir_energy": 10,
+    "potion_sleep": 10,
+    "potion_soothing": 10,
+    "elixir_protection": 10,
+    "potion_freshness": 10,
+    "balm_repair": 10,
+    "balm_paws": 10,
+    "bandages": 10,
+    "compress_plants": 10,
+    "oil_fur": 10,
+    "sachet_flowers": 10,
+    "compress_cool": 10
+  }
+}

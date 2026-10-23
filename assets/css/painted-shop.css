@@ -1,0 +1,50 @@
+/* Coordonnées proportionnelles des décors : tous les éléments suivent le même cadre. */
+.shop-dialog.painted-shop #shopBody{position:relative;min-height:0!important;padding:0!important;overflow:hidden!important;background-image:none!important;background-color:#e5d2ae}
+.shop-painted-stage{position:absolute;background-position:center;background-repeat:no-repeat;background-size:100% 100%}
+.shop-dialog.painted-shop .shop-cashier,
+html.phone-ui .shop-dialog.painted-shop .shop-cashier{position:fixed!important;left:var(--painted-actor-x)!important;top:var(--painted-actor-y)!important;right:auto!important;bottom:auto!important;width:var(--painted-actor-w)!important;height:var(--painted-actor-h)!important;z-index:6!important}
+.shop-dialog.painted-shop .shop-cashier img,
+html.phone-ui .shop-dialog.painted-shop .shop-cashier img{position:static!important;width:100%!important;height:100%!important;object-fit:contain;object-position:center bottom}
+.shop-dialog.painted-shop .shop-needs,.shop-dialog.painted-shop .shop-cart-note{display:none!important}
+/* Soins : les quatre étals existent déjà dans l'image. */
+.shop-dialog.zone-items.painted-shop .shop-items.remedy-stalls{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;display:block!important;margin:0!important}
+.painted-shop .remedy-stall{position:absolute;top:42%;height:18%;width:13.6%;display:block;border:0;border-radius:0;background:none;box-shadow:none}
+.painted-shop .remedy-stall:nth-child(1){left:3.4%}
+.painted-shop .remedy-stall:nth-child(2){left:19.3%}
+.painted-shop .remedy-stall:nth-child(3){left:35.2%}
+.painted-shop .remedy-stall:nth-child(4){left:51.9%}
+.painted-shop .remedy-stall>h3{position:absolute;left:-3%;right:-3%;bottom:100%;margin:0 0 5%;min-height:0;height:auto;padding:3px 2px;border:1px solid #b79156;border-radius:6px;background:#fff7e7;font-size:clamp(8px,.85vw,14px);line-height:1.1}
+.painted-shop .remedy-products{position:absolute;inset:0;display:grid;grid-template-columns:repeat(3,minmax(0,1fr));grid-template-rows:repeat(2,minmax(0,1fr));grid-auto-rows:50%;gap:2px;padding:0;overflow:visible}
+.shop-dialog.zone-items.painted-shop .remedy-products .shop-consumable{min-height:0!important;height:100%!important;border:0;overflow:visible}
+.shop-dialog.zone-items.painted-shop .remedy-products .shop-consumable>img{height:100%!important;width:100%!important;max-height:none;object-fit:contain;object-position:center bottom}
+/* Marché : deux rangées dans chacun des trois présentoirs peints. */
+.shop-dialog.market-illustrated.painted-shop .shop-items{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;margin:0!important;display:block!important;transform:none!important}
+.shop-dialog.market-illustrated.painted-shop .market-stall,
+html.phone-ui .shop-dialog.market-illustrated.painted-shop .market-stall{position:absolute!important;top:42%!important;height:18%!important;width:17.2%!important;min-height:0!important;padding:0;border:0;background:none;box-shadow:none;overflow:visible}
+.shop-dialog.market-illustrated.painted-shop .market-stall:nth-child(1){left:3.3%!important}
+.shop-dialog.market-illustrated.painted-shop .market-stall:nth-child(2){left:26.4%!important}
+.shop-dialog.market-illustrated.painted-shop .market-stall:nth-child(3){left:49.8%!important}
+.painted-shop .market-stall>h3{position:absolute!important;top:auto!important;bottom:100%;left:0;right:0;margin:0 0 5%;height:auto;padding:3px 2px!important;font-size:clamp(8px,.85vw,14px)!important;line-height:1.1}
+.painted-shop .market-stall-products{display:grid!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:repeat(2,minmax(0,1fr));grid-auto-rows:50%;width:100%;height:100%;gap:2px!important;overflow-y:auto;overflow-x:hidden;scrollbar-width:thin;scrollbar-color:#a97c43 #e5c392}
+.painted-shop .market-stall-products .shop-consumable{height:100%!important;min-height:0!important;margin:0;padding:0;border:0}
+.painted-shop .market-stall-products .shop-consumable>img{height:calc(100% - 14px)!important;object-fit:contain;object-position:center bottom}
+.painted-shop .market-price-tag{position:absolute;bottom:0!important;left:0;right:0;font-size:clamp(7px,.75vw,12px)!important;line-height:14px;padding:0!important}
+/* Les achats reposent sur la grande étagère : aucun second meuble ajouté. */
+.shop-dialog.market-illustrated.painted-shop .market-purchase-table,
+html.phone-ui .shop-dialog.market-illustrated.painted-shop .market-purchase-table{position:absolute!important;left:68.5%!important;top:33%!important;right:auto!important;bottom:auto!important;width:30%!important;height:16%!important;background:none!important;border:0;box-shadow:none;z-index:3!important}
+.shop-dialog.market-illustrated.painted-shop .market-purchase-table>div{inset:0!important;align-content:end;align-items:end;overflow:auto}
+.shop-dialog.market-illustrated.painted-shop .market-purchase-table img{height:clamp(20px,5dvh,65px)}
+.painted-shop .market-purchase-table::before,.painted-shop .market-purchase-table::after{display:none!important}
+/* Les images restent dans les cases, y compris avec les anciennes règles mobiles. */
+html.phone-ui .shop-dialog.market-illustrated.painted-shop .market-stall{top:38%!important;height:27%!important}
+html.phone-ui .shop-dialog.market-illustrated.painted-shop .market-stall .shop-consumable>img{position:absolute!important;top:0!important;left:4%!important;width:92%!important;height:calc(100% - 10px)!important;max-height:none!important;max-width:none!important;object-fit:contain!important;object-position:center bottom!important}
+html.phone-ui .shop-dialog.market-illustrated.painted-shop .market-price-tag{height:10px!important;line-height:10px!important}
+.shop-dialog.painted-shop #shopCashierSpeech:not(.phone-bubble){position:absolute!important;top:100%!important;bottom:auto!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;margin:4px 0 0!important;width:100%!important;max-width:none!important;z-index:10}
+html.phone-ui .shop-dialog.market-illustrated.painted-shop #shopBody::after{display:none!important}
+html.phone-ui .shop-dialog.market-illustrated.painted-shop .market-stall-products{grid-template-rows:repeat(2,minmax(0,1fr))!important;grid-auto-rows:50%!important;min-height:0!important}
+html.phone-ui .shop-dialog.market-illustrated.painted-shop .market-stall .shop-consumable{max-height:none!important;aspect-ratio:auto!important}
+html.phone-ui .shop-dialog.market-illustrated.painted-shop .market-stall{top:32%!important;height:36%!important}
+html.phone-ui .shop-dialog.market-illustrated.painted-shop .market-stall .shop-consumable>img{height:100%!important}
+html.phone-ui .shop-dialog.market-illustrated.painted-shop .market-price-tag{bottom:-3px!important;height:9px!important;line-height:9px!important;z-index:3}
+html.phone-ui .shop-dialog.market-illustrated.painted-shop .market-stall .shop-consumable>img{height:calc(100% - 7px)!important}
+html.phone-ui .shop-dialog.market-illustrated.painted-shop .market-price-tag{bottom:0!important}

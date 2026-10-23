@@ -5,6 +5,7 @@ const context={window:{},console};
 vm.createContext(context);
 vm.runInContext(fs.readFileSync('assets/js/game-economy.js','utf8'),context);
 vm.runInContext(fs.readFileSync('assets/js/team-rules.js','utf8'),context);
+vm.runInContext(fs.readFileSync('assets/js/apothecary-effects.js','utf8'),context);
 const rules=context.window.LapinousTeamRules;
 const content=JSON.parse(fs.readFileSync('lapinous-content.json','utf8'));
 const sp=content.species;

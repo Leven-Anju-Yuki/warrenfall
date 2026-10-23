@@ -18,7 +18,7 @@ import requests
 from reseau import diagnostic, sanitize, read_request
 from dotenv import load_dotenv
 from cloudinary_rapport import build as cloudinary_report
-from suivi_trello import collect, dirty_paths, evidence, progress, validate_tasks
+from suivi_trello import collect, dirty_paths, evidence, progress, validate_tasks, partition_tasks
 
 HERE = Path(__file__).resolve().parent
 ROOT = HERE.parent.parent
@@ -218,9 +218,11 @@ def finish_comment(plan):
     write_transitions(items)
 
 
-def recover_transitions(lists):
+def recover_transitions(lists, blocked_ids=()):
     recovered = []
     for plan in list(read_transitions().values()):
+        if plan['id'] in blocked_ids:
+            continue  # Conserver le journal ; aucune reprise d'une carte ambiguë.
         card = api('GET', 'cards/' + plan['id'], {'fields': 'idList,closed'})
         protected = {list_id(lists, key) for key in ('realise', 'idees', 'bloque')}
         if card.get('closed') or card['idList'] in protected:
@@ -371,7 +373,8 @@ def bilan(apply, since=None, chain=None):
     tasks = load_mappings()
     todo_file, readme_file = ROOT / 'A_FAIRE.md', ROOT / 'readme.md'
     todo = todo_file.read_text(encoding='utf-8')
-    validate_tasks(tasks, todo)
+    tasks, validation_issues = partition_tasks(tasks, todo)
+    blocked_ids = {issue['card_id'] for issue in validation_issues}
     changes, snapshot, warnings = collect(ROOT, STATE_FILE, tasks, since=since)
     stamp = dt.datetime.now().astimezone().strftime('%d/%m/%Y %H:%M')
     plans, errors = [], []
@@ -385,6 +388,10 @@ def bilan(apply, since=None, chain=None):
         cards_by_id = {card['id']: card for card in cards}
         if len(cards_by_id) != len(cards):
             raise ValueError('Cartes en double dans la reponse Trello.')
+        for issue in validation_issues:
+            card = cards_by_id.get(issue['card_id'], {})
+            issue['nom'] = card.get('name', issue['nom'])
+            issue['url'] = card.get('shortUrl') or 'https://trello.com/c/' + issue['card_id']
         for task in tasks:
             try:
                 plans.append(plan_card(task, changes, todo, lists, cards_by_id.get(task['card_id'])))
@@ -398,7 +405,7 @@ def bilan(apply, since=None, chain=None):
         ALLOWED_LISTS = {list_id(lists, 'en cours'), list_id(lists, 'a_valider')}
         REMOTE_WRITES = True
         try:
-            recovered = recover_transitions(lists)
+            recovered = recover_transitions(lists, blocked_ids) if blocked_ids else recover_transitions(lists)
             applied.extend(recovered)
             for plan in updates:
                 if plan['id'] in recovered:
@@ -413,6 +420,12 @@ def bilan(apply, since=None, chain=None):
         finally:
             REMOTE_WRITES = False
             ALLOWED_LISTS = set()
+    validation_messages = [
+        'Trello / intervention requise : ' + issue['nom'] + ' [' + issue['card_id'] + '] ' +
+        issue.get('url', 'https://trello.com/c/' + issue['card_id']) + ' ; ' + issue['detail'] +
+        ' ; carte exclue des mutations, état et historique conservés.'
+        for issue in validation_issues]
+    errors.extend(validation_messages)
     names = {item['id']: item['name'] for item in lists.values()}
     cloud_text, cloud_ok = cloudinary_report(ROOT, expected_start=chain.get('startedAt')) if isinstance(chain, dict) else cloudinary_report(ROOT)
     chain_errors = []
@@ -493,6 +506,8 @@ def bilan(apply, since=None, chain=None):
     message = '\n'.join(plan['nom'] + ' : ' + ('applique' if plan['id'] in applied else 'non applique')
                         + ' ; ' + plan['raison'] for plan in updates)
     message += f'\nCartes ignorees : {len(plans) - len(updates)} (motifs dans le rapport complet). Erreurs Trello : {sum('Trello' in error for error in errors)}. Erreurs globales : {len(errors)}.'
+    if validation_messages:
+        message += '\n' + '\n'.join(validation_messages)
     jobs.append(('trello', lambda: discord('trello', message)))
     if not cloud_ok:
         jobs.append(('alerte Cloudinary', lambda: discord('erreurs', 'Cloudinary : ' + sanitize(cloud_text[:1400]))))

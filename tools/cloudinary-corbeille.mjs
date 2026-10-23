@@ -11,6 +11,8 @@ import crypto from 'node:crypto';
 import { deletionSuspended } from './cloudinary-deletion-policy.mjs';
 
 const root = process.cwd();
+if (JSON.parse(await fs.readFile(path.join(root, 'tools/automation/config.json'), 'utf8')).enabled === true && process.argv[2] === 'appliquer')
+  throw Error('Mode hybride : corbeille réservée à la chaîne distante, aucune suppression locale.');
 const dir = path.join(root, '.cloudinary-local');
 const mode = process.argv[2] || 'simulation';
 if (!['simulation', 'appliquer'].includes(mode)) throw Error('Modes : simulation ou appliquer.');

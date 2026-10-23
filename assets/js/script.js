@@ -579,20 +579,28 @@ document.addEventListener("DOMContentLoaded", () => {
                 savedAt: Date.now(),
             });
         }
-        function autoSave() {
+        let autoNestWarningShown=false;
+        function autoSave(leaving=false) {
             if(body.classList.contains("game-running")) renderRecordsButton();
             try {
                 if(saveLoadBlocked)return false;
                 lastSavedRaw=window.LapinousSaveSafety.write(localStorage,AUTOSAVE_KEY,serializeGame(),lastSavedRaw);
-                saveWarningShown=false;return true;
+                saveWarningShown=false;
             } catch (e) {
                 if(!saveWarningShown){saveWarningShown=true;showToast("Sauvegarde non enregistrée : "+e.message+" Exporte ta partie en JSON avant de fermer le jeu.","warn",12000);}
                 return false;
             }
+            if(body.classList.contains('game-running'))try{
+                const nest=window.LapinousAutoNests.capture(localStorage,lastSavedRaw,currentRabbitName(),Date.now(),leaving===true);
+                if(nest){autoNestWarningShown=false;showToast('🐰 Sauvegarde automatique : ton petit nid est à l’abri !','success',3500);}
+            }catch(error){if(!autoNestWarningShown){autoNestWarningShown=true;showToast('Partie enregistrée, mais le petit nid n’a pas pu être créé : '+error.message,'warn',10000);}}
+            return true;
         }
 
-        document.addEventListener("visibilitychange",()=>{if(document.hidden&&body.classList.contains("game-running"))autoSave();});
-        window.addEventListener("pagehide",()=>{if(body.classList.contains("game-running"))autoSave();});
+        document.addEventListener("visibilitychange",()=>{if(document.hidden&&body.classList.contains("game-running"))autoSave(true);});
+        window.addEventListener("pagehide",()=>{if(body.classList.contains("game-running"))autoSave(true);});
+        setInterval(()=>{if(!document.hidden&&body.classList.contains('game-running'))autoSave();},window.LapinousAutoNests.INTERVAL);
+        function readAutoNests(){try{return window.LapinousAutoNests.read(localStorage);}catch(error){showToast(error.message,'warn',10000);return [];}}
         function loadSavesList() {
             try {
                 const list=JSON.parse(localStorage.getItem(SAVES_KEY) || "[]");
@@ -639,7 +647,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         function loadSaveEntry(id) {
-            const entry = loadSavesList().find((s) => s.id === id);
+            const entry = [...loadSavesList(),...readAutoNests()].find((s) => s.id === id);
             if (!entry) {
                 showToast("Sauvegarde introuvable.", "warn");
                 return;
@@ -683,7 +691,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function renderSavesList() {
             const container = document.getElementById("saveSlots");
-            const list = loadSavesList().sort((a, b) => b.savedAt - a.savedAt);
+            const list = [...loadSavesList(),...readAutoNests()].sort((a, b) => b.savedAt - a.savedAt);
             container.innerHTML = "";
             if (list.length === 0) {
                 container.innerHTML = `<p class="upgrade-locked-note">Aucune sauvegarde pour l'instant — crée-en une ci-dessus.</p>`;
@@ -695,14 +703,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 row.className = "save-slot";
                 row.innerHTML = `
                 <div class="save-slot-info">
-                    <strong>${idx === 0 ? "⭐ " : ""}${entry.name}</strong>
-                    ${entry.data.rabbitName || "Sans nom"} — Niveau ${entry.data.currentLevel || 1} — ${date}
+                    <strong>${entry.automatic ? '🐰 ' : idx === 0 ? '⭐ ' : ''}${combatEscape(entry.name)}</strong>
+                    ${entry.automatic?'Sauvegarde automatique · ':''}${combatEscape(entry.data.rabbitName || "Sans nom")} — Niveau ${entry.data.progress?.[entry.data.species]?.currentLevel || entry.data.currentLevel || 1} — ${date}
                 </div>
                 <div class="save-slot-actions">
                     <button class="slot-btn load" data-load-save="${entry.id}">Charger</button>
-                    <button class="slot-btn save" data-overwrite-save="${entry.id}">Écraser</button>
+                    ${entry.automatic?'':`<button class="slot-btn save" data-overwrite-save="${entry.id}">Écraser</button>
                     <button class="slot-btn save" data-rename-save="${entry.id}">Renommer</button>
-                    <button class="slot-btn clear" data-delete-save="${entry.id}">✕</button>
+                    <button class="slot-btn clear" data-delete-save="${entry.id}">✕</button>`}
                 </div>`;
                 container.appendChild(row);
             });
@@ -1258,11 +1266,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 const realImg = s.faceImg || s.coteImg || "";
                 const imgSrc =
                     realImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg";
-                const eventBadge =
-                    s.event
-                        ? `<span class="event-badge">${window.LapinousTeamRules.eventActive(s,currentActiveEvents()) ? "En ce moment" : eventLabelFor(s).split(" ")[0]}</span>`
-                        : "";
-                card.innerHTML = `<img class="${owned ? "" : realImg ? "rabbit-silhouette" : ""}" src="${imgSrc}" alt="${owned ? s.name : "???"}" onerror="this.onerror=null;this.classList.remove('rabbit-silhouette');this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';"><span class="card-name">${owned ? s.name : "???"}</span>${owned ? '<span class="owned-badge">✓</span>' : ""}${eventBadge}`;
+                card.innerHTML = `<img class="${owned ? "" : realImg ? "rabbit-silhouette" : ""}" src="${imgSrc}" alt="${owned ? s.name : "???"}" onerror="this.onerror=null;this.classList.remove('rabbit-silhouette');this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';"><span class="card-name">${owned ? s.name : "???"}</span>`;
+                if(s.event){
+                    const badge=document.createElement('span');
+                    badge.className='event-badge';
+                    badge.textContent=eventLabelFor(s).split(' ')[0];
+                    badge.title=eventLabelFor(s);
+                    badge.setAttribute('aria-label',eventLabelFor(s));
+                    card.append(badge);
+                }
                 card.addEventListener("click", () => {
                     if (owned) showEncyclopediaDetail(key);
                     else if (s.event && !isSpeciesAvailableNow(s))
@@ -1399,6 +1411,11 @@ document.addEventListener("DOMContentLoaded", () => {
         // BARRES DE STATUT
         // ============================================================
         function updateStatusBars() {
+            const away=!!window.LapinousExploration?.busy(game,game.species);
+            body.classList.toggle('rabbit-exploring',away);
+            let note=document.getElementById('explorationAwayNote');
+            if(away&&!note){note=document.createElement('div');note.id='explorationAwayNote';note.className='exploration-away-note';body.append(note);}
+            if(note){note.hidden=!away;note.textContent=away?`${currentRabbitName()} explore les sentiers avec le randonneur.`:'';}
             foodBar.style.width = progress().food + "%";
             energyBar.style.width = progress().energy + "%";
             cleanlinessBar.style.width = progress().cleanliness + "%";
@@ -1510,6 +1527,7 @@ document.addEventListener("DOMContentLoaded", () => {
             );
         };
         window.eatKitchenItem = (id) => {
+            if(explorationUnavailable())return;
             if (!window.LapinousVisibility.allowed("pantry")) return;
             const catalog = window.LapinousShop.getCatalog();
             const item =
@@ -1810,6 +1828,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!p.minigames.puzzle.puzzles) p.minigames.puzzle.puzzles = {};
             if (!p.minigames.memory) p.minigames.memory = { level: 0, completed: 0 };
             if (!p.minigames.lapidoku) p.minigames.lapidoku = { level: 0, completed: 0 };
+            if (!p.minigames.lapinoudoku) p.minigames.lapinoudoku = { ...p.minigames.lapidoku };
             return p.minigames;
         }
 
@@ -1849,7 +1868,30 @@ document.addEventListener("DOMContentLoaded", () => {
             });
         };
 
+        function explorationUnavailable(key=game.species){
+            if(!window.LapinousExploration?.busy(game,key))return false;
+            showToast('Ce lapin explore les sentiers. Choisis un autre compagnon en attendant son retour.','warn');return true;
+        }
+        window.openExplorations=function(){
+            if(tacticalFight||body.classList.contains('battle-scene')){showToast('Termine le combat avant de préparer une escapade.','warn');return;}
+            for(const id of game.ownedSpecies||[])if(!game.progress[id])game.progress[id]=freshSpeciesProgress();
+            window.LapinousExploration.open({host:gameArea,game,config:window.getExplorationConfig(),items:window.LapinousShop.getCatalog()?.items||[],species:getSpecies(),save:autoSave,toast:showToast,refresh:updateStatusBars});
+        };
+        setInterval(()=>{if(body.classList.contains('game-running')){
+            updateStatusBars();
+            const ready=Object.values(game.exploration?.trips||{}).filter(t=>!t.claimed&&Date.now()>=t.endsAt&&!t.notified);
+            if(ready.length){for(const t of ready)t.notified=true;if(autoSave())showToast('🐾 Un explorateur est revenu ! Retrouve ses trouvailles dans le Jardin → Explorer.','success',7000);else for(const t of ready)delete t.notified;}
+        }},30000);
+        window.openColoring = function () {
+            if(!window.LapinousVisibility.allowed('puzzles'))return;
+            const mg=ensureMinigameProgress();
+            if(!mg.coloring)mg.coloring={};
+            const rabbits=(game.ownedSpecies||[]).filter(id=>getSpecies()[id]?.faceImg).map(id=>({id:'rabbit-'+id,title:rabbitDisplayName({key:id,sp:getSpecies()[id]}),image:getSpecies()[id].faceImg,kind:'rabbit'}));
+            const scenes=puzzleCatalog().filter(isPuzzleAvailableNow).map(image=>({...image,kind:'scene'}));
+            window.LapinousColoring.open({host:gameArea,catalog:[...rabbits,...scenes],storage:mg.coloring,save:autoSave,back:()=>openGameConsole()});
+        };
         window.openGameConsole = function () {
+            if(explorationUnavailable())return;
             if (!window.LapinousVisibility.allowed("games")) return;
             const mg = ensureMinigameProgress();
             const availablePuzzles = puzzleCatalog().filter(isPuzzleAvailableNow);
@@ -1873,10 +1915,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 [
                     "lapidoku",
                     "Lapidoku",
-                    "openLapidoku()",
-                    `${mg.lapidoku.completed || 0} grilles terminees`,
+                    "openNumberSudoku()",
+                    `${mg.lapidoku.completed || 0} grilles de chiffres terminées`,
                 ],
+                ["lapinoudoku", "Lapinoudoku", "openLapidoku()", `${mg.lapinoudoku.completed || 0} clairières terminées`],
                 ["quiz", "Quiz des lapins", "openRabbitQuiz()", "Alimentation et comportement"],
+                ["coloring", "Les Couleurs du terrier", "openColoring()", "Coloriages numérotés · 3 difficultés"],
             ];
             const cupboard = document.createElement("section");
             cupboard.className = "game-cupboard";
@@ -1886,7 +1930,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const shelf = document.createElement("div");
             shelf.className = "game-cupboard-shelves";
             games.forEach(([key, name, action, description]) => {
-                if (!window.LapinousVisibility.allowed(key)) return;
+                if (!window.LapinousVisibility.allowed(key==='coloring'?'puzzles':key)) return;
                 const button = document.createElement("button");
                 button.type = "button";
                 button.className = "game-box";
@@ -2303,7 +2347,7 @@ document.addEventListener("DOMContentLoaded", () => {
             progress().energy = Math.max(0, progress().energy - Number(lvl.energy || 0));
             progress().cleanliness = Math.max(
                 0,
-                progress().cleanliness - Number(lvl.cleanliness || 0),
+                progress().cleanliness - window.LapinousRemedies.cleanCost(progress(),Number(lvl.cleanliness || 0)),
             );
             gainFriendship(lvl.friendship);
             rewardMinigame("puzzle:"+puz.id, levelIndex);
@@ -2498,7 +2542,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 image: () => `./assets/img/Zone_SdB/toilette_oreilles.png`,
                 content: () =>
                     progress().improvements.sdb
-                        ? `<div class="action-row"><button class="action-btn upgraded" onclick="cleanRabbit()"><img class="action-icon" src="./assets/img/Zone_SdB/pommeau.png" alt=""><span>Nettoyer</span></button>${upgradeButtonHtml("sdb", "", "improveCleanRabbit()")}</div>`
+                        ? `<div class="action-row"><button class="action-btn upgraded" onclick="cleanRabbit()"><img class="action-icon" src="./assets/img/Zone_SdB/pommeau.png" alt=""><span>Nettoyer</span></button><button class="action-btn" onclick="brushRabbit()"><img class="action-icon" src="./assets/img/Zone_SdB/brosse.png" alt=""><span>Brosser</span></button>${upgradeButtonHtml("sdb", "", "improveCleanRabbit()")}</div>`
                         : `<div class="action-row">
                     <button class="action-btn" onclick="cleanRabbit()"><img class="action-icon" src="./assets/img/Zone_SdB/brosse.png" alt=""><span>Nettoyer</span></button>
                     ${upgradeButtonHtml("sdb", "./assets/img/Zone_SdB/pommeau.png", "improveCleanRabbit()")}
@@ -2518,6 +2562,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <button class="${btnClass}" onclick="startAgility()"><img class="action-icon" src="${icon}" alt=""><span>Jouer</span></button>
                     ${upgradeButtonHtml("jardin", "./assets/img/Zone_jardin/agilite.png", "improvePlayWithRabbit()")}
                     <button class="action-btn adventure" onclick="openAdventure()"><span class="action-icon-emoji">⚔️</span><span>Aventure</span></button>
+                    <button class="action-btn adventure" onclick="openExplorations()"><span class="action-icon-emoji">🧭</span><span>Explorer</span></button>
                 </div>
                 <div class="carrot-counter">🥕 ${game.carrots} carotte${game.carrots > 1 ? "s" : ""}</div>`;
                 },
@@ -2662,13 +2707,16 @@ document.addEventListener("DOMContentLoaded", () => {
         // ============================================================
         // ACTIONS
         // ============================================================
+        function careFriendship(extra=0){const amount=extra+window.LapinousRemedies.take(progress(),'interaction');if(amount){progress().friendshipTotal+=amount;progress().friendship=Math.min(100,progress().friendship+amount);checkLevelUp();}}
         window.feedRabbit = function () {
+            if(explorationUnavailable())return;
             animateZoneRabbit("cuisine");
             playSfx("feed");
             if (progress().food >= 100) {
                 showToast("Le lapin est déjà rassasié !");
             } else {
                 progress().food = Math.min(progress().food + 2 + roomStage("cuisine"), 100);
+                careFriendship();
                 bounceRabbit();
                 spawnParticles("🥕", 5);
             }
@@ -2677,15 +2725,17 @@ document.addEventListener("DOMContentLoaded", () => {
             autoSave();
         };
         window.putRabbitToSleep = function () {
+            if(explorationUnavailable())return;
             animateZoneRabbit("chambre");
             playSfx("sleep");
             if (progress().energy >= 100) {
                 showToast("Le lapin est déjà bien reposé !");
             } else {
                 progress().energy = Math.min(
-                    progress().energy + traitGain("energy", 5) + progress().boosts.energy,
+                    progress().energy + Math.ceil((traitGain("energy", 5) + progress().boosts.energy)*(1+window.LapinousRemedies.take(progress(),"sleep"))),
                     100,
                 );
+                careFriendship();
                 bounceRabbit();
                 spawnParticles("💤", 5);
             }
@@ -2693,16 +2743,20 @@ document.addEventListener("DOMContentLoaded", () => {
             checkStatus();
             autoSave();
         };
-        window.cleanRabbit = function () {
+        window.brushRabbit = () => window.cleanRabbit(true);
+        window.cleanRabbit = function (brushingOnly=false) {
+            if(explorationUnavailable())return;
             animateZoneRabbit("sdb");
             playSfx("clean");
             if (progress().cleanliness >= 100) {
                 showToast("Le lapin est déjà tout propre !");
             } else {
+                const brushing=(brushingOnly||roomStage("sdb")===0)&&Boolean(progress().remedyEffects?.brush);
                 progress().cleanliness = Math.min(
-                    progress().cleanliness + 5 + progress().boosts.cleanliness,
+                    progress().cleanliness + 5 + progress().boosts.cleanliness + ((brushingOnly||roomStage("sdb")===0)?window.LapinousRemedies.take(progress(),"brush"):0),
                     100,
                 );
+                careFriendship(brushing?3:0);
                 bounceRabbit();
                 spawnParticles("🫧", 5);
             }
@@ -2902,55 +2956,170 @@ document.addEventListener("DOMContentLoaded", () => {
             renderMemory();
         };
 
-        // ---- Lapidoku : progression 4×4, 6×6 puis 9×9 ----
-        let lapidokuState = null;
-        window.openLapidoku = function () {
+        // ---- NumberSudoku : progression 4×4, 6×6 puis 9×9 ----
+        let numberSudokuState = null;
+        window.openNumberSudoku = function () {
             if (!window.LapinousVisibility.allowed("lapidoku")) return;
-            lapidokuState = null;
+            numberSudokuState = null;
             const mg = ensureMinigameProgress().lapidoku;
             const unlocked = Math.max(0, Math.min(11, Number(mg.level) || 0));
-            gameArea.innerHTML = `<section class="sudoku-panel"><h2>🔢 Lapidoku</h2><p>Un chiffre par case, sans répétition dans chaque ligne, colonne et bloc encadré.</p><div class="sudoku-levels">${LapinousSudoku.levels.map(l => `<button type="button" onclick="startLapidoku(${l.index})" ${l.index > unlocked ? "disabled" : ""}><strong>${l.index > unlocked ? "🔒 " : ""}Niveau ${l.index+1}</strong><span>${l.size}×${l.size} · ${l.label}${l.givenPercent ? ` · ≈${l.givenPercent}% prérempli` : ""}</span></button>`).join("")}</div><button class="ghost-btn" onclick="openGameConsole()">← Mini-jeux</button></section>`;
+            gameArea.innerHTML = `<section class="number-sudoku-panel"><h2>🔢 Lapidoku</h2><p>Un chiffre par case, sans répétition dans chaque ligne, colonne et bloc encadré.</p><div class="number-sudoku-levels">${LapinousSudoku.levels.map(l => `<button type="button" onclick="startNumberSudoku(${l.index})" ${l.index > unlocked ? "disabled" : ""}><strong>${l.index > unlocked ? "🔒 " : ""}Niveau ${l.index+1}</strong><span>${l.size}×${l.size} · ${l.label}${l.givenPercent ? ` · ≈${l.givenPercent}% prérempli` : ""}</span></button>`).join("")}</div><button class="ghost-btn" onclick="openGameConsole()">← Mini-jeux</button></section>`;
         };
-        window.startLapidoku = function(index) {
+        window.startNumberSudoku = function(index) {
+            if (!window.LapinousVisibility.allowed("lapidoku")) return;
             const mg = ensureMinigameProgress().lapidoku;
             if (!Number.isInteger(index) || index < 0 || index > Math.min(11, Number(mg.level) || 0)) return;
             const level = LapinousSudoku.create(index);
-            lapidokuState = {...level, rewardLevel:index, given:level.board.map(Boolean), selected:level.board.indexOf(0), finished:false, lost:false, mistakes:0, mistakeLimit:LapinousSudoku.mistakeLimit, notice:"Choisis une case vide, puis un chiffre."};
-            renderLapidoku();
+            numberSudokuState = {...level, rewardLevel:index, given:level.board.map(Boolean), selected:level.board.indexOf(0), finished:false, lost:false, mistakes:0, mistakeLimit:LapinousSudoku.mistakeLimit, notice:"Choisis une case vide, puis un chiffre."};
+            renderNumberSudoku();
         };
-        function renderLapidoku() {
-            const st=lapidokuState;if(!st)return;
+        function renderNumberSudoku() {
+            const st=numberSudokuState;if(!st)return;
             const errors=LapinousSudoku.conflicts(st.board,st).map((conflict,i)=>conflict||(!st.given[i]&&st.board[i]!==0&&st.board[i]!==st.solution[i]));
-            gameArea.innerHTML=`<section class="sudoku-panel sudoku-play ${st.finished ? (st.lost ? "sudoku-lost" : "sudoku-won") : ""}"><header><h2>🔢 Lapidoku · Niveau ${st.index+1}</h2><span>${st.size}×${st.size} · ${Math.round(st.given.filter(Boolean).length/st.board.length*100)}% prérempli · Erreurs ${st.mistakes}/${st.mistakeLimit}</span></header>${st.lost ? `<div class="sudoku-defeat" role="alert"><strong>Grille perdue : ${st.mistakeLimit} erreurs</strong><span>Recommence ce niveau pour réessayer.</span></div>` : st.finished ? `<div class="sudoku-victory" role="status"><strong>🎉 Niveau ${st.index+1} réussi !</strong><span>+8 💛 · Progression sauvegardée</span></div>` : ""}<div class="sudoku-layout"><div class="sudoku-board" role="group" aria-label="Grille de Sudoku" style="--sudoku-size:${st.size}">${st.board.map((v,i)=>`<button type="button" class="sudoku-cell ${st.given[i]?'given':''} ${st.selected===i?'selected':''} ${errors[i]?'conflict':''}" style="${i%st.size%st.cols===st.cols-1&&i%st.size!==st.size-1?'border-right:3px solid #72563c;':''}${Math.floor(i/st.size)%st.rows===st.rows-1&&Math.floor(i/st.size)!==st.size-1?'border-bottom:3px solid #72563c;':''}" onclick="selectLapidoku(${i})" ${st.given[i]||st.finished?'disabled':''} aria-label="Ligne ${Math.floor(i/st.size)+1}, colonne ${i%st.size+1}, ${v||'vide'}">${v||''}</button>`).join('')}</div><aside class="sudoku-controls"><p>Chaque ligne, colonne et bloc doit contenir les chiffres de 1 à ${st.size} une seule fois.</p><div class="sudoku-pad">${Array.from({length:st.size},(_,i)=>`<button type="button" onclick="enterLapidoku(${i+1})" ${st.finished?'disabled':''}>${i+1}</button>`).join('')}</div><button class="ghost-btn" onclick="enterLapidoku(0)" ${st.finished?'disabled':''}>Effacer</button><p class="sudoku-notice" role="status">${st.notice}</p><div class="sudoku-actions">${st.lost ? `<button onclick="startLapidoku(${st.index})">Recommencer ce niveau</button>` : st.finished&&st.index<11?`<button onclick="startLapidoku(${st.index+1})">Niveau suivant →</button>`:st.finished?'':`<button onclick="checkLapidoku()">Vérifier</button><button onclick="startLapidoku(${st.index})">Recommencer</button>`}<button onclick="openLapidoku()">← Niveaux</button></div></aside></div></section>`;
+            gameArea.innerHTML=`<section class="number-sudoku-panel number-sudoku-play ${st.finished ? (st.lost ? "number-sudoku-lost" : "number-sudoku-won") : ""}"><header><h2>🔢 Lapidoku · Niveau ${st.index+1}</h2><span>${st.size}×${st.size} · ${Math.round(st.given.filter(Boolean).length/st.board.length*100)}% prérempli · Erreurs ${st.mistakes}/${st.mistakeLimit}</span></header>${st.lost ? `<div class="number-sudoku-defeat" role="alert"><strong>Grille perdue : ${st.mistakeLimit} erreurs</strong><span>Recommence ce niveau pour réessayer.</span></div>` : st.finished ? `<div class="number-sudoku-victory" role="status"><strong>🎉 Niveau ${st.index+1} réussi !</strong><span>+8 💛 · Progression sauvegardée</span></div>` : ""}<div class="number-sudoku-layout"><div class="number-sudoku-board" role="group" aria-label="Grille de Sudoku" style="--number-sudoku-size:${st.size}">${st.board.map((v,i)=>`<button type="button" class="number-sudoku-cell ${st.given[i]?'given':''} ${st.selected===i?'selected':''} ${errors[i]?'conflict':''}" style="${i%st.size%st.cols===st.cols-1&&i%st.size!==st.size-1?'border-right:3px solid #72563c;':''}${Math.floor(i/st.size)%st.rows===st.rows-1&&Math.floor(i/st.size)!==st.size-1?'border-bottom:3px solid #72563c;':''}" onclick="selectNumberSudoku(${i})" ${st.given[i]||st.finished?'disabled':''} aria-label="Ligne ${Math.floor(i/st.size)+1}, colonne ${i%st.size+1}, ${v||'vide'}">${v||''}</button>`).join('')}</div><aside class="number-sudoku-controls"><p>Chaque ligne, colonne et bloc doit contenir les chiffres de 1 à ${st.size} une seule fois.</p><div class="number-sudoku-pad">${Array.from({length:st.size},(_,i)=>`<button type="button" onclick="enterNumberSudoku(${i+1})" ${st.finished?'disabled':''}>${i+1}</button>`).join('')}</div><button class="ghost-btn" onclick="enterNumberSudoku(0)" ${st.finished?'disabled':''}>Effacer</button><p class="number-sudoku-notice" role="status">${st.notice}</p><div class="number-sudoku-actions">${st.lost ? `<button onclick="startNumberSudoku(${st.index})">Recommencer ce niveau</button>` : st.finished&&st.index<11?`<button onclick="startNumberSudoku(${st.index+1})">Niveau suivant →</button>`:st.finished?'':`<button onclick="checkNumberSudoku()">Vérifier</button><button onclick="startNumberSudoku(${st.index})">Recommencer</button>`}<button onclick="openNumberSudoku()">← Niveaux</button></div></aside></div></section>`;
         }
-        window.selectLapidoku = function(i) {
-            if(!lapidokuState||lapidokuState.finished||lapidokuState.given[i]||!Number.isInteger(i)||i<0||i>=lapidokuState.board.length)return;
-            lapidokuState.selected=i;renderLapidoku();
+        window.selectNumberSudoku = function(i) {
+            if(!numberSudokuState||numberSudokuState.finished||numberSudokuState.given[i]||!Number.isInteger(i)||i<0||i>=numberSudokuState.board.length)return;
+            numberSudokuState.selected=i;renderNumberSudoku();
         };
-        window.enterLapidoku = function(value) {
-            const st=lapidokuState;if(!st||st.finished||st.selected<0||st.given[st.selected]||!Number.isInteger(value)||value<0||value>st.size)return;
+        window.enterNumberSudoku = function(value) {
+            const st=numberSudokuState;if(!st||st.finished||st.selected<0||st.given[st.selected]||!Number.isInteger(value)||value<0||value>st.size)return;
             if(!LapinousSudoku.enter(st,st.selected,value))return;
-            if(st.lost){st.notice="Limite d’erreurs atteinte. Aucune récompense : il faut recommencer.";renderLapidoku();return;}
-            if(st.board.every(Boolean)&&!LapinousSudoku.conflicts(st.board,st).some(Boolean)){checkLapidoku();return;}
-            st.notice=value&&value!==st.solution[st.selected]?`Chiffre incorrect. Erreurs : ${st.mistakes}/${st.mistakeLimit}.`:"Choisis une case puis un chiffre. Effacer ne coûte pas d’erreur.";renderLapidoku();
+            if(st.lost){st.notice="Limite d’erreurs atteinte. Aucune récompense : il faut recommencer.";renderNumberSudoku();return;}
+            if(st.board.every(Boolean)&&!LapinousSudoku.conflicts(st.board,st).some(Boolean)){checkNumberSudoku();return;}
+            st.notice=value&&value!==st.solution[st.selected]?`Chiffre incorrect. Erreurs : ${st.mistakes}/${st.mistakeLimit}.`:"Choisis une case puis un chiffre. Effacer ne coûte pas d’erreur.";renderNumberSudoku();
         };
-        window.checkLapidoku = function () {
-            const st=lapidokuState;if(!st||st.finished)return;
+        window.checkNumberSudoku = function () {
+            const st=numberSudokuState;if(!st||st.finished)return;
             if(st.board.some(v=>!v)||LapinousSudoku.conflicts(st.board,st).some(Boolean)){
-                st.notice="Il reste des cases vides ou des chiffres répétés.";renderLapidoku();return;
+                st.notice="Il reste des cases vides ou des chiffres répétés.";renderNumberSudoku();return;
             }
             st.finished=true;
             const mg=ensureMinigameProgress().lapidoku;
             mg.completed=(Number(mg.completed)||0)+1;
             mg.level=Math.max(Number(mg.level)||0,Math.min(11,st.index+1));
-            recordAchievement("gamesWon");gainFriendship(8);rewardMinigame("lapidoku",lapidokuState.rewardLevel);
+            recordAchievement("gamesWon");gainFriendship(8);rewardMinigame("lapidoku",numberSudokuState.rewardLevel);
             st.notice="Grille réussie ! +8 💛 — progression enregistrée.";
-            autoSave();renderLapidoku();
+            autoSave();renderNumberSudoku();
         };
         document.addEventListener("keydown", event=>{
-            if(!gameArea.querySelector('.sudoku-play')||event.target.matches('input,textarea,select')||document.querySelector('dialog[open],.records-overlay'))return;
-            if(/^[1-9]$/.test(event.key)){event.preventDefault();enterLapidoku(Number(event.key));}
-            else if(['Backspace','Delete','0'].includes(event.key)){event.preventDefault();enterLapidoku(0);}
+            if(!gameArea.querySelector('.number-sudoku-play')||event.target.matches('input,textarea,select')||document.querySelector('dialog[open],.records-overlay'))return;
+            if(/^[1-9]$/.test(event.key)){event.preventDefault();enterNumberSudoku(Number(event.key));}
+            else if(['Backspace','Delete','0'].includes(event.key)){event.preventDefault();enterNumberSudoku(0);}
+        });
+
+        // ---- Lapinoudoku : régions colorées, lapins et croix ----
+        let lapidokuState = null;
+        let lastBunnyTap = null;
+        let bunnyStroke=null,bunnyClickBlockedUntil=0;
+        gameArea.addEventListener('pointerdown',event=>{
+            const cell=event.target.closest('[data-bunny-cell]'),st=lapidokuState;
+            if(!cell||!st||st.finished||event.button>0)return;
+            if(bunnyStroke){bunnyStroke.cancelled=true;return;}
+            bunnyClickBlockedUntil=0;
+            const rect=cell.closest('.bunny-grid').getBoundingClientRect();
+            const point={x:(event.clientX-rect.left)*st.size/rect.width,y:(event.clientY-rect.top)*st.size/rect.height};
+            bunnyStroke={id:event.pointerId,state:st,rect,start:point,last:point,clientX:event.clientX,clientY:event.clientY,dragged:false};
+        });
+        document.addEventListener('pointermove',event=>{
+            const drag=bunnyStroke,st=lapidokuState;
+            if(!drag||drag.id!==event.pointerId||drag.cancelled||drag.state!==st||!gameArea.querySelector('.bunny-grid'))return;
+            if(!drag.dragged&&Math.hypot(event.clientX-drag.clientX,event.clientY-drag.clientY)<8)return;
+            event.preventDefault();
+            if(!drag.dragged){drag.dragged=true;gameArea.setPointerCapture(event.pointerId);lastBunnyTap=null;}
+            const point={x:(event.clientX-drag.rect.left)*st.size/drag.rect.width,y:(event.clientY-drag.rect.top)*st.size/drag.rect.height};
+            for(const i of window.LapinousGridStroke(drag.last,point,st.size,st.size))if(st.board[i]===0)LapinousBunnyGrid.enter(st,i,2);
+            drag.last=point;renderLapidoku();
+        },{passive:false});
+        const endBunnyStroke=event=>{
+            if(!bunnyStroke||bunnyStroke.id!==event.pointerId)return;
+            if(bunnyStroke.dragged){bunnyClickBlockedUntil=performance.now()+600;lastBunnyTap=null;}
+            bunnyStroke=null;
+        };
+        document.addEventListener('pointerup',endBunnyStroke);
+        document.addEventListener('pointercancel',endBunnyStroke);
+        gameArea.addEventListener('click',event=>{if(event.detail&&performance.now()<bunnyClickBlockedUntil){event.preventDefault();event.stopImmediatePropagation();}},true);
+        const bunnyPalette=[['#eeb4b5','rose'],['#f1ce8b','dorée'],['#b5d0a2','verte'],['#adcde1','bleue'],['#c9b5db','lavande'],['#e8bc9e','pêche'],['#a6cec3','menthe'],['#dfcfa3','sable']];
+        window.openLapidoku = function () {
+            if (!window.LapinousVisibility.allowed('lapinoudoku')) return;
+            lapidokuState = null;
+            const mg=ensureMinigameProgress().lapinoudoku;
+            const unlocked=Math.max(0,Math.min(11,Number(mg.level)||0));
+            gameArea.innerHTML=`<section class="sudoku-panel bunny-panel"><h2>🐰 Lapinoudoku</h2><p class="bunny-intro">Trouve la place de chaque lapin dans les clairières colorées.</p><div class="bunny-rules"><span>🐰 Un par ligne et colonne</span><span>🎨 Un par couleur</span><span>↔ Aucun lapin ne se touche</span></div><p>Les croix t’aident à éliminer les cases. Deux lapins ne se touchent pas, même en diagonale.</p><div class="sudoku-levels">${LapinousBunnyGrid.levels.map(level=>`<button type="button" onclick="startLapidoku(${level.index})" ${level.index>unlocked?'disabled':''}><strong>${level.index>unlocked?'🔒 ':level.index<unlocked?'✓ ':''}Clairière ${level.index+1}</strong><span>${level.size} × ${level.size} · ${level.label}</span><i class="bunny-color-samples" aria-hidden="true">${bunnyPalette.slice(0,level.size).map(([color])=>`<b style="background:${color}"></b>`).join('')}</i></button>`).join('')}</div><button class="ghost-btn" onclick="openGameConsole()">← Mini-jeux</button></section>`;
+        };
+        window.startLapidoku = function(index) {
+            if (!window.LapinousVisibility.allowed('lapinoudoku')) return;
+            const mg=ensureMinigameProgress().lapinoudoku;
+            if(!Number.isInteger(index)||index<0||index>Math.min(11,Number(mg.level)||0))return;
+            lastBunnyTap=null;
+            lapidokuState={...LapinousBunnyGrid.create(index),rewardLevel:index,selected:0,tool:1,finished:false,lost:false,mistakes:0,mistakeLimit:LapinousBunnyGrid.mistakeLimit,notice:'Un clic : une croix. Deux clics rapides : un lapin.'};
+            renderLapidoku();
+        };
+        function renderLapidoku(){
+            const st=lapidokuState;if(!st)return;
+            const errors=LapinousBunnyGrid.conflicts(st.board,st),count=st.board.filter(v=>v===1).length;
+            gameArea.innerHTML=`<section class="sudoku-panel sudoku-play bunny-panel ${st.finished?(st.lost?'sudoku-lost':'sudoku-won'):''}"><header><h2>🐰 Lapinoudoku · Clairière ${st.index+1}</h2><span>${count}/${st.size} lapins · Erreurs ${st.mistakes}/${st.mistakeLimit}</span></header>${st.lost?`<div class="sudoku-defeat" role="alert"><strong>Trois erreurs, on réessaie ?</strong><span>Recommence cette clairière pour repartir tranquillement.</span></div>`:st.finished?`<div class="sudoku-victory" role="status"><strong>Clairière réussie ! 🐰</strong><span>+8 💛 · Progression enregistrée</span></div>`:''}<div class="sudoku-layout"><div class="sudoku-board bunny-grid" role="group" aria-label="Clairière colorée de ${st.size} lignes et ${st.size} colonnes" style="--sudoku-size:${st.size}">${st.board.map((value,i)=>{
+                const row=Math.floor(i/st.size),col=i%st.size,region=st.regions[i],color=bunnyPalette[region];
+                const right=col<st.size-1&&st.regions[i+1]!==region,bottom=row<st.size-1&&st.regions[i+st.size]!==region;
+                return `<button type="button" data-bunny-cell="${i}" class="sudoku-cell bunny-cell ${st.selected===i?'selected':''} ${errors[i]?'conflict':''} ${value===1?'has-rabbit':value===2?'has-cross':''}" style="--region-color:${color[0]};${right?'border-right:3px solid #746349;':''}${bottom?'border-bottom:3px solid #746349;':''}" onclick="tapLapidokuCell(${i})" oncontextmenu="event.preventDefault();playLapidokuCell(${i},2)" ${st.finished?'disabled':''} aria-pressed="${st.selected===i}" aria-label="Ligne ${row+1}, colonne ${col+1}, zone ${region+1} ${color[1]}, ${value===1?'lapin':value===2?'croix':'vide'}"><span aria-hidden="true">${value===1?'🐰':value===2?'×':''}</span></button>`;
+            }).join('')}</div><aside class="sudoku-controls"><div class="bunny-tools" role="group" aria-label="Modifier la case s?lectionn?e">${[[1,'🐰','Lapin'],[2,'×','Croix'],[0,'⌫','Effacer']].map(([value,icon,label])=>`<button type="button" data-bunny-tool="${value}" aria-label="${label} dans la case s?lectionn?e" onclick="setLapidokuTool(${value})" ${st.finished?'disabled':''}><span aria-hidden="true">${icon}</span>${label}</button>`).join('')}</div><p class="sudoku-notice" role="status">${st.notice}</p><div class="bunny-rules"><span>🐰 Un lapin par ligne et colonne</span><span>🎨 Un lapin par région colorée</span><span>↔ Pas de voisins, même en diagonale</span></div><details class="sudoku-help"><summary>Comment jouer ?</summary><p>Choisis un outil, puis touche les cases. Avec le même outil, touche une seconde fois pour effacer.</p><p>Les croix marquent les endroits que tu élimines. Elles ne coûtent aucune erreur. La grille est réussie quand tous les lapins sont bien placés ; les dernières croix sont alors complétées.</p><p>Trois placements qui enfreignent une règle terminent la partie. Les erreurs sont entourées de rouge.</p><p>Sur ordinateur : flèches pour choisir une case, L pour un lapin, X pour une croix, Suppr pour effacer. Le clic droit pose une croix.</p></details><div class="sudoku-actions">${st.lost?`<button onclick="startLapidoku(${st.index})">Réessayer</button>`:st.finished&&st.index<11?`<button onclick="startLapidoku(${st.index+1})">Clairière suivante →</button>`:st.finished?'':`<button onclick="checkLapidoku()">Vérifier</button><button onclick="startLapidoku(${st.index})">Recommencer</button>`}<button onclick="openLapidoku()">← Clairières</button></div></aside></div></section>`;
+        }
+        window.setLapidokuTool=function(value){
+            if(!lapidokuState||lapidokuState.finished||![0,1,2].includes(value))return;
+            lastBunnyTap=null;
+            enterLapidoku(value);
+        };
+        window.tapLapidokuCell=function(index){
+            const st=lapidokuState;
+            if(!st||st.finished||!Number.isInteger(index)||index<0||index>=st.board.length)return;
+            const now=performance.now(),double=lastBunnyTap?.state===st&&lastBunnyTap.index===index&&now-lastBunnyTap.time<=450;
+            st.selected=index;
+            if(double){lastBunnyTap=null;enterLapidoku(1);}
+            else{lastBunnyTap={state:st,index,time:now};enterLapidoku(st.board[index]===2?0:2);}
+        };
+        window.selectLapidoku=function(index){
+            if(!lapidokuState||lapidokuState.finished||!Number.isInteger(index)||index<0||index>=lapidokuState.board.length)return;
+            lapidokuState.selected=index;renderLapidoku();
+            gameArea.querySelector('.bunny-cell.selected')?.focus({preventScroll:true});
+        };
+        window.playLapidokuCell=function(index,tool){
+            const st=lapidokuState;if(!st||st.finished||!Number.isInteger(index)||index<0||index>=st.board.length)return;
+            st.selected=index;const value=tool??st.tool;
+            enterLapidoku(st.board[index]===value?0:value);
+        };
+        window.enterLapidoku=function(value){
+            const st=lapidokuState;if(!st||!LapinousBunnyGrid.enter(st,st.selected,value))return;
+            if(st.lost){st.notice='La clairière attend ta prochaine tentative.';renderLapidoku();return;}
+            if(LapinousBunnyGrid.isSolved(st)){checkLapidoku();return;}
+            st.notice=LapinousBunnyGrid.conflicts(st.board,st).some(Boolean)?'Deux lapins partagent une ligne, une colonne, une couleur ou se touchent. Tu peux effacer pour corriger.':'Un clic : une croix. Double-clic : un lapin. Glisse pour poser plusieurs croix sans effacer les lapins.';
+            renderLapidoku();
+            gameArea.querySelector('.bunny-cell.selected')?.focus({preventScroll:true});
+        };
+        window.checkLapidoku=function(){
+            const st=lapidokuState;if(!st||st.finished)return;
+            if(!LapinousBunnyGrid.isSolved(st)){
+                st.notice=LapinousBunnyGrid.conflicts(st.board,st).some(Boolean)?'Les lapins entourés de rouge enfreignent une règle. Corrige leur placement.':`Il faut ${st.size} lapins : un par ligne, par colonne et par couleur, sans voisins.`;
+                renderLapidoku();return;
+            }
+            st.finished=true;st.board=st.board.map(value=>value===1?1:2);
+            const mg=ensureMinigameProgress().lapinoudoku;
+            mg.completed=(Number(mg.completed)||0)+1;
+            mg.level=Math.max(Number(mg.level)||0,Math.min(11,st.index+1));
+            recordAchievement('gamesWon');gainFriendship(8);rewardMinigame('lapinoudoku',st.rewardLevel);
+            st.notice='Clairière réussie ! +8 💛 — progression enregistrée.';
+            autoSave();renderLapidoku();
+        };
+        document.addEventListener('keydown',event=>{
+            if(!gameArea.querySelector('.bunny-grid')||event.target?.matches?.('input,textarea,select')||document.querySelector('dialog[open],.records-overlay'))return;
+            const st=lapidokuState;if(!st||st.finished)return;
+            if(['ArrowLeft','ArrowRight','ArrowUp','ArrowDown'].includes(event.key)){
+                event.preventDefault();const row=Math.floor(st.selected/st.size),col=st.selected%st.size;
+                const y=Math.max(0,Math.min(st.size-1,row+(event.key==='ArrowDown'?1:event.key==='ArrowUp'?-1:0)));
+                const x=Math.max(0,Math.min(st.size-1,col+(event.key==='ArrowRight'?1:event.key==='ArrowLeft'?-1:0)));
+                selectLapidoku(y*st.size+x);
+            }else if(['l','L','x','X','Backspace','Delete','0'].includes(event.key)){
+                event.preventDefault();enterLapidoku(event.key.toLowerCase()==='l'?1:event.key.toLowerCase()==='x'?2:0);
+            }
         });
 
         // ---- Mini-jeu d'agilité : mini-runner ----
@@ -2958,6 +3127,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let agilityRun = null;
 
         window.startAgility = function () {
+            if(explorationUnavailable())return;
             animateZoneRabbit("jardin");
             if (!window.LapinousVisibility.allowed("agility")) return;
             if (progress().food <= 5 || progress().energy <= 5 || progress().cleanliness <= 5) {
@@ -2988,7 +3158,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </div>
                 <div class="agility-runner" id="agilityRunner" tabindex="0" aria-label="Parcours d'agilité">
                   <div class="agility-ground"></div>
-                  <div class="agility-runner-rabbit" id="agilityRabbit"><img src="./assets/img/Ouverture_du_jeu/animations/azazel_course.gif" alt="Ton lapin court"></div>
+                  <div class="agility-runner-rabbit" id="agilityRabbit"><img src="./assets/img/Zone_jardin/Lapin_blanc_course.gif" alt="Ton lapin court"></div>
                   <div class="agility-start-hint" id="agilityHint">ESPACE, ↑ ou clique pour sauter</div>
                 </div>
                 <div class="agility-runner-controls">
@@ -2998,7 +3168,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <small>Le parcours accélère progressivement. Trois collisions mettent fin à la partie.</small>
               </div>`;
             const runner = document.getElementById("agilityRunner");
-            runner.style.backgroundImage=getComputedStyle(body).backgroundImage;
+            runner.style.backgroundImage=`url("${window.LapinousImages?.url("assets/img/fond/jardin.png")||"./assets/img/fond/jardin.png"}")`;
             runner.onclick = (e) => {
                 if (!e.target.closest("button")) agilityJump();
             };
@@ -3037,7 +3207,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             const rabbit = document.getElementById("agilityRabbit");
             if (rabbit)
-                rabbit.style.transform = `translateY(${-Math.min(118, agilityRun.y)}px) scaleX(-1)`;
+                rabbit.style.transform = `translateY(${-Math.min(Math.max(0,document.getElementById("agilityRunner").clientHeight-rabbit.clientHeight-parseFloat(getComputedStyle(rabbit).bottom)-8), agilityRun.y)}px)`;
 
             agilityRun.spawnIn -= dt;
             if (agilityRun.spawnIn <= 0) {
@@ -3055,7 +3225,9 @@ document.addEventListener("DOMContentLoaded", () => {
             for (const o of agilityRun.obstacles) {
                 o.x -= dt * agilityRun.speed * 0.095;
                 if (o.el) o.el.style.left = o.x + "%";
-                if (!o.hit && o.x < 19 && o.x > 8 && agilityRun.y < 43) {
+                const actorBox=rabbit?.getBoundingClientRect(),obstacleBox=o.el?.getBoundingClientRect();
+                const collision=actorBox&&obstacleBox&&actorBox.right-actorBox.width*.2>obstacleBox.left+obstacleBox.width*.1&&actorBox.left+actorBox.width*.2<obstacleBox.right-obstacleBox.width*.1&&actorBox.bottom>obstacleBox.top+6&&actorBox.top+actorBox.height*.2<obstacleBox.bottom;
+                if (!o.hit && collision) {
                     o.hit = true;
                     agilityRun.hits++;
                     o.el?.classList.add("hit");
@@ -3087,13 +3259,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 Math.max(1, Math.min(10, Math.floor(meters / 18))) +
                 traitGain("friendship", 0) +
                 progress().boosts.friendship;
-            gainFriendship(reward);
+            const preparedTraining=meters>=20?window.LapinousRemedies.training(progress(),8):{cost:8,experience:1};
+            gainFriendship(reward*preparedTraining.experience);
             if(meters>=20)rewardMinigame("agility",Math.floor(meters/100));
             progress().food = Math.max(0, progress().food - 6);
-            progress().energy = Math.max(0, progress().energy - 8);
+            progress().energy = Math.max(0, progress().energy - preparedTraining.cost);
             progress().cleanliness = Math.max(
                 0,
-                progress().cleanliness - (4 + agilityRun.hits * 2),
+                progress().cleanliness - window.LapinousRemedies.cleanCost(progress(),(4 + agilityRun.hits * 2)),
             );
             updateStatusBars();
             checkStatus();
@@ -3370,7 +3543,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
             progress().food = Math.max(progress().food - 7, 0);
             progress().energy = Math.max(progress().energy - 10, 0);
-            progress().cleanliness = Math.max(progress().cleanliness - 5, 0);
+            progress().cleanliness = Math.max(progress().cleanliness - window.LapinousRemedies.cleanCost(progress(),5), 0);
 
             const fightExhausted =
                 bossHp > 0 || playerHp <= Math.max(10, Math.round(playerMaxHp * 0.1));
@@ -3535,6 +3708,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
         function combatSpriteStyle(character, side, key) {
             const leftRabbits = [
+                "cauchemar",
                 "toothFairy",
                 "jackFrost",
                 "ghostRabbit",
@@ -3543,8 +3717,9 @@ document.addEventListener("DOMContentLoaded", () => {
             ];
             const facing =
                 character.combatFacing ||
-                (side === "rabbit" ? (leftRabbits.includes(key) ? "left" : "right") : "left");
-            return `scale:${facing === (side === "rabbit" ? "right" : "left") ? "1 1" : "-1 1"};`;
+                (side === "rabbit" ? (leftRabbits.includes(key) ? "left" : "right") : character.kind === "vegetable" ? "right" : "left");
+            const direction = facing === (side === "rabbit" ? "right" : "left") ? 1 : -1;
+            return `scale:${direction} 1;--combat-facing:${direction};`;
         }
         function rabbitFightPreviewHtml(r) {
             const skills = r.pr.attackLevels
@@ -3594,13 +3769,71 @@ document.addEventListener("DOMContentLoaded", () => {
             const totals = selectedFightTeam.map(key => `${species[key]?.name} : ${bonuses[key] > 0 ? '+' : ''}${bonuses[key] || 0} %`).join(' · ');
             return `<aside class="fight-affinities" aria-live="polite"><strong>Les liens de ton équipe</strong><p>${pairText || 'Pas de lien particulier dans cette équipe.'}</p><small>${totals}. Effet sur la puissance seulement, limité à ±10 % par lapin. Les niveaux et l’amitié restent inchangés.</small></aside>`;
         }
-        function bossFightPreviewHtml(boss) {
+        function combatEscape(text){return String(text??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
+        // Update existing nodes at each impact; replacing the stage would interrupt animations.
+        function updateTacticalVitals(f){
+            const update=(side,hp,maxHp,charge)=>{
+                const host=gameArea.querySelector(`.tactical .fight-hud-side.${side}`);
+                if(!host)return;
+                host.querySelector('.fight-hp-fill').style.width=`${Math.max(0,hp)/maxHp*100}%`;
+                host.querySelector('.fight-hp-text').textContent=`${Math.max(0,hp)} / ${maxHp} PV`;
+                host.querySelector('.fight-crit-fill').style.width=`${charge}%`;
+                host.querySelector('.fight-crit-label').textContent=`🌟 Critique ${Math.round(charge)}%`;
+            };
+            const active=f.team[f.active];
+            update('player',active.hp,active.maxHp,active.charge);
+            update('boss',f.bossHp,f.bossMaxHp,f.bossCharge);
+            f.team.forEach((r,i)=>{
+                const slot=gameArea.querySelector(`.tactical [data-fighter="${i}"]`);
+                if(!slot)return;
+                slot.querySelector('small').textContent=`${Math.max(0,r.hp)} / ${r.maxHp} PV`;
+                slot.querySelector('.mini-hp i').style.width=`${Math.max(0,r.hp)/r.maxHp*100}%`;
+                slot.classList.toggle('ko',r.hp<=0);
+                const effects=slot.querySelector('.fighter-effects'),labels=window.LapinousBossAbilities.rabbitLabels(r);
+                effects.title=labels.join(', ');effects.textContent=labels.map(label=>label.split(' ')[0]).join(' ');
+            });
+            updateCombatShieldBars(f);
+        }
+        function updateCombatShieldBars(f){
+            const show=(host,r,compact=false)=>{
+                if(!host)return;
+                let bar=host.querySelector(':scope > .combat-shield');
+                if(!bar){bar=document.createElement('div');bar.className='combat-shield'+(compact?' compact':'');host.append(bar);}
+                const state=window.LapinousBossAbilities.shieldInfo(f,r),percent=Math.round(state.reduction*100);
+                bar.hidden=percent<=0;
+                if(bar.hidden){bar.replaceChildren();return;}
+                const label=`Bouclier : dégâts réduits de ${percent} %, ${state.hits} coup${state.hits>1?'s':''}`;
+                bar.innerHTML=`<span>🛡️ −${percent} % · ${state.hits} coup${state.hits>1?'s':''}</span><div class="combat-shield-track" role="meter" aria-label="${label}" aria-valuemin="0" aria-valuemax="100" aria-valuenow="${percent}"><i style="width:${percent}%"></i></div>`;
+            };
+            show(gameArea.querySelector('.tactical .fight-hud-side.player'),f.team[f.active]);
+            show(gameArea.querySelector('.tactical .fight-hud-side.boss'));
+            f.team.forEach((r,i)=>show(gameArea.querySelector(`.tactical [data-fighter="${i}"]`),r,true));
+        }
+        function combatStatusHtml(labels){return labels.length?`<div class="combat-status">${labels.map(label=>`<span>${combatEscape(label)}</span>`).join('')}</div>`:'';}
+        function bossIntentHtml(f){
+            const intent=window.LapinousBossAbilities.intent(f,criticalConfig(f.boss).chargePerTurn);
+            if(!intent)return '';
+            return `<p class="boss-intent ${intent.ready?'ready':''}" title="${combatEscape(intent.description)}"><strong>${intent.icon} ${combatEscape(intent.name)}</strong><span>${intent.label}</span></p>${combatStatusHtml(window.LapinousBossAbilities.bossLabels(f))}`;
+        }
+        function animateBossAbility(f,ability){
+            const field=gameArea.querySelector('.team-battlefield');if(!field||!ability)return;
+            const fx=document.createElement('div');fx.className='boss-cast boss-cast--'+ability.kind;
+            fx.setAttribute('aria-hidden','true');fx.style.setProperty('--cast-duration',`${650/f.speed}ms`);
+            const caption=document.createElement('strong');caption.textContent=`${ability.icon} ${ability.name}`;fx.append(caption);
+            for(let i=0;i<6;i++){const particle=document.createElement('i');particle.textContent=ability.icon;particle.style.setProperty('--particle',i);fx.append(particle);}
+            field.append(fx);
+            if(['shell','royal'].includes(ability.kind))playSfx('shieldActivation');
+            else if(['roots','veil','toxin','mark'].includes(ability.kind))playSfx('magic');
+            else playSfx('critical');
+        }
+
+        function bossFightPreviewHtml(boss, key) {
             const stats = bossCombatStats(boss),
                 hp = stats.maxHp;
             const low = Math.round(stats.attackBase),
                 high = Math.round(stats.attackBase + stats.attackSpread);
-            const config = criticalConfig(boss);
-            return `<div class="fight-preview-stats"><div class="fight-stat-chips"><span>❤️ ${hp} PV</span><span>⚔️ ${stats.power} puissance</span></div><ul><li><b>Attaque du légume</b><span>${low}–${high} dégâts</span></li><li class="preview-ultimate"><b>🌟 ${powerName(boss)}</b><span>${Math.round(low * config.multiplier)}–${Math.round(high * config.multiplier)} dégâts · +${config.chargePerTurn} % charge/tour${powerMode(boss) === "heal" ? " · soin 20 %" : powerMode(boss) === "support" ? " · protection 40 %" : ""}</span></li></ul><small>Valeurs avant protection adverse.</small></div>`;
+            const config = criticalConfig(boss), ability=window.LapinousBossAbilities.get(boss,key);
+            return `<div class="fight-preview-stats"><div class="fight-stat-chips"><span>❤️ ${hp} PV</span><span>⚔️ ${stats.power} puissance</span></div><ul><li><b>Attaque du légume</b><span>${low}–${high} dégâts</span></li><li class="preview-ultimate"><b>🌟 ${powerName(boss)}</b><span>${Math.round(low * config.multiplier)}–${Math.round(high * config.multiplier)} dégâts · +${config.chargePerTurn} % charge/tour${!ability&&powerMode(boss) === "heal" ? " · soin 20 %" : !ability&&powerMode(boss) === "support" ? " · protection 40 %" : ""}</span></li></ul>${ability?`<div class="boss-preview-ability"><strong>${ability.icon} ${combatEscape(ability.name)}</strong><p>${combatEscape(ability.description)}</p><small>Conseil : ${combatEscape(ability.tip)}</small></div>`:''}<small>Valeurs avant protection adverse.</small></div>`;
         }
         function nextLivingIndex(f, from) {
             if (!f.team.some((x) => x.hp > 0)) return -1;
@@ -3611,6 +3844,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return -1;
         }
         window.toggleFightTeam = function (key, bossKey) {
+            if(explorationUnavailable(key))return;
             if (selectedFightTeam.includes(key))
                 selectedFightTeam = selectedFightTeam.filter((x) => x !== key);
             else if (selectedFightTeam.length < 3) selectedFightTeam.push(key);
@@ -3620,9 +3854,10 @@ document.addEventListener("DOMContentLoaded", () => {
         window.prepareFight = function (key) {
             const boss = getOpponents()[key];
             if (!boss) return;
+            document.body.classList.add("battle-scene");
             if (!game.discoveredBosses) game.discoveredBosses = [];
             if (boss.kind !== "vegetable" && !game.discoveredBosses.includes(key)) game.discoveredBosses.push(key);
-            const owned = window.LapinousTeamRules.eventFirst((game.ownedSpecies || [game.species]).map(k=>[k,getSpecies()[k]]).filter(x=>x[1]),currentActiveEvents()).map(x=>x[0]);
+            const owned = window.LapinousTeamRules.eventFirst((game.ownedSpecies || [game.species]).map(k=>[k,getSpecies()[k]]).filter(x=>x[1]&&!window.LapinousExploration.busy(game,x[0])),currentActiveEvents()).map(x=>x[0]);
             if (!selectedFightTeam.length)
                 selectedFightTeam = owned.slice(0, Math.min(3, owned.length));
             selectedFightTeam = selectedFightTeam.filter((k) => owned.includes(k)).slice(0, 3);
@@ -3641,12 +3876,14 @@ document.addEventListener("DOMContentLoaded", () => {
                     return `<div class="team-preview-rabbit slot-${i + 1}"><img style="${combatSpriteStyle(sp, "rabbit", r.key)}" src="${sp.coteImg || sp.faceImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg"}"><strong>${rabbitDisplayName(r)}</strong>${rabbitFightPreviewHtml(r)}</div>`;
                 })
                 .join("");
-            gameArea.innerHTML = `<div class="fight-stage fight-preparation"><div class="console-title">⚔️ Prépare ton équipe contre ${boss.name}</div>${fightPowerComparisonHtml(boss)}${fightAffinityHtml()}<div class="fight-team-select">${teamCards}</div><div class="battlefield-preview"><div class="team-preview-side">${preview || "<span>Choisis ton équipe</span>"}</div><div class="vs-mark">VS</div><div class="preview-boss"><img style="${combatSpriteStyle(boss, "boss")}" src="${boss.coteImg || boss.faceImg}" onerror="this.src='./assets/img/boss/mystery_boss.svg'"><strong>${boss.name}</strong>${bossFightPreviewHtml(boss)}</div></div><div class="action-row"><label>Combat <select onchange="setFightMode(this.value)"><option value="manual" ${fightMode === "manual" ? "selected" : ""}>Manuel</option><option value="auto" ${fightMode === "auto" ? "selected" : ""}>Automatique</option></select></label><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${fightSpeed === 1 ? "selected" : ""}>×1</option><option value="3" ${fightSpeed === 3 ? "selected" : ""}>×3</option></select></label><button class="action-btn adventure" onclick="startTacticalFight('${key}')" ${selectedFightTeam.length ? "" : "disabled"}>⚔️ Commencer</button><button class="ghost-btn" onclick="openAdventure()">← Boss</button></div></div>`;
+            gameArea.innerHTML = `<div class="fight-stage fight-preparation"><div class="console-title">⚔️ Prépare ton équipe contre ${boss.name}</div>${fightPowerComparisonHtml(boss)}${fightAffinityHtml()}<div class="fight-team-select">${teamCards}</div><div class="battlefield-preview"><div class="team-preview-side">${preview || "<span>Choisis ton équipe</span>"}</div><div class="vs-mark">VS</div><div class="preview-boss"><img style="${combatSpriteStyle(boss, "boss")}" src="${boss.coteImg || boss.faceImg}" onerror="this.src='./assets/img/boss/mystery_boss.svg'"><strong>${boss.name}</strong>${bossFightPreviewHtml(boss,key)}</div></div><div class="action-row"><label>Combat <select onchange="setFightMode(this.value)"><option value="manual" ${fightMode === "manual" ? "selected" : ""}>Manuel</option><option value="auto" ${fightMode === "auto" ? "selected" : ""}>Automatique</option></select></label><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${fightSpeed === 1 ? "selected" : ""}>×1</option><option value="3" ${fightSpeed === 3 ? "selected" : ""}>×3</option></select></label><button class="action-btn adventure" onclick="startTacticalFight('${key}')" ${selectedFightTeam.length ? "" : "disabled"}>⚔️ Commencer</button><button class="ghost-btn" onclick="openAdventure()">← Boss</button></div></div>`;
             autoSave();
         };
         window.startTacticalFight = function (key) {
+            if(selectedFightTeam.some(k=>window.LapinousExploration.busy(game,k))){showToast('Un lapin de cette équipe est en exploration. Choisis un autre compagnon.','warn');return;}
             const boss = getOpponents()[key];
             if (!boss || !selectedFightTeam.length) return;
+            document.body.classList.add("battle-scene");
             const team = selectedFightTeam.map(key => rabbitCombatStats(key, selectedFightTeam));
             tacticalFight = {
                 key,
@@ -3684,16 +3921,17 @@ document.addEventListener("DOMContentLoaded", () => {
             const fighters = f.team
                 .map(
                     (x, i) =>
-                        `<div class="team-fighter battle-slot-${i + 1} ${i === f.active ? "active-turn" : ""} ${x.hp <= 0 ? "ko" : ""}" data-fighter="${i}"><div class="turn-marker">${i === f.active ? "▼ TOUR" : ""}</div><img class="battle-sprite team-rabbit-sprite" style="${combatSpriteStyle(x.sp, "rabbit", x.key)}" src="${x.sp.coteImg || x.sp.faceImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg"}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';"><strong>${rabbitDisplayName(x)}</strong><small>${Math.max(0, x.hp)} / ${x.maxHp} PV</small><div class="mini-hp"><i style="width:${(Math.max(0, x.hp) / x.maxHp) * 100}%"></i></div></div>`,
+                        `<div class="team-fighter battle-slot-${i + 1} ${i === f.active ? "active-turn" : ""} ${x.hp <= 0 ? "ko" : ""}" data-fighter="${i}"><div class="turn-marker">${i === f.active ? "▼ TOUR" : ""}</div><img class="battle-sprite team-rabbit-sprite" style="${combatSpriteStyle(x.sp, "rabbit", x.key)}" src="${x.sp.coteImg || x.sp.faceImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg"}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';"><strong>${rabbitDisplayName(x)}</strong><small>${Math.max(0, x.hp)} / ${x.maxHp} PV</small><span class="fighter-effects" title="${combatEscape(window.LapinousBossAbilities.rabbitLabels(x).join(', '))}">${window.LapinousBossAbilities.rabbitLabels(x).map(label=>label.split(' ')[0]).join(' ')}</span><div class="mini-hp"><i style="width:${(Math.max(0, x.hp) / x.maxHp) * 100}%"></i></div></div>`,
                 )
                 .join("");
-            gameArea.innerHTML = `<div class="fight-stage tactical"><div class="fight-hud-side player"><div class="fight-name">🐰 Tour de ${rabbitDisplayName(r)}</div><div class="fight-hp"><div class="fight-hp-fill player-hp" style="width:${(r.hp / r.maxHp) * 100}%"></div></div><div class="fight-hp-text">${Math.max(0, r.hp)} / ${r.maxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(r.charge)}%</div><div class="fight-crit"><div class="fight-crit-fill player-crit-fill" style="width:${r.charge}%"></div></div></div><div class="fight-hud-side boss"><div class="fight-name">🥕 ${f.boss.name}</div><div class="fight-hp"><div class="fight-hp-fill boss-hp" style="width:${(f.bossHp / f.bossMaxHp) * 100}%"></div></div><div class="fight-hp-text">${Math.max(0, f.bossHp)} / ${f.bossMaxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(f.bossCharge)}%</div><div class="fight-crit"><div class="fight-crit-fill" style="width:${f.bossCharge}%"></div></div></div><div class="team-battlefield"><div class="team-fighters">${fighters}</div><div class="vs-mark">⚔️</div><div class="boss-battle-slot"><img class="battle-sprite boss-sprite" style="${combatSpriteStyle(f.boss, "boss")}" src="${f.boss.coteImg || f.boss.faceImg}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';"><strong>${f.boss.name}</strong></div></div><div id="fightLog" class="fight-log">Tour ${f.turn} · ${message}</div><div class="fight-command-grid">${skills}${r.charge >= 100 ? `<button class="fight-command ultimate" onclick="tacticalAction('ultimate')">🌟 ${ultimateName(r)}</button>` : ""}<button id="fightModeToggle" class="fight-command" onclick="setFightMode(tacticalFightMode())">${f.auto ? "⏸ Reprendre en manuel" : "▶ Combat automatique"}</button><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${f.speed === 1 ? "selected" : ""}>×1</option><option value="3" ${f.speed === 3 ? "selected" : ""}>×3</option></select></label></div></div>`;
+            gameArea.innerHTML = `<div class="fight-stage tactical"><div class="fight-hud-side player"><div class="fight-name">🐰 Tour de ${rabbitDisplayName(r)}</div><div class="fight-hp"><div class="fight-hp-fill player-hp" style="width:${(r.hp / r.maxHp) * 100}%"></div></div><div class="fight-hp-text">${Math.max(0, r.hp)} / ${r.maxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(r.charge)}%</div><div class="fight-crit"><div class="fight-crit-fill player-crit-fill" style="width:${r.charge}%"></div></div>${combatStatusHtml(window.LapinousBossAbilities.rabbitLabels(r))}</div><div class="fight-hud-side boss"><div class="fight-name">🥕 ${f.boss.name}</div><div class="fight-hp"><div class="fight-hp-fill boss-hp" style="width:${(f.bossHp / f.bossMaxHp) * 100}%"></div></div><div class="fight-hp-text">${Math.max(0, f.bossHp)} / ${f.bossMaxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(f.bossCharge)}%</div><div class="fight-crit"><div class="fight-crit-fill" style="width:${f.bossCharge}%"></div></div>${bossIntentHtml(f)}</div><div class="team-battlefield"><div class="team-fighters">${fighters}</div><div class="vs-mark">⚔️</div><div class="boss-battle-slot"><img class="battle-sprite boss-sprite" style="${combatSpriteStyle(f.boss, "boss")}" src="${f.boss.coteImg || f.boss.faceImg}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';"><strong>${f.boss.name}</strong></div></div><div id="fightLog" class="fight-log" role="status" aria-live="polite">Tour ${f.turn} · ${message}</div><div class="fight-command-grid">${skills}${r.charge >= 100 ? `<button class="fight-command ultimate" onclick="tacticalAction('ultimate')">🌟 ${ultimateName(r)}</button>` : ""}<button id="fightModeToggle" class="fight-command" onclick="setFightMode(tacticalFightMode())">${f.auto ? "⏸ Reprendre en manuel" : "▶ Combat automatique"}</button><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${f.speed === 1 ? "selected" : ""}>×1</option><option value="3" ${f.speed === 3 ? "selected" : ""}>×3</option></select></label></div></div>`;
+            updateCombatShieldBars(f);
             queueAutoFight();
         }
         window.tacticalFightMode = () => (tacticalFight?.auto ? "manual" : "auto");
         window.tacticalAction = async function (type, index = 0) {
             const f = tacticalFight;
-            if (!f || f.locked) return;
+            if (!f || f.locked || f.finished || !gameArea.querySelector(".tactical")) return;
             const r = f.team[f.active];
             if (!["attack", "skill", "ultimate"].includes(type)) return;
             if (type === "ultimate" && r.charge < 100) return;
@@ -3756,17 +3994,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 msg = `🌟 ${name} déclenche ${ultimateName(r)} ! — ${dmg} dégâts !`;
                 playSfx("critical");
             }
+            updateTacticalVitals(f);
             gameArea.querySelectorAll(".fight-command").forEach((btn) => (btn.disabled = true));
             sprite?.classList.add("fight-attack-player");
             await fightPause(f, 240);
+            if(tacticalFight!==f||f.finished||!gameArea.querySelector(".tactical"))return;
             if (f.bossGuard > 0) playSfx("shieldImpact");
-            dmg = Math.max(1, Math.round(dmg * (1 - f.bossGuard)));
+            dmg = window.LapinousBossAbilities.playerDamage(f,r,Math.max(1, Math.round(dmg * (1 - f.bossGuard))));
+            msg=msg.replace(/\d+ dégâts/,`${dmg} dégâts`);
             f.bossGuard = 0;
             f.bossHp = Math.max(0, f.bossHp - dmg);
+            updateTacticalVitals(f);
             bossSprite?.classList.add(type === "ultimate" ? "fight-critical-hit" : "fight-hit");
             const log = gameArea.querySelector("#fightLog");
             if (log) log.textContent = msg;
             await fightPause(f, type === "ultimate" ? 650 : 430);
+            if(tacticalFight!==f||f.finished||!gameArea.querySelector(".tactical"))return;
             sprite?.classList.remove("fight-attack-player");
             bossSprite?.classList.remove("fight-hit", "fight-critical-hit");
             if (f.bossHp <= 0) {
@@ -3778,40 +4021,39 @@ document.addEventListener("DOMContentLoaded", () => {
             const bossCritical = f.bossCharge >= 100;
             const bossStats = bossCombatStats(f.boss);
             const raw = Math.round(bossStats.attackBase + Math.random() * bossStats.attackSpread);
-            const bd = Math.max(
-                1,
-                Math.round(
-                    raw *
-                        (bossCritical ? config.multiplier : 1) *
-                        (1 - (r.guard || 0)) *
-                        (1 - mealBonus(r.key, "resistance")),
-                ),
-            );
             const hitShield = (r.guard || 0) > 0;
-            r.guard = 0;
-            const bossMessage = bossCritical
-                ? `🌟 ${f.boss.name} déclenche ${powerName(f.boss)} : ${bd} dégâts !`
-                : `🥕 ${f.boss.name} attaque ${name} : ${bd} dégâts.`;
-            if (bossCritical) {
-                f.bossCharge = 0;
-                const mode = powerMode(f.boss);
-                if (mode === "heal") {
-                    playSfx("heal");
-                    f.bossHp = Math.min(f.bossMaxHp, f.bossHp + Math.round(f.bossMaxHp * 0.2));
-                } else if (mode === "support") {
-                    f.bossGuard = 0.4;
-                    playSfx("shieldActivation");
+            const preparedStrike=!!f.bossEffects?.strike;
+            const bd=window.LapinousBossAbilities.bossDamage(f,r,raw*(bossCritical?config.multiplier:1),mealBonus(r.key,'resistance'));
+            let bossMessage=bossCritical?`🌟 ${f.boss.name} déclenche ${powerName(f.boss)} : ${bd} dégâts !`:`🥕 ${f.boss.name} ${preparedStrike?'utilise sa frappe préparée contre':'attaque'} ${name} : ${bd} dégâts.`;
+            if(bossCritical){
+                f.bossCharge=0;
+                if(!window.LapinousBossAbilities.get(f.boss,f.key)){
+                    const mode=powerMode(f.boss);
+                    if(mode==='heal'){playSfx('heal');f.bossHp=Math.min(f.bossMaxHp,f.bossHp+Math.round(f.bossMaxHp*.2));}
+                    else if(mode==='support'){f.bossGuard=.4;playSfx('shieldActivation');}
                 }
             }
             const bossImg = gameArea.querySelector(".boss-sprite");
             bossImg?.classList.add("fight-attack-boss");
             await fightPause(f, 220);
+            if(tacticalFight!==f||f.finished||!gameArea.querySelector(".tactical"))return;
             r.hp = Math.max(0, r.hp - bd);
+            const abilityCast=bossCritical?window.LapinousBossAbilities.cast(f,r,bd,x=>mealBonus(x.key,'resistance')):null;
+            if(abilityCast){
+                animateBossAbility(f,abilityCast);
+                bossMessage+=' '+abilityCast.description;
+                if(abilityCast.extra.length)bossMessage+=' '+abilityCast.extra.map(hit=>`${rabbitDisplayName(f.team.find(x=>x.key===hit.key))} : −${hit.damage} PV.`).join(' ');
+            }
+            const poisonTicks=window.LapinousBossAbilities.afterBoss(f);
+            updateTacticalVitals(f);
+            if(poisonTicks.length)bossMessage+=' '+poisonTicks.map(hit=>`🧪 ${rabbitDisplayName(f.team.find(x=>x.key===hit.key))} : −${hit.damage} PV (poison).`).join(' ');
+
             playSfx(bossCritical ? "critical" : "attack");
             if (hitShield) playSfx("shieldImpact");
             sprite?.classList.add(bossCritical ? "fight-critical-hit" : "fight-hit");
             if (log) log.textContent += ` ${bossMessage}${r.hp <= 0 ? ` ${name} est K.O. !` : ""}`;
             await fightPause(f, bossCritical ? 650 : 430);
+            if(tacticalFight!==f||f.finished||!gameArea.querySelector(".tactical"))return;
             bossImg?.classList.remove("fight-attack-boss");
             sprite?.classList.remove("fight-hit", "fight-critical-hit");
             if (!f.team.some((x) => x.hp > 0)) {
@@ -3851,7 +4093,7 @@ document.addEventListener("DOMContentLoaded", () => {
             f.team.forEach((x) => {
                 x.pr.food = Math.max(0, x.pr.food - 8);
                 x.pr.energy = Math.max(0, x.pr.energy - 12);
-                x.pr.cleanliness = Math.max(0, x.pr.cleanliness - 5);
+                x.pr.cleanliness = Math.max(0, x.pr.cleanliness - window.LapinousRemedies.cleanCost(x.pr,5));
             });
             updateStatusBars();
             autoSave();
@@ -4913,7 +5155,9 @@ document.addEventListener("DOMContentLoaded", () => {
                     index,
                 ),
             inCombat: () => Boolean(tacticalFight) || body.classList.contains("battle-scene"),
+            exploring: key=>window.LapinousExploration.busy(game,key),
             save: autoSave,
+            checkLevelUp,
             refresh: () => {
                 updateStatusBars();
                 refreshCurrentZone();

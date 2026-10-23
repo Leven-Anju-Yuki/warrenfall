@@ -49,6 +49,14 @@ function Start-LapinousChain {
     try { $lock=[IO.File]::Open((Join-Path $folder 'chaine.lock'),'OpenOrCreate','ReadWrite','None') }
     catch { Write-Warning 'Chaine deja en cours ou verrou inaccessible : aucune seconde execution.'; return 1 }
     try {
+        $hybridFile=Join-Path $ProjectRoot 'tools\automation\config.json'
+        if (Test-Path -LiteralPath $hybridFile) {
+            $hybridConfig=Get-Content -LiteralPath $hybridFile -Raw -Encoding UTF8 | ConvertFrom-Json
+            if ($hybridConfig.enabled -eq $true) {
+                & python -B (Join-Path $ProjectRoot 'tools\automation\local_bridge.py') run
+                return $LASTEXITCODE
+            }
+        }
         $log=Join-Path $folder ((Get-Date -Format 'yyyy-MM-dd_HHmmss_fff')+'_chaine.log')
         $journal={param($line) $line | Add-Content -LiteralPath $log -Encoding UTF8}.GetNewClosure()
         $execute={

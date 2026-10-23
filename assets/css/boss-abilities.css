@@ -1,0 +1,44 @@
+.boss-preview-ability{padding:10px;border-left:4px solid #8b6845;border-radius:10px;background:#fff8e8;color:#513b2b;font-size:13px;line-height:1.4}
+.boss-preview-ability p{margin:5px 0}.boss-preview-ability small{display:block;color:#5d6a3e}
+.boss-intent{display:flex;flex-wrap:wrap;gap:3px 7px;margin:5px 0 0;padding:4px 7px;border:1px solid #a89978;border-radius:8px;background:#fff8e6;color:#59432d;font-size:11px;line-height:1.25}
+.boss-intent.ready{border:2px solid #ad6930;background:#ffe5bb;color:#633714}
+.boss-intent span{display:block}.boss-intent.ready span{font-weight:bold}
+.combat-status{display:flex;flex-wrap:wrap;gap:3px;margin-top:4px}.combat-status:empty{display:none}
+.combat-status>span{padding:3px 5px;background:#fff6e3;border:1px solid #b49a6e;border-radius:6px;color:#62432d;font-size:10px;line-height:1.2}
+.fighter-effects{position:absolute;top:8px;right:2px;padding:2px;border-radius:8px;background:#fff8e6e8;font:16px/1.2 system-ui;z-index:6}.fighter-effects:empty{display:none}
+body.game-running:has(.fight-stage.tactical) :is(#eventBanner,#friendshipBarContainer,#statusBars){display:none!important}
+html.phone-ui body.game-running:has(.fight-stage) #installInGame:not([hidden]),body.game-running:has(.fight-stage) #installInNav:not([hidden]){display:none!important}
+.fight-stage.tactical .fight-log{max-height:100px;overflow:auto;line-height:1.4}
+.boss-cast{position:absolute;inset:0;pointer-events:none;z-index:12;overflow:hidden;animation:bossCastFade var(--cast-duration,650ms) ease both;border-radius:14px;background:radial-gradient(ellipse at center,#fff6dd44,transparent 70%)}
+.boss-cast strong{position:absolute;left:50%;top:6%;transform:translateX(-50%);padding:7px 12px;border:1px solid #c9a36a;border-radius:12px;background:#fff6e8ed;color:#583a26;font-size:16px;text-align:center;white-space:nowrap;box-shadow:0 4px 15px #47322344}
+.boss-cast i{position:absolute;left:calc(6% + var(--particle)*16%);bottom:15%;font:normal clamp(25px,4vw,52px)/1 system-ui;animation:bossCastRise var(--cast-duration,650ms) ease both;animation-delay:calc(var(--particle)*-12ms)}
+.boss-cast--roots,.boss-cast--veil,.boss-cast--toxin,.boss-cast--mark{background:linear-gradient(0deg,#83a34d55,transparent 75%)}
+.boss-cast--veil{background:linear-gradient(90deg,#b5d3f077,#e4eaff77)}
+.boss-cast--veil i{animation-name:bossCastDrift;bottom:45%}
+.boss-cast--shell,.boss-cast--royal{background:radial-gradient(circle at 82% 55%,#b0d48488,transparent 30%)}
+.boss-cast--shell i,.boss-cast--royal i{left:76%;bottom:calc(8% + var(--particle)*12%);animation-name:bossCastShield}
+.boss-cast--explosion,.boss-cast--quake{background:radial-gradient(ellipse at 50% 85%,#f3b23e88,transparent 70%)}
+.boss-cast--explosion i,.boss-cast--quake i{animation-name:bossCastBurst}
+.boss-cast--blade,.boss-cast--aim{background:linear-gradient(145deg,transparent 35%,#fff8d777 48%,transparent 60%)}
+.boss-cast--blade i,.boss-cast--aim i{animation-name:bossCastSlash}
+.boss-cast--frenzy{background:linear-gradient(90deg,transparent,#e8ba5077)}
+@keyframes bossCastFade{0%{opacity:0}20%,80%{opacity:1}100%{opacity:0}}
+@keyframes bossCastRise{0%{opacity:0;transform:translateY(35px) scale(.5)}50%{opacity:1;transform:translateY(-10px) scale(1.1)}100%{opacity:0;transform:translateY(-55px)}}
+@keyframes bossCastDrift{0%{opacity:0;transform:translateX(35px)}50%{opacity:1}100%{opacity:0;transform:translateX(-45px)}}
+@keyframes bossCastShield{0%{opacity:0;transform:scale(.5)}50%{opacity:1;transform:scale(1.3)}100%{opacity:0;transform:scale(1)}}
+@keyframes bossCastBurst{0%{opacity:0;transform:translateY(20px) scale(.4)}40%{opacity:1;transform:translateY(-30px) scale(1.4)}100%{opacity:0;transform:translateY(-55px) scale(.8)}}
+@keyframes bossCastSlash{0%{opacity:0;transform:translate(50px,-40px) rotate(-30deg)}40%{opacity:1}100%{opacity:0;transform:translate(-70px,30px) rotate(20deg)}}
+@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){
+ .boss-preview-ability{padding:6px;font-size:11px}.boss-intent{padding:3px 4px;font-size:10px!important;margin-top:3px;gap:1px 5px}
+ .combat-status{gap:2px}.combat-status>span{font-size:9px!important;padding:2px 3px}
+ .boss-cast strong{font-size:11px;top:1%;padding:4px 7px;max-width:95%;white-space:normal}
+ .boss-cast i{font-size:25px}.fighter-effects{top:2px;right:0;font-size:12px}
+ html.phone-ui .fight-stage.tactical .fight-log{max-height:90px!important;overflow:auto!important}
+}
+@media(prefers-reduced-motion:reduce){.boss-cast,.boss-cast i{animation:none}.boss-cast i{display:none}.boss-cast{background:#fff4df44}}
+.combat-shield{margin-top:4px;color:#23556e;font-size:11px;font-weight:700;line-height:1.3}
+.combat-shield[hidden]{display:none}
+.combat-shield-track{height:6px;margin-top:2px;overflow:hidden;border-radius:8px;background:#c8dde5;border:1px solid #6a99ad}
+.combat-shield-track i{display:block;height:100%;background:linear-gradient(90deg,#367f9e,#8dddea);transition:width .15s}
+.combat-shield.compact{font-size:9px;width:100%;max-width:110px;margin:2px auto 0}
+.combat-shield.compact .combat-shield-track{height:4px}

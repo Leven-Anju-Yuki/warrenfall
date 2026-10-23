@@ -132,7 +132,15 @@ function getSpecies() {
     return base;
 }
 function getBosses() { return { ...BASE_BOSSES, ...JSON_BOSSES, ...loadCustomBosses() }; }
-function getOpponents() { let custom={}; try { custom=JSON.parse(localStorage.getItem("lapinous_custom_opponents")||"{}"); } catch {} return { ...getBosses(), ...JSON_OPPONENTS, ...custom }; }
+function getOpponents() {
+    let custom={};try{custom=JSON.parse(localStorage.getItem('lapinous_custom_opponents')||'{}');}catch{}
+    const opponents={...getBosses(),...JSON_OPPONENTS,...custom};
+    for(const id of ['debut_radis','debut_navet','debut_petit_pois'])if(opponents[id]){
+        opponents[id]={...opponents[id]};
+        for(const pose of ['faceImg','coteImg'])if(!opponents[id][pose]||opponents[id][pose].includes('vegetable-placeholder.svg'))opponents[id][pose]=JSON_OPPONENTS[id]?.[pose]||opponents[id][pose];
+    }
+    return opponents;
+}
 
 // ============================================================
 // CHARGEMENT DE lapinous-content.json (déposé à la racine du projet)
@@ -147,6 +155,8 @@ let JSON_BOSSES = {};
 let JSON_OPPONENTS = {};
 let JSON_EGG_RATES = null;
 let JSON_EVENT_WINDOWS = null;
+let JSON_EXPLORATION = null;
+window.getExplorationConfig=()=>JSON_EXPLORATION;
 
 window.LapinousContentReady = fetch("./lapinous-content.json", { cache: "no-store" })
     .then((res) => (res.ok ? res.json() : null))
@@ -158,6 +168,7 @@ window.LapinousContentReady = fetch("./lapinous-content.json", { cache: "no-stor
             JSON_OPPONENTS = data.opponents || {};
             JSON_EGG_RATES = data.eggRates || null;
             JSON_EVENT_WINDOWS = data.eventWindows || null;
+            JSON_EXPLORATION = data.exploration || null;
         }
     })
     .catch(() => {
@@ -167,7 +178,7 @@ window.LapinousContentReady = fetch("./lapinous-content.json", { cache: "no-stor
 // Visibilité éditoriale : les réglages locaux de l’administrateur précèdent le catalogue publié.
 (() => {
     const key='lapinous_visibility';
-    const definitions={quiz:['Quiz des lapins','[onclick="openRabbitQuiz()"]','admin'],market:['Rayon Marche','[data-shop-tab=market]','public'],evolution:['Rayon Evolutions','[data-shop-tab=evolution]','public'],fragments:['Rayon Fragments','[data-shop-tab=fragments]','public'],carrotShop:['Rayon Carottes','[data-shop-tab=carrots]','admin'],recipes:['Preparation des plats','.pantry-meals','public'],agility:['Agilite','[onclick="startAgility()"]','public'],games:['Coin jeux','[onclick="openGameConsole()"]','public'],favorites:['Favoris du salon','.salon-favorites-button,.rabbit-favorite-star','public'],records:['Records et succes','#lapinousRecordsBtn','public'],pantry:['Garde-manger et cuisine du Chef','.fridge-hotspot,#kitchenFridgeDialog','public'],shop:['Magasin','#shopButton','public'],inventory:['Apothicairerie','#inventoryButton','public'],legal:['Documents juridiques','#legalTrigger','public'],encyclopedia:['Encyclopédie','#encyclopediaBtn','public'],puzzles:['Puzzles','[onclick="openPuzzleHub()"]','public'],memory:['Memory','[onclick="openMemory()"]','public'],lapidoku:['Lapidoku','[onclick="openLapidoku()"]','public'],combat:['Combats','[onclick="openAdventure()"]','public']};
+    const definitions={quiz:['Quiz des lapins','[onclick="openRabbitQuiz()"]','admin'],market:['Rayon Marche','[data-shop-tab=market]','public'],evolution:['Rayon Evolutions','[data-shop-tab=evolution]','public'],fragments:['Rayon Fragments','[data-shop-tab=fragments]','public'],carrotShop:['Rayon Carottes','[data-shop-tab=carrots]','admin'],recipes:['Preparation des plats','.pantry-meals','public'],agility:['Agilite','[onclick="startAgility()"]','public'],games:['Coin jeux','[onclick="openGameConsole()"]','public'],favorites:['Favoris du salon','.salon-favorites-button,.rabbit-favorite-star','public'],records:['Records et succes','#lapinousRecordsBtn','public'],pantry:['Garde-manger et cuisine du Chef','.fridge-hotspot,#kitchenFridgeDialog','public'],shop:['Magasin','#shopButton','public'],inventory:['Apothicairerie','#inventoryButton','public'],legal:['Documents juridiques','#legalTrigger','public'],encyclopedia:['Encyclopédie','#encyclopediaBtn','public'],puzzles:['Puzzles','[onclick="openPuzzleHub()"]','public'],memory:['Memory','[onclick="openMemory()"]','public'],lapidoku:['Lapidoku','[onclick="openNumberSudoku()"]','public'],lapinoudoku:['Lapinoudoku','[onclick="openLapidoku()"]','public'],combat:['Combats','[onclick="openAdventure()"]','public']};
     let base={},local={};
     const admin=['localhost','127.0.0.1','::1','[::1]'].includes(location.hostname.toLowerCase());
     try {if(admin)local=JSON.parse(localStorage.getItem(key)||'{}');} catch {}

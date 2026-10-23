@@ -5,6 +5,8 @@ import { spawn } from 'node:child_process';
 
 const watchMode = process.argv.includes('--watch');
 const backupMode = process.argv.includes('--backup-local');
+let hybrid = JSON.parse(fs.readFileSync(new URL('./automation/config.json', import.meta.url), 'utf8')).enabled === true;
+if (hybrid && !process.env.WARRENFALL_LOCAL_LOCK_OWNER) throw Error('Mode hybride : utiliser le relais local avec verrou partagé.');
 let running = false, pending = false, timer;
 let beforeAssets = null;
 const runStarted = new Date();
@@ -36,6 +38,8 @@ function run(file, args = []) {
 
 /** Regroupe les étapes de migration ; les transferts restent contrôlés par le quota gratuit. */
 async function update() {
+  hybrid = JSON.parse(fs.readFileSync(new URL('./automation/config.json', import.meta.url), 'utf8')).enabled === true;
+  if (hybrid && !process.env.WARRENFALL_LOCAL_LOCK_OWNER) throw Error('Relais hybride activé : arrêter cet ancien watcher et utiliser le lanceur Windows.');
   if (running) { pending = true; return; }
   running = true;
   runDetails.startedAt = new Date().toISOString();
@@ -95,9 +99,13 @@ async function update() {
     fs.renameSync(ledgerFile + '.tmp', ledgerFile);
     // La corbeille n'est traitée qu'après une synchronisation et une activation réussies.
     runDetails.syncStatus = 'success';
-    runDetails.trashStatus = 'running';
-    await run('tools/cloudinary-corbeille.mjs', ['appliquer']);
-    runDetails.trashStatus = 'success';
+    if (hybrid) {
+      runDetails.trashStatus = 'delegated';
+    } else {
+      runDetails.trashStatus = 'running';
+      await run('tools/cloudinary-corbeille.mjs', ['appliquer']);
+      runDetails.trashStatus = 'success';
+    }
     console.log(changed ? 'Images synchronisées et raccordées.' : 'Images déjà synchronisées ; raccordement à jour.');
     runDetails.status = 'success';
   } catch (e) {

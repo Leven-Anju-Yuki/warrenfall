@@ -3600,11 +3600,11 @@ body.battle-scene .scene-label {
     }
 
     48% {
-        transform: translateX(clamp(70px, 16vw, 230px)) translateY(-8px) scale(1.08);
+        transform: translateX(calc(clamp(70px, 16vw, 230px) * var(--combat-facing, 1))) translateY(-8px) scale(1.08);
     }
 
     62% {
-        transform: translateX(clamp(70px, 16vw, 230px)) translateY(0) scale(1.04);
+        transform: translateX(calc(clamp(70px, 16vw, 230px) * var(--combat-facing, 1))) translateY(0) scale(1.04);
     }
 
     100% {
@@ -3618,11 +3618,11 @@ body.battle-scene .scene-label {
     }
 
     48% {
-        transform: translateX(clamp(-230px, -16vw, -70px)) translateY(-8px) scale(1.08);
+        transform: translateX(calc(clamp(-230px, -16vw, -70px) * var(--combat-facing, 1))) translateY(-8px) scale(1.08);
     }
 
     62% {
-        transform: translateX(clamp(-230px, -16vw, -70px)) translateY(0) scale(1.04);
+        transform: translateX(calc(clamp(-230px, -16vw, -70px) * var(--combat-facing, 1))) translateY(0) scale(1.04);
     }
 
     100% {

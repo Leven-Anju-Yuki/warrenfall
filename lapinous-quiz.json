@@ -1,30 +1,946 @@
 {
-  "version": 1,
+  "version": 3,
   "roundSize": 8,
   "questions": [
-    {"id":"foin","category":"Alimentation","question":"Quelle est la base de l’alimentation d’un lapin ?","choices":["Le foin ou l’herbe","Les carottes","Les fruits","Les biscuits"],"answer":0,"explanation":"Le foin ou l’herbe doit rester disponible à volonté.","source":"Guide fourni, page 1","enabled":true},
-    {"id":"eau","category":"Alimentation","question":"Quand doit-il pouvoir boire de l’eau propre ?","choices":["En permanence","Seulement le matin","Après un jeu seulement","Une fois par semaine"],"answer":0,"explanation":"L’eau fraîche doit toujours être accessible.","source":"Guide fourni, page 1","enabled":true},
-    {"id":"carotte","category":"Alimentation","question":"La racine de carotte est surtout…","choices":["Une friandise occasionnelle","La totalité du repas","Un remplacement du foin","Une boisson"],"answer":0,"explanation":"La racine est sucrée : on la propose en petite quantité.","source":"Guide fourni, page 3","enabled":true},
-    {"id":"fruits","category":"Alimentation","question":"Comment proposer les fruits ?","choices":["En petits morceaux, occasionnellement","À volonté","À chaque repas en grande quantité","À la place de l’eau"],"answer":0,"explanation":"Les fruits sont des friandises sucrées.","source":"Guide fourni, page 6","enabled":true},
-    {"id":"transition","category":"Alimentation","question":"Comment introduire un nouvel aliment ?","choices":["Progressivement, un à la fois","Tout changer en une journée","Ajouter dix nouveautés ensemble","Supprimer le foin d’abord"],"answer":0,"explanation":"Une introduction progressive permet de surveiller la tolérance.","source":"Guide fourni, page 11","enabled":true},
-    {"id":"foin-propre","category":"Alimentation","question":"Quel foin choisir ?","choices":["Sec, propre et sans moisissure","Humide et moisi","Très poussiéreux","Parfumé artificiellement"],"answer":0,"explanation":"Le guide recommande du foin propre, sec et non poussiéreux.","source":"Guide fourni, pages 1 et 7","enabled":true},
-    {"id":"granules","category":"Alimentation","question":"Quelle place ont les granulés complets ?","choices":["Une petite ration mesurée","Ils remplacent tout le foin","Ils sont donnés sans limite","Ils remplacent l’eau"],"answer":0,"explanation":"Les granulés ne constituent qu’une petite partie de la ration.","source":"Guide fourni, page 1","enabled":true},
-    {"id":"romaine","category":"Alimentation","question":"Quelle laitue le guide propose-t-il dans une alimentation variée ?","choices":["La romaine","La laitue iceberg uniquement","Une laitue moisie","Une laitue traitée non lavée"],"answer":0,"explanation":"La romaine fait partie des verdures proposées dans le guide.","source":"Guide fourni, page 2","enabled":true},
-    {"id":"herbes","category":"Alimentation","question":"Lequel est une herbe proposée dans le guide ?","choices":["La coriandre","Le chocolat","Une confiserie","Un biscuit salé"],"answer":0,"explanation":"La coriandre peut participer à une rotation d’herbes variées.","source":"Guide fourni, page 5","enabled":true},
-    {"id":"pissenlit","category":"Plantes","question":"Avant d’offrir du pissenlit, que faut-il vérifier ?","choices":["Son identification et l’absence de traitement","Sa couleur seulement","Sa proximité d’une route","Son emballage décoratif"],"answer":0,"explanation":"Une plante doit être correctement identifiée et non traitée.","source":"Guide fourni, page 2","enabled":true},
-    {"id":"fleurs","category":"Plantes","question":"Peut-on donner n’importe quelle fleur d’un bouquet ?","choices":["Non, il faut vérifier qu’elle convient et n’est pas traitée","Oui, toutes les fleurs conviennent","Oui, si elle sent bon","Oui, si elle est jolie"],"answer":0,"explanation":"Une belle fleur n’est pas forcément comestible ou sûre.","source":"Guide fourni, pages 8 et 10","enabled":true},
-    {"id":"rose","category":"Plantes","question":"Quelle condition compte pour des pétales de rose ?","choices":["Ils ne doivent pas être traités","Ils doivent être salés","Ils doivent être sucrés","Ils doivent être couverts de peinture"],"answer":0,"explanation":"Le guide précise de choisir des pétales non traités et de modérer les quantités.","source":"Guide fourni, page 8","enabled":true},
-    {"id":"tonte","category":"Sécurité","question":"Que faire des tontes de gazon ?","choices":["Ne pas les donner au lapin","Les donner à volonté","Les mélanger au chocolat","En remplacer toute la verdure"],"answer":0,"explanation":"Les tontes fermentent vite ; elles sont à éviter.","source":"Guide fourni, pages 7 et 10","enabled":true},
-    {"id":"chocolat","category":"Sécurité","question":"Quel aliment ne doit pas être donné ?","choices":["Le chocolat","Le foin propre","L’herbe adaptée","La coriandre"],"answer":0,"explanation":"Le chocolat figure parmi les aliments à éviter absolument.","source":"Guide fourni, page 10","enabled":true},
-    {"id":"lait","category":"Sécurité","question":"Une friandise au yaourt est-elle adaptée ?","choices":["Non","Oui, comme repas principal","Oui, à volonté","Oui, à la place du foin"],"answer":0,"explanation":"Les produits laitiers et friandises au yaourt sont déconseillés.","source":"Guide fourni, page 10","enabled":true},
-    {"id":"tomate","category":"Sécurité","question":"Quelles parties de tomate le guide interdit-il ?","choices":["Les feuilles et les tiges","La chair mûre en petite quantité","L’étiquette de la recette","Aucune partie"],"answer":0,"explanation":"Le guide distingue la chair mûre occasionnelle des feuilles et tiges à ne pas donner.","source":"Guide fourni, pages 3 et 10","enabled":true},
-    {"id":"inconnue","category":"Sécurité","question":"Que faire d’une plante qu’on ne reconnaît pas ?","choices":["Ne pas la donner","La goûter pour décider","La donner en grande quantité","Se fier uniquement à son odeur"],"answer":0,"explanation":"Dans le doute, on ne propose pas une plante non identifiée.","source":"Guide fourni, page 10","enabled":true},
-    {"id":"laver","category":"Alimentation","question":"Que faire avant de proposer des végétaux adaptés ?","choices":["Les laver et éviter ceux des zones traitées","Les couvrir de sel","Les laisser moisir","Les tremper dans du sirop"],"answer":0,"explanation":"Le guide conseille le lavage et d’éviter les endroits traités ou souillés.","source":"Guide fourni, page 11","enabled":true},
-    {"id":"rotation","category":"Alimentation","question":"Pourquoi varier les légumes-feuilles et les herbes ?","choices":["Pour proposer une alimentation variée","Pour supprimer le foin","Pour supprimer l’eau","Pour ne donner que des fruits"],"answer":0,"explanation":"Le guide recommande une rotation des verdures au cours de la semaine.","source":"Guide fourni, page 11","enabled":true},
-    {"id":"jeu-realite","category":"Alimentation","question":"Les plats au wok de Warrenfall sont-ils un modèle d’alimentation réelle ?","choices":["Non, ce sont des recettes imaginaires du jeu","Oui, avec du sel","Oui, avec de l’huile","Oui, à la place du foin"],"answer":0,"explanation":"Pour un vrai lapin, les repères du guide restent le foin, l’eau et les végétaux adaptés.","source":"Guide fourni, page 1 ; distinction avec les mécaniques du jeu","enabled":true},
-    {"id":"creuser","category":"Comportement","question":"Quelle activité est naturelle chez le lapin ?","choices":["Creuser","Construire un nid dans un arbre","Hiberner","Voler"],"answer":0,"explanation":"Un espace de fouille sûr favorise son comportement naturel.","source":"RSPCA — enrichissement","sourceUrl":"https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/behaviour/enrichment","enabled":true},
-    {"id":"cachette","category":"Comportement","question":"Que peut apporter une cachette sûre ?","choices":["Un refuge","Une punition","Un remplacement de l’eau","Une ration de nourriture"],"answer":0,"explanation":"Se cacher et explorer participent au bien-être.","source":"RSPCA — enrichissement","sourceUrl":"https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/behaviour/enrichment","enabled":true},
-    {"id":"jouets","category":"Comportement","question":"Que faire d’un jouet cassé avec des bords dangereux ?","choices":["Le retirer ou le remplacer","Le laisser sans contrôle","Ajouter des pièces minuscules","Le cacher dans le foin"],"answer":0,"explanation":"Les jouets doivent rester sûrs et être inspectés.","source":"RSPCA — enrichissement","sourceUrl":"https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/behaviour/enrichment","enabled":true},
-    {"id":"appetit","category":"Soins","question":"Si un lapin mange moins et fait moins de crottes, que faire ?","choices":["Contacter rapidement un vétérinaire","Attendre plusieurs jours","Supprimer l’eau","Donner des bonbons"],"answer":0,"explanation":"Un changement d’appétit ou de crottes nécessite un avis vétérinaire rapide.","source":"Guide fourni, page 1 ; RSPCA — santé","sourceUrl":"https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/health","enabled":true}
+    {
+      "id": "foin",
+      "category": "Alimentation",
+      "question": "Tu prépares le repas d’Azur. Que doit-il pouvoir grignoter tout au long de la journée ?",
+      "choices": [
+        "Du foin propre",
+        "Une grande assiette de granulés",
+        "Des morceaux de pomme",
+        "Un mélange de graines"
+      ],
+      "answer": 0,
+      "explanation": "Le foin constitue la base du repas. Les verdures et les petites friandises viennent en complément.",
+      "source": "Guide fourni, page 1",
+      "enabled": true
+    },
+    {
+      "id": "eau",
+      "category": "Alimentation",
+      "question": "Avant de quitter le terrier pour la journée, que vérifies-tu en priorité ?",
+      "choices": [
+        "Que l’eau est propre et accessible",
+        "Que l’eau sera servie avec le repas du soir",
+        "Que la verdure suffit à remplacer l’eau",
+        "Que le récipient est vide pour être rempli au retour"
+      ],
+      "answer": 0,
+      "explanation": "Même avec des légumes frais, un lapin doit toujours avoir accès à de l’eau propre.",
+      "source": "Guide fourni, page 1",
+      "enabled": true
+    },
+    {
+      "id": "carotte",
+      "category": "Alimentation",
+      "question": "Mocha adore la carotte. Quelle place lui donner dans ses repas ?",
+      "choices": [
+        "Un petit plaisir de temps en temps",
+        "Une grosse portion chaque matin",
+        "La moitié de sa ration de verdure",
+        "Un remplacement des granulés à volonté"
+      ],
+      "answer": 0,
+      "explanation": "La racine de carotte est sucrée : elle reste une petite friandise, même si les lapins l’adorent.",
+      "source": "Guide fourni, page 3",
+      "enabled": true
+    },
+    {
+      "id": "fruits",
+      "category": "Alimentation",
+      "question": "Tu as de la pomme et de la poire. Quelle récompense choisis-tu ?",
+      "choices": [
+        "Un petit morceau de l’un des deux fruits",
+        "Une demi-pomme et une demi-poire",
+        "Un bol de fruits laissé toute la journée",
+        "Du jus de fruits dans l’eau"
+      ],
+      "answer": 0,
+      "explanation": "Les fruits sont sucrés. Un petit morceau occasionnel suffit ; inutile de cumuler les gourmandises.",
+      "source": "Guide fourni, page 6",
+      "enabled": true
+    },
+    {
+      "id": "transition",
+      "category": "Alimentation",
+      "question": "Bambou n’a jamais mangé de coriandre. Comment lui fais-tu découvrir ?",
+      "choices": [
+        "Une petite quantité, sans autre nouveauté ce jour-là",
+        "Une portion complète dès le premier repas",
+        "Avec trois autres nouvelles herbes",
+        "En remplaçant sa nourriture habituelle pendant une journée"
+      ],
+      "answer": 0,
+      "explanation": "Une seule nouveauté à la fois, en petite quantité, permet de voir comment elle est tolérée.",
+      "source": "Guide fourni, page 11",
+      "enabled": true
+    },
+    {
+      "id": "foin-propre",
+      "category": "Alimentation",
+      "question": "En ouvrant un sac de foin, tu remarques une odeur de moisi. Que fais-tu ?",
+      "choices": [
+        "Tu prends un autre foin, sec et sain",
+        "Tu retires seulement les brins les plus foncés",
+        "Tu le fais sécher avant de le servir",
+        "Tu le mélanges à du foin neuf"
+      ],
+      "answer": 0,
+      "explanation": "Un foin moisi ne se récupère pas en le mélangeant ou en le faisant sécher. Choisis un lot propre et sec.",
+      "source": "Guide fourni, pages 1 et 7",
+      "enabled": true
+    },
+    {
+      "id": "granules",
+      "category": "Alimentation",
+      "question": "Au magasin, tu hésites entre deux sachets. Lequel correspond le mieux à une petite ration de complément ?",
+      "choices": [
+        "Des granulés complets uniformes",
+        "Un mélange de graines et de céréales",
+        "Un mélange où le lapin peut trier ses morceaux préférés",
+        "Des friandises présentées comme un repas complet"
+      ],
+      "answer": 0,
+      "explanation": "Les granulés complets se donnent en ration mesurée. Ils complètent le foin, sans le remplacer.",
+      "source": "Guide fourni, page 1",
+      "enabled": true
+    },
+    {
+      "id": "romaine",
+      "category": "Alimentation",
+      "question": "Tu composes une assiette de verdure déjà connue de ton lapin. Quelle proposition privilégier ?",
+      "choices": [
+        "De la romaine avec d’autres feuilles et herbes adaptées",
+        "Uniquement de la laitue iceberg chaque jour",
+        "Des fruits à la place des légumes-feuilles",
+        "Toujours un seul légume, sans jamais varier"
+      ],
+      "answer": 0,
+      "explanation": "La romaine peut faire partie d’une assiette variée. L’idée est de varier les verdures adaptées, progressivement.",
+      "source": "Guide fourni, page 2",
+      "enabled": true
+    },
+    {
+      "id": "herbes",
+      "category": "Alimentation",
+      "question": "Quelle herbe aromatique peut apporter de la variété à l’assiette, une fois introduite progressivement ?",
+      "choices": [
+        "La coriandre fraîche",
+        "Un mélange d’herbes cuisiné avec du sel",
+        "Une sauce aux herbes",
+        "Une tisane sucrée versée sur les granulés"
+      ],
+      "answer": 0,
+      "explanation": "La coriandre fraîche peut rejoindre une rotation d’herbes adaptées. Les préparations salées ou sucrées n’ont pas le même usage.",
+      "source": "Guide fourni, page 5",
+      "enabled": true
+    },
+    {
+      "id": "pissenlit",
+      "category": "Plantes",
+      "question": "Tu trouves des pissenlits près d’un parking. Quel choix fais-tu ?",
+      "choices": [
+        "Tu préfères une zone propre et non traitée",
+        "Tu les prends s’ils ont de belles feuilles",
+        "Tu choisis les plus jeunes, quel que soit l’endroit",
+        "Tu comptes sur un rinçage pour rendre toute récolte sûre"
+      ],
+      "answer": 0,
+      "explanation": "Le lieu de récolte compte autant que la plante : évite les zones traitées, souillées et les bords de route.",
+      "source": "Guide fourni, page 2",
+      "enabled": true
+    },
+    {
+      "id": "fleurs",
+      "category": "Plantes",
+      "question": "Une amie t’offre un bouquet. Peux-tu en partager les fleurs avec ton lapin ?",
+      "choices": [
+        "Seulement si leur espèce convient et qu’elles ne sont pas traitées",
+        "Oui, si ce sont des fleurs naturelles",
+        "Oui, après avoir retiré les tiges",
+        "Oui, si elles sentent bon"
+      ],
+      "answer": 0,
+      "explanation": "Toutes les fleurs ne conviennent pas. Un bouquet décoratif ne garantit ni une espèce adaptée ni l’absence de traitement.",
+      "source": "Guide fourni, pages 8 et 10",
+      "enabled": true
+    },
+    {
+      "id": "rose",
+      "category": "Plantes",
+      "question": "Quels pétales de rose pourrais-tu proposer en petite quantité ?",
+      "choices": [
+        "Ceux d’un rosier identifié et non traité",
+        "Ceux d’un bouquet de fleuriste sans autre information",
+        "Ceux d’un pot-pourri parfumé",
+        "Ceux d’un rosier traité, après un simple rinçage"
+      ],
+      "answer": 0,
+      "explanation": "Choisis des pétales non traités. Leur parfum ou leur beauté ne suffit pas à garantir qu’ils conviennent.",
+      "source": "Guide fourni, page 8",
+      "enabled": true
+    },
+    {
+      "id": "tonte",
+      "category": "Sécurité",
+      "question": "Après avoir tondu, tu as un panier d’herbe coupée. Que choisis-tu pour ton lapin ?",
+      "choices": [
+        "Tu gardes son foin et ne lui donnes pas les tontes",
+        "Tu sers les tontes encore tièdes",
+        "Tu les conserves en tas pour le lendemain",
+        "Tu les mélanges au foin pour les faire sécher"
+      ],
+      "answer": 0,
+      "explanation": "Les tontes de gazon fermentent rapidement. Elles ne remplacent pas une herbe adaptée, propre et introduite progressivement.",
+      "source": "Guide fourni, pages 7 et 10",
+      "enabled": true
+    },
+    {
+      "id": "chocolat",
+      "category": "Sécurité",
+      "question": "Tu veux offrir une gourmandise. Laquelle faut-il écarter complètement ?",
+      "choices": [
+        "Un petit morceau de chocolat",
+        "Un minuscule morceau de pomme occasionnel",
+        "Quelques brins d’une herbe adaptée",
+        "Une petite portion de verdure déjà connue"
+      ],
+      "answer": 0,
+      "explanation": "Le chocolat ne convient pas aux lapins, même en petite quantité. Choisis une récompense adaptée.",
+      "source": "Guide fourni, page 10",
+      "enabled": true
+    },
+    {
+      "id": "lait",
+      "category": "Sécurité",
+      "question": "Un sachet porte la mention « friandise au yaourt pour lapin ». Que retiens-tu ?",
+      "choices": [
+        "L’étiquette ne suffit pas : les produits laitiers sont à éviter",
+        "Le dessin d’un lapin garantit que c’est adapté",
+        "Le yaourt peut remplacer une portion de verdure",
+        "Une friandise au yaourt peut être laissée à volonté"
+      ],
+      "answer": 0,
+      "explanation": "Un produit vendu pour les lapins n’est pas forcément adapté. Les friandises au yaourt sont à écarter.",
+      "source": "Guide fourni, page 10",
+      "enabled": true
+    },
+    {
+      "id": "tomate",
+      "category": "Sécurité",
+      "question": "Tu prépares une tomate mûre. Quelle partie ne faut-il pas donner au lapin ?",
+      "choices": [
+        "Les feuilles et les tiges",
+        "Un petit morceau de chair mûre sans les parties vertes",
+        "La chair mûre, uniquement parce qu’elle est rouge",
+        "Toutes les parties deviennent adaptées après lavage"
+      ],
+      "answer": 0,
+      "explanation": "Les feuilles et les tiges de tomate ne se donnent pas. La chair mûre, elle, reste un apport occasionnel en petite quantité.",
+      "source": "Guide fourni, pages 3 et 10",
+      "enabled": true
+    },
+    {
+      "id": "inconnue",
+      "category": "Sécurité",
+      "question": "Une plante ressemble à une herbe comestible, mais tu n’es pas sûre. Que fais-tu ?",
+      "choices": [
+        "Tu ne la donnes pas tant qu’elle n’est pas identifiée",
+        "Tu te fies seulement à son odeur",
+        "Tu en proposes un tout petit bout pour essayer",
+        "Tu la donnes si les insectes la visitent"
+      ],
+      "answer": 0,
+      "explanation": "Une ressemblance ne suffit pas. Dans le doute, mieux vaut laisser la plante de côté.",
+      "source": "Guide fourni, page 10",
+      "enabled": true
+    },
+    {
+      "id": "laver",
+      "category": "Alimentation",
+      "question": "La verdure vient d’un potager non traité. Quelle préparation reste utile ?",
+      "choices": [
+        "La laver et retirer les parties abîmées",
+        "La servir sans la regarder puisqu’elle vient du jardin",
+        "La laisser plusieurs jours à température ambiante",
+        "La mélanger à de la verdure déjà abîmée"
+      ],
+      "answer": 0,
+      "explanation": "Même une récolte du jardin se vérifie et se lave avant d’être proposée.",
+      "source": "Guide fourni, page 11",
+      "enabled": true
+    },
+    {
+      "id": "rotation",
+      "category": "Alimentation",
+      "question": "Pour varier les repas cette semaine, quelle approche choisis-tu ?",
+      "choices": [
+        "Alterner des feuilles et des herbes déjà bien tolérées",
+        "Changer toute l’assiette chaque jour avec des aliments inconnus",
+        "Remplacer régulièrement le foin par des fruits",
+        "Augmenter les friandises pour apporter de la variété"
+      ],
+      "answer": 0,
+      "explanation": "Varier ne veut pas dire tout bouleverser : alterne les verdures connues et introduis les nouveautés doucement.",
+      "source": "Guide fourni, page 11",
+      "enabled": true
+    },
+    {
+      "id": "jeu-realite",
+      "category": "Alimentation",
+      "question": "Le Chef de Warrenfall prépare un plat au wok. Est-ce une recette à reproduire pour un vrai lapin ?",
+      "choices": [
+        "Non, c’est une recette imaginaire du jeu",
+        "Oui, si on réduit seulement le temps de cuisson",
+        "Oui, si on ajoute peu d’huile",
+        "Oui, pour remplacer le foin au dîner"
+      ],
+      "answer": 0,
+      "explanation": "Les recettes du terrier sont imaginaires. Pour un vrai lapin, on garde les repères : foin, eau et végétaux adaptés.",
+      "source": "Guide fourni, page 1 ; distinction avec les mécaniques du jeu",
+      "enabled": true
+    },
+    {
+      "id": "creuser",
+      "category": "Comportement",
+      "question": "Azur gratte et cherche à fouiller. Quelle activité répond à ce besoin naturel ?",
+      "choices": [
+        "Un espace de fouille sécurisé",
+        "Seulement un nouveau couchage",
+        "Des jouets suspendus hors de portée",
+        "Retirer toute possibilité de gratter"
+      ],
+      "answer": 0,
+      "explanation": "Creuser fait partie des comportements naturels du lapin. Un espace de fouille sûr lui permet de l’exprimer.",
+      "source": "RSPCA — enrichissement",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/behaviour/enrichment",
+      "enabled": true
+    },
+    {
+      "id": "cachette",
+      "category": "Comportement",
+      "question": "Mocha se retire dans sa cachette pendant une visite. Comment réagis-tu ?",
+      "choices": [
+        "Tu le laisses profiter de son refuge",
+        "Tu retires la cachette pour qu’il participe",
+        "Tu le fais sortir à chaque fois qu’il s’y installe",
+        "Tu déplaces sans cesse son refuge"
+      ],
+      "answer": 0,
+      "explanation": "Une cachette est un refuge. Le lapin doit pouvoir s’y retirer tranquillement.",
+      "source": "RSPCA — enrichissement",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/behaviour/enrichment",
+      "enabled": true
+    },
+    {
+      "id": "jouets",
+      "category": "Comportement",
+      "question": "Le jouet préféré de Bambou s’est fendu et présente une pointe. Que fais-tu ?",
+      "choices": [
+        "Tu le retires et proposes un objet sûr",
+        "Tu le retournes pour cacher la pointe",
+        "Tu le laisses tant qu’il joue encore avec",
+        "Tu le places dans sa cachette pour limiter les déplacements"
+      ],
+      "answer": 0,
+      "explanation": "Un jouet abîmé peut devenir dangereux. Vérifie régulièrement les objets laissés à disposition.",
+      "source": "RSPCA — enrichissement",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/behaviour/enrichment",
+      "enabled": true
+    },
+    {
+      "id": "appetit",
+      "category": "Soins",
+      "question": "Ton lapin boude son repas habituel et fait beaucoup moins de crottes. Que fais-tu ?",
+      "choices": [
+        "Tu contactes rapidement un vétérinaire",
+        "Tu attends le lendemain pour comparer",
+        "Tu essaies seulement sa friandise préférée",
+        "Tu considères qu’il a simplement moins faim"
+      ],
+      "answer": 0,
+      "explanation": "Une baisse d’appétit associée à moins de crottes mérite un avis vétérinaire rapide. Ne te contente pas d’attendre.",
+      "source": "Guide fourni, page 1 ; RSPCA — santé",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/health",
+      "enabled": true
+    },
+    {
+      "id": "sol",
+      "category": "Habitat",
+      "question": "Azur glisse sur le carrelage. Que changes-tu ?",
+      "choices": [
+        "Un revêtement stable et antidérapant",
+        "Une couche de plastique lisse",
+        "Un sol grillagé",
+        "Rien, il finira par s’habituer"
+      ],
+      "answer": 0,
+      "explanation": "Un sol confortable et non glissant protège ses pattes et facilite ses déplacements.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/environment",
+      "enabled": true
+    },
+    {
+      "id": "espace",
+      "category": "Habitat",
+      "question": "Quel aménagement laisse vraiment un lapin se dépenser ?",
+      "choices": [
+        "Un espace sécurisé pour courir, sauter et se redresser",
+        "Une cage agrandie seulement en hauteur",
+        "Un petit couchage avec beaucoup de jouets",
+        "Une sortie de quelques minutes de temps en temps"
+      ],
+      "answer": 0,
+      "explanation": "Les lapins ont besoin d’espace pour bouger librement et exprimer leurs comportements naturels.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/environment",
+      "enabled": true
+    },
+    {
+      "id": "abri-sec",
+      "category": "Habitat",
+      "question": "L’abri extérieur a pris l’humidité. Que fais-tu ?",
+      "choices": [
+        "Tu remets un couchage sec et corriges l’infiltration",
+        "Tu ajoutes du foin par-dessus la litière humide",
+        "Tu parfumes l’abri",
+        "Tu attends que le lapin change de coin"
+      ],
+      "answer": 0,
+      "explanation": "Le refuge doit rester sec, propre et bien ventilé, sans courants d’air.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/environment",
+      "enabled": true
+    },
+    {
+      "id": "chaleur",
+      "category": "Habitat",
+      "question": "Le soleil arrive sur tout l’enclos. Que faut-il prévoir ?",
+      "choices": [
+        "Un refuge ombragé et frais, avec de l’eau accessible",
+        "Seulement une couverture sur le toit",
+        "Une fenêtre fermée pour garder la chaleur",
+        "Un coin ensoleillé sans possibilité de s’en éloigner"
+      ],
+      "answer": 0,
+      "explanation": "Le lapin doit pouvoir se mettre à l’abri de la chaleur, sans dépendre d’un déplacement de son enclos.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/environment",
+      "enabled": true
+    },
+    {
+      "id": "sorties-abri",
+      "category": "Habitat",
+      "question": "Tu fabriques une cachette pour deux lapins. Quel détail est utile ?",
+      "choices": [
+        "Plusieurs ouvertures pour pouvoir sortir facilement",
+        "Une entrée très étroite, seule issue",
+        "Un couvercle fermé pendant les visites",
+        "Une cachette sans accès depuis l’espace de jeu"
+      ],
+      "answer": 0,
+      "explanation": "Plusieurs issues permettent au lapin de se retirer sans se retrouver coincé.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/environment",
+      "enabled": true
+    },
+    {
+      "id": "enclos",
+      "category": "Habitat",
+      "question": "Avant une sortie au jardin, quel contrôle compte ?",
+      "choices": [
+        "La solidité de l’enclos et les possibilités de fuite",
+        "La couleur du grillage",
+        "Le nombre de fleurs autour",
+        "La présence d’une seule gamelle"
+      ],
+      "answer": 0,
+      "explanation": "Un espace extérieur doit empêcher les fuites et protéger les lapins des prédateurs.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/environment",
+      "enabled": true
+    },
+    {
+      "id": "fouille-repas",
+      "category": "Jeux",
+      "question": "Comment transformer une partie du repas habituel en activité ?",
+      "choices": [
+        "Répartir des aliments adaptés dans des cachettes faciles",
+        "Doubler les friandises",
+        "Retirer toute nourriture jusqu’à la fin du jeu",
+        "Placer le repas hors d’atteinte"
+      ],
+      "answer": 0,
+      "explanation": "Chercher sa nourriture occupe le lapin et encourage son comportement de fouille.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/behaviour/enrichment",
+      "enabled": true
+    },
+    {
+      "id": "tunnel",
+      "category": "Jeux",
+      "question": "Quel tunnel choisis-tu pour Mocha ?",
+      "choices": [
+        "Un tunnel stable, assez large et sans élément dangereux",
+        "Un tube si étroit qu’il doit se forcer",
+        "Un passage qui se referme sur lui",
+        "Un tube aux bords coupants"
+      ],
+      "answer": 0,
+      "explanation": "Un tunnel doit permettre de passer facilement, sans risque de blessure.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/behaviour/enrichment",
+      "enabled": true
+    },
+    {
+      "id": "carton",
+      "category": "Jeux",
+      "question": "Tu proposes une boîte en carton comme jeu. Que vérifies-tu ?",
+      "choices": [
+        "L’absence d’agrafes et de petites pièces détachables",
+        "Seulement sa couleur",
+        "Qu’elle reste fermée de tous les côtés",
+        "Qu’elle contienne beaucoup de ruban adhésif accessible"
+      ],
+      "answer": 0,
+      "explanation": "Un jeu simple peut convenir si ses matériaux et ses ouvertures sont sûrs.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/behaviour/enrichment",
+      "enabled": true
+    },
+    {
+      "id": "preferences",
+      "category": "Jeux",
+      "question": "Bambou ignore un jouet qu’Azur adore. Que fais-tu ?",
+      "choices": [
+        "Tu lui proposes un autre type d’activité",
+        "Tu le forces à utiliser le même jouet",
+        "Tu retires tous les jeux",
+        "Tu conclus qu’il n’aime jamais jouer"
+      ],
+      "answer": 0,
+      "explanation": "Les préférences varient : tunnels, fouille et objets à manipuler ne plaisent pas pareil à tous.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/behaviour/enrichment",
+      "enabled": true
+    },
+    {
+      "id": "rotation-jouets",
+      "category": "Jeux",
+      "question": "Comment renouveler les activités sans tout bouleverser ?",
+      "choices": [
+        "Alterner quelques jeux sûrs en gardant les refuges",
+        "Changer tout l’habitat chaque matin",
+        "Retirer toutes les cachettes",
+        "Ajouter toujours plus d’objets sans vérifier l’espace"
+      ],
+      "answer": 0,
+      "explanation": "Quelques changements de jeux apportent de la nouveauté tout en conservant des repères rassurants.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/behaviour/enrichment",
+      "enabled": true
+    },
+    {
+      "id": "bac-creuser",
+      "category": "Jeux",
+      "question": "Que peux-tu mettre dans un bac de fouille adapté ?",
+      "choices": [
+        "Du papier simple déchiqueté ou du foin propre",
+        "De petites pièces de plastique",
+        "Des matériaux parfumés inconnus",
+        "Des objets pointus cachés sous le foin"
+      ],
+      "answer": 0,
+      "explanation": "Un bac de fouille se prépare avec des matériaux sûrs, sous surveillance.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/behaviour/enrichment",
+      "enabled": true
+    },
+    {
+      "id": "menton",
+      "category": "Comportement",
+      "question": "Azur frotte son menton contre un meuble. Que peut-il faire ?",
+      "choices": [
+        "Y déposer son odeur",
+        "Essayer d’user ses incisives",
+        "Demander systématiquement à manger",
+        "Montrer à coup sûr une douleur"
+      ],
+      "answer": 0,
+      "explanation": "Le frottement du menton fait partie du marquage olfactif du lapin.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/behaviour",
+      "enabled": true
+    },
+    {
+      "id": "bond-joie",
+      "category": "Comportement",
+      "question": "Mocha court puis fait un bond en se tortillant. Cela peut traduire…",
+      "choices": [
+        "Un moment de joie et d’aisance",
+        "Une demande de bain",
+        "Un besoin d’être porté immédiatement",
+        "Une volonté de dormir"
+      ],
+      "answer": 0,
+      "explanation": "Ces bonds spontanés peuvent accompagner un lapin qui se sent bien et joue.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/behaviour",
+      "enabled": true
+    },
+    {
+      "id": "taper-patte",
+      "category": "Comportement",
+      "question": "Bambou frappe le sol avec ses pattes arrière. Que fais-tu ?",
+      "choices": [
+        "Tu observes ce qui pourrait l’inquiéter ou le contrarier",
+        "Tu le grondes pour le bruit",
+        "Tu lui imposes aussitôt un câlin",
+        "Tu ignores toujours ce comportement"
+      ],
+      "answer": 0,
+      "explanation": "Frapper le sol peut signaler une alerte ou de la contrariété : le contexte aide à comprendre.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/behaviour",
+      "enabled": true
+    },
+    {
+      "id": "lechouille",
+      "category": "Comportement",
+      "question": "Deux lapins liés se lèchent doucement le front. C’est souvent…",
+      "choices": [
+        "Un comportement affectueux de toilettage",
+        "Un signe certain de bagarre imminente",
+        "Une demande de nourriture",
+        "Une façon de remplacer leur toilette personnelle"
+      ],
+      "answer": 0,
+      "explanation": "Le toilettage mutuel peut faire partie d’une relation amicale.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/behaviour",
+      "enabled": true
+    },
+    {
+      "id": "recul",
+      "category": "Comportement",
+      "question": "Un lapin se détourne et s’éloigne de ta main. Comment réagis-tu ?",
+      "choices": [
+        "Tu lui laisses de l’espace",
+        "Tu le suis pour terminer la caresse",
+        "Tu bloques sa cachette",
+        "Tu le retiens près de toi"
+      ],
+      "answer": 0,
+      "explanation": "S’éloigner peut exprimer le besoin de distance. Respecter ce signal évite de le forcer.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/behaviour",
+      "enabled": true
+    },
+    {
+      "id": "immobilite-dos",
+      "category": "Comportement",
+      "question": "Un lapin mis sur le dos reste immobile. Est-ce une preuve de détente ?",
+      "choices": [
+        "Non, cette immobilité peut être une réaction de peur",
+        "Oui, il apprécie forcément cette position",
+        "Oui, c’est une bonne façon de le calmer",
+        "Oui, il faut prolonger ce moment"
+      ],
+      "answer": 0,
+      "explanation": "Ne retourne pas un lapin pour l’immobiliser : cette réaction peut traduire une peur intense.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/behaviour",
+      "enabled": true
+    },
+    {
+      "id": "compagnon",
+      "category": "Vie en groupe",
+      "question": "Quel compagnon correspond le mieux aux besoins sociaux d’un lapin ?",
+      "choices": [
+        "Un autre lapin compatible, avec une rencontre préparée",
+        "Un cochon d’Inde choisi au hasard",
+        "Un miroir dans son abri",
+        "Un nouveau jouet chaque jour à la place de toute compagnie"
+      ],
+      "answer": 0,
+      "explanation": "Un compagnon lapin compatible apporte une relation qu’un jouet ou une autre espèce ne remplace pas.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/company",
+      "enabled": true
+    },
+    {
+      "id": "rencontre",
+      "category": "Vie en groupe",
+      "question": "Tu accueilles un second lapin. Comment préparer leur rencontre ?",
+      "choices": [
+        "Progressivement, sous surveillance et en terrain neutre",
+        "Le déposer directement dans le refuge du premier",
+        "Les enfermer ensemble pour accélérer les choses",
+        "Les laisser seuls dès les premières minutes"
+      ],
+      "answer": 0,
+      "explanation": "Une rencontre se prépare avec des conseils adaptés ; on ne force pas deux inconnus à cohabiter.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/company",
+      "enabled": true
+    },
+    {
+      "id": "ressources",
+      "category": "Vie en groupe",
+      "question": "Deux lapins partagent leur espace. Quel aménagement facilite la vie commune ?",
+      "choices": [
+        "Plusieurs accès à l’eau, au foin et aux refuges",
+        "Un seul refuge avec une entrée",
+        "Une gamelle que l’un peut bloquer",
+        "Moins d’espace pour les rapprocher"
+      ],
+      "answer": 0,
+      "explanation": "Des ressources accessibles à chacun limitent la compétition.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/company",
+      "enabled": true
+    },
+    {
+      "id": "entente",
+      "category": "Vie en groupe",
+      "question": "Quel signe est encourageant pendant une rencontre surveillée ?",
+      "choices": [
+        "Se reposer côte à côte, détendus",
+        "Se poursuivre sans relâche",
+        "S’arracher des touffes de poils",
+        "Se mordre"
+      ],
+      "answer": 0,
+      "explanation": "Le repos détendu à proximité fait partie des signes d’une relation qui se construit bien.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/company",
+      "enabled": true
+    },
+    {
+      "id": "personnalites",
+      "category": "Vie en groupe",
+      "question": "Deux lapins ont la même couleur et le même âge. Cela garantit-il leur entente ?",
+      "choices": [
+        "Non, leur compatibilité et leur caractère comptent aussi",
+        "Oui, ils se reconnaîtront forcément comme amis",
+        "Oui, si leurs noms se ressemblent",
+        "Oui, sans avoir besoin de rencontre progressive"
+      ],
+      "answer": 0,
+      "explanation": "L’apparence ne prédit pas une amitié : chaque lapin a son tempérament.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/company",
+      "enabled": true
+    },
+    {
+      "id": "sterilisation",
+      "category": "Vie en groupe",
+      "question": "Avant de former un duo mâle-femelle, quel sujet aborder avec le vétérinaire ?",
+      "choices": [
+        "Leur santé et leur stérilisation",
+        "Seulement la couleur des petits",
+        "Le choix d’un abri plus étroit",
+        "La suppression des cachettes"
+      ],
+      "answer": 0,
+      "explanation": "La stérilisation évite les portées non souhaitées et peut faciliter la vie commune.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/company",
+      "enabled": true
+    },
+    {
+      "id": "brossage",
+      "category": "Soins",
+      "question": "Pendant la mue, quel geste aide à entretenir le pelage ?",
+      "choices": [
+        "Un brossage doux et adapté",
+        "Tirer les touffes qui résistent",
+        "Parfumer le pelage",
+        "Attendre qu’il avale tous les poils en se léchant"
+      ],
+      "answer": 0,
+      "explanation": "Un brossage régulier aide à retirer les poils et à surveiller l’état de la peau.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/health",
+      "enabled": true
+    },
+    {
+      "id": "dents",
+      "category": "Soins",
+      "question": "Pourquoi le foin est-il aussi important pour les dents ?",
+      "choices": [
+        "Sa mastication participe à leur usure",
+        "Il empêche les dents de pousser",
+        "Il remplace tout contrôle dentaire",
+        "Sa couleur indique la longueur des dents"
+      ],
+      "answer": 0,
+      "explanation": "Les dents poussent continuellement. La mastication participe à leur bonne usure.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/health",
+      "enabled": true
+    },
+    {
+      "id": "controle-quotidien",
+      "category": "Soins",
+      "question": "Quel petit bilan est utile chaque jour ?",
+      "choices": [
+        "Observer appétit, crottes, comportement et déplacements",
+        "Regarder seulement si la gamelle est jolie",
+        "Peser uniquement les jouets",
+        "Attendre un signe très visible pour observer son lapin"
+      ],
+      "answer": 0,
+      "explanation": "Connaître ses habitudes aide à repérer rapidement un changement.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/health",
+      "enabled": true
+    },
+    {
+      "id": "vaccins",
+      "category": "Soins",
+      "question": "Même pour un lapin vivant à l’intérieur, à qui demander un programme de vaccination ?",
+      "choices": [
+        "À un vétérinaire connaissant les lapins",
+        "Au hasard d’un commentaire",
+        "En copiant le calendrier d’un autre animal",
+        "À personne tant qu’il ne sort pas"
+      ],
+      "answer": 0,
+      "explanation": "Le vétérinaire conseille les vaccins et leur fréquence selon la situation du lapin.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/health",
+      "enabled": true
+    },
+    {
+      "id": "litiere",
+      "category": "Soins",
+      "question": "Une partie de la litière est souillée. Que fais-tu ?",
+      "choices": [
+        "Tu retires les zones sales et remets du propre",
+        "Tu caches les saletés sous une couche neuve",
+        "Tu ajoutes seulement du parfum",
+        "Tu attends qu’il cesse d’utiliser ce coin"
+      ],
+      "answer": 0,
+      "explanation": "Un coin toilette entretenu contribue au confort et à l’hygiène.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/health",
+      "enabled": true
+    },
+    {
+      "id": "dents-longues",
+      "category": "Soins",
+      "question": "Tu penses que les dents de ton lapin sont trop longues. Que fais-tu ?",
+      "choices": [
+        "Tu les fais contrôler par un vétérinaire",
+        "Tu les coupes toi-même avec une pince",
+        "Tu attends qu’elles cassent",
+        "Tu remplaces tous ses repas par des friandises dures"
+      ],
+      "answer": 0,
+      "explanation": "Une anomalie dentaire demande un contrôle vétérinaire, pas une coupe improvisée.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/health",
+      "enabled": true
+    },
+    {
+      "id": "premier-contact",
+      "category": "Confiance",
+      "question": "Un lapin vient d’arriver chez toi. Comment débutes-tu la relation ?",
+      "choices": [
+        "Avec une présence calme, en le laissant venir",
+        "En le poursuivant pour qu’il s’habitue",
+        "En le sortant sans cesse de son refuge",
+        "En imposant de longues séances de câlins"
+      ],
+      "answer": 0,
+      "explanation": "Une rencontre douce lui laisse le choix d’approcher.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/environment",
+      "enabled": true
+    },
+    {
+      "id": "hauteur-rencontre",
+      "category": "Confiance",
+      "question": "Pour passer un moment avec un lapin timide, où t’installes-tu ?",
+      "choices": [
+        "Au sol, calmement et à distance confortable",
+        "Debout, penchée brusquement sur lui",
+        "Dans sa cachette en bloquant la sortie",
+        "Sur son passage pour l’obliger à s’arrêter"
+      ],
+      "answer": 0,
+      "explanation": "Se placer tranquillement à son niveau facilite une approche volontaire.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/environment",
+      "enabled": true
+    },
+    {
+      "id": "visiteurs",
+      "category": "Confiance",
+      "question": "Des amis souhaitent caresser Mocha. Quelle règle leur donnes-tu ?",
+      "choices": [
+        "Attendre qu’il approche et respecter son retrait",
+        "Le suivre dans tous ses refuges",
+        "L’attirer puis bloquer son passage",
+        "Le réveiller pour que chacun en profite"
+      ],
+      "answer": 0,
+      "explanation": "Le lapin doit pouvoir choisir le contact et y mettre fin.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/environment",
+      "enabled": true
+    },
+    {
+      "id": "pause-contact",
+      "category": "Confiance",
+      "question": "Pendant une interaction, Azur se retire dans un coin calme. Que choisis-tu ?",
+      "choices": [
+        "Faire une pause et le laisser tranquille",
+        "Recommencer immédiatement le même jeu",
+        "Le faire sortir en bougeant sa cachette",
+        "Fermer l’accès au coin calme"
+      ],
+      "answer": 0,
+      "explanation": "Une relation de confiance laisse une place au repos et au retrait.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/environment",
+      "enabled": true
+    },
+    {
+      "id": "routine",
+      "category": "Confiance",
+      "question": "Qu’est-ce qui peut aider un lapin à garder ses repères ?",
+      "choices": [
+        "Une routine régulière avec des activités variées",
+        "Déplacer son refuge sans arrêt",
+        "Changer brutalement tous ses horaires",
+        "L’empêcher d’explorer"
+      ],
+      "answer": 0,
+      "explanation": "Des repères stables et des nouveautés progressives rendent le quotidien plus prévisible.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/environment",
+      "enabled": true
+    },
+    {
+      "id": "initiative",
+      "category": "Confiance",
+      "question": "Comment savoir si un moment de jeu partagé lui convient ?",
+      "choices": [
+        "Observer s’il participe librement et peut s’éloigner",
+        "Le retenir jusqu’à la fin prévue",
+        "Continuer même s’il fuit",
+        "Choisir uniquement selon ton envie de jouer"
+      ],
+      "answer": 0,
+      "explanation": "Le jeu partagé reste agréable quand le lapin peut participer ou faire une pause.",
+      "source": "RSPCA — bien-être des lapins",
+      "sourceUrl": "https://www.rspca.org.uk/adviceandwelfare/pets/rabbits/environment",
+      "enabled": true
+    }
   ]
 }

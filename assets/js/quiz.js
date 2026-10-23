@@ -17,14 +17,33 @@
   }
   /** Mélange une copie, pour éviter les répétitions et ne pas modifier le catalogue. */
   function shuffle(values){const copy=[...values];for(let i=copy.length-1;i>0;i--){const j=Math.floor(Math.random()*(i+1));[copy[i],copy[j]]=[copy[j],copy[i]];}return copy;}
+  /** Alterne les thèmes avant de reprendre une deuxième question du même thème. */
+  function selectQuestions(data){
+    const groups=new Map();
+    for(const q of data.questions.filter(q=>q.enabled!==false)){
+      const category=q.category||'Découvertes';
+      if(!groups.has(category))groups.set(category,[]);
+      groups.get(category).push(q);
+    }
+    const pools=shuffle([...groups.values()]).map(shuffle),selected=[];
+    while(selected.length<data.roundSize){
+      let added=false;
+      for(const pool of pools){
+        if(pool.length){selected.push(pool.pop());added=true;}
+        if(selected.length===data.roundSize)break;
+      }
+      if(!added)break;
+    }
+    return selected;
+  }
   const ready=fetch('./lapinous-quiz.json',{cache:'no-store'}).then(response=>{if(!response.ok)throw new Error('Quiz indisponible.');return response.json();}).then(data=>{
-    catalog=validate(data);if(local){try{const saved=JSON.parse(localStorage.getItem(key));if(saved)catalog=validate(saved);}catch{}}
+    catalog=validate(data);if(local){try{const saved=JSON.parse(localStorage.getItem(key));if(saved&&saved.version===data.version)catalog=validate(saved);}catch{}}
     return catalog;
   }).catch(error=>{console.warn(error.message);return null;});
   /** Une réponse ne compte qu'une fois ; un changement de partie annule la récompense. */
   async function open(api){
     const data=await ready;if(!data||!api.valid())return;
-    const questions=shuffle(data.questions.filter(q=>q.enabled!==false)).slice(0,data.roundSize);
+    const questions=selectQuestions(data);
     if(!questions.length){api.toast('Aucune question active.');return;}
     let index=0,score=0,answered=false,finished=false;
     const panel=document.createElement('section');panel.className='console-panel quiz-panel';api.root.replaceChildren(panel);
@@ -33,7 +52,7 @@
       answered=false;
       if(index===questions.length){
         if(!finished){finished=true;api.complete(score,questions.length);}
-        panel.innerHTML=`<h2>Quiz terminé !</h2><p class="quiz-score">${score} / ${questions.length}</p><p>Chaque partie propose de nouvelles questions et mélange les réponses.</p><button data-quiz-replay>Rejouer</button><button data-quiz-back>Retour aux mini-jeux</button>`;
+        panel.innerHTML=`<h2>Quiz terminé !</h2><p class="quiz-score">${score} / ${questions.length}</p><p>Chaque partie propose de nouvelles questions et mélange les réponses.</p><p class="quiz-more">Envie de préparer de bons repas pour un vrai lapin ?<br><a href="https://leven-anju-yuki.github.io/nourriture-lapin/" target="_blank" rel="noopener noreferrer">Découvrir le guide de l’alimentation du lapin ↗</a></p><button data-quiz-replay>Rejouer</button><button data-quiz-back>Retour aux mini-jeux</button>`;
         panel.querySelector('[data-quiz-replay]').onclick=()=>open(api);
       }else{
         const q=questions[index],choices=shuffle(q.choices.map((text,id)=>({text,id})));
@@ -43,7 +62,7 @@
           const correct=Number(button.dataset.quizAnswer)===q.answer;if(correct)score++;
           panel.querySelectorAll('[data-quiz-answer]').forEach(control=>{control.disabled=true;if(Number(control.dataset.quizAnswer)===q.answer)control.classList.add('correct');});
           if(!correct)button.classList.add('incorrect');
-          panel.querySelector('.quiz-feedback').innerHTML=`<strong>${correct?'Bonne réponse !':'La bonne réponse : '+escape(q.choices[q.answer])}</strong><p>${escape(q.explanation)}</p><small>${q.sourceUrl?`<a href="${escape(q.sourceUrl)}" target="_blank" rel="noopener noreferrer">${escape(q.source)}</a>`:escape(q.source)}</small>`;
+          panel.querySelector('.quiz-feedback').innerHTML=`<strong>${correct?'Bonne réponse !':'La bonne réponse : '+escape(q.choices[q.answer])}</strong><p>${escape(q.explanation)}</p>`;
           panel.querySelector('[data-quiz-next]').disabled=false;
         });
         panel.querySelector('[data-quiz-next]').onclick=()=>{if(answered){index++;render();}};
@@ -52,5 +71,5 @@
     }
     render();
   }
-  window.LapinousQuiz={ready,validate,shuffle,open,get:()=>catalog,save(data){catalog=validate(data);localStorage.setItem(key,JSON.stringify(data));}};
+  window.LapinousQuiz={ready,validate,shuffle,selectQuestions,open,get:()=>catalog,save(data){catalog=validate(data);localStorage.setItem(key,JSON.stringify(data));}};
 })();

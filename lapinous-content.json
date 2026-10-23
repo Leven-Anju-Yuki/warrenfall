@@ -349,7 +349,7 @@
       "faceImg": "./assets/img/lapins_jouables/sans_evenements/eclair_face.png",
       "coteImg": "./assets/img/lapins_jouables/sans_evenements/eclair_cote.png",
       "friends": [
-        "nova"
+        "nova","archy"
       ],
       "rivals": [
         "mocha"
@@ -542,7 +542,7 @@
       "faceImg": "./assets/img/lapins_jouables/sans_evenements/archy_face.png",
       "coteImg": "./assets/img/lapins_jouables/sans_evenements/archy_cote.png",
       "friends": [
-        "umbra"
+        "umbra","spark"
       ],
       "rivals": [],
       "attacks": [
@@ -1975,7 +1975,7 @@
         "Les trahisons"
       ],
       "quote": "Vous nous avez arrachés de la terre. Nous allons vous y remettre.",
-      "power": "Révolte des Racines : invoque des racines géantes qui immobilisent tous les ennemis.",
+      "power": "Révolte des Racines : Entrave tous les lapins : leur prochaine attaque inflige 25 % de dégâts en moins.",
       "difficulty": 250,
       "faceImg": "./assets/img/boss/carotte_face.png",
       "coteImg": "./assets/img/boss/carotte_cote.png",
@@ -1986,7 +1986,12 @@
       ],
       "rivals": [
         "ail"
-      ]
+      ],
+      "critical": {
+        "chargePerTurn": 20,
+        "multiplier": 1.75
+      },
+      "combatAbility": "roots"
     },
     "oignon": {
       "name": "SHINOBI OIGNON",
@@ -2011,7 +2016,7 @@
         "Bananax"
       ],
       "quote": "Les larmes arrivent toujours avant la mort.",
-      "power": "Voile de Larmes : réduit fortement la précision des ennemis.",
+      "power": "Voile de Larmes : Brouille la vue de toute l’équipe : dégâts réduits de 20 % pendant les deux prochaines actions de chaque lapin.",
       "difficulty": 150,
       "faceImg": "./assets/img/boss/oignon_face.png",
       "coteImg": "./assets/img/boss/oignon_cote.png",
@@ -2021,7 +2026,12 @@
       ],
       "rivals": [
         "banane"
-      ]
+      ],
+      "critical": {
+        "chargePerTurn": 20,
+        "multiplier": 1.75
+      },
+      "combatAbility": "veil"
     },
     "choux": {
       "name": "BRUTUS CHOU",
@@ -2046,7 +2056,7 @@
         "Les traîtres"
       ],
       "quote": "Plus tu frappes, plus je pousse.",
-      "power": "Mur de Chou : réduit fortement les dégâts subis par toute l'équipe.",
+      "power": "Mur de Chou : Réduit de 45 % les dégâts des deux prochaines attaques reçues.",
       "difficulty": 200,
       "faceImg": "./assets/img/boss/choux_face.png",
       "coteImg": "./assets/img/boss/choux_cote.png",
@@ -2057,7 +2067,12 @@
       ],
       "rivals": [
         "oignon"
-      ]
+      ],
+      "critical": {
+        "chargePerTurn": 20,
+        "multiplier": 1.75
+      },
+      "combatAbility": "shell"
     },
     "piment": {
       "name": "PIMENTOR",
@@ -2082,7 +2097,7 @@
         "Les règles"
       ],
       "quote": "Si ça n'explose pas, c'est pas fini.",
-      "power": "Explosion Contrôlée : inflige d'importants dégâts de zone.",
+      "power": "Explosion Contrôlée : Frappe aussi les autres lapins encore debout : 35 % des dégâts principaux, avant leur protection.",
       "difficulty": 75,
       "faceImg": "./assets/img/boss/piment_face.png",
       "coteImg": "./assets/img/boss/piment_cote.png",
@@ -2092,7 +2107,12 @@
       ],
       "rivals": [
         "choux"
-      ]
+      ],
+      "critical": {
+        "chargePerTurn": 20,
+        "multiplier": 1.75
+      },
+      "combatAbility": "explosion"
     },
     "banane": {
       "name": "BANANAX",
@@ -2117,7 +2137,7 @@
         "Être ignoré"
       ],
       "quote": "Je n'entends que le chaos.",
-      "power": "Folie Bananière : augmente énormément sa vitesse d'attaque mais réduit sa défense.",
+      "power": "Folie Bananière : Ses deux prochaines attaques sont renforcées de 25 %, mais il subit 20 % de dégâts supplémentaires pendant deux impacts.",
       "difficulty": 40,
       "faceImg": "./assets/img/boss/banane.png",
       "coteImg": "./assets/img/boss/banane.png",
@@ -2127,7 +2147,12 @@
       "rivals": [
         "oignon",
         "aubergine"
-      ]
+      ],
+      "critical": {
+        "chargePerTurn": 20,
+        "multiplier": 1.75
+      },
+      "combatAbility": "frenzy"
     },
     "courgette": {
       "name": "ZUKK",
@@ -2152,7 +2177,7 @@
         "Les imprudents"
       ],
       "quote": "Les traces racontent toujours une histoire.",
-      "power": "Marque du Traqueur : révèle les ennemis cachés et augmente les dégâts contre eux.",
+      "power": "Marque du Traqueur : Marque sa cible : elle subit 25 % de dégâts supplémentaires lors des deux prochaines attaques du boss qui la touchent.",
       "difficulty": 20,
       "faceImg": "./assets/img/boss/courgette_face.png",
       "coteImg": "./assets/img/boss/courgette_cote.png",
@@ -2160,7 +2185,12 @@
         "oignon",
         "mais"
       ],
-      "rivals": []
+      "rivals": [],
+      "critical": {
+        "chargePerTurn": 20,
+        "multiplier": 1.75
+      },
+      "combatAbility": "mark"
     },
     "tomate": {
       "name": "TOMARAK",
@@ -2185,7 +2215,7 @@
         "L'échec"
       ],
       "quote": "La victoire est une maladie contagieuse.",
-      "power": "Toxines Paralysantes : chance d'immobiliser les ennemis.",
+      "power": "Toxines Paralysantes : Empoisonne sa cible : elle perd 4 % de ses PV maximum à la fin des deux prochains tours du boss. Sa prochaine attaque est affaiblie de 15 %.",
       "difficulty": 50,
       "faceImg": "./assets/img/boss/tomate_face.png",
       "coteImg": "./assets/img/boss/tomate_cote.png",
@@ -2194,7 +2224,12 @@
       ],
       "rivals": [
         "ail"
-      ]
+      ],
+      "critical": {
+        "chargePerTurn": 20,
+        "multiplier": 1.75
+      },
+      "combatAbility": "toxin"
     },
     "ail": {
       "name": "COMTE AILULA",
@@ -2219,7 +2254,7 @@
         "Le désordre"
       ],
       "quote": "La conquête commence par une conversation.",
-      "power": "Autorité Royale : augmente temporairement toutes les statistiques des alliés.",
+      "power": "Autorité Royale : Renforce ses deux prochaines attaques de 20 % et réduit de 20 % les deux prochains coups reçus.",
       "difficulty": 60,
       "faceImg": "./assets/img/boss/ail_face.png",
       "coteImg": "./assets/img/boss/ail_cote.png",
@@ -2229,7 +2264,12 @@
       "rivals": [
         "carotte",
         "tomate"
-      ]
+      ],
+      "critical": {
+        "chargePerTurn": 20,
+        "multiplier": 1.75
+      },
+      "combatAbility": "royal"
     },
     "mais": {
       "name": "MARÉCHAL ÉPI-DOR",
@@ -2253,7 +2293,7 @@
         "Les tricheurs"
       ],
       "quote": "Un seul tir suffit.",
-      "power": "Précision Mortelle : augmente fortement les chances de coup critique.",
+      "power": "Précision Mortelle : Prépare sa prochaine frappe : dégâts augmentés de 35 % et moitié de la protection ignorée.",
       "difficulty": 70,
       "faceImg": "./assets/img/boss/mais_face.png",
       "coteImg": "./assets/img/boss/mais_cote.png",
@@ -2261,7 +2301,12 @@
         "choux",
         "courgette"
       ],
-      "rivals": []
+      "rivals": [],
+      "critical": {
+        "chargePerTurn": 34,
+        "multiplier": 2
+      },
+      "combatAbility": "aim"
     },
     "aubergine": {
       "name": "SHOGUN AUBERGINE",
@@ -2285,7 +2330,7 @@
         "Le chaos"
       ],
       "quote": "La maîtrise précède la victoire.",
-      "power": "Lame du Shogun : prochaine attaque critique garantie.",
+      "power": "Lame du Shogun : Prépare un coup critique : sa prochaine attaque inflige 60 % de dégâts supplémentaires.",
       "difficulty": 100,
       "faceImg": "./assets/img/boss/aubergine_face.png",
       "coteImg": "./assets/img/boss/aubergine_cote.png",
@@ -2295,7 +2340,12 @@
       ],
       "rivals": [
         "banane"
-      ]
+      ],
+      "critical": {
+        "chargePerTurn": 34,
+        "multiplier": 2
+      },
+      "combatAbility": "blade"
     },
     "patate": {
       "name": "PATATOR LE BROYEUR",
@@ -2319,7 +2369,7 @@
         "L'abandon"
       ],
       "quote": "Je me bats pour ceux qui ne peuvent plus le faire.",
-      "power": "Séisme : frappe le sol et inflige des dégâts à tous les ennemis.",
+      "power": "Séisme : Touche les autres lapins pour 25 % des dégâts principaux et affaiblit de 20 % la prochaine attaque de chacun.",
       "difficulty": 85,
       "faceImg": "./assets/img/boss/patate_face.png",
       "coteImg": "./assets/img/boss/patate_cote.png",
@@ -2327,7 +2377,12 @@
         "choux",
         "carotte"
       ],
-      "rivals": []
+      "rivals": [],
+      "critical": {
+        "chargePerTurn": 20,
+        "multiplier": 1.75
+      },
+      "combatAbility": "quake"
     }
   },
   "eggRates": {
@@ -2373,8 +2428,8 @@
       "maxHp": 40,
       "power": "Petite bousculade",
       "rewardCarrots": 4,
-      "faceImg": "./assets/icons/vegetable-placeholder.svg",
-      "coteImg": "./assets/icons/vegetable-placeholder.svg",
+      "faceImg": "./assets/img/boss/Radis_face.png",
+      "coteImg": "./assets/img/boss/Radis_cote.png",
       "imageSlot": "radis",
       "critical": {
         "chargePerTurn": 10,
@@ -2389,8 +2444,8 @@
       "maxHp": 55,
       "power": "Petite bousculade",
       "rewardCarrots": 4,
-      "faceImg": "./assets/icons/vegetable-placeholder.svg",
-      "coteImg": "./assets/icons/vegetable-placeholder.svg",
+      "faceImg": "./assets/img/boss/Navet_face.png",
+      "coteImg": "./assets/img/boss/Navet_cote.png",
       "imageSlot": "navet",
       "critical": {
         "chargePerTurn": 10,
@@ -2405,8 +2460,8 @@
       "maxHp": 70,
       "power": "Petite bousculade",
       "rewardCarrots": 5,
-      "faceImg": "./assets/icons/vegetable-placeholder.svg",
-      "coteImg": "./assets/icons/vegetable-placeholder.svg",
+      "faceImg": "./assets/img/boss/Petit_Pois_face.png",
+      "coteImg": "./assets/img/boss/Petit_Pois_cote.png",
       "imageSlot": "petit_pois",
       "critical": {
         "chargePerTurn": 10,
@@ -2414,5 +2469,139 @@
       },
       "combatPower": 9
     }
+  },
+  "exploration": {
+    "companion": {
+      "name": "Le randonneur",
+      "image": "assets/img/accompagnateurs/Randonneur/Lapin randonneur, carte et boussole-1.png"
+    },
+    "durations": [
+      {
+        "hours": 1,
+        "rolls": 2,
+        "energy": 10,
+        "care": 8,
+        "rare": 2,
+        "egg": 1
+      },
+      {
+        "hours": 3,
+        "rolls": 4,
+        "energy": 15,
+        "care": 12,
+        "rare": 4,
+        "egg": 2
+      },
+      {
+        "hours": 8,
+        "rolls": 7,
+        "energy": 25,
+        "care": 17,
+        "rare": 7,
+        "egg": 4
+      },
+      {
+        "hours": 12,
+        "rolls": 10,
+        "energy": 30,
+        "care": 22,
+        "rare": 10,
+        "egg": 5
+      }
+    ],
+    "zones": [
+      {
+        "id": "meadow",
+        "name": "Prairie des petites pousses",
+        "emoji": "🌼",
+        "level": 1,
+        "ingredients": [
+          "market_carrot",
+          "market_lettuce",
+          "market_chamomile",
+          "market_dandelion"
+        ],
+        "care": [
+          "potion_vitality",
+          "compress_plants"
+        ],
+        "rare": [
+          "sachet_flowers",
+          "oil_fur"
+        ],
+        "affinities": [
+          "caramel",
+          "bambou"
+        ]
+      },
+      {
+        "id": "forest",
+        "name": "Forêt des champignons luisants",
+        "emoji": "🍄",
+        "level": 1,
+        "ingredients": [
+          "market_blueberry",
+          "market_herbs",
+          "market_mint",
+          "market_cornflower"
+        ],
+        "care": [
+          "potion_sleep",
+          "potion_freshness"
+        ],
+        "rare": [
+          "balm_repair",
+          "sachet_flowers"
+        ],
+        "affinities": [
+          "myco"
+        ]
+      },
+      {
+        "id": "desert",
+        "name": "Dunes du soleil doux",
+        "emoji": "🌵",
+        "level": 3,
+        "ingredients": [
+          "market_hay",
+          "market_calendula",
+          "market_fennel"
+        ],
+        "care": [
+          "potion_freshness",
+          "potion_soothing"
+        ],
+        "rare": [
+          "balm_paws",
+          "bandages"
+        ],
+        "affinities": [
+          "nopal"
+        ]
+      },
+      {
+        "id": "cave",
+        "name": "Grottes des lucioles",
+        "emoji": "💎",
+        "level": 8,
+        "ingredients": [
+          "market_rose",
+          "market_dill",
+          "market_cilantro"
+        ],
+        "care": [
+          "elixir_energy",
+          "elixir_protection"
+        ],
+        "rare": [
+          "oil_fur",
+          "bandages"
+        ],
+        "affinities": [
+          "nova",
+          "umbra"
+        ]
+      }
+    ]
   }
 }

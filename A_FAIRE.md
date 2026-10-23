@@ -1,6 +1,147 @@
 # Warrenfall - suivi des travaux et validations
 
-Mise a jour : 21 octobre 2026.
+Mise à jour : 22 octobre 2026.
+
+## Préparation du combat lisible — révision 156
+
+- [x] Réserver une hauteur minimale aux aperçus, sans laisser les fiches et bandeaux les écraser. Afficher les personnages entiers ; liste des lapins et fiches détaillées défilantes, commandes séparées de la scène.
+- [x] Renforcer le contraste et retirer les commandes flottantes et filtres saisonniers qui recouvraient la préparation. Conserver les statistiques, affinités, capacités et sélection de l'équipe.
+- [x] Vérifier une et trois sélections à 1920 × 622 (hauteur de la capture) et sur navigateur téléphone, avec contrôle des dimensions et des chevauchements. Cache actualisé ; aucune sauvegarde modifiée. Non publié.
+
+## Les escapades du terrier — révision 155
+
+- [x] Jardin → Explorer, accompagné du randonneur fourni. Prairie (niveau 1), forêt (niveau 1), désert (niveau 3), grottes (niveau 8) ; chaque zone possède ses ingrédients et ses soins propres. Catalogue éditable dans `lapinous-content.json > exploration`.
+- [x] Sorties de 1/3/8/12 heures réelles, avec respectivement 2/4/7/10 trouvailles et coût de 10/15/25/30 énergie. Départ et échéance absolue sauvegardés : le voyage continue jeu fermé. Un voyage par lapin, plusieurs compagnons peuvent explorer séparément.
+- [x] Affinités explicites : Myco en forêt, Nopal dans le désert, Caramel/Bambou dans la prairie et Nova/Umbra dans les grottes. Durée et paliers de niveau augmentent les taux de soins rares et d'œufs ; probabilités exactes affichées par trouvaille. Les œufs rejoignent le stock habituel, les ingrédients et soins leur inventaire.
+- [x] Butin fixé au départ, récupération unique et sauvegardée au retour, reprise après échec de sauvegarde sans perte ni double gain. Catalogue absent : trouvailles conservées. Lapin absent des équipes et indisponible pour soins, nourriture, sommeil et agilité ; autres compagnons utilisables.
+- [x] Tests des heures réelles, zones, affinités, niveaux, sauvegardes anciennes et invalides, coûts et gains uniques. Navigateur PC/téléphone : départ, exclusion des combats, rechargement réel avec échéance simulée et récupération correcte. Aucun fichier de sauvegarde joueur modifié.
+- [ ] Équilibrage longue durée et confort tactile physique à valider par Florie ; non publié. L'heure utilisée est celle de l'appareil, sans serveur de temps.
+
+## Détails des coloriages — révision 154
+
+- [x] Renforcer les nouveaux niveaux : portraits simples 64 pixels/24 couleurs, modérés 96 pixels/40 couleurs ; scènes modérées 128 pixels/40 couleurs et difficiles 192 pixels/56 couleurs. Plus de pixels et de nuances pour conserver les visages et les détails.
+- [x] Conserver les générations précédentes dans Mes coloriages ; nouvelles grilles versionnées séparément, sans effacer ni convertir un coloriage commencé. Les cases coloriées n'ont plus de bordure qui quadrille le dessin reconstitué.
+- [x] Optimiser la sélection des couleurs et limiter la taille des cases du canvas sur les grandes grilles pour maîtriser la mémoire. Tests de conversion, de niveaux et de sauvegardes ; aucune image originale ni sauvegarde joueur modifiée.
+- [ ] Appréciation visuelle par Florie et publication restantes.
+
+## Petits nids — révision 153
+
+- [x] Créer trois instantanés automatiques tournants nommés « Petit nid de [lapin] », avec date et heure à la seconde : toutes les cinq minutes pendant la partie ; mise en arrière-plan après au moins une minute. Chaque nouvelle copie remplace uniquement le plus ancien des trois nids.
+- [x] Afficher un message après confirmation de l'enregistrement. Nids accessibles et rechargeables dans Sauvegardes, avec les sauvegardes manuelles conservées séparément et sans toucher aux protections de migration existantes.
+- [x] Conserver les trois copies si quota insuffisant, structure illisible ou conflit détecté ; signaler l'échec sans annoncer à tort une réussite. Tests de rotation, intervalle, dates et inventaire ; sécurité des anciennes sauvegardes et cache PWA vérifiés.
+- [ ] Validation physique par Florie ; non publié. Les petits nids utilisent le stockage local du navigateur.
+
+## Palette — révision 152
+
+- [x] Afficher les couleurs sur deux colonnes, y compris avec une barre de défilement. Lorsque la couleur sélectionnée est terminée, rendre immédiatement visible la suivante en faisant défiler uniquement la palette ; garder le dessin et son zoom fixes.
+
+## Vérification de l'incident de l'agent à 20 h 01
+
+- [x] Journaux des 21 et 22 octobre : erreur de validation de `6ac39e147db15f1edab9c326`, carte Équipes favorites (`https://trello.com/c/bK6JARQX`). Lecture réelle de Trello : aucune checklist. Dans la version Git précédente d'A_FAIRE, deux cases principales cochées aux lignes 76 et 277 ; aucune sous-tâche dupliquée pour cette carte.
+- [x] Vérifier le correctif local déjà présent : un seul parent coché conservé, autre occurrence remplacée par un renvoi ; diagnostic précis des absences/doublons et lignes, exclusion de la carte ambiguë et de ses reprises, poursuite du rapport et alerte Discord détaillée. Aucune modification Trello nécessaire ni effectuée.
+- [x] Vérifier 46 tests de l'agent et 18 tests de la migration Actions, avec API simulées : rapport en mode dégradé, cartes valides traitées, checkpoint non avancé en cas d'erreur, historique et reprises préservés. La migration réutilise le même bilan et son workflow comprend les tests de résilience ; elle reste désactivée. Aucun paramètre Windows, sauvegarde permanente ou réglage de quarantaine modifié.
+
+## Navigation du coloriage — révision 151
+
+- [x] Relier la boîte fournie `assets/img/Boite_Mini_Jeu/LapinPixels.png` au jeu de coloriage, avec sa propre référence dans le catalogue des boîtes et la visibilité des puzzles conservée.
+- [x] Limiter le dézoom à la taille de la vue recentrée pour les boutons et les pincements ; borner le déplacement pour garder la grille dans le cadre. Palette et progression inchangées.
+- [x] PC : défilement à deux doigts du pavé tactile pour déplacer, pincement ou Ctrl + molette pour zoomer ; clic droit maintenu et boutons +/− conservés. Instructions adaptées mises à jour.
+- [ ] Vérifier le confort sur le pavé tactile physique de Florie ; les événements de défilement sont contrôlés dans le navigateur isolé. Non publié.
+
+## Images des petits légumes — révision 150
+
+- [x] Relier les six images fournies dans `assets/img/boss` : Radis, Navet et Petit Pois, face pour les fiches et profil pour le combat. Remplacer les silhouettes provisoires des catalogues locaux existants sans écraser leurs autres réglages ni les visuels personnalisés.
+- [x] Conserver PV, puissance et récompenses des adversaires du début. Tests des règles de combat réussis ; originaux conservés, aucun transfert Cloudinary ni publication lancé.
+
+## Coloriages reconnaissables — révision 149
+
+- [x] Ajouter les portraits des lapins possédés en simple (32 cases de large, 12 couleurs) et modéré (48 cases, 24 couleurs). Grandes scènes en modéré (64 cases, 24 couleurs) et difficile (96 cases, 32 couleurs), pour conserver davantage de détails.
+- [x] Séparer Mes lapins, Grandes images et Mes coloriages. Les nouvelles grilles sont enregistrées séparément ; les anciennes restent accessibles et ne sont ni effacées ni reconverties.
+- [x] Sélectionner la prochaine couleur inachevée quand la couleur actuelle est terminée, à la fin du geste. Garder la couleur fixe pendant le trait ; ne pas modifier la palette lors d'un pincement.
+- [x] Afficher les consignes adaptées au pointeur : gestes tactiles sur téléphone, souris/molette sur PC ; ajouter le déplacement au clic droit maintenu sur PC.
+- [x] Vérifier niveaux, couleur suivante, consignes et reprise des anciennes grilles dans les navigateurs isolés PC/téléphone. Tests de sauvegarde et PWA réussis. Validation tactile physique et publication restantes.
+
+## Glissements — révision 148
+
+- [x] Colorier plusieurs cases d'un glissement dans Les Couleurs du terrier, uniquement avec la couleur sélectionnée. Relier les événements espacés pour ne pas sauter de cases ; enregistrer le trait à la fin du geste. Palette fixe et zoom conservés ; l'ajout d'un second doigt annule le trait en cours avant le pincement.
+- [x] Glisser dans le Lapinoudoku pour poser des croix sur les cases vides, sans effacer les lapins ni les croix existantes, sans erreur et sans déclencher un lapin à la fin du geste. Conserver le clic simple, le double-clic et les commandes clavier.
+- [x] Gestes vérifiés dans les navigateurs isolés téléphone et PC : continuité, couleur autorisée, conservation des lapins et annulation du coloriage au pincement. Aucun fichier de sauvegarde joueur modifié.
+- [ ] Validation tactile sur téléphone physique par Florie. Non publié.
+
+## Plantes fournies — révision 145
+
+- [x] Utiliser les deux planches de `magasin/aliments` pour afficher séparément camomille, bleuet, souci, pissenlit, rose, menthe, aneth, coriandre, céleri, fenouil et myrtilles. Découpes d'affichage générées en mémoire, originaux conservés.
+- [x] Appliquer ces visuels aux références d'images existantes, y compris dans les catalogues locaux déjà enregistrés, sans changement d'identifiant, de stock, de prix ni d'effet. Chargement vérifié dans les navigateurs isolés PC et téléphone ; cache PWA actualisé. Aucun transfert Cloudinary réel lancé, aucune publication effectuée.
+
+## Les Couleurs du terrier — révision 144
+
+- [x] Présentation 147 : album centré sur PC, grands aperçus entiers sans découpe, cartes avec titres lisibles et progression, trois boutons de difficulté illustrés. Galerie défilante adaptée au téléphone ; palette et mécanique de coloriage conservées. Contrôle visuel PC/petit écran effectué.
+- [x] Correctif 146 : ne pas réutiliser une image opaque du cache pour lire les pixels du coloriage ; charger une copie lisible via CORS. Garder la préparation et les erreurs dans une fenêtre lisible avec retour et bouton Réessayer, sans effacer la progression. Vérification Cloudinary en lecture seule : image disponible et CORS autorisé ; test de cache opaque, panne simulée et reprise dans le navigateur isolé.
+- [x] Ajouter un mini-jeu distinct dans le placard, en conservant les puzzles existants et leur progression. Réutiliser leurs images et leur disponibilité événementielle, sans modifier les originaux.
+- [x] Trois difficultés : 16, 28 ou 40 cases de large, avec 8, 14 ou 22 couleurs maximum. Conversion en couleurs numérotées ; seules les cases correspondant à la couleur choisie sont coloriées.
+- [x] Grille zoomable et déplaçable à deux doigts ; boutons +/−, recentrage et molette sur PC. Palette indépendante et fixe, avec indication des couleurs terminées. Les gestes à deux doigts ne colorient aucune case.
+- [x] Conserver chaque progression par image et difficulté dans la sauvegarde du lapin, avec la palette et la grille générées pour une reprise identique. Aucun changement des stocks, récompenses ou anciennes progressions ; aucune sauvegarde réelle modifiée par les tests.
+- [x] Tests de conversion déterministe, couleurs autorisées et reprise ; vérification navigateur isolé PC/téléphone du chargement des images, du zoom, des gestes et de la palette fixe. Protection des sauvegardes et cache PWA vérifiés.
+- [ ] Validation sur téléphone physique par Florie, notamment le confort du pincement et la taille des numéros. Publication non effectuée.
+
+## Capacités des boss — 22 octobre 2026
+
+Correspondance Trello : [Boss à comportements distincts](https://trello.com/c/5AwYo5tK). Fichiers : `assets/js/boss-abilities.js`, `assets/js/script.js`, `assets/css/boss-abilities.css`, `lapinous-content.json`, `tools/test-boss-abilities.mjs` et `tools/test-landscape-game.mjs`. Code local, publication non effectuée ; validation en jeu par Florie à conserver.
+
+- [x] Capacités et protections implémentées ; preuves et limites consignées ci-dessous. [trello:6ac39e1702dcc73d8bd079c2:code:boss-abilities-142-shield-143]
+
+- [ ] Valider visuellement les nouvelles barres de bouclier sur PC et téléphone physique : apparition, coups restants et disparition après impact. Les tests automatisés de consommation sont réussis ; le contrôle visuel spécifique à ces barres reste à faire.
+- [ ] Équilibrage à mesurer séparément : taux de victoire et nombre de tours selon les niveaux et les équipes ; les tests des pouvoirs ne prouvent pas cet équilibre. Carte [Équilibrage des boss](https://trello.com/c/mmVo687F).
+- [x] Révision 143 : barres de bouclier bleues pour les lapins et les boss, avec pourcentage de dégâts absorbés et coups restants ; actualisation dès l'activation et à chaque impact, disparition après consommation ou K.O. Tests des protections et du cache PWA réussis.
+- [x] Révision 142 : onze capacités réellement distinctes et liées à chaque boss : racines, voile de larmes, rempart de chou, explosion de zone, frénésie à double tranchant, marque du traqueur, toxines, autorité royale, visée préparée, lame critique préparée et séisme.
+- [x] Décrire les effets et un conseil avant le combat ; annoncer le prochain déclenchement, afficher les durées et protections actives, animer chaque famille de pouvoir et expliquer les dégâts dans le journal. Respecter la réduction des animations.
+- [x] Effets limités au combat, sans modification des besoins sauvegardés ; protections prises en compte sur les attaques de zone, pas de résurrection des K.O., expiration des effets vérifiée. Préserver les caractéristiques de base, la charge critique existante, les récompenses et les petits adversaires du début.
+- [x] Tester les onze effets et leur intégration sur parties isolées PC/téléphone, ainsi que l'interruption d'une attaque lors du lancement d'un autre combat.
+
+## Collection — 22 octobre 2026
+
+- [x] Révision 141 : retirer « En ce moment » et les coches vertes des cartes de lapins ; garder l'emoji d'événement dans le coin supérieur droit, à distance de l'étoile de favori et du portrait. Le nom de l'événement reste accessible au survol et au lecteur d'écran.
+
+## Lapinoudoku — 22 octobre 2026
+
+- [x] Révision 140 : conserver les deux jeux et leurs deux boîtes distinctes. Lapidoku garde les chiffres et sa progression historique ; Lapinoudoku utilise les régions colorées et une progression séparée, initialisée sans perdre les niveaux déjà débloqués.
+- [x] Lapinoudoku : un clic/une touche pose une croix, deux clics/touches rapprochés sur la même case posent un lapin. Reconnaissance indépendante des éléments recréés à l'écran ; clics espacés, clavier et boutons d'accessibilité conservés.
+
+- [x] Révision 139, remplacement de la mécanique numérique de la révision 138 : douze grilles à régions colorées de 5 × 5 à 8 × 8, avec têtes de lapin et croix. Un lapin par ligne, colonne et région ; les lapins ne se touchent pas, même en diagonale.
+- [x] Régions connectées et solution unique vérifiées pour chaque grille. Outils Lapin/Croix/Effacer, clic droit pour une croix, commandes clavier L/X/Suppr, aide courte et contrôle des conflits. Les croix sont libres et gratuites ; après la réussite, les cases restantes sont complétées avec des croix.
+- [x] Conserver les champs de progression existants, les niveaux débloqués et les récompenses. Empêcher une double récompense après réussite et toute récompense après défaite.
+
+- [x] Révision 138 : harmoniser le nom affiché, présenter les niveaux et les règles plus clairement, ajouter une aide repliable et compter les cases remplies.
+- [x] Surligner ligne, colonne, bloc et chiffres identiques ; autoriser la sélection des chiffres fixes comme repères sans permettre leur modification ; navigation avec les flèches du clavier.
+- [x] Adapter les couleurs et les commandes au téléphone. Conserver les douze niveaux à solution unique, les trois erreurs, la progression et les récompenses existantes.
+
+## Quiz — 22 octobre 2026
+
+- [x] Révision 137 : passer à 60 questions sur neuf thèmes (alimentation, plantes, sécurité, comportement, soins, habitat, jeux, vie en groupe et confiance). Chaque partie reste à huit questions et couvre huit thèmes distincts ; sources conservées uniquement dans le catalogue, lien alimentation maintenu à la fin. Validation du tirage sur 500 parties, sans doublons ni modification des données.
+
+- [x] Ajouter à la fin du quiz un lien vers le site alimentation : `https://leven-anju-yuki.github.io/nourriture-lapin/`, dans un nouvel onglet pour conserver la partie ouverte.
+
+- [x] Réécrire les 24 questions en situations concrètes, avec des choix moins caricaturaux et des explications autonomes. Le document alimentaire sert d'inspiration interne, sans références au guide affichées aux joueurs après chaque réponse.
+- [x] Versionner le catalogue pour que les anciennes questions enregistrées dans le navigateur local ne masquent pas la nouvelle édition ; conserver le mélange des questions, des réponses et les récompenses existantes.
+
+## Recette sous le Chef — 22 octobre 2026
+
+- [x] Afficher sous le cuisinier le nom du plat sélectionné et les ingrédients nécessaires, avec stock disponible/quantité demandée ; actualiser la liste à chaque sélection et distinguer les ingrédients manquants. Affichage adapté au téléphone, sans rétablir le bandeau inférieur.
+- [x] Révision 134 : placer sa bulle au-dessus de sa tête sur tous les écrans et caler les trois rangées de plats sur les hauteurs réelles des planches du décor, sans débordement des images.
+
+## Placement et cuisine — révision 132
+
+- [x] Apothicaire : meuble décalé vers la gauche, lapine entièrement dans le cadre, visuels ajustés aux tiroirs ; bulle sous les pieds sur PC et au-dessus de la tête sur téléphone.
+- [x] Marché mobile : corriger les hauteurs contradictoires qui réduisaient les produits à quelques pixels, agrandir la vendeuse et conserver le décor.
+- [x] Plats préparés : choisir une recette directement sur l'étagère ; un plat à zéro ne déclenche aucune remise. Le bouton de préparation lance la collecte et la cuisine, sans grand bandeau inférieur. Test du débit exact et de la protection contre le double clic réussi dans une partie isolée.
+- [x] Sauvegarde admin : contrôler les vingt ingrédients à dix, avec copie du fichier avant modification ; aucune autre sauvegarde modifiée.
+- [x] Jardin : taille du GIF proportionnelle à la piste, espace de saut réservé et contrôles compacts sur petit écran.
+
+## Visuels fournis — révision 131
+
+- [x] Jardin : utiliser `Zone_jardin/Lapin_blanc_course.gif`, sans miroir ni mélange qui assombrit le pelage blanc.
+- [x] Apothicaire : associer les treize photos aux soins par leur fonction ; actualiser aussi infusion, bain et extracteur. Les catalogues déjà enregistrés récupèrent les nouveaux visuels sans changer les stocks.
+- [x] Actualiser le cache de l’application pour diffuser ces remplacements à la prochaine mise à jour.
 
 ## Conservation des sauvegardes — 21 octobre 2026
 
@@ -73,36 +214,36 @@ Les cases principales des cartes restent ouvertes tant que leur validation ou le
 
 Export fourni par l’utilisateur : `5VmsAFi7 - clikergame.json`, relu le 21 octobre 2026. Les 30 cartes placées par l’utilisateur dans Réalisé sont reconnues comme validations humaines, dont 28 également marquées terminées (dueComplete). Les cases principales correspondantes étaient déjà cochées ; le résumé ancien ne recensait que neuf cartes.
 
-- [x] Équipes favorites [trello:6ac39e147db15f1edab9c326]
-- [x] faire une modal qui souvre avec un bouton image livre pour afficher les regles du jeu [trello:6661a8eefa746159ea2700da]
-- [x] faire le clicker pour lui donner a manger le brosser [trello:6661a4b7b41cd821c331d689]
-- [x] Barres de besoins et niveau d’amitié [trello:6661a5ec1e0c59351bd18a52]
-- [x] trouver un gif de lapin heureux [trello:6661a91283b1bf3c205e457c]
-- [x] Retour au Salon et informations du lapin [trello:6669758ceb6d2b877ef431fa]
-- [x] trouver les images [trello:6661b309ac71b719ebc63fd7]
-- [x] faire une zone soin alimentation sommeil et jeu avec des fond différent [trello:6661a6149952d95e5c048f9a]
-- [x] thème sur les lapins [trello:6661a423f3b0f23f486d3590]
-- [x] faire un salon avec des bouton de base  pour les diffèrent lieu et une fleche pour revenir en arriere [trello:6661b4124754141925b73499]
-- [x] Adoption, traits, collection et encyclopédie [trello:6ac39e3c28d335cd92c8cc95]
-- [x] Progression indépendante par lapin [trello:6ac39e3f09478ebeda38c92d]
-- [x] Combat tactique — équipe, mode manuel et automatique [trello:6ac39e4258234f0f6df5def5]
-- [x] Ultimes et barres de charge — lapins et boss [trello:6ac39e452732a48b7581df6e]
-- [x] Listes de 1 à 6 attaques selon la rareté [trello:6ac39e5cff0d2d466b27ecbb]
-- [x] Fragments — amélioration de la technique choisie [trello:6ac39e5fd921b05e95245ff0]
-- [x] Œufs illustrés — ouverture individuelle et par 10 [trello:6ac39e61cbe7415819b24df8]
-- [x] Décors de saisons jour/nuit et événements prioritaires [trello:6ac39efb4988b40cec255170]
-- [x] Admin local — tests rapides et Dashboard [trello:6ac39efeb8e60614e640ad49]
-- [x] Dashboard — graphiques de rareté harmonisés [trello:6ac39f0129a42ce3c535a196]
-- [x] Sauvegardes nommées, datées et remplacement confirmé [trello:6ac39f0465d01dcee2c8411d]
-- [x] Mini-jeux — Memory 30 niveaux et puzzles cousus [trello:6ac39f1ffd16599635e62ae9]
-- [x] Défis quotidiens, succès et récompenses [trello:6ac39f233ae89c6d7a24fb0c]
-- [x] Audio — soins courts, volumes et défaite [trello:6ac39f2681968bcd0d9b086d]
-- [x] Audio original livré — ambiance et sommeil [trello:6ac39f295fcf0100cf51e1cd]
-- [x] Notifications et combat lisible — corrections livrées [trello:6ac39f2b43bb87374c9f2e22]
-- [x] Salon — compagnons ensemble et placement corrigé [trello:6ac39f2fa02c69b499e17ea8]
-- [x] README et arborescence — actualisés le 08-10-2026 [trello:6ac39d96335bf1dad3b0d2f2]
-- [x] Magasin et inventaire — code livré [trello:6ac75d3f821f8ecfbfefd1b3]
-- [x] Accompagnateurs et lapins — médias centralisés [trello:6ac75d402925f959a3e9afbc]
+- Validation humaine cochée : Équipes favorites — renvoi à la case principale [Carte](https://trello.com/c/6ac39e147db15f1edab9c326)
+- Validation humaine cochée : faire une modal qui souvre avec un bouton image livre pour afficher les regles du jeu — renvoi à la case principale [Carte](https://trello.com/c/6661a8eefa746159ea2700da)
+- Validation humaine cochée : faire le clicker pour lui donner a manger le brosser — renvoi à la case principale [Carte](https://trello.com/c/6661a4b7b41cd821c331d689)
+- Validation humaine cochée : Barres de besoins et niveau d’amitié — renvoi à la case principale [Carte](https://trello.com/c/6661a5ec1e0c59351bd18a52)
+- Validation humaine cochée : trouver un gif de lapin heureux — renvoi à la case principale [Carte](https://trello.com/c/6661a91283b1bf3c205e457c)
+- Validation humaine cochée : Retour au Salon et informations du lapin — renvoi à la case principale [Carte](https://trello.com/c/6669758ceb6d2b877ef431fa)
+- Validation humaine cochée : trouver les images — renvoi à la case principale [Carte](https://trello.com/c/6661b309ac71b719ebc63fd7)
+- Validation humaine cochée : faire une zone soin alimentation sommeil et jeu avec des fond différent — renvoi à la case principale [Carte](https://trello.com/c/6661a6149952d95e5c048f9a)
+- Validation humaine cochée : thème sur les lapins — renvoi à la case principale [Carte](https://trello.com/c/6661a423f3b0f23f486d3590)
+- Validation humaine cochée : faire un salon avec des bouton de base  pour les diffèrent lieu et une fleche pour revenir en arriere — renvoi à la case principale [Carte](https://trello.com/c/6661b4124754141925b73499)
+- Validation humaine cochée : Adoption, traits, collection et encyclopédie — renvoi à la case principale [Carte](https://trello.com/c/6ac39e3c28d335cd92c8cc95)
+- Validation humaine cochée : Progression indépendante par lapin — renvoi à la case principale [Carte](https://trello.com/c/6ac39e3f09478ebeda38c92d)
+- Validation humaine cochée : Combat tactique — équipe, mode manuel et automatique — renvoi à la case principale [Carte](https://trello.com/c/6ac39e4258234f0f6df5def5)
+- Validation humaine cochée : Ultimes et barres de charge — lapins et boss — renvoi à la case principale [Carte](https://trello.com/c/6ac39e452732a48b7581df6e)
+- Validation humaine cochée : Listes de 1 à 6 attaques selon la rareté — renvoi à la case principale [Carte](https://trello.com/c/6ac39e5cff0d2d466b27ecbb)
+- Validation humaine cochée : Fragments — amélioration de la technique choisie — renvoi à la case principale [Carte](https://trello.com/c/6ac39e5fd921b05e95245ff0)
+- Validation humaine cochée : Œufs illustrés — ouverture individuelle et par 10 — renvoi à la case principale [Carte](https://trello.com/c/6ac39e61cbe7415819b24df8)
+- Validation humaine cochée : Décors de saisons jour/nuit et événements prioritaires — renvoi à la case principale [Carte](https://trello.com/c/6ac39efb4988b40cec255170)
+- Validation humaine cochée : Admin local — tests rapides et Dashboard — renvoi à la case principale [Carte](https://trello.com/c/6ac39efeb8e60614e640ad49)
+- Validation humaine cochée : Dashboard — graphiques de rareté harmonisés — renvoi à la case principale [Carte](https://trello.com/c/6ac39f0129a42ce3c535a196)
+- Validation humaine cochée : Sauvegardes nommées, datées et remplacement confirmé — renvoi à la case principale [Carte](https://trello.com/c/6ac39f0465d01dcee2c8411d)
+- Validation humaine cochée : Mini-jeux — Memory 30 niveaux et puzzles cousus — renvoi à la case principale [Carte](https://trello.com/c/6ac39f1ffd16599635e62ae9)
+- Validation humaine cochée : Défis quotidiens, succès et récompenses — renvoi à la case principale [Carte](https://trello.com/c/6ac39f233ae89c6d7a24fb0c)
+- Validation humaine cochée : Audio — soins courts, volumes et défaite — renvoi à la case principale [Carte](https://trello.com/c/6ac39f2681968bcd0d9b086d)
+- Validation humaine cochée : Audio original livré — ambiance et sommeil — renvoi à la case principale [Carte](https://trello.com/c/6ac39f295fcf0100cf51e1cd)
+- Validation humaine cochée : Notifications et combat lisible — corrections livrées — renvoi à la case principale [Carte](https://trello.com/c/6ac39f2b43bb87374c9f2e22)
+- Validation humaine cochée : Salon — compagnons ensemble et placement corrigé — renvoi à la case principale [Carte](https://trello.com/c/6ac39f2fa02c69b499e17ea8)
+- Validation humaine cochée : README et arborescence — actualisés le 08-10-2026 — renvoi à la case principale [Carte](https://trello.com/c/6ac39d96335bf1dad3b0d2f2)
+- Validation humaine cochée : Magasin et inventaire — code livré — renvoi à la case principale [Carte](https://trello.com/c/6ac75d3f821f8ecfbfefd1b3)
+- Validation humaine cochée : Accompagnateurs et lapins — médias centralisés — renvoi à la case principale [Carte](https://trello.com/c/6ac75d402925f959a3e9afbc)
 
 Les cartes « Retour au Salon et informations du lapin » et « trouver les images » sont dans Réalisé sans dueComplete : leur placement humain est respecté. La checklist « niveau » conserve ses trois éléments non cochés ; aucune sous-tâche n’est validée par déduction. Les correctifs et régressions signalés séparément restent ouverts. Aucun déplacement distant, aucune création de carte, aucun changement des automatismes ni du point de reprise Git.
 
@@ -1407,3 +1548,33 @@ Ces deux idées sont enregistrées dans « Idées à sélectionner » après lec
 - [x] Interface 121 : succ?s accomplis en t?te (r?compenses disponibles en premier), d?fis quotidiens non r?cup?r?s expir?s ? minuit sans retirer les gains d?j? re?us ; historique conserv?. Bloc nom/renommage/d?connexion ancr? en bas ? gauche au-dessus de la navigation, largeur stable. ? valider sur t?l?phone r?el.
 
 - [x] Installation 122 : aucun bouton d?installation ni aide Android/iOS propos? dans l?application autonome ; aide du navigateur remani?e en deux parcours courts avec la nouvelle ic?ne et une pr?sentation assortie au terrier.
+# Migration hybride Windows / GitHub Actions — préparation du 21 octobre 2026
+
+- [x] Examiner la chaîne locale, les états privés, les règles Trello et les dépendances aux chemins Windows.
+- [x] Préparer le workflow quotidien 20 h Europe/Paris et lancement manuel, désactivé pour les opérations réelles.
+- [x] Préparer état privé persistant, verrou partagé, attestations de sauvegarde, quarantaine sans remise à zéro, journal de reprise et bilan distant utilisant l'agent existant.
+- [x] Simuler sans services distants : 17 tests hybrides et 38 tests Python existants réussis ; scénarios Node de corbeille/transfert/politique réussis. Syntaxe YAML et PowerShell vérifiée.
+- [x] Audit en lecture seule : 330 versions sauvegardées exactement ; chef.svg bloqué ; quatre échéances conservées au 26 octobre, aucune suppression proposée aujourd'hui.
+- [ ] Exécuter les tests PowerShell complets dans une session autorisée (politique actuelle bloquante, non modifiée).
+- [ ] Après validation humaine : publier le code, configurer le dépôt privé d'état et les secrets, comparer les simulations GitHub / Windows, puis valider le relais et une passe réelle supervisée. Ne désactiver aucune tâche Windows sans accord.
+
+Procédure et limites : [MIGRATION_GITHUB_ACTIONS.md](docs/MIGRATION_GITHUB_ACTIONS.md). Aucun appel réel Cloudinary, Trello ou Discord pendant cette préparation.
+
+- [x] Interface 123 : apothicairerie ? quatre rang?es (16 tiroirs), d?cor complet sans d?formation et meubles align?s sur le cadre de l?image ; fiches d?achat positionn?es au-dessus du produit consult?. V?rification du rendu PC et t?l?phone en cours de validation humaine apr?s publication.
+
+- [x] Interface 124 : marchande ancr?e au parquet dans le march? et le panier ; table remplac?e par un meuble en bois aux pieds sculpt?s, pr?sentation des achats sans grosse barre blanche. Sauvegarde admin format?e et tous les ingr?dients du catalogue/r?serves des recettes ? 10, copie originale priv?e conserv?e.
+- [x] Apothicaire 126 : nouvelle liste des 13 soins, numéros visuels conservés, fond du marché et quatre rayons classés par effet ; bonus sauvegardés pour sommeil, entraînement au Jardin (20 m minimum), brossage, interaction, propreté dix minutes et élixir rare à 1 500 carottes donnant un niveau (maximum 100). Pas de cumul des réductions d'énergie ; soins en attente non écrasés. Stocks admin à 10, sauvegardes ordinaires sans cadeau automatique.
+- [x] Deux décors fournis et intégrés : quatre présentoirs pour les soins, trois présentoirs et grande étagère pour le marché.
+- [ ] Remplacer les pictogrammes provisoires des soins par les treize visuels définitifs numérotés.
+- [x] Perspective 127 : marchande réduite et rapprochée du plan des étals, atelier avec objets réduits sans déplacer leur base, fenêtre des œufs centrée et simplifiée avec libellés contrastés. Planche intégrée au prochain visuel de niche à prévoir pour conserver la perspective du décor.
+- [x] Décors 128 : fond à quatre présentoirs raccordé aux soins, fond à trois présentoirs/grande étagère raccordé au marché. Retrait des étals et de la table ajoutés en interface ; produits et marchande positionnés dans le cadre des nouveaux décors. Aucune modification des originaux ni transfert Cloudinary pendant l’intégration.
+- [x] Interface 129 : seize soins visibles dans la réserve, grisés et consultables sans consommation quand le stock est vide ; apothicairerie sans bandes latérales, grand meuble recentré sur PC ; forgeron et mage replacés, extracteur posé sur la table, commandes et collection dans un panneau sans zone vide imposée ; recettes sans défilement horizontal coupé.
+- [x] Jardin 129 : véritable GIF `Zone_jardin/entrenement.gif`, miroir retiré, cadrage et taille du lapin revus, obstacles agrandis et collisions liées aux rectangles affichés ; fond du Jardin explicite pour éviter une reprise du Salon ; bandeau d’événement masqué pendant le parcours. Tests navigateur PC/téléphone et sauvegardes réalisés sur parties fictives ; validation humaine du rendu restante.
+- [x] Correction 130 : le grisé concerne les plats préparés du Chef, tous visibles sur leur étagère avec stock zéro ; cliquer un plat absent sélectionne sa recette sans consommation. Les soins non possédés ne sont plus affichés dans les tiroirs de l’apothicaire. Cadrage et autres corrections 129 conservés.
+# Combat — révision 157
+
+- PV, charges, petites barres de l’équipe et boucliers actualisés à chaque impact, sans attendre la fin du tour ni interrompre les animations.
+- Orientation corrigée pour Peatch Black et les légumes débutants ; déplacements d’attaque conservés vers l’adversaire même lorsque le sprite est retourné.
+- Texte des dégâts corrigé pour tenir compte des réductions réellement appliquées.
+- Tests : contrôle navigateur des deux impacts séparés, cohérence des petites barres et orientation des légumes ; test des orientations explicites et régressions des capacités/boucliers.
+

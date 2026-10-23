@@ -1,0 +1,93 @@
+/* Le meuble est la réserve : les soins non possédés restent visibles en grisé. */
+.shop-dialog.inventory-dialog #shopBody{position:relative!important;background-size:100% 100%!important;background-position:center!important}
+.shop-dialog.inventory-dialog #shopBody .herbalist-workshop{width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;min-height:0!important;box-sizing:border-box}
+.shop-dialog.inventory-dialog .inventory-cabinet{left:16%!important;width:58%!important;height:70%!important;max-width:none!important;max-height:none!important;bottom:5%!important}
+.shop-dialog.inventory-dialog .inventory-herbalist{right:2%!important;width:20%!important;bottom:5%!important}
+.inventory-drawer.is-unowned>img{filter:grayscale(1);opacity:.38}
+.inventory-drawer.is-unowned>strong{opacity:.6}
+.inventory-drawer.is-unowned .inventory-quantity{background:#e1d6c2;color:#645c50}
+.inventory-dialog .inventory-drawer>img{background:transparent!important;border:0!important;padding:0!important}
+@media(min-width:1000px){.inventory-dialog .inventory-drawer>img{width:clamp(38px,4vw,72px)!important;height:clamp(38px,6dvh,72px)!important}.inventory-dialog .inventory-drawer>strong{font-size:12px!important}}
+@media(max-height:500px){.shop-dialog.inventory-dialog .inventory-cabinet{left:3%!important;width:65%!important;height:70%!important}.shop-dialog.inventory-dialog .inventory-herbalist{right:1%!important;width:25%!important}}
+/* Les artisans restent dans leur atelier, à distance des bords. */
+.shop-dialog.zone-evolution .shop-zone-companion,html.phone-ui .shop-dialog.zone-evolution .shop-zone-companion{right:16%!important;width:18%!important;height:40%!important;bottom:10%!important}
+.shop-dialog.zone-fragments .shop-zone-companion,html.phone-ui .shop-dialog.zone-fragments .shop-zone-companion{left:41%!important;width:18%!important;height:50%!important;bottom:8%!important}
+.shop-dialog.zone-fragments .shop-product-visual{position:absolute!important;left:15%!important;top:auto!important;bottom:33%!important;width:16%!important;height:18%!important;padding:0!important}
+.shop-dialog.zone-fragments .shop-product-visual img{width:100%!important;height:100%!important;object-fit:contain;object-position:center bottom}
+.shop-dialog.zone-fragments .shop-items{display:none!important}
+.shop-dialog.zone-fragments .fragment-controls{position:absolute;right:2%;top:4%;bottom:auto;width:36%;height:auto;max-height:92%;display:flex;flex-direction:column;gap:12px;padding:14px;box-sizing:border-box;border:1px solid #c9ae82;border-radius:18px;background:#fff8e9f2;color:#513b2b;overflow:hidden}
+.shop-dialog.zone-fragments .fragment-controls .shop-fragment-details{position:static!important;width:100%!important;height:auto!important;max-height:46%;margin:0!important;padding:0!important;overflow:auto;background:none;flex:none}
+.shop-dialog.zone-fragments .fragment-controls .shop-fragment-rabbits{position:static!important;width:100%!important;height:auto!important;max-height:none!important;margin:0!important;padding:0!important;flex:0 1 auto;min-height:0;display:flex;background:none;overflow:hidden}
+.fragment-controls .shop-rabbit-picker{display:flex;flex-direction:column;flex:1;min-height:0}
+.shop-dialog.zone-fragments .fragment-controls .shop-rabbit-grid{flex:0 1 auto;min-height:0;max-height:42dvh!important;overflow:auto;display:grid;grid-template-columns:repeat(4,minmax(0,1fr));grid-auto-rows:max-content;align-content:start;gap:6px;padding:2px}
+.fragment-controls .shop-rabbit-choice{min-width:0;min-height:90px}
+.fragment-controls select{box-sizing:border-box;width:100%;min-height:40px;padding:7px;border:1px solid #bd9d69;border-radius:9px;background:#fffdf7;color:#513b2b;font:inherit}
+.fragment-controls button[data-shop-add]{min-height:44px;border:1px solid #657841;border-radius:10px;background:#768d50;color:#fffdf6}
+.fragment-controls h3{margin:0 0 8px;font-size:15px}
+@media(max-height:500px){.shop-dialog.zone-fragments .fragment-controls{width:41%;padding:7px;gap:6px}.shop-dialog.zone-fragments .shop-zone-companion,html.phone-ui .shop-dialog.zone-fragments .shop-zone-companion{left:34%!important;width:20%!important;height:45%!important}.shop-dialog.zone-fragments .fragment-controls .shop-rabbit-grid{grid-template-columns:repeat(3,minmax(0,1fr))}.fragment-controls .shop-rabbit-choice{min-height:74px}.fragment-controls .shop-rabbit-choice img{width:32px!important;height:36px!important}.fragment-controls h3{font-size:12px}.fragment-controls select{min-height:32px}}
+@media(max-height:500px){.shop-dialog.zone-fragments .fragment-controls{overflow:auto;display:block}.shop-dialog.zone-fragments .fragment-controls .shop-fragment-details{max-height:none;overflow:visible;margin-bottom:8px!important}.shop-dialog.zone-fragments .fragment-controls .shop-rabbit-grid{max-height:none!important;overflow:visible}.shop-dialog.zone-fragments .fragment-controls .shop-fragment-rabbits{overflow:visible}}
+/* Le GIF du Jardin regarde déjà à droite ; aucun miroir ne lui est appliqué. */
+.agility-runner-rabbit{width:clamp(96px,18dvh,190px)!important;height:clamp(96px,18dvh,190px)!important;overflow:hidden;bottom:32px!important;mix-blend-mode:normal}
+.agility-runner-rabbit img{position:absolute;left:50%;top:50%;width:125%!important;height:125%!important;max-width:none!important;object-fit:contain;transform:translate(-50%,-50%);mix-blend-mode:normal}
+body:has(.agility-runner-wrap) :is(#eventBanner,#installInGame){display:none!important}
+.agility-obstacle{width:clamp(44px,7dvh,82px)!important;height:clamp(38px,6dvh,68px)!important;bottom:32px!important}
+.agility-log{border-width:4px!important;box-shadow:inset -8px 0 0 #c89b62,inset -11px 0 0 #6d4528}
+.agility-rock{background:linear-gradient(135deg,#c4b7a4,#766b60 65%,#54483f)!important}
+/* Un seul défilement pour les recettes, pas de rangée coupée horizontalement. */
+.pantry-recipe-choices{flex-wrap:wrap!important;overflow:visible!important}
+.pantry-recipe-choices button{white-space:normal!important;max-width:100%;flex:1 1 130px}
+.pantry-workshop>.pantry-meals{height:auto!important;max-height:30dvh!important;overflow:auto!important;box-sizing:border-box}
+.pantry-ready-shelves .pantry-provision.pantry-unavailable .pantry-picture{filter:grayscale(1);opacity:.4}
+.pantry-ready-shelves .pantry-provision.pantry-unavailable>b{background:#e2d9c9;color:#675b48}
+.pantry-ready-shelves .pantry-provision.pantry-unavailable{cursor:pointer}
+/* Un cadre commun : le meuble laisse sa place à l'apothicaire. */
+.shop-dialog.inventory-dialog .inventory-cabinet{left:7%!important;width:62%!important;height:70%!important;bottom:9%!important}
+.shop-dialog.inventory-dialog .inventory-herbalist{position:absolute!important;left:auto!important;right:4%!important;width:25%!important;height:62%!important;bottom:10%!important;transform:none}
+.shop-dialog.inventory-dialog .inventory-herbalist #inventoryHerbalist{display:block;width:100%!important;height:100%!important;max-height:none!important;object-fit:contain;object-position:center bottom;scale:1!important;translate:none!important}
+.shop-dialog.inventory-dialog #inventorySpeech{position:absolute;top:100%!important;bottom:auto!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;width:100%!important;max-width:none;margin:4px 0 0!important;z-index:10}
+.shop-dialog.inventory-dialog .inventory-drawer>img{width:55%!important;height:58%!important;max-width:100%!important;max-height:58%!important;object-fit:contain}
+.shop-dialog.inventory-dialog .inventory-drawer>strong{font-size:clamp(8px,.7vw,12px)!important}
+/* La recette se choisit sur son étagère : seul le bouton reste en bas. */
+.pantry-workshop>.pantry-meals,html.phone-ui .pantry-workshop>.pantry-meals{left:auto!important;right:3%!important;bottom:3%!important;width:auto!important;height:auto!important;max-height:none!important;display:block!important;padding:0!important;border:0!important;background:none!important;box-shadow:none!important;overflow:visible!important}
+.pantry-workshop>.pantry-meals>label,html.phone-ui .pantry-workshop>.pantry-meals>label,.pantry-workshop #pantryIngredients,html.phone-ui .pantry-workshop #pantryIngredients{display:none!important}
+.pantry-workshop #pantryCook{padding:10px 18px!important;border:1px solid #657841;border-radius:14px;background:#788d50;color:#fff9eb;font:inherit;min-height:40px}
+.pantry-workshop #pantryCook:disabled{opacity:.55}
+.pantry-stage.pantry-illustrated,html.phone-ui .pantry-stage.pantry-illustrated{inset:0!important;width:100%!important;height:100%!important;bottom:0!important}
+.pantry-illustrated .pantry-ready,html.phone-ui .pantry-illustrated .pantry-ready{top:25%!important;right:3.3%!important;width:30.5%!important;height:48%!important}
+.pantry-illustrated .pantry-ready-shelves,html.phone-ui .pantry-illustrated .pantry-ready-shelves{flex:none!important;height:100%!important;max-height:none!important;min-height:0!important;padding:0!important;border:0!important;grid-template-columns:repeat(3,minmax(0,1fr))!important;grid-template-rows:31% 37% 32%!important;grid-auto-rows:33.333%!important;gap:0 4px!important;scroll-snap-type:none}
+.pantry-illustrated .pantry-ready .pantry-picture{display:block!important;inset:12% 10% 1%!important;min-height:0;min-width:0}
+.pantry-illustrated .pantry-ready .pantry-picture img{display:block;min-width:0;min-height:0;object-fit:contain;object-position:center bottom}
+.pantry-illustrated .pantry-ready h3,html.phone-ui .pantry-illustrated .pantry-ready h3{position:absolute!important;top:auto!important;bottom:100%!important;margin-bottom:4px!important}
+.pantry-illustrated .pantry-ready-shelves,html.phone-ui .pantry-illustrated .pantry-ready-shelves{position:absolute!important;inset:0!important}
+/* Le personnage tient toujours dans la piste, même sur un petit téléphone. */
+.agility-runner-rabbit{height:65%!important;width:auto!important;aspect-ratio:1;max-height:190px;bottom:32px!important}
+.agility-runner-rabbit img{display:block!important;visibility:visible!important;opacity:1!important}
+html.phone-ui body:has(.agility-runner-wrap) #installInGame{display:none!important}
+@media(max-height:700px){
+ html.phone-ui .shop-dialog.inventory-dialog .inventory-cabinet{left:3%!important;width:65%!important;bottom:10%!important;height:70%!important}
+ html.phone-ui .shop-dialog.inventory-dialog .inventory-herbalist{right:2%!important;width:28%!important;height:65%!important;bottom:10%!important}
+ .agility-runner-rabbit{height:58%!important;max-height:130px;bottom:18px!important}
+ .agility-obstacle{height:30%!important;max-height:55px;bottom:18px!important}
+ .agility-ground{bottom:18px!important}
+}
+@media(max-height:500px){
+ .agility-runner-wrap{margin:0!important;padding:5px!important;gap:3px!important}
+ .agility-runner-head{flex:none;margin:0!important;min-height:18px;font-size:11px}
+ .agility-runner-controls{flex:none;margin:0!important;gap:8px!important}
+ .agility-runner-controls button{min-height:30px!important;padding:4px 14px!important}
+ .agility-runner-wrap>small{display:none}
+ .agility-runner-rabbit{height:50%!important;max-height:100px}
+ .agility-start-hint{font-size:11px!important;top:5%!important;bottom:auto!important;transform:translateX(-50%)!important}
+}
+/* La recette choisie reste au pied du Chef pendant ses déplacements. */
+.pantry-workshop #pantryIngredients.pantry-recipe-ingredients,
+html.phone-ui .pantry-workshop #pantryIngredients.pantry-recipe-ingredients{position:absolute;left:30%;bottom:1%;width:40%;max-height:12%;overflow:auto;display:flex!important;flex-wrap:wrap!important;justify-content:center;align-content:start;gap:4px!important;margin:0!important;padding:5px;box-sizing:border-box;z-index:8;border:1px solid #c5ae7b;border-radius:12px;background:#fff9ecf2;color:#513b2b;font-size:12px!important;line-height:1.3}
+.pantry-recipe-name{flex-basis:100%;text-align:center}
+.pantry-recipe-ingredients .pantry-ingredient{margin:0!important;padding:3px 6px!important;font-size:inherit!important;white-space:normal!important}
+html.phone-ui .pantry-illustrated .pantry-chef{bottom:22%!important;height:48%!important}
+html.phone-ui .pantry-workshop #pantryIngredients.pantry-recipe-ingredients{left:27%;width:46%;bottom:1%;max-height:20%;padding:3px;font-size:10px!important;gap:2px!important}
+/* Une seule position pour la bulle, sur PC comme sur téléphone. */
+#encyclopediaGrid .encyclopedia-card .event-badge{top:6px;right:6px;left:auto;width:auto;min-width:22px;height:24px;display:flex;align-items:center;justify-content:center;font-size:19px;line-height:1;z-index:2;pointer-events:none}
+.quiz-more{margin:18px 0;line-height:1.6}
+.quiz-more a{display:inline-block;padding:8px 0;color:#4d642f;font-weight:700;text-decoration:underline;text-underline-offset:3px}
+.pantry-illustrated .pantry-chef>p,html.phone-ui .pantry-illustrated .pantry-chef>p{top:auto!important;bottom:calc(100% + 6px)!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;margin:0!important;width:max-content!important;max-width:min(30vw,340px)!important;z-index:12}

@@ -1,40 +1,45 @@
-.sudoku-panel{width:min(960px,100%);max-height:100%;overflow:auto;box-sizing:border-box;padding:18px;background:#fff9ed;color:#574132;border:2px solid #c7af83;border-radius:20px;text-align:left}
-body.game-running #gameArea:has(.sudoku-panel){display:flex;justify-content:center;align-items:center;padding:90px 16px 20px;box-sizing:border-box;overflow:auto}
-.sudoku-panel h2{font-size:24px;margin:0 0 8px}.sudoku-panel p{font-size:14px;line-height:1.4;margin:8px 0}
-.sudoku-levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:10px;margin:14px 0}.sudoku-levels button{min-height:72px}.sudoku-levels span{display:block;font-size:12px}
-.sudoku-panel button{border:1px solid #b79d75;border-radius:8px;background:#fffdf6;color:#574132;padding:8px;min-height:44px;font:inherit;cursor:pointer}
-.sudoku-panel button:disabled{opacity:.5;cursor:default}.sudoku-panel button:focus-visible{outline:3px solid #a36a17;outline-offset:1px}
-.sudoku-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(180px,.65fr);gap:20px;align-items:start}
-.sudoku-panel .sudoku-board{display:grid;grid-template-columns:repeat(var(--sudoku-size),minmax(0,1fr));width:100%;aspect-ratio:1;border:3px solid #72563c;gap:0;box-sizing:border-box;background:#fff}
-.sudoku-board .sudoku-cell{width:100%;height:100%;aspect-ratio:1;min-height:0;min-width:0;margin:0;padding:0;display:grid;place-items:center;border:1px solid #d4c7b5;border-radius:0;box-shadow:none;background:#fff;font-size:clamp(17px,2.5vw,32px);line-height:1;touch-action:manipulation}
-.sudoku-board .sudoku-cell.given{opacity:1;background:#eee4d1;color:#413322;font-weight:bold}
-.sudoku-board .sudoku-cell.selected{background:#fff0b7;outline:3px solid #bd852b;outline-offset:-3px}.sudoku-board .sudoku-cell.conflict{color:#b52020;background:#ffe0db}
-.sudoku-pad{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:5px}.sudoku-actions{display:flex;flex-wrap:wrap;gap:5px}.sudoku-notice{min-height:40px}
-body.game-running:has(.sudoku-panel) :is(#friendshipBarContainer,#statusBars,.brand,.scene-label,.rules-btn,.encyclopedia-btn,.save-btn,.shop-trigger,#installInGame,.admin-test-toggle,#adminTestPanel){display:none!important}
+/* Lapinoudoku : clairières colorées et marques lisibles au toucher. */
+.sudoku-panel{width:min(1100px,100%);max-height:100%;overflow:auto;box-sizing:border-box;padding:20px;background:linear-gradient(135deg,#fffaf0,#f1e4c8);color:#513b2b;border:2px solid #bda16c;border-radius:22px;box-shadow:0 12px 36px #30221826;text-align:left}
+body.game-running #gameArea:has(.bunny-panel){display:flex;justify-content:center;align-items:center;padding:75px 16px 20px;box-sizing:border-box;overflow:auto}
+.sudoku-panel h2{margin:0;font-size:clamp(18px,2vw,27px);color:#65462e}.sudoku-panel p{font-size:14px;line-height:1.5}
+.sudoku-panel button{border:1px solid #ac915f;border-radius:10px;background:#fffdf5;color:#513b2b;padding:9px 12px;min-height:44px;font:inherit;cursor:pointer}
+.sudoku-panel button:disabled{opacity:.55;cursor:default}.sudoku-panel button:focus-visible{outline:3px solid #5b713a;outline-offset:2px}
+.sudoku-levels{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:12px;margin:16px 0}.sudoku-levels button{text-align:left;min-height:100px;background:#fffaf0;box-shadow:0 3px 0 #c9ad7e}.sudoku-levels strong{display:block;margin-bottom:5px}.sudoku-levels span{display:block;font-size:12px}
+.sudoku-levels button:disabled{background:#e8dfce;box-shadow:none}
+.bunny-color-samples{display:flex;gap:3px;margin-top:8px}.bunny-color-samples b{width:16px;height:10px;border:1px solid #8d795855;border-radius:3px}
+.bunny-rules{display:flex;flex-wrap:wrap;gap:6px;margin:10px 0}.bunny-rules span{display:block;padding:5px 8px;border-radius:8px;background:#e9eddb;color:#3e4f2d;font-size:13px;line-height:1.4}
+.sudoku-play>header{display:flex;justify-content:space-between;align-items:center;flex-wrap:wrap;gap:8px;margin-bottom:14px}.sudoku-play>header>span{font-size:13px}
+.sudoku-layout{display:grid;grid-template-columns:minmax(0,1fr) minmax(240px,.7fr);gap:22px;align-items:start}
+.sudoku-board.bunny-grid{display:grid;grid-template-columns:repeat(var(--sudoku-size),minmax(0,1fr));grid-template-rows:repeat(var(--sudoku-size),minmax(0,1fr));width:100%;aspect-ratio:1;box-sizing:border-box;border:3px solid #746349;border-radius:8px;overflow:hidden;gap:0;background:#746349}
+.bunny-grid .bunny-cell{position:relative;display:grid;place-items:center;width:100%;height:100%;min-width:0;min-height:0;padding:0;margin:0;border:1px solid #ffffff80;border-radius:0;box-shadow:none;background:var(--region-color);color:#513b2b;font-size:clamp(20px,3vw,47px);line-height:1;touch-action:manipulation;user-select:none}
+.bunny-grid .bunny-cell:disabled{opacity:1}.bunny-cell>span{pointer-events:none}.bunny-cell.has-cross>span{font-family:system-ui,sans-serif;font-weight:500;font-size:1.15em;color:#604c3dc9}
+.bunny-grid .bunny-cell.selected{outline:3px solid #fffdf4;outline-offset:-4px;z-index:1}.bunny-grid .bunny-cell:focus-visible{outline:3px solid #513b2b;outline-offset:-4px}
+.bunny-grid .bunny-cell.conflict{box-shadow:inset 0 0 0 4px #a72b30}.bunny-grid .bunny-cell.conflict>span{filter:drop-shadow(0 0 2px #ffedde)}
+.bunny-tools{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));gap:6px}.bunny-tools button{display:flex;flex-direction:column;align-items:center;justify-content:center;gap:4px;font-size:13px}.bunny-tools button>span{font-size:25px;line-height:1}.bunny-tools button[aria-pressed=true]{background:#dbe8c8;border:2px solid #657b40;font-weight:700}
+.sudoku-notice{padding:9px 11px;margin:10px 0;background:#fffdf5;border-left:4px solid #80945b;border-radius:8px;min-height:36px}
+.sudoku-controls .bunny-rules{display:grid;gap:4px}.sudoku-controls .bunny-rules span{background:none;padding:0}
+.sudoku-help{padding:8px 10px;margin:10px 0;border:1px solid #c5ae80;border-radius:10px;background:#fff9ee;font-size:13px;line-height:1.45}.sudoku-help summary{cursor:pointer;font-weight:700;min-height:24px}.sudoku-help p{font-size:inherit;margin:8px 0}
+.sudoku-actions{display:flex;flex-wrap:wrap;gap:6px}.sudoku-actions button{flex:1;min-width:90px;font-size:13px}
+.sudoku-victory,.sudoku-defeat{display:flex;flex-wrap:wrap;align-items:center;justify-content:space-between;gap:6px;padding:10px 12px;margin-bottom:12px;border:1px solid #819a51;border-radius:12px;background:#e9f1d8;color:#3d512b;font-size:13px}.sudoku-defeat{border-color:#b37a69;background:#ffede4;color:#793f31}
+body.game-running:has(.bunny-panel) :is(#friendshipBarContainer,#statusBars,.brand,.scene-label,.rules-btn,.encyclopedia-btn,.save-btn,.shop-trigger,.admin-test-toggle,#adminTestPanel,#eventBanner){display:none!important}
+html.phone-ui body.game-running:has(.bunny-panel) #installInGame:not([hidden]),body.game-running:has(.bunny-panel) #installInNav{display:none!important}
 @media(pointer:coarse) and (orientation:landscape) and (max-height:700px){
- body.game-running #gameArea:has(.sudoku-panel){padding:5px!important;display:block!important}
+ body.game-running #gameArea:has(.bunny-panel){padding:5px!important;display:block!important}
  .sudoku-panel{width:100%;height:100%;padding:8px;border-radius:12px}
- .sudoku-panel h2{font-size:15px;margin:0 0 3px}.sudoku-panel p{font-size:11px;margin:4px 0}
- .sudoku-play>header{display:flex;justify-content:space-between;gap:6px;font-size:11px}
- .sudoku-layout{grid-template-columns:minmax(0,1fr) minmax(170px,.8fr);gap:10px}
- .sudoku-panel .sudoku-board{width:min(100%,calc(100dvh - 95px));justify-self:center}
- .sudoku-board .sudoku-cell{font-size:clamp(12px,4dvh,23px)}
- .sudoku-controls{max-height:calc(100dvh - 92px);overflow:auto;padding:2px}
- .sudoku-controls{display:grid;grid-template-columns:1fr 2fr;gap:3px;align-items:center}
- .sudoku-controls>p:first-child{display:none}
- .sudoku-pad{grid-column:1/-1;grid-row:1}.sudoku-controls>button{grid-column:1;grid-row:2}.sudoku-controls>.sudoku-notice{grid-column:2;grid-row:2}.sudoku-actions{grid-column:1/-1;grid-row:3}
- .sudoku-actions button{flex:1;min-width:0;line-height:1.2}
- .sudoku-pad{grid-template-columns:repeat(5,minmax(0,1fr));gap:3px}.sudoku-pad button,.sudoku-controls>button,.sudoku-actions button{min-height:40px;padding:4px;font-size:12px}
- .sudoku-notice{min-height:0}.sudoku-levels{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:8px 0}.sudoku-levels button{font-size:12px;min-height:50px;padding:4px}.sudoku-levels span{font-size:10px}
- .puzzle-workshop.is-sewing .puzzle-tailor>img{visibility:visible!important}
- .puzzle-workshop .puzzle-side{position:sticky;right:0;z-index:12;background:#fff8e8e8;border-radius:10px}
- .puzzle-workshop .puzzle-workspace{grid-template-columns:80px minmax(0,1fr) 112px!important}
- .puzzle-workshop .puzzle-tailor>img{height:min(135px,40dvh)!important;width:100%!important}
+ .sudoku-panel h2{font-size:15px}.sudoku-panel p{font-size:11px}.sudoku-play>header{margin-bottom:5px;gap:3px}.sudoku-play>header>span{font-size:10px}
+ .sudoku-layout{grid-template-columns:minmax(0,1fr) minmax(205px,.85fr);gap:10px}
+ .sudoku-board.bunny-grid{width:min(100%,calc(100dvh - 94px));justify-self:center}
+ .bunny-grid .bunny-cell{font-size:clamp(16px,6dvh,30px)}
+ .sudoku-controls{max-height:calc(100dvh - 94px);overflow:auto;padding:1px 3px}
+ .bunny-tools{gap:4px}.bunny-tools button{padding:4px;min-height:44px;font-size:11px;gap:2px}.bunny-tools button>span{font-size:19px}
+ .sudoku-notice{padding:5px 7px;margin:5px 0;min-height:0;font-size:11px!important;line-height:1.3!important}
+ .bunny-rules{margin:5px 0;gap:3px}.bunny-rules span{font-size:10px;padding:3px 5px}
+ .sudoku-help{padding:5px 6px;margin:5px 0;font-size:11px}.sudoku-help summary{min-height:22px}
+ .sudoku-actions{gap:4px}.sudoku-actions button{padding:5px;min-width:65px;font-size:11px;min-height:36px}
+ .sudoku-levels{grid-template-columns:repeat(4,minmax(0,1fr));gap:6px;margin:8px 0}.sudoku-levels button{min-height:75px;padding:6px;font-size:12px}.sudoku-levels span{font-size:10px}.bunny-color-samples{margin-top:5px;gap:1px}.bunny-color-samples b{height:7px}
+ .sudoku-victory,.sudoku-defeat{padding:4px 8px;margin-bottom:5px;font-size:11px}
+ .sudoku-won .bunny-grid,.sudoku-lost .bunny-grid{width:min(100%,calc(100dvh - 129px))}
+ .sudoku-won .sudoku-controls,.sudoku-lost .sudoku-controls{max-height:calc(100dvh - 129px)}
 }
 @media(max-width:500px) and (orientation:portrait){.sudoku-layout{grid-template-columns:1fr}.sudoku-levels{grid-template-columns:repeat(2,minmax(0,1fr))}}
-
-.sudoku-victory{display:flex;justify-content:space-between;align-items:center;gap:8px;flex-wrap:wrap;padding:10px 14px;margin:4px 0 10px;border:2px solid #78924c;border-radius:12px;background:#eaf4d5;color:#36501e}.sudoku-victory strong{font-size:18px}.sudoku-victory span{font-size:13px}
-@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){.sudoku-victory{padding:4px 8px;margin:2px 0 4px}.sudoku-victory strong{font-size:14px}.sudoku-victory span{font-size:10px}.sudoku-won .sudoku-board{width:min(100%,calc(100dvh - 130px))}.sudoku-won .sudoku-controls{max-height:calc(100dvh - 125px)}}
-
-.sudoku-defeat{display:flex;justify-content:space-between;gap:8px;flex-wrap:wrap;padding:10px 14px;margin:4px 0 10px;border:2px solid #ac5252;border-radius:12px;background:#ffe9e4;color:#842d2d}.sudoku-defeat strong{font-size:18px}.sudoku-defeat span{font-size:13px}
-@media(pointer:coarse) and (orientation:landscape) and (max-height:700px){.sudoku-defeat{padding:4px 8px;margin:2px 0 4px}.sudoku-defeat strong{font-size:14px}.sudoku-defeat span{font-size:10px}.sudoku-lost .sudoku-board{width:min(100%,calc(100dvh - 130px))}.sudoku-lost .sudoku-controls{max-height:calc(100dvh - 125px)}}
+.bunny-grid,.bunny-grid .bunny-cell{touch-action:none!important}

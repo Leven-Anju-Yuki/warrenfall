@@ -124,20 +124,33 @@ def collect(root, state_file, tasks, since=None):
 
 def progress(todo, card_id):
     main = []
+    main_lines = []
+    subtask_lines = {}
     subtasks = []
     pattern = re.compile(r'^\s*[-*]\s*\[([ xX])\].*?\[trello:' + re.escape(card_id)
                          + r'(?::(code|manuel):([\w-]+))?\]')
-    for line in todo.splitlines():
+    for line_number, line in enumerate(todo.splitlines(), 1):
         match = pattern.search(line)
         if match:
             checked = match[1].lower() == 'x'
             if match[2]:
                 subtasks.append({'type': match[2], 'id': match[3], 'cochee': checked})
+                subtask_lines.setdefault((match[2], match[3]), []).append(line_number)
             else:
                 main.append(checked)
+                main_lines.append(line_number)
     ids = [(s['type'], s['id']) for s in subtasks]
     ambiguous = len(main) != 1 or len(ids) != len(set(ids))
+    issues = []
+    if not main:
+        issues.append('case principale absente')
+    elif len(main) > 1:
+        issues.append('case principale dupliquée aux lignes ' + ', '.join(map(str, main_lines)))
+    for (kind, ident), lines in subtask_lines.items():
+        if len(lines) > 1:
+            issues.append('sous-tâche ' + kind + ':' + ident + ' dupliquée aux lignes ' + ', '.join(map(str, lines)))
     return {'parent_coche': len(main) == 1 and main[0], 'ambigu': ambiguous,
+            'diagnostics': issues, 'lignes_principales': main_lines,
             'sous_taches': subtasks, 'cochees': sum(s['cochee'] for s in subtasks),
             'total': len(subtasks),
             'code_restant': any(s['type'] == 'code' and not s['cochee'] for s in subtasks)}
@@ -175,7 +188,7 @@ def validate_tasks(tasks, todo):
         if task.get('automatique') is True and not task.get('preuves'):
             raise ValueError('Automatisation sans règle de preuve : ' + cid)
         if progress(todo, cid)['ambigu']:
-            raise ValueError('Case principale absente/dupliquée ou sous-tâche dupliquée : ' + cid)
+            raise ValueError('A_FAIRE.md : ' + '; '.join(progress(todo, cid)['diagnostics']) + ' : ' + cid)
         for rule in task.get('preuves', []):
             if not isinstance(rule, dict) or not isinstance(rule.get('motifs', []), list):
                 raise ValueError('Règle de preuve mal formée : ' + cid)
@@ -186,3 +199,24 @@ def validate_tasks(tasks, todo):
                 raise ValueError('Preuve insuffisante : ' + cid)
             for pattern in rule.get('motifs', []):
                 re.compile(pattern)
+
+
+def partition_tasks(tasks, todo):
+    """Isole toutes les liaisons ambiguës ; aucune sélection arbitraire d'un doublon."""
+    counts = {}
+    for task in tasks:
+        cid = task.get('card_id', '') if isinstance(task, dict) else ''
+        counts[str(cid)] = counts.get(str(cid), 0) + 1
+    valid, issues = [], []
+    for task in tasks:
+        cid = str(task.get('card_id', '')) if isinstance(task, dict) else ''
+        try:
+            if counts[cid] > 1:
+                raise ValueError('liaisons_trello.json : identifiant présent plusieurs fois')
+            validate_tasks([task], todo)
+        except (ValueError, TypeError, KeyError, AttributeError, re.error) as exc:
+            issues.append({'card_id': cid, 'nom': str(task.get('nom', '?')) if isinstance(task, dict) else '?',
+                           'detail': str(exc)})
+        else:
+            valid.append(task)
+    return valid, issues

@@ -22,7 +22,7 @@
       "price": 150,
       "kind": "restore",
       "stat": "energy",
-      "image": "assets/img/magasin/produits/infusion_douce.png"
+      "image": "assets/img/magasin/apothicaire/infusion_douce.png"
     },
     {
       "id": "cleanliness",
@@ -32,7 +32,7 @@
       "price": 150,
       "kind": "restore",
       "stat": "cleanliness",
-      "image": "assets/img/magasin/produits/bain_petales.png"
+      "image": "assets/img/magasin/apothicaire/bain_petales.png"
     },
     {
       "id": "food",
@@ -45,13 +45,234 @@
       "image": "assets/img/magasin/produits/panier_gourmand.png"
     },
     {
+      "id": "potion_vitality",
+      "name": "Potion nourrissante",
+      "emoji": "🧪",
+      "price": 45,
+      "kind": "restore",
+      "stat": "food",
+      "restoreAmount": 50,
+      "category": "apothecary",
+      "image": "assets/img/magasin/apothicaire/Potion nourrissante au médaillon de carotte-1.png",
+      "description": "Rend 50 points de nourriture.",
+      "remedyGroup": "nourriture",
+      "visualNumber": 1
+    },
+    {
+      "id": "elixir_energy",
+      "name": "Élixir d’énergie",
+      "emoji": "⚡",
+      "price": 65,
+      "kind": "restore",
+      "stat": "energy",
+      "restoreAmount": 65,
+      "category": "apothecary",
+      "image": "assets/img/magasin/apothicaire/Élixir d’énergie ambré, éclair cuivré-2.png",
+      "description": "Rend 65 points d’énergie.",
+      "remedyGroup": "energie",
+      "visualNumber": 2
+    },
+    {
+      "id": "potion_sleep",
+      "name": "Potion de repos",
+      "emoji": "🌙",
+      "price": 75,
+      "kind": "restore",
+      "stat": "energy",
+      "restoreAmount": 0,
+      "category": "apothecary",
+      "image": "assets/img/magasin/apothicaire/Potion de repos, lune et étoiles-3.png",
+      "description": "Le prochain sommeil récupère 50 % d’énergie en plus. Le bonus reste disponible si le lapin est déjà reposé.",
+      "remedyGroup": "energie",
+      "visualNumber": 3,
+      "remedyEffect": {
+        "type": "sleep",
+        "value": 0.5
+      }
+    },
+    {
+      "id": "potion_soothing",
+      "name": "Élixir d’endurance",
+      "emoji": "🌸",
+      "price": 60,
+      "kind": "restore",
+      "stat": "energy",
+      "restoreAmount": 0,
+      "category": "apothecary",
+      "image": "assets/img/magasin/apothicaire/Élixir d’endurance bleu pétrole-5.png",
+      "description": "Réduit de 25 % le coût en énergie du prochain parcours d’entraînement au Jardin.",
+      "remedyGroup": "energie",
+      "visualNumber": 4,
+      "remedyEffect": {
+        "type": "trainingSaving",
+        "value": 0.25
+      }
+    },
+    {
+      "id": "elixir_protection",
+      "name": "Potion d’apprentissage",
+      "emoji": "🛡️",
+      "price": 100,
+      "kind": "restore",
+      "stat": "energy",
+      "restoreAmount": 0,
+      "category": "apothecary",
+      "image": "assets/img/magasin/apothicaire/Potion d’apprentissage aux éclats dorés-4.png",
+      "description": "Augmente de 50 % l’amitié (expérience) gagnée au prochain parcours d’entraînement au Jardin.",
+      "remedyGroup": "amitie",
+      "visualNumber": 5,
+      "remedyEffect": {
+        "type": "trainingExperience",
+        "value": 0.5
+      }
+    },
+    {
+      "id": "potion_freshness",
+      "name": "Potion de fraîcheur",
+      "emoji": "💧",
+      "price": 50,
+      "kind": "restore",
+      "stat": "cleanliness",
+      "restoreAmount": 50,
+      "category": "apothecary",
+      "image": "assets/img/magasin/apothicaire/Potion de fraîcheur au médaillon d’eau-6.png",
+      "description": "Rend 50 points de propreté.",
+      "remedyGroup": "proprete",
+      "visualNumber": 6
+    },
+    {
+      "id": "balm_repair",
+      "name": "Baume de toilette",
+      "emoji": "🌿",
+      "price": 70,
+      "kind": "restore",
+      "stat": "cleanliness",
+      "restoreAmount": 0,
+      "category": "apothecary",
+      "image": "assets/img/magasin/apothicaire/Baume ivoire, goutte et sablier-7.png",
+      "description": "Réduit de moitié les pertes de propreté pendant 10 minutes.",
+      "remedyGroup": "proprete",
+      "visualNumber": 7,
+      "remedyEffect": {
+        "type": "cleanProtection",
+        "value": 0.5,
+        "durationMs": 600000
+      }
+    },
+    {
+      "id": "balm_paws",
+      "name": "Baume des pattounes",
+      "emoji": "🐾",
+      "price": 110,
+      "kind": "restore",
+      "stat": "energy",
+      "restoreAmount": 0,
+      "category": "apothecary",
+      "image": "assets/img/magasin/apothicaire/Baume prune à patte dorée-8.png",
+      "description": "Réduit de 20 % le coût en énergie des trois prochains entraînements au Jardin. Les réductions ne se cumulent pas.",
+      "remedyGroup": "energie",
+      "visualNumber": 8,
+      "remedyEffect": {
+        "type": "trainingSavings",
+        "value": 0.2,
+        "uses": 3
+      }
+    },
+    {
+      "id": "bandages",
+      "name": "Bandes d’entraînement",
+      "emoji": "🩹",
+      "price": 90,
+      "kind": "restore",
+      "stat": "energy",
+      "restoreAmount": 0,
+      "category": "apothecary",
+      "image": "assets/img/magasin/apothicaire/Bandes d’entraînement à fermoir patte cuivré-10.png",
+      "description": "Réduit de moitié le coût en énergie d’un entraînement au Jardin. Ne se cumule pas avec l’élixir d’endurance.",
+      "remedyGroup": "energie",
+      "visualNumber": 9,
+      "remedyEffect": {
+        "type": "trainingSaving",
+        "value": 0.5
+      }
+    },
+    {
+      "id": "compress_plants",
+      "name": "Lingettes douces",
+      "emoji": "🌿",
+      "price": 10,
+      "kind": "restore",
+      "stat": "cleanliness",
+      "restoreAmount": 15,
+      "category": "apothecary",
+      "image": "assets/img/magasin/apothicaire/Lingettes ivoire au ruban lavande-9.png",
+      "description": "Rend 15 points de propreté à petit prix.",
+      "remedyGroup": "proprete",
+      "visualNumber": 10
+    },
+    {
+      "id": "oil_fur",
+      "name": "Huile de brossage",
+      "emoji": "✨",
+      "price": 85,
+      "kind": "restore",
+      "stat": "cleanliness",
+      "restoreAmount": 0,
+      "category": "apothecary",
+      "image": "assets/img/magasin/apothicaire/Huile de brossage et brosse lapin-11.png",
+      "description": "Au prochain brossage : +15 points de propreté et +3 points d’amitié en plus. Le bouton Brosser reste accessible avec la douche améliorée.",
+      "remedyGroup": "proprete",
+      "visualNumber": 11,
+      "remedyEffect": {
+        "type": "brush",
+        "value": 15
+      }
+    },
+    {
+      "id": "sachet_flowers",
+      "name": "Sachet de complicité",
+      "emoji": "💐",
+      "price": 65,
+      "kind": "restore",
+      "stat": "energy",
+      "restoreAmount": 0,
+      "category": "apothecary",
+      "image": "assets/img/magasin/apothicaire/Sachet lavande au cœur brodé-12.png",
+      "description": "La prochaine interaction réussie (nourrir, dormir ou nettoyer) donne 5 points d’amitié supplémentaires.",
+      "remedyGroup": "amitie",
+      "visualNumber": 12,
+      "remedyEffect": {
+        "type": "interaction",
+        "value": 5
+      }
+    },
+    {
+      "id": "compress_cool",
+      "name": "Élixir de progression",
+      "emoji": "❄️",
+      "price": 1500,
+      "kind": "restore",
+      "stat": "energy",
+      "restoreAmount": 0,
+      "category": "apothecary",
+      "image": "assets/img/magasin/apothicaire/Élixir doré de progression-13.png",
+      "description": "Fait gagner un niveau au lapin actif, jusqu’au niveau 100. Objet rare et cher ; conserve les récompenses normales du niveau.",
+      "remedyGroup": "amitie",
+      "visualNumber": 13,
+      "remedyEffect": {
+        "type": "level",
+        "value": 1
+      },
+      "rarity": "rare"
+    },
+    {
       "id": "fragments",
       "name": "Extracteur de fragments",
       "emoji": "🛠️",
       "description": "Retire les améliorations de la compétence choisie. Ses fragments redeviennent disponibles pour améliorer une autre compétence débloquée de ce même lapin.",
       "price": 330,
       "kind": "reset",
-      "image": "assets/img/magasin/produits/extracteur_fragments.png"
+      "image": "assets/img/magasin/apothicaire/extracteur_fragments.png"
     },
     {
       "id": "market_carrot",
@@ -734,8 +955,8 @@
   "backgrounds": {
     "inventory": "assets/img/fond/Magasin/herboristerie.png",
     "pantry": "assets/img/fond/Magasin/Garde-manger.png",
-    "market": "assets/img/fond/Magasin/Marche.png",
-    "items": "assets/img/fond/Magasin/Boutique chaleureuse aux trois niches vides-1.png",
+    "market": "assets/img/fond/Magasin/Boutique chaleureuse, trois présentoirs et grande étagère.png",
+    "items": "assets/img/fond/Magasin/Boutique chaleureuse à quatre présentoirs.png",
     "evolution": "assets/img/fond/Magasin/Petite forge chaleureuse dans un terrier-1.png",
     "fragments": "assets/img/fond/Magasin/Atelier de forge mystique au terrier-2.png",
     "cart": "assets/img/fond/Magasin/Comptoir.png"
@@ -744,6 +965,8 @@
     "quiz": "assets/img/Boite_Mini_Jeu/Quiz-1.png",
     "puzzles": "assets/img/Boite_Mini_Jeu/puzzles.png",
     "memory": "assets/img/Boite_Mini_Jeu/Memory.png",
-    "lapidoku": "assets/img/Boite_Mini_Jeu/Lapidoku.png"
+    "lapidoku": "assets/img/Boite_Mini_Jeu/Lapidoku.png",
+    "lapinoudoku": "assets/img/Boite_Mini_Jeu/LapinouDoku.png",
+    "coloring": "assets/img/Boite_Mini_Jeu/LapinPixels.png"
   }
 }

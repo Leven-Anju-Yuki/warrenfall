@@ -9,8 +9,9 @@
         for (const item of data.items) {
             if (!item.id || ids.has(item.id) || !Number.isSafeInteger(item.price) || item.price <= 0) throw new Error('Article incorrect');
             if (item.kind !== 'reset' && (item.kind !== 'restore' || !['food','energy','cleanliness'].includes(item.stat))) throw new Error('Effet incorrect');
-            if(item.restoreAmount!==undefined&&(!Number.isFinite(item.restoreAmount)||item.restoreAmount<=0))throw new Error('Quantité de nourriture incorrecte');
+            if(item.restoreAmount!==undefined&&(!Number.isFinite(item.restoreAmount)||(item.restoreAmount<0||(item.restoreAmount===0&&!item.remedyEffect))))throw new Error('Quantité de nourriture incorrecte');
             if(item.bonus&&(!['resistance','combat','speed','experience'].includes(item.bonus.type)||!Number.isFinite(item.bonus.value)||item.bonus.value<=0||item.bonus.value>1||!Number.isSafeInteger(item.bonus.durationMs)||item.bonus.durationMs<=0))throw new Error('Bonus incorrect');
+            if(item.remedyEffect&&(!['sleep','trainingSaving','trainingSavings','trainingExperience','cleanProtection','brush','interaction','level'].includes(item.remedyEffect.type)||!Number.isFinite(item.remedyEffect.value)||item.remedyEffect.value<=0||(item.remedyEffect.uses!==undefined&&(!Number.isSafeInteger(item.remedyEffect.uses)||item.remedyEffect.uses<1))||(item.remedyEffect.durationMs!==undefined&&(!Number.isSafeInteger(item.remedyEffect.durationMs)||item.remedyEffect.durationMs<1))))throw new Error('Effet de soin incorrect');
             ids.add(item.id);
         }
         // Les plats spéciaux mis de côté ne doivent pas bloquer les articles et les soins.
@@ -76,10 +77,12 @@
     }
     // Consommer une unité et restaurer la barre du compagnon actif.
     function useConsumable(game, progress, item) {
+        if(window.LapinousExploration?.busy(game,game.species))throw new Error('Ce lapin est en exploration. Attends son retour pour lui donner un soin.');
         if (item?.kind !== 'restore' || !['food','energy','cleanliness'].includes(item.stat)) throw new Error('Ce produit ne peut pas être consommé.');
         const count = game.inventory?.[item.id];
         if (!Number.isSafeInteger(count) || count < 1) throw new Error('Cet article est épuisé.');
-        if (!Number.isFinite(progress[item.stat]) || (progress[item.stat] >= 100 && !item.bonus)) throw new Error('Cette barre est déjà pleine.');
+        if (!Number.isFinite(progress[item.stat]) || (progress[item.stat] >= 100 && !item.bonus&&!item.remedyEffect)) throw new Error('Cette barre est déjà pleine.');
+        if(item.remedyEffect)window.LapinousRemedies.arm(progress,item.remedyEffect);
         progress[item.stat] = Math.min(100,progress[item.stat]+(item.restoreAmount??100));
         if(item.bonus){progress.mealBonuses ||= {};progress.mealBonuses[item.bonus.type]={value:item.bonus.value,expiresAt:Date.now()+item.bonus.durationMs};}
         game.inventory[item.id] = count - 1;
@@ -90,7 +93,7 @@
     }).then(data => {
         // Les essais locaux du Dashboard ne remplacent pas le fichier publié.
         if(document.documentElement.classList.contains('local-admin')){
-            try {const saved=JSON.parse(localStorage.getItem('lapinous_shop_catalog'));if(saved){validateCatalog(saved);saved.items.forEach(item=>{const base=data.items.find(value=>value.id===item.id);if(base?.category==='market'){item.category=base.category;item.image=base.image;}});saved.items.push(...data.items.filter(item=>!saved.items.some(existing=>existing.id===item.id)));saved.items=saved.items.filter(item=>item.category!=='prepared');saved.backgrounds={...data.backgrounds,...saved.backgrounds};if(saved.backgrounds.cart?.includes('Comptoir vide'))saved.backgrounds.cart=data.backgrounds.cart;if(['assets/img/fond/salon.png','./assets/img/fond/salon.png'].includes(saved.backgrounds.inventory))saved.backgrounds.inventory=data.backgrounds.inventory;saved.gameBoxes={...data.gameBoxes,...saved.gameBoxes};if(!Array.isArray(saved.recipes)||saved.recipes.some(recipe=>!('image' in recipe)))saved.recipes=data.recipes;if(typeof saved.recipesEnabled!=='boolean')saved.recipesEnabled=data.recipesEnabled;saved.items.forEach(item=>{if(["market_carrot","market_apple"].includes(item.id)){item.category="market";item.image=data.items.find(base=>base.id===item.id)?.image||item.image||"";}if(item.id==="market_basket")item.category="retired";});saved.companions={...data.companions,...saved.companions};if(saved.companions.fragmentKeeper?.working?.endsWith('-10.png'))saved.companions.fragmentKeeper=data.companions.fragmentKeeper;for(const role of ['artisan','fragmentKeeper'])if(!saved.companions[role]?.idle||saved.companions[role]?.placeholder)saved.companions[role]=data.companions[role];if(saved.companions.chef?.placeholder||saved.companions.chef?.idle?.endsWith("chef.svg"))saved.companions.chef=data.companions.chef;if(saved.companions.fragmentKeeper)saved.companions.fragmentKeeper.name='Le mage des fragments';saved.apothecary={...data.apothecary,...saved.apothecary};if(!saved.cashier.idle||/caissier_(presentation|merci)\.png$/.test(saved.cashier.presentation))saved.cashier=data.cashier;data=saved;}} catch {}
+            try {const saved=JSON.parse(localStorage.getItem('lapinous_shop_catalog'));if(saved){validateCatalog(saved);saved.items.forEach(item=>{const base=data.items.find(value=>value.id===item.id);if(base?.category==='market')item.category=base.category;if(base?.image)item.image=base.image;});saved.items.push(...data.items.filter(item=>!saved.items.some(existing=>existing.id===item.id)));saved.items=saved.items.filter(item=>item.category!=='prepared');saved.backgrounds={...data.backgrounds,...saved.backgrounds,market:data.backgrounds.market,items:data.backgrounds.items};if(saved.backgrounds.cart?.includes('Comptoir vide'))saved.backgrounds.cart=data.backgrounds.cart;if(['assets/img/fond/salon.png','./assets/img/fond/salon.png'].includes(saved.backgrounds.inventory))saved.backgrounds.inventory=data.backgrounds.inventory;saved.gameBoxes={...data.gameBoxes,...saved.gameBoxes,lapinoudoku:data.gameBoxes.lapinoudoku};if(!Array.isArray(saved.recipes)||saved.recipes.some(recipe=>!('image' in recipe)))saved.recipes=data.recipes;if(typeof saved.recipesEnabled!=='boolean')saved.recipesEnabled=data.recipesEnabled;saved.items.forEach(item=>{if(["market_carrot","market_apple"].includes(item.id)){item.category="market";item.image=data.items.find(base=>base.id===item.id)?.image||item.image||"";}if(item.id==="market_basket")item.category="retired";});saved.companions={...data.companions,...saved.companions};if(saved.companions.fragmentKeeper?.working?.endsWith('-10.png'))saved.companions.fragmentKeeper=data.companions.fragmentKeeper;for(const role of ['artisan','fragmentKeeper'])if(!saved.companions[role]?.idle||saved.companions[role]?.placeholder)saved.companions[role]=data.companions[role];if(saved.companions.chef?.placeholder||saved.companions.chef?.idle?.endsWith("chef.svg"))saved.companions.chef=data.companions.chef;if(saved.companions.fragmentKeeper)saved.companions.fragmentKeeper.name='Le mage des fragments';saved.apothecary={...data.apothecary,...saved.apothecary};if(!saved.cashier.idle||/caissier_(presentation|merci)\.png$/.test(saved.cashier.presentation))saved.cashier=data.cashier;data=saved;}} catch {}
         }
         catalog = validateCatalog(data);
     }).catch(error => { console.warn('Magasin indisponible', error); });
@@ -169,6 +172,25 @@
             const aside=document.createElement('aside');aside.className='shop-zone-companion';content.append(aside);
             showWorkshopPose(Date.now()<workshopUntil?workshopPose:'idle');
         }
+        function placeProductInfo(product) {
+            const panel=product?.querySelector('.shop-consumable-details');if(!panel)return;
+            const rect=product.getBoundingClientRect();
+            panel.style.setProperty('width',Math.min(300,innerWidth-24)+'px','important');
+            const box=panel.getBoundingClientRect();
+            panel.style.setProperty('left',Math.max(12,Math.min(rect.left+rect.width/2-box.width/2,innerWidth-box.width-12))+'px','important');
+            panel.style.setProperty('top',Math.max(8,rect.top-box.height-10)+'px','important');
+        }
+        for(const type of ['pointerover','focusin','click']) content.addEventListener(type,event=>{
+            const product=event.target.closest('.shop-consumable');if(product)placeProductInfo(product);
+        });
+        function fitApothecary(){
+            if(!content.querySelector('.herbalist-workshop'))return;
+            const width=content.clientWidth;
+            content.style.setProperty('--apothecary-width',width+'px');
+            content.style.setProperty('--apothecary-height',content.clientHeight+'px');
+        }
+        new ResizeObserver(()=>{fitApothecary();const product=content.querySelector('.shop-consumable:focus-within,.shop-consumable:hover');if(product)placeProductInfo(product);}).observe(content);
+        new MutationObserver(fitApothecary).observe(content,{childList:true});
         let forging=false;
         function inspectCartItem(trigger){
             const panel=content.querySelector('#cartOptions'+trigger.dataset.cartInspect);if(!panel)return;
@@ -263,15 +285,32 @@
                 if(bubble.hidden)continue;
                 const box=bubble.getBoundingClientRect();
                 bubble.style.setProperty('--bubble-x',Math.max(6,Math.min(frame.width-box.width-6,bounds.left-frame.left+(bounds.width-box.width)/2))+'px');
-                bubble.style.setProperty('--bubble-y',Math.max(2,bounds.top-frame.top-box.height-4)+'px');
+                bubble.style.setProperty('--bubble-y',Math.max(2,(phone?bounds.top-frame.top-box.height-4:bounds.bottom-frame.top+4))+'px');
             }
             if(cashierMoving||retrieving)actorFrame=requestAnimationFrame(actorBounds);
         }
         new ResizeObserver(()=>requestAnimationFrame(actorBounds)).observe(content);
         new ResizeObserver(()=>requestAnimationFrame(actorBounds)).observe(speech);
+        function fitPaintedShop(){
+            const stage=content.querySelector('.shop-painted-stage');if(!stage)return;
+            const width=content.clientWidth,height=content.clientHeight;
+            const x=(content.clientWidth-width)/2,y=(content.clientHeight-height)/2;
+            Object.assign(stage.style,{width:width+'px',height:height+'px',left:x+'px',top:y+'px'});
+            const rect=stage.getBoundingClientRect();
+            for(const [name,value] of Object.entries({x:rect.left+width*.79,y:rect.top+height*(innerHeight<700?.23:.27),w:width*.20,h:height*(innerHeight<700?.54:.45)}))dialog.style.setProperty('--painted-actor-'+name,value+'px');
+        }
+        new ResizeObserver(()=>{fitPaintedShop();requestAnimationFrame(actorBounds);}).observe(content);
         function render() {
             renderContents();
-            requestAnimationFrame(actorBounds);
+            const painted=['market','items'].includes(tab);
+            dialog.classList.toggle('painted-shop',painted);
+            if(painted){
+                const stage=document.createElement('div');stage.className='shop-painted-stage';
+                stage.style.backgroundImage=content.style.backgroundImage;
+                stage.append(...content.childNodes);content.append(stage);
+                fitPaintedShop();
+            }
+            requestAnimationFrame(()=>{fitPaintedShop();actorBounds();});
         }
         function renderContents() {
             const game=api.game(),keys=owned();
@@ -307,16 +346,18 @@
             if(tab==='inventory') {
                 content.style.backgroundImage=`url("${window.LapinousImages?.url(catalog.backgrounds.inventory)||catalog.backgrounds.inventory}")`;
                 const active=game.species,pr=api.progress(active);
-                const remedies=catalog.items.filter(item=>item.kind==='restore'&&!['market','prepared','legacy_food','retired'].includes(item.category));
+                const groupOrder=['nourriture','energie','proprete','amitie'];
+                const remedyGroup=item=>item.remedyGroup||({food:'nourriture',energy:'energie',cleanliness:'proprete'}[item.stat]);
+                const remedies=catalog.items.filter(item=>item.kind==='restore'&&!['market','prepared','legacy_food','retired'].includes(item.category)).sort((a,b)=>groupOrder.indexOf(remedyGroup(a))-groupOrder.indexOf(remedyGroup(b)));
                 // Emplacements fixes et espacés sur les trois rangées, indépendants du stock.
                 if(!drawerSlots){
-                    const count=Math.max(12,Math.ceil(remedies.length/4)*4);
-                    const preferred=[0,9,6];
+                    const count=Math.max(16,Math.ceil(remedies.length/4)*4);
+                    const preferred=[];
                     drawerSlots=preferred.concat(Array.from({length:count},(_,i)=>i).filter(i=>!preferred.includes(i)));
                 }
                 const items=Array(drawerSlots.length).fill(null);
                 remedies.forEach((item,i)=>{if((game.inventory?.[item.id]||0)>0)items[drawerSlots[i]]=item;});
-                content.innerHTML=`<div class="herbalist-workshop"><section class="inventory-cabinet" aria-label="Tes soins disponibles"><div class="inventory-cabinet-heading">Les réserves du terrier</div><div class="inventory-drawers">${items.map(item=>item?`<button type="button" class="inventory-drawer" data-shop-use="${escape(item.id)}" ${retrieving?'disabled':''} aria-disabled="${pr[item.stat]>=100}" aria-label="${escape(item.name)} : une touche pour la description, deux pour utiliser"><img src="${escape(item.image)}" alt="${escape(item.name)}"><strong>${escape(item.emoji)} ${escape(item.name)}</strong><span class="inventory-quantity">×${game.inventory[item.id]}</span><span class="inventory-handle" aria-hidden="true"></span><span class="inventory-drawer-details"><b>${escape(item.emoji)} ${escape(item.name)}</b><span>${escape(item.description)}</span><em>${pr[item.stat]>=100?'Barre déjà pleine':`Utiliser sur ${escape(name(active))}`} · Stock : ${game.inventory[item.id]}</em></span></button>`:'<div class="inventory-drawer inventory-drawer-empty" aria-label="Tiroir vide"><span class="inventory-handle" aria-hidden="true"></span></div>').join('')}</div>${!items.some(Boolean)?'<p class="inventory-empty">Tes tiroirs sont vides pour le moment.</p>':''}<div class="inventory-cabinet-feet" aria-hidden="true"></div></section><aside class="inventory-herbalist"><img id="inventoryHerbalist" src="${escape(herbalistPoses.idle)}" alt="La lapine apothicaire"><p id="inventorySpeech" aria-live="polite">De quoi as-tu besoin, ${escape(name(active))} ?</p></aside></div><div class="shop-needs"><span>🥕 ${Math.round(pr.food)} %</span><span>😴 ${Math.round(pr.energy)} %</span><span>🫧 ${Math.round(pr.cleanliness)} %</span></div>`;
+                content.innerHTML=`<div class="herbalist-workshop"><section class="inventory-cabinet" aria-label="Tes soins disponibles"><div class="inventory-cabinet-heading">Les réserves du terrier</div><div class="inventory-drawers">${items.map(item=>item?`<button type="button" class="inventory-drawer ${(game.inventory?.[item.id]||0)>0?'':'is-unowned'}" data-shop-use="${escape(item.id)}" ${retrieving?'disabled':''} aria-disabled="${(pr[item.stat]>=100&&!item.bonus&&!item.remedyEffect)}" aria-label="${escape(item.name)} : une touche pour la description, deux pour utiliser"><img src="${escape(item.image)}" alt="${escape(item.name)}"><strong>${escape(item.emoji)} ${escape(item.name)}</strong><span class="inventory-quantity">×${game.inventory?.[item.id]||0}</span><span class="inventory-handle" aria-hidden="true"></span><span class="inventory-drawer-details"><b>${escape(item.emoji)} ${escape(item.name)}</b><span>${escape(item.description)}</span><em>${(pr[item.stat]>=100&&!item.bonus&&!item.remedyEffect)?'Barre déjà pleine':`Utiliser sur ${escape(name(active))}`} · Stock : ${game.inventory?.[item.id]||0}</em></span></button>`:'<div class="inventory-drawer inventory-drawer-empty" aria-label="Tiroir vide"><span class="inventory-handle" aria-hidden="true"></span></div>').join('')}</div>${!items.some(Boolean)?'<p class="inventory-empty">Tes tiroirs sont vides pour le moment.</p>':''}<div class="inventory-cabinet-feet" aria-hidden="true"></div></section><aside class="inventory-herbalist"><img id="inventoryHerbalist" src="${escape(herbalistPoses.idle)}" alt="La lapine apothicaire"><p id="inventorySpeech" aria-live="polite">De quoi as-tu besoin, ${escape(name(active))} ?</p></aside></div><div class="shop-needs"><span>🥕 ${Math.round(pr.food)} %</span><span>😴 ${Math.round(pr.energy)} %</span><span>🫧 ${Math.round(pr.cleanliness)} %</span></div>`;
                 return;
             }
             if(tab==='carrots'){content.innerHTML='<section class="shop-coming"><span>🥕</span><h3>Des carottes pour tes aventures</h3><p>Les achats avec de l’argent réel ne sont pas encore disponibles.</p><p>Gagne tes carottes en jouant et en affrontant les boss.</p></section>';return;}
@@ -347,6 +388,12 @@
                 if(!reset)return `<article class="shop-consumable" tabindex="0" aria-label="${escape(item.name)}">${item.image?`<img src="${escape(item.image)}" alt="${escape(item.name)}" loading="lazy">`:`<span class="shop-food-emoji" aria-hidden="true">${escape(item.emoji)}</span>`}<div class="shop-consumable-details"><h3>${escape(item.emoji)} ${escape(item.name)}</h3><p>${escape(item.description)}</p><button type="button" data-shop-add="${escape(item.id)}">${item.price} 🥕 · Ajouter au panier</button></div></article>`;
                 return `<article class="shop-item shop-fragment-item"><div class="shop-fragment-details">${item.image ? `<div class="shop-product-visual"><img src="${escape(item.image)}" alt="${escape(item.name)}" loading="lazy"></div>` : `<span class="shop-item-icon" aria-hidden="true">${escape(item.emoji)}</span>`}<h3>${escape(item.name)}</h3><p>${escape(item.description)}</p>${skills}<button type="button" data-shop-add="${escape(item.id)}" ${unavailable?'disabled':''}>${full?'Barre déjà pleine':`${item.price} 🥕 · Payer et récupérer`}</button></div><aside class="shop-fragment-rabbits">${selector}</aside></article>`;
             }).join('')}</div>`;
+            if(tab==='items'){
+                const grid=content.querySelector('.shop-items');grid.classList.add('remedy-stalls');
+                const groups=[['nourriture','Nourriture'],['energie','Énergie et repos'],['proprete','Propreté'],['amitie','Amitié et progression']];
+                const cards=[...grid.children];
+                for(const [key,label] of groups){const stall=document.createElement('section');stall.className='remedy-stall';const title=document.createElement('h3');title.textContent=label;stall.append(title);const shelf=document.createElement('div');shelf.className='remedy-products';for(const card of cards){const id=card.querySelector('[data-shop-add]').dataset.shopAdd;const item=getItem(id);const group=item.remedyGroup||({food:'nourriture',energy:'energie',cleanliness:'proprete'}[item.stat]);if(group===key){card.dataset.remedyNumber=item.visualNumber||'';shelf.append(card);}}stall.append(shelf);grid.append(stall);}
+            }
             if(tab==='market'){
                 // Rayons compacts : les etals remplacent la succession de grandes cartes.
                 const grid=content.querySelector('.shop-items');
@@ -457,20 +504,22 @@
             if(clicked.dataset.shopUse){
                 if(retrieving)return;
                 const active=api.game().species,currentGame=api.game(),item=getItem(clicked.dataset.shopUse);
+                if(api.exploring?.(active)){api.toast('Ce lapin est en exploration. Choisis un autre compagnon pour utiliser un soin.','warn');return;}
                 try {
                     if(api.inCombat()||cartGame!==currentGame||!owned().includes(active))throw new Error('Rouvre l’inventaire avec ton compagnon actif après le combat.');
-                    if(!item||!(currentGame.inventory?.[item.id]>0))return;
+                    if(!item)return;
                     const now=Date.now();
                     if(inspectedItem!==item.id||now-inspectedAt>900||!clicked.classList.contains('drawer-selected')){
                         inspectedItem=item.id;inspectedAt=now;
                         content.querySelectorAll('[data-shop-use]').forEach(node=>node.classList.toggle('drawer-selected',node.dataset.shopUse===item.id));
                         let description=content.querySelector('.inventory-description');
                         if(!description){description=document.createElement('div');description.className='inventory-description';description.setAttribute('role','status');content.append(description);}
-                        description.innerHTML=`<strong>${escape(item.name)} · ×${currentGame.inventory[item.id]}</strong><p>${escape(item.description)}</p><small>${api.progress(active)[item.stat]>=100?'Ce besoin est déjà rempli.':'Touche deux fois le tiroir pour utiliser ce soin.'}</small>`;
+                        description.innerHTML=`<strong>${escape(item.name)} · ×${currentGame.inventory?.[item.id]||0}</strong><p>${escape(item.description)}</p><small>${!(currentGame.inventory?.[item.id]>0)?'Stock vide : disponible au magasin.':(api.progress(active)[item.stat]>=100&&!item.bonus&&!item.remedyEffect)?'Ce besoin est déjà rempli.':'Touche deux fois le tiroir pour utiliser ce soin.'}</small>`;
                         return;
                     }
+                    if(!(currentGame.inventory?.[item.id]>0))return;
                     inspectedItem='';inspectedAt=0;
-                    if(api.progress(active)[item.stat]>=100)return;
+                    if((api.progress(active)[item.stat]>=100&&!item.bonus&&!item.remedyEffect))return;
                     clearTimeout(apothecaryTimer);retrieving=true;requestAnimationFrame(actorBounds);render();
                     const version=++retrieveVersion;
                     const valid=()=>version===retrieveVersion&&dialog.open&&tab==='inventory'&&api.game()===currentGame&&api.game().species===active&&!api.inCombat();
@@ -509,7 +558,7 @@
                     drawer.classList.remove('drawer-taking');
                     await move(offset,'translateX(0)');
                     if(!valid())throw new Error('Le soin est resté dans ton inventaire.');
-                    useConsumable(currentGame,api.progress(active),item);api.save();api.refresh();
+                    useConsumable(currentGame,api.progress(active),item);api.checkLevelUp?.();api.save();api.refresh();
                     retrieving=false;render();
                     content.querySelector('#inventoryHerbalist').src=herbalistPoses.thanks;
                     content.querySelector('#inventorySpeech').textContent='Tiens, prends ça, ça te fera du bien !';

@@ -159,3 +159,40 @@ html.phone-ui .shop-dialog.market-illustrated .market-price-tag{left:0!important
 
 .inventory-dialog .inventory-herbalist .herbalist-gift{position:absolute!important;width:64px!important;height:64px!important;max-width:64px!important;max-height:64px!important;left:15%!important;bottom:30%!important;top:auto!important;object-fit:contain;scale:1!important;translate:0 0!important;pointer-events:none}
 .inventory-dialog .shop-needs{position:absolute!important;left:3%;bottom:1%;z-index:8;display:flex!important;gap:5px;padding:3px!important;margin:0!important}
+/* Le décor entier reste visible ; meubles et lapine suivent le même cadre. */
+.shop-dialog.inventory-dialog #shopBody{background-size:contain!important;background-position:center!important;background-repeat:no-repeat!important;padding:0!important;overflow:hidden}
+.shop-dialog.inventory-dialog #shopBody .herbalist-workshop{position:absolute!important;left:50%!important;top:50%!important;translate:-50% -50%;width:var(--apothecary-width,100%)!important;height:var(--apothecary-height,100%)!important;margin:0!important}
+.shop-dialog.inventory-dialog .inventory-drawers{grid-template-columns:repeat(4,minmax(0,1fr))!important;grid-template-rows:repeat(4,minmax(0,1fr))!important;gap:5px!important}
+.shop-dialog.inventory-dialog .inventory-drawer{height:auto!important;min-height:0!important}
+.shop-dialog.zone-items .shop-consumable-details,.shop-dialog.market-illustrated .shop-consumable-details{position:fixed!important;right:auto!important;bottom:auto!important;transform:none!important;min-height:0!important;height:auto!important;max-height:40dvh!important;gap:6px!important;padding:10px!important;z-index:40!important}
+/* La marchande s'ancre au sol du décor, jamais au bandeau du panier. */
+.shop-dialog.market-illustrated .shop-cashier,
+.shop-dialog.zone-cart .shop-cashier,
+html.phone-ui .shop-dialog.market-illustrated .shop-cashier,
+html.phone-ui .shop-dialog.zone-cart .shop-cashier{top:auto!important;bottom:8%!important;height:62%!important;width:25%!important;right:2%!important;margin:0!important;transform:none!important}
+.shop-dialog.market-illustrated .shop-cashier img,
+.shop-dialog.zone-cart .shop-cashier img,
+html.phone-ui .shop-dialog.market-illustrated .shop-cashier img,
+html.phone-ui .shop-dialog.zone-cart .shop-cashier img{position:static!important;display:block;width:100%!important;height:100%!important;max-height:none!important;object-fit:contain;object-position:center bottom;bottom:auto!important}
+.shop-dialog.market-illustrated #shopCashierSpeech,.shop-dialog.zone-cart #shopCashierSpeech{position:absolute;top:auto;bottom:100%;margin:0 0 8px}
+.shop-dialog.market-illustrated .market-purchase-table,
+html.phone-ui .shop-dialog.market-illustrated .market-purchase-table{right:3%!important;bottom:7%!important;width:30%!important;height:32%!important;background:url('../icons/market-table.svg') center bottom/100% 100% no-repeat!important;border:0;box-shadow:none;padding:0;z-index:3!important}
+.market-purchase-table::before,.market-purchase-table::after{display:none!important}
+.market-purchase-table>strong{display:none}
+.shop-dialog.market-illustrated .market-purchase-table>div{position:absolute;inset:-12% 8% 64%!important;display:flex;flex-wrap:wrap;align-items:end;align-content:end;justify-content:center;gap:3px;padding:0;overflow:auto;scrollbar-width:thin;scrollbar-color:#a26c37 #ead2a6;border-radius:8px}
+.market-purchase-table>div>span{flex:0 0 22%;min-width:0;display:flex;align-items:end;justify-content:center;position:relative}
+.shop-dialog.market-illustrated .market-purchase-table img{width:100%;height:clamp(24px,5dvh,60px);object-fit:contain}
+.market-purchase-table b{position:absolute;right:0;bottom:0;font-size:10px}
+.shop-remedy-pages{position:absolute;left:8%;bottom:7%;width:44%;display:flex;align-items:center;justify-content:center;gap:12px;z-index:10;color:#513923;font-size:14px}
+.shop-remedy-pages span{padding:6px 10px;border-radius:12px;background:#fff7e8}
+.shop-remedy-pages button{width:44px;height:44px;min-height:44px;border:1px solid #ae8a52;border-radius:50%;background:#fff7e8;color:#513923;font-size:22px;cursor:pointer}
+.shop-remedy-pages button:disabled{opacity:.5;cursor:default}
+/* Quatre familles de soins, sur le même fond que le marché. */
+.shop-dialog.zone-items .shop-items.remedy-stalls{left:2%!important;top:17%!important;width:70%!important;height:65%!important;display:grid!important;grid-template-columns:repeat(4,minmax(0,1fr))!important;gap:10px!important;overflow:visible}
+.remedy-stall{min-width:0;min-height:0;display:flex;flex-direction:column;border:3px solid #a76d32;border-radius:15px 15px 5px 5px;background:linear-gradient(90deg,#6e3e20,#b8793d 5%,#875024 50%,#b8793d 95%,#6e3e20);box-shadow:inset 0 0 12px #40241388,0 5px 0 #69401f}
+.remedy-stall>h3{flex:none;margin:0;padding:6px 3px;min-height:30px;display:grid;place-items:center;text-align:center;background:#fff4db;color:#513923;border-radius:10px 10px 0 0;font-size:clamp(10px,1.1vw,17px)}
+.remedy-products{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));grid-auto-rows:minmax(40px,1fr);gap:5px;flex:1;min-height:0;padding:6px;overflow:auto;scrollbar-width:thin}
+.shop-dialog.zone-items .remedy-products .shop-consumable{position:relative;height:100%!important;min-height:42px;border-bottom:3px solid #d6a268;overflow:visible}
+.shop-dialog.zone-items .remedy-products .shop-consumable>img{height:100%!important;max-height:88px;object-position:center bottom}
+.remedy-products .shop-consumable[data-remedy-number]:not([data-remedy-number=""])::after{content:attr(data-remedy-number);position:absolute;right:1px;bottom:3px;display:grid;place-items:center;min-width:17px;height:17px;border-radius:50%;background:#fff1ca;color:#513923;font:bold 10px system-ui;pointer-events:none}
+@media(max-height:500px){.shop-dialog.zone-items .shop-items.remedy-stalls{top:18%!important;height:65%!important;gap:4px!important}.remedy-stall{border-width:2px}.remedy-stall>h3{padding:3px;min-height:24px;font-size:9px}.remedy-products{padding:3px;gap:2px;grid-auto-rows:minmax(30px,1fr)}.shop-dialog.zone-items .remedy-products .shop-consumable{min-height:30px}}

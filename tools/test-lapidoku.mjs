@@ -3,38 +3,41 @@ import fs from 'node:fs';
 import vm from 'node:vm';
 const ctx=vm.createContext({});
 vm.runInContext(fs.readFileSync('assets/js/lapidoku.js','utf8'),ctx);
-const api=ctx.LapinousSudoku;
-let previousGiven=82;
+const api=ctx.LapinousBunnyGrid;
+assert.equal(api.levels.length,12);
 for(const level of api.levels){
-  const puzzle=api.create(level.index);
-  assert.equal(puzzle.board.length,level.size**2);
-  assert.equal(api.solutions(puzzle.board,level),1,'Solution unique au niveau '+level.index);
-  assert(!api.conflicts(puzzle.solution,level).some(Boolean));
-  assert(puzzle.board.some(v=>!v));
-  if(level.size===9){
-    const given=puzzle.board.filter(Boolean).length;
-    assert.equal(given,Math.round(81*level.givenPercent/100));
-    assert(given<previousGiven,'Moins de chiffres présents à chaque niveau 9×9');previousGiven=given;
-  }
-  assert(puzzle.board.every((v,i)=>!v||v===puzzle.solution[i]));
-  const duplicate=puzzle.solution.slice();duplicate[1]=duplicate[0];
-  assert(api.conflicts(duplicate,level).some(Boolean));
-  assert.deepEqual(api.create(level.index).board,puzzle.board);
+ const puzzle=api.create(level.index),n=level.size;
+ assert.equal(puzzle.board.length,n*n);assert(puzzle.board.every(v=>v===0));
+ assert.equal(new Set(puzzle.regions).size,n);
+ for(let zone=0;zone<n;zone++){
+  const cells=puzzle.regions.map((v,i)=>v===zone?i:-1).filter(i=>i>=0),seen=new Set([cells[0]]),queue=[cells[0]];
+  for(const i of queue){const r=Math.floor(i/n),c=i%n;for(const [dr,dc] of [[-1,0],[1,0],[0,-1],[0,1]]){const y=r+dr,x=c+dc,j=y*n+x;if(y>=0&&y<n&&x>=0&&x<n&&puzzle.regions[j]===zone&&!seen.has(j)){seen.add(j);queue.push(j);}}}
+  assert.equal(seen.size,cells.length,'Region connected '+level.index+'/'+zone);
+ }
+ const solutions=api.solutions(puzzle);assert.equal(solutions.length,1,'Unique solution '+level.index);
+ const state={...puzzle,mistakes:0,mistakeLimit:3,finished:false,lost:false};
+ assert(!api.isSolved(state));
+ for(const i of solutions[0])assert(api.enter(state,i,1));
+ assert(api.isSolved(state));assert.equal(state.mistakes,0);
+ assert(!api.conflicts(state.board,state).some(Boolean));
+ const modified=api.create(level.index);modified.regions[0]=99;
+ assert.notEqual(api.create(level.index).regions[0],99,'No catalog mutation');
 }
-assert.throws(()=>api.create(99));
-console.log('Lapidoku : 12 niveaux 4×4, 6×6 et 9×9, solutions uniques, chiffres fixes et conflits vérifiés.');
-
-const puzzle=api.create(0);
-const fresh=()=>({...puzzle,board:puzzle.board.slice(),given:puzzle.board.map(Boolean),mistakes:0,mistakeLimit:api.mistakeLimit,finished:false,lost:false});
-const state=fresh(),slot=state.board.indexOf(0),wrong=state.solution[slot]%state.size+1;
-assert(api.enter(state,slot,wrong));assert.equal(state.mistakes,1);
-api.enter(state,slot,wrong);assert.equal(state.mistakes,1,'Même valeur sans changement : pas de nouvelle erreur');
-api.enter(state,slot,0);assert.equal(state.mistakes,1,'Effacement gratuit');
-api.enter(state,slot,wrong);assert.equal(state.mistakes,2);
-api.enter(state,slot,0);api.enter(state,slot,wrong);
-assert(state.lost&&state.finished);assert.equal(state.mistakes,3);
-assert.equal(api.enter(state,slot,state.solution[slot]),false,'Défaite verrouillée');
-const restarted=fresh();assert.equal(restarted.mistakes,0);assert(!restarted.finished);
-api.enter(restarted,slot,restarted.solution[slot]);assert.equal(restarted.mistakes,0);
-const fixed=restarted.given.findIndex(Boolean);assert.equal(api.enter(restarted,fixed,wrong),false);
-console.log('Erreurs : seuil 3, saisie correcte et effacement gratuits, défaite verrouillée et remise à zéro vérifiés.');
+// Exhaustively check the four placement rules for every pair on a 5x5 grid.
+const level=api.create(0),n=level.size;
+for(let i=0;i<n*n;i++)for(let j=i+1;j<n*n;j++){
+ const board=Array(n*n).fill(0);board[i]=board[j]=1;
+ const r=Math.floor(i/n),c=i%n,y=Math.floor(j/n),x=j%n;
+ const bad=r===y||c===x||level.regions[i]===level.regions[j]||(Math.abs(r-y)<=1&&Math.abs(c-x)<=1);
+ assert.equal(api.conflicts(board,level)[i],bad);
+ board[j]=2;assert(!api.conflicts(board,level).some(Boolean),'Cross is not a rabbit');
+}
+const fresh=()=>({...api.create(0),mistakes:0,mistakeLimit:3,finished:false,lost:false});
+const state=fresh();api.enter(state,0,1);api.enter(state,1,1);assert.equal(state.mistakes,1);
+assert.equal(api.enter(state,1,1),false);assert.equal(state.mistakes,1);
+api.enter(state,1,2);assert.equal(state.mistakes,1);assert(!api.conflicts(state.board,state).some(Boolean));
+api.enter(state,1,1);api.enter(state,1,0);api.enter(state,1,1);
+assert(state.finished&&state.lost);assert.equal(state.mistakes,3);assert.equal(api.enter(state,1,0),false);
+const marks=fresh();for(let i=0;i<n*n;i++)api.enter(marks,i,2);assert.equal(marks.mistakes,0);assert(!api.isSolved(marks));
+assert.equal(api.enter(marks,-1,1),false);assert.equal(api.enter(marks,0,3),false);assert.throws(()=>api.create(99));
+console.log('Lapinoudoku : 12 grilles 5×5 à 8×8, régions connectées, solution unique, quatre règles, croix gratuites, trois erreurs et verrouillage vérifiés.');

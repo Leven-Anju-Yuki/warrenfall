@@ -1,6 +1,6 @@
 /* Les caches sont propres à ce projet, y compris sur un domaine GitHub Pages partagé. */
 const PREFIX = 'lapinous-' + new URL(self.registration.scope).pathname + '-';
-const SHELL = PREFIX + 'shell-v18', IMAGES = PREFIX + 'images-v1';
+const SHELL = PREFIX + 'shell-v53', IMAGES = PREFIX + 'images-v1';
 const HOME = new URL('index.html', self.registration.scope).href;
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
@@ -32,7 +32,9 @@ self.addEventListener('fetch', event => {
     const cache = await caches.open(image ? IMAGES : SHELL);
     const key = local && (relative === '' || relative === 'index.html') ? HOME : event.request;
     const cached = await cache.match(key);
-    if (image && cached) return cached;
+    // Une image opaque affichable ne permet pas la lecture des pixels d'un canvas.
+    const usableCached = cached && !(event.request.mode === 'cors' && cached.type === 'opaque');
+    if (image && usableCached) return cached;
     try {
       const response = await fetch(event.request);
       if (navigation && [403,404].includes(response.status)) {
@@ -44,6 +46,6 @@ self.addEventListener('fetch', event => {
         if (image) { const keys = await cache.keys(); for (const old of keys.slice(0, Math.max(0, keys.length - 120))) await cache.delete(old); }
       }
       return response;
-    } catch (error) { if (cached) return cached; if (navigation) { const page = await cache.match(new URL('offline.html', self.registration.scope).href); if(page) return page; } throw error; }
+    } catch (error) { if (usableCached) return cached; if (navigation) { const page = await cache.match(new URL('offline.html', self.registration.scope).href); if(page) return page; } throw error; }
   })());
 });

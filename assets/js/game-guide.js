@@ -38,7 +38,7 @@
     "where": "Salon → Coin jeux · Jardin",
     "text": "Les jeux et les victoires font gagner de l’amitié à ton lapin.",
     "points": [
-      "Au Salon : puzzles, jeu des paires, quiz et Lapidoku.",
+      "Au Salon : puzzles, jeu des paires, quiz, Lapidoku (chiffres) et Lapinoudoku (couleurs, lapins et croix).",
       "Au Jardin : cours et remporte des combats.",
       "L’amitié gagnée fait monter son niveau."
     ],
@@ -79,7 +79,7 @@
     "points": [
       "Marchande : choisis tes articles, puis règle ton panier.",
       "Chef : retrouve tes ingrédients dans le frigo et choisis un plat à préparer.",
-      "Apothicaire : utilise tes soins pour le lapin choisi."
+      "Apothicaire : les soins sont rangés par nourriture, énergie, propreté et amitié. Certains préparent un bonus pour une prochaine action."
     ],
     "tip": "Les provisions et les soins sont partagés entre tous tes lapins."
   },
