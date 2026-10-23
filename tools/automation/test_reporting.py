@@ -107,6 +107,35 @@ class DetailedReports(unittest.TestCase):
         self.assertIn('DISCORD_WEBHOOK_CLOUDINARY:', workflow)
         self.assertIn('DISCORD_WEBHOOK_TRELLO:', workflow)
 
+    def test_validation_runs_persist_without_advancing_business_checkpoints(self):
+        import report_probe
+        store = Store(fixture())
+        before = report_probe.business_fingerprint(store.data)
+        with tempfile.TemporaryDirectory() as folder, \
+             patch('state_store.GitHubStore', return_value=store), \
+             patch('report_probe.collect_reports', return_value={'bilan': 'b', 'images': 'i', 'trello': 't'}), \
+             patch('report_probe.deliver', return_value={k: 'sent' for k in reporting.CHANNELS}) as send:
+            for run_id in ('first-run', 'second-run'):
+                with patch.dict(os.environ, {'GITHUB_RUN_ID': run_id}), \
+                     patch('sys.argv', ['probe', '--source', 'actions', '--send', '--output', folder]):
+                    self.assertEqual(report_probe.main(), 0)
+            self.assertEqual(send.call_count, 2)
+            self.assertEqual(store.data['validation_runs'][-1]['previous_run'], 'first-run')
+            self.assertTrue(store.data['validation_runs'][-1]['same_as_previous'])
+            self.assertEqual(before, report_probe.business_fingerprint(store.data))
+            self.assertIsNone(store.data['lock'])
+            with patch.dict(os.environ, {'GITHUB_RUN_ID': 'second-run'}), \
+                 patch('sys.argv', ['probe', '--source', 'actions', '--send', '--output', folder]):
+                self.assertEqual(report_probe.main(), 0)
+            self.assertEqual(send.call_count, 2)
+
+    def test_validation_fingerprint_includes_unknown_business_fields(self):
+        from report_probe import business_fingerprint
+        state = fixture()
+        before = business_fingerprint(state)
+        state['future_checkpoint'] = {'keep': 'exact'}
+        self.assertNotEqual(before, business_fingerprint(state))
+
 
 if __name__ == '__main__':
     unittest.main()
