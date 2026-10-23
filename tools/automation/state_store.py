@@ -5,10 +5,15 @@ from __future__ import annotations
 import copy
 import json
 import re
+import time
 import requests
 
 
 class StateError(RuntimeError):
+    pass
+
+
+class StateBusy(StateError):
     pass
 
 
@@ -58,7 +63,7 @@ class LockedState:
         self.store, self.owner = store, owner
         self.data, self.revision = store.read()
         if self.data.get('lock'):
-            raise StateError('Traitement déjà verrouillé ; reprise manuelle après vérification du propriétaire.')
+            raise StateBusy('Traitement déjà verrouillé ; reprise manuelle après vérification du propriétaire.')
         self.data['lock'] = {'owner': owner}
         self.save()
 
@@ -73,3 +78,16 @@ class LockedState:
 
     # Pas d'expiration du verrou : un runner ancien ne peut pas continuer à supprimer
     # après une reprise concurrente. Un crash bloque jusqu'à contrôle explicite.
+
+
+def wait_for_state(store, owner, timeout=600, interval=10):
+    """Attend la fin du relais concurrent, sans voler ni expirer son verrou."""
+    deadline = time.monotonic() + timeout
+    while True:
+        try:
+            return LockedState(store, owner)
+        except StateBusy:
+            remaining = deadline - time.monotonic()
+            if remaining <= 0:
+                raise StateBusy('Relais encore verrouillé après attente ; aucun traitement concurrent lancé.') from None
+            time.sleep(min(interval, remaining))

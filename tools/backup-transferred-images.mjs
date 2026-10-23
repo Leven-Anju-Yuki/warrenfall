@@ -5,6 +5,7 @@ import crypto from 'node:crypto';
 const root = await fs.realpath('.');
 const imageRoot = path.join(root, 'assets', 'img') + path.sep;
 const backupRoot = await fs.realpath(process.env.LAPINOUS_IMAGE_BACKUP_DIR || 'C:/Users/flori/Desktop/clikergame_avec_image');
+if (backupRoot === root || backupRoot.startsWith(root + path.sep)) throw Error('La sauvegarde permanente doit rester hors du dépôt du jeu.');
 const manifest = JSON.parse(await fs.readFile('.cloudinary-local/manifest.json', 'utf8'));
 const inventory = JSON.parse(await fs.readFile('.cloudinary-local/inventory.json', 'utf8'));
 let moved = 0;
@@ -26,6 +27,8 @@ for (const entry of inventory.selected.filter(x => x.sourceExists !== false)) {
       const archive = path.join(backupRoot, '.versions', entry.path, oldHash + path.extname(destination));
       await fs.mkdir(path.dirname(archive), { recursive: true });
       await fs.writeFile(archive, previous, { flag: 'wx' }).catch(e => { if (e.code !== 'EEXIST') throw e; });
+      const archivedHash = crypto.createHash('sha256').update(await fs.readFile(archive)).digest('hex');
+      if (archivedHash !== oldHash) throw Error('Ancienne version non sécurisée : ' + entry.path);
     }
   } catch (e) { if (e.code !== 'ENOENT') throw e; }
   // Remplace la version de même nom, puis vérifie la copie avant de retirer la source.

@@ -12,7 +12,7 @@ import sys
 import tempfile
 import uuid
 from core import plan, apply_trash, paris_day
-from state_store import GitHubStore, LockedState, StateError
+from state_store import GitHubStore, LockedState, StateError, wait_for_state
 from transports import Cloudinary, send_discord, request
 from reporting import cloudinary_details, bundle, deliver
 
@@ -250,7 +250,7 @@ def main():
         return 0
     if not cfg['remote_apply_validated']:
         raise StateError('Application distante non validée.')
-    locked = LockedState(store, 'actions:' + os.getenv('GITHUB_RUN_ID', str(uuid.uuid4())))
+    locked = wait_for_state(store, 'actions:' + os.getenv('GITHUB_RUN_ID', str(uuid.uuid4())))
     if locked.data.get('ownership') != 'hybrid':
         locked.close()
         raise StateError('Relais Windows non validé : refus de double traitement.')

@@ -13,7 +13,7 @@ import sys
 import uuid
 from dotenv import load_dotenv
 from core import attest, valid_path
-from state_store import GitHubStore, LockedState, StateError
+from state_store import GitHubStore, LockedState, StateError, wait_for_state
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -66,17 +66,20 @@ def main():
     load_dotenv(ROOT / '.env')
     parser = argparse.ArgumentParser()
     parser.add_argument('command', choices=['export', 'run'])
-    parser.add_argument('--backup-dir', type=Path, default=os.getenv('LAPINOUS_IMAGE_BACKUP_DIR'))
+    parser.add_argument('--backup-dir', type=Path, default=os.getenv('LAPINOUS_IMAGE_BACKUP_DIR') or ROOT.parent / 'clikergame_avec_image')
     args = parser.parse_args()
     if not args.backup_dir:
         parser.error('--backup-dir ou LAPINOUS_IMAGE_BACKUP_DIR requis')
+    args.backup_dir = args.backup_dir.expanduser().resolve(strict=True)
+    if not args.backup_dir.is_dir() or args.backup_dir.is_relative_to(ROOT):
+        raise StateError('Sauvegarde permanente requise hors du dépôt du jeu.')
     key = os.getenv('WARRENFALL_BACKUP_SIGNING_KEY', '')
     if args.command == 'run':
         cfg = read(Path(__file__).parent, 'config.json')
         if not cfg['enabled']:
             raise StateError('Relais local non activé ; chaîne Windows historique conservée.')
         store = GitHubStore(os.getenv('WARRENFALL_STATE_REPO'), os.getenv('WARRENFALL_STATE_TOKEN'), cfg['state_branch'], cfg['state_file'])
-        locked = LockedState(store, 'windows:' + str(uuid.uuid4()))
+        locked = wait_for_state(store, 'windows:' + str(uuid.uuid4()))
         if locked.data.get('ownership') != 'hybrid':
             locked.close()
             raise StateError('Passage de relais non validé.')
@@ -86,7 +89,8 @@ def main():
             pending = folder / (name + '.tmp')
             pending.write_text(json.dumps(value, ensure_ascii=False), encoding='utf-8')
             pending.replace(folder / name)
-        child_env = {**os.environ, 'WARRENFALL_LOCAL_LOCK_OWNER': locked.owner}
+        child_env = {**os.environ, 'WARRENFALL_LOCAL_LOCK_OWNER': locked.owner,
+                     'LAPINOUS_IMAGE_BACKUP_DIR': str(args.backup_dir)}
         completed = subprocess.run(['node', 'tools/update-images.mjs', '--backup-local'], cwd=ROOT, env=child_env)
         # Même un transfert échoué est communiqué, sans autoriser la corbeille.
         state = export(ROOT, args.backup_dir, key)
