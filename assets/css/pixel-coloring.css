@@ -42,3 +42,38 @@ dialog.coloring-hub{inset:18px 0 auto;width:min(1240px,calc(100vw - 40px));heigh
 }
 .coloring-game .coloring-palette{display:grid;grid-template-columns:repeat(2,minmax(0,1fr));align-content:start;gap:7px;min-width:0;overflow-y:auto;overflow-x:hidden;scroll-padding:5px;box-sizing:border-box}
 .coloring-game .coloring-palette button{width:100%;min-width:0;height:40px;padding:3px;box-sizing:border-box}
+
+/* Un atelier de peinture, avec une toile indépendante de ses petits pots. */
+dialog.coloring-game{background:radial-gradient(ellipse at top left,#fffdf5,#f3e5cd);border:3px double #b7996a;box-shadow:0 16px 60px #24180b66;padding:20px;gap:12px;grid-template-columns:minmax(0,1fr) 122px}
+.coloring-game header{padding-bottom:10px;border-bottom:1px solid #cbb48a;flex-wrap:wrap}
+.coloring-game h2{color:#624558;font-size:clamp(17px,1.5vw,25px)}
+.coloring-navigation{display:flex;gap:8px;flex-wrap:wrap}
+.coloring-game button{border-radius:18px;background-color:#fffaf0;box-shadow:0 2px 0 #ad906647}
+.coloring-navigation button{padding:9px 15px;min-height:40px}
+.coloring-tools{display:flex;align-items:center;gap:7px;flex-wrap:wrap}
+.coloring-tools small{flex:1;min-width:180px;line-height:1.5}
+.coloring-viewport{border:8px solid #ae8758;border-radius:8px;background:repeating-linear-gradient(0deg,#e6dccb 0 2px,#e9e0d1 2px 4px);box-shadow:inset 0 2px 14px #65503524,0 3px 0 #795c3e}
+.coloring-viewport canvas{box-shadow:0 3px 18px #4c382733}
+.coloring-game .coloring-palette{padding:9px 7px;gap:14px 10px;background:#e5d2ae;border-radius:28px;box-shadow:inset 0 2px 8px #7b59262b}
+.coloring-game .coloring-palette button{position:relative;width:100%;height:auto;aspect-ratio:1;border-radius:50%;border:4px solid #f9edce;outline-offset:2px;box-shadow:inset 0 3px 5px #0005,inset 0 -3px 3px #fff4,0 3px 0 #9a7954,0 5px 6px #49301b30;font-size:14px}
+.coloring-palette button::after{content:'';position:absolute;inset:5% 14% 56% 14%;border-radius:50%;background:linear-gradient(#fff8,#fff0);pointer-events:none}
+.coloring-game .coloring-palette button[aria-pressed=true]{outline:3px solid #6c4866;transform:translateY(-2px)}
+.coloring-status{color:#624558;font-size:14px;padding:3px 0}
+@media(max-height:500px){dialog.coloring-game{padding:8px;gap:6px;grid-template-columns:minmax(0,1fr) 104px}.coloring-game header{padding-bottom:4px;flex-wrap:nowrap}.coloring-game h2{font-size:14px}.coloring-navigation{gap:4px}.coloring-navigation button{font-size:11px;min-height:28px;padding:4px 8px}.coloring-tools button{font-size:11px;min-height:28px;padding:4px 8px}.coloring-game .coloring-palette{gap:10px 7px;padding:7px}.coloring-viewport{border-width:5px}.coloring-status{font-size:11px;margin:0}}
+.coloring-help-toggle{display:none}
+@media(pointer:coarse),(max-height:500px){
+ dialog.coloring-game{inset:0!important;width:100%!important;height:100dvh!important;max-height:100dvh!important;margin:0!important;padding:5px max(6px,env(safe-area-inset-right)) 4px max(6px,env(safe-area-inset-left));border-width:1px;border-radius:8px;overflow:hidden;grid-template-columns:minmax(0,1fr) 82px;grid-template-rows:30px 30px minmax(0,1fr) 16px;gap:4px 7px}
+ .coloring-game header{padding:0;border:0;min-width:0;flex-wrap:nowrap;gap:5px;grid-row:1}
+ .coloring-game h2{font-size:13px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis;min-width:0}
+ .coloring-game .coloring-navigation{flex-wrap:nowrap;flex-shrink:0;gap:4px}
+ .coloring-game .coloring-navigation button{min-height:28px;font-size:10px;padding:3px 7px}
+ .coloring-game .coloring-tools{grid-row:2;gap:4px;flex-wrap:nowrap;min-width:0}
+ .coloring-game .coloring-tools button{min-height:28px;min-width:28px;padding:3px 7px;font-size:10px;white-space:nowrap}
+ .coloring-game .coloring-tools small{display:none!important}
+ .coloring-game .coloring-help-toggle{display:block;margin-left:auto}
+ .coloring-game.show-coloring-help .coloring-tools small{display:block!important;position:absolute;z-index:5;top:67px;left:10px;right:95px;min-width:0;padding:10px;background:#fff9eff5;border:1px solid #b99c70;border-radius:12px;box-shadow:0 4px 15px #0003;font-size:12px}
+ .coloring-game .coloring-viewport{grid-row:3;grid-column:1;border-width:3px;height:100%;min-height:0}
+ .coloring-game .coloring-palette{grid-row:3;grid-column:2;gap:8px 5px;padding:6px 3px;border-radius:18px;scrollbar-width:thin}
+ .coloring-game .coloring-palette button{border-width:3px;font-size:11px;min-height:32px;aspect-ratio:1}
+ .coloring-game .coloring-status{grid-row:4;font-size:10px;line-height:16px;padding:0;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+}

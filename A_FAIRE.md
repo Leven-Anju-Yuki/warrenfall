@@ -1578,3 +1578,51 @@ Procédure et limites : [MIGRATION_GITHUB_ACTIONS.md](docs/MIGRATION_GITHUB_ACTI
 - Texte des dégâts corrigé pour tenir compte des réductions réellement appliquées.
 - Tests : contrôle navigateur des deux impacts séparés, cohérence des petites barres et orientation des légumes ; test des orientations explicites et régressions des capacités/boucliers.
 
+# Atelier de coloriage — révision 158
+
+- Aperçu du pixel art terminé réservé à l’admin, réversible et sans écriture dans la progression.
+- Retour à l’album et retour direct au placard de jeux depuis le coloriage.
+- Atelier présenté comme une toile encadrée ; palette fixe sur deux colonnes de petits pots de peinture ronds et brillants, avec défilement conservé.
+- Tests : conversion des images, reprise, cache PWA et contrôle navigateur de l’aperçu sans sauvegarde ni accès joueur.
+
+# Fonds d’exploration — révision 159
+
+- Les quatre nouveaux décors du dossier `assets/img/fond/randonnée` sont associés à la prairie, la forêt, les dunes et la grotte.
+- Le fond suit la destination sélectionnée ; les panneaux restent lisibles sur les images.
+- Durées, probabilités, inventaires et sauvegardes inchangés. Aucun transfert Cloudinary lancé.
+
+# Randonneur vivant — révision 160
+
+- Les cinq visuels sont utilisés : salut, carte, marche animée, jumelles et sac à dos.
+- Le randonneur traverse le décor du biome sélectionné dans les deux sens, en regardant dans sa direction de marche.
+- Salut au départ et à la récupération des trouvailles ; jumelles au changement de destination.
+- Animation arrêtée à la fermeture ; marche remplacée par une pose fixe si les animations réduites sont demandées.
+- Aucun changement des durées, récompenses ou sauvegardes.
+
+# Lisibilité des escapades — révision 161
+
+- Décor et randonneur à gauche, commandes regroupées à droite ; trouvailles repliables et voyages masqués quand il n’y en a aucun.
+- Motif de blocage affiché près du départ : niveau exact, énergie disponible ou voyage en cours.
+- Destination accessible proposée si le niveau est insuffisant ; les affinités ne contournent pas les niveaux requis.
+- Règles de départ et sauvegardes conservées.
+
+# Orientation individuelle — révision 162
+
+- Vérification visuelle des 39 images de côté ; orientation d’origine déclarée par lapin dans le catalogue, au lieu d’une liste partielle dans le combat.
+- Lord Noctis, Easter King et Sandman sont désormais retournés vers leur adversaire ; les images déjà tournées à droite sont préservées.
+- Limite du visuel `oeuf_cote.png` : le personnage est entièrement de dos, un miroir ne peut pas créer un profil.
+- Tests des 39 orientations, des légumes et des règles d’équipe.
+
+# Fin de combat — révision 163
+
+- Carte de résultat avec portraits de l’équipe, adversaire et rappel des carottes/amitié gagnées.
+- Bouton « Rejouer ce combat » et retour au choix des adversaires, adaptés aux petits écrans.
+- Présentation de défaite harmonisée. Attribution des gains et protection contre les doubles gains conservées.
+
+# Coloriage sur téléphone — révision 165
+
+- Atelier sur toute la surface disponible, sans réserver la hauteur de la navigation du jeu.
+- En-tête et commandes compacts ; aide repliée derrière « ? » ; palette fixe de deux colonnes plus étroite.
+- Zone de coloriage agrandie, zoom et déplacement conservés, sauvegardes inchangées.
+- Rendu vérifié à 568 × 280 ; contrôle navigateur ajouté pour une toile occupant au moins 60 % de la hauteur sur téléphone.
+

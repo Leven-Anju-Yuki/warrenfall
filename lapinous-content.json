@@ -35,7 +35,8 @@
           "kind": "damage",
           "mult": 1.35
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "caramel": {
       "name": "Caramel",
@@ -71,7 +72,8 @@
           "kind": "damage",
           "mult": 1.35
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "mocha": {
       "name": "Mocha",
@@ -109,7 +111,8 @@
           "kind": "damage",
           "mult": 1.35
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "bambou": {
       "name": "Bambou",
@@ -149,7 +152,8 @@
           "kind": "damage",
           "mult": 1.55
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "flamme": {
       "name": "Flamme",
@@ -193,7 +197,8 @@
           "kind": "damage",
           "mult": 1.55
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "koda": {
       "name": "Koda",
@@ -239,7 +244,8 @@
           "kind": "guard",
           "mult": 0.85
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "nova": {
       "name": "Nova",
@@ -285,7 +291,8 @@
           "kind": "damage",
           "mult": 1.85
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "sakura": {
       "name": "Sakura",
@@ -326,7 +333,8 @@
           "kind": "guard",
           "mult": 0.85
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "spark": {
       "name": "Spark",
@@ -349,7 +357,8 @@
       "faceImg": "./assets/img/lapins_jouables/sans_evenements/eclair_face.png",
       "coteImg": "./assets/img/lapins_jouables/sans_evenements/eclair_cote.png",
       "friends": [
-        "nova","archy"
+        "nova",
+        "archy"
       ],
       "rivals": [
         "mocha"
@@ -367,7 +376,8 @@
           "kind": "damage",
           "mult": 1.55
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "myco": {
       "name": "Myco",
@@ -400,7 +410,8 @@
           "kind": "damage",
           "mult": 1.35
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "corsaire": {
       "name": "Corsaire",
@@ -433,7 +444,8 @@
           "kind": "damage",
           "mult": 1.35
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "nopal": {
       "name": "NOPAL",
@@ -472,7 +484,8 @@
           "kind": "damage",
           "mult": 1.55
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "umbra": {
       "name": "Umbra",
@@ -519,7 +532,8 @@
           "kind": "guard",
           "mult": 0.85
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "archy": {
       "name": "ARCHY",
@@ -542,7 +556,8 @@
       "faceImg": "./assets/img/lapins_jouables/sans_evenements/archy_face.png",
       "coteImg": "./assets/img/lapins_jouables/sans_evenements/archy_cote.png",
       "friends": [
-        "umbra","spark"
+        "umbra",
+        "spark"
       ],
       "rivals": [],
       "attacks": [
@@ -564,7 +579,8 @@
           "kind": "guard",
           "mult": 0.85
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "solaria": {
       "name": "SOLARIA",
@@ -614,7 +630,8 @@
           "kind": "guard",
           "mult": 0.85
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "meli": {
       "name": "MELI",
@@ -659,7 +676,8 @@
           "kind": "guard",
           "mult": 0.85
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "cauchemar": {
       "name": "Peatch Black",
@@ -713,7 +731,8 @@
           "kind": "damage",
           "mult": 1.85
         }
-      ]
+      ],
+      "combatFacing": "left"
     },
     "santaLegend": {
       "name": "Santa Rabbit",
@@ -779,7 +798,8 @@
           "kind": "heal",
           "mult": 0.65
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "easterKing": {
       "name": "Easter King",
@@ -843,7 +863,8 @@
           "kind": "heal",
           "mult": 0.65
         }
-      ]
+      ],
+      "combatFacing": "left"
     },
     "toothFairy": {
       "name": "Tooth Fairy",
@@ -907,7 +928,8 @@
           "kind": "heal",
           "mult": 0.65
         }
-      ]
+      ],
+      "combatFacing": "left"
     },
     "jackFrost": {
       "name": "Jack Frost",
@@ -971,7 +993,8 @@
           "kind": "heal",
           "mult": 0.65
         }
-      ]
+      ],
+      "combatFacing": "left"
     },
     "sandman": {
       "name": "Sandman",
@@ -1037,7 +1060,8 @@
           "kind": "heal",
           "mult": 0.65
         }
-      ]
+      ],
+      "combatFacing": "left"
     },
     "eggGuardian": {
       "name": "Egg Guardian",
@@ -1079,7 +1103,8 @@
           "kind": "damage",
           "mult": 1.55
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "santaRabbit": {
       "name": "Santa Rabbit",
@@ -1134,7 +1159,8 @@
           "kind": "damage",
           "mult": 1.85
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "mrsClaus": {
       "name": "Mrs Claus",
@@ -1181,7 +1207,8 @@
           "kind": "guard",
           "mult": 0.85
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "elfRabbit": {
       "name": "Elf Rabbit",
@@ -1222,7 +1249,8 @@
           "kind": "guard",
           "mult": 0.85
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "reindeerRabbit": {
       "name": "Reindeer Rabbit",
@@ -1263,7 +1291,8 @@
           "kind": "guard",
           "mult": 0.85
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "krampus": {
       "name": "Krampus",
@@ -1308,7 +1337,8 @@
         }
       ],
       "friends": [],
-      "rivals": []
+      "rivals": [],
+      "combatFacing": "right"
     },
     "vampireRabbit": {
       "name": "Lord Noctis",
@@ -1368,7 +1398,8 @@
           "kind": "heal",
           "mult": 0.65
         }
-      ]
+      ],
+      "combatFacing": "left"
     },
     "ghostRabbit": {
       "name": "Lady Etheria",
@@ -1428,7 +1459,8 @@
           "kind": "heal",
           "mult": 0.65
         }
-      ]
+      ],
+      "combatFacing": "left"
     },
     "skeletonRabbit": {
       "name": "King Ossarium",
@@ -1487,7 +1519,8 @@
           "kind": "heal",
           "mult": 0.65
         }
-      ]
+      ],
+      "combatFacing": "left"
     },
     "frankensteinRabbit": {
       "name": "Doctor Stitch",
@@ -1546,7 +1579,8 @@
           "kind": "heal",
           "mult": 0.65
         }
-      ]
+      ],
+      "combatFacing": "left"
     },
     "werebunnyRabbit": {
       "name": "Fenrabbit",
@@ -1605,7 +1639,8 @@
           "kind": "heal",
           "mult": 0.65
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "jinfu": {
       "name": "Jinfu",
@@ -1662,7 +1697,8 @@
           "kind": "heal",
           "mult": 0.65
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "longyun": {
       "name": "Longyun",
@@ -1719,7 +1755,8 @@
           "kind": "heal",
           "mult": 0.65
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "huangdi": {
       "name": "Huangdi",
@@ -1776,7 +1813,8 @@
           "kind": "heal",
           "mult": 0.65
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "yuehua": {
       "name": "Yuehua",
@@ -1833,7 +1871,8 @@
           "kind": "heal",
           "mult": 0.65
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "denghua": {
       "name": "Denghua",
@@ -1890,7 +1929,8 @@
           "kind": "heal",
           "mult": 0.65
         }
-      ]
+      ],
+      "combatFacing": "right"
     },
     "wushi": {
       "name": "Wushi",
@@ -1948,7 +1988,8 @@
           "kind": "heal",
           "mult": 0.65
         }
-      ]
+      ],
+      "combatFacing": "right"
     }
   },
   "bosses": {
@@ -2435,7 +2476,8 @@
         "chargePerTurn": 10,
         "multiplier": 1.2
       },
-      "combatPower": 5
+      "combatPower": 5,
+      "combatFacing": "right"
     },
     "debut_navet": {
       "name": "Navet Bougon",
@@ -2451,7 +2493,8 @@
         "chargePerTurn": 10,
         "multiplier": 1.2
       },
-      "combatPower": 7
+      "combatPower": 7,
+      "combatFacing": "right"
     },
     "debut_petit_pois": {
       "name": "Petit Pois Malicieux",
@@ -2467,12 +2510,20 @@
         "chargePerTurn": 10,
         "multiplier": 1.2
       },
-      "combatPower": 9
+      "combatPower": 9,
+      "combatFacing": "right"
     }
   },
   "exploration": {
     "companion": {
       "name": "Le randonneur",
+      "poses": {
+        "map": "assets/img/accompagnateurs/Randonneur/Lapin randonneur, carte et boussole-1.png",
+        "stand": "assets/img/accompagnateurs/Randonneur/Lapin randonneur debout avec sac à dos-3.png",
+        "look": "assets/img/accompagnateurs/Randonneur/Lapin randonneur aux jumelles-4.png",
+        "wave": "assets/img/accompagnateurs/Randonneur/Lapin randonneur saluant joyeusement-5.png",
+        "walk": "assets/img/accompagnateurs/Randonneur/07_marche_lapin_randonneur.gif"
+      },
       "image": "assets/img/accompagnateurs/Randonneur/Lapin randonneur, carte et boussole-1.png"
     },
     "durations": [
@@ -2512,6 +2563,7 @@
     "zones": [
       {
         "id": "meadow",
+        "image": "assets/img/fond/randonnée/Prairie dorée aux petites pousses-1.png",
         "name": "Prairie des petites pousses",
         "emoji": "🌼",
         "level": 1,
@@ -2536,6 +2588,7 @@
       },
       {
         "id": "forest",
+        "image": "assets/img/fond/randonnée/Forêt enchantée aux champignons luisants-2.png",
         "name": "Forêt des champignons luisants",
         "emoji": "🍄",
         "level": 1,
@@ -2559,6 +2612,7 @@
       },
       {
         "id": "desert",
+        "image": "assets/img/fond/randonnée/Dunes dorées au soleil doux-3.png",
         "name": "Dunes du soleil doux",
         "emoji": "🌵",
         "level": 3,
@@ -2581,6 +2635,7 @@
       },
       {
         "id": "cave",
+        "image": "assets/img/fond/randonnée/La grotte aux lucioles ambrées-4.png",
         "name": "Grottes des lucioles",
         "emoji": "💎",
         "level": 8,

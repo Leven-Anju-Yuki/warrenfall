@@ -1888,7 +1888,7 @@ document.addEventListener("DOMContentLoaded", () => {
             if(!mg.coloring)mg.coloring={};
             const rabbits=(game.ownedSpecies||[]).filter(id=>getSpecies()[id]?.faceImg).map(id=>({id:'rabbit-'+id,title:rabbitDisplayName({key:id,sp:getSpecies()[id]}),image:getSpecies()[id].faceImg,kind:'rabbit'}));
             const scenes=puzzleCatalog().filter(isPuzzleAvailableNow).map(image=>({...image,kind:'scene'}));
-            window.LapinousColoring.open({host:gameArea,catalog:[...rabbits,...scenes],storage:mg.coloring,save:autoSave,back:()=>openGameConsole()});
+            window.LapinousColoring.open({host:gameArea,catalog:[...rabbits,...scenes],admin:isLocalAdmin && adminTesting,storage:mg.coloring,save:autoSave,back:()=>openGameConsole()});
         };
         window.openGameConsole = function () {
             if(explorationUnavailable())return;
@@ -3707,17 +3707,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return `${powerName(r.sp) || r.sp.name} — Coup critique`;
         }
         function combatSpriteStyle(character, side, key) {
-            const leftRabbits = [
-                "cauchemar",
-                "toothFairy",
-                "jackFrost",
-                "ghostRabbit",
-                "skeletonRabbit",
-                "frankensteinRabbit",
-            ];
-            const facing =
-                character.combatFacing ||
-                (side === "rabbit" ? (leftRabbits.includes(key) ? "left" : "right") : character.kind === "vegetable" ? "right" : "left");
+            const facing = character.combatFacing || (side === "rabbit" ? "right" : "left");
             const direction = facing === (side === "rabbit" ? "right" : "left") ? 1 : -1;
             return `scale:${direction} 1;--combat-facing:${direction};`;
         }
@@ -4099,7 +4089,8 @@ document.addEventListener("DOMContentLoaded", () => {
             autoSave();
             const key = f.key;
             tacticalFight = null;
-            gameArea.innerHTML = `<div class="console-panel"><div class="console-title">${win ? "🏆 Victoire !" : "💤 Défaite"}</div><button class="action-btn" onclick="prepareFight('${key}')">🔁 Rejouer</button><button class="ghost-btn" onclick="openAdventure()">← Boss</button></div>`;
+            const portraits=f.team.map(x=>`<figure><img src="${combatEscape(x.sp.faceImg||x.sp.coteImg||'./assets/img/lapins_jouables/sans_evenements/mystery.svg')}" alt=""><figcaption>${combatEscape(rabbitDisplayName(x))}</figcaption></figure>`).join('');
+            gameArea.innerHTML = `<section class="battle-result ${win?'won':'lost'}" aria-labelledby="battleResultTitle"><span class="battle-result-medal" aria-hidden="true">${win?'🏆':'🌙'}</span><p class="battle-result-eyebrow">${win?'Une belle aventure en équipe':'Une pause au terrier'}</p><h2 id="battleResultTitle">${win?'Victoire !':'On reprend des forces ?'}</h2><p class="battle-result-opponent">${win?'Face à':'Après le combat contre'} ${combatEscape(f.boss.name)}</p><div class="battle-result-team">${portraits}</div>${win?`<div class="battle-result-rewards"><span>🥕 +${window.LapinousTeamRules.victory(f.boss).carrots} carottes</span><span>💛 +3 amitié par lapin</span></div>`:'<p class="battle-result-rest">Ton équipe a besoin de repos avant sa prochaine aventure.</p>'}<div class="battle-result-actions"><button class="battle-result-replay" onclick="prepareFight('${key}')">↻ ${win?'Rejouer ce combat':'Préparer une nouvelle tentative'}</button><button class="battle-result-back" onclick="openAdventure()">← Choisir un adversaire</button></div></section>`;
         }
 
         // ---- Boutique à œufs (Salon) ----

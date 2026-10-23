@@ -4,3 +4,34 @@
 body.rabbit-exploring #rabbitImage,body.rabbit-exploring #salonActiveRabbitSpot{visibility:hidden!important}.exploration-away-note{position:fixed;left:50%;bottom:75px;transform:translateX(-50%);z-index:20;padding:7px 15px;border-radius:12px;background:#fff8e8;color:#4b3a2a;font-size:13px;pointer-events:none}
 @media(max-width:750px),(max-height:500px){.exploration-dialog{padding:12px}.exploration-dialog h2{font-size:18px}.exploration-layout{grid-template-columns:100px minmax(0,1fr);gap:10px}.exploration-guide img{height:150px}.exploration-guide p{font-size:11px;padding:7px}.exploration-form{grid-template-columns:1fr}.exploration-form label{font-size:12px}.exploration-form select{padding:7px}.exploration-details{font-size:12px}.exploration-intro{font-size:12px}.exploration-away-note{bottom:56px;font-size:11px}}
 @media(orientation:landscape) and (max-height:500px){.exploration-form{grid-template-columns:repeat(2,minmax(0,1fr))}.exploration-form label:last-child{grid-column:1/-1}.exploration-guide img{border-radius:14px}}
+.exploration-dialog[data-biome]{background-image:linear-gradient(#fff8e833,#fff8e822),var(--biome-image);background-size:cover;background-position:center;background-repeat:no-repeat}
+.exploration-dialog[data-biome] header,.exploration-dialog[data-biome] .exploration-intro{background:#fff8ecef;border-radius:14px;padding:12px 16px}
+.exploration-dialog[data-biome] .exploration-layout>section{background:#fff8ecef;padding:18px;border-radius:18px;box-shadow:0 4px 20px #34211126}
+.exploration-dialog[data-biome] .exploration-guide{align-self:end;padding:12px;border-radius:18px;background:linear-gradient(transparent,#fff8e8aa)}
+@media(max-height:500px),(max-width:750px){.exploration-dialog[data-biome] header,.exploration-dialog[data-biome] .exploration-intro{padding:8px}.exploration-dialog[data-biome] .exploration-layout>section{padding:10px}.exploration-dialog[data-biome] .exploration-guide{padding:4px}}
+.exploration-dialog[data-biome] .exploration-layout{display:flex;flex-direction:column;gap:14px}
+.exploration-dialog[data-biome] .exploration-guide{align-self:stretch;padding:0;background:none}
+.exploration-trail{position:relative;height:260px;overflow:hidden;border-radius:18px;border:2px solid #c5ad7c;background-image:var(--biome-image);background-size:cover;background-position:center 65%;box-shadow:inset 0 -30px 45px #3d42131f}
+.exploration-walker{position:absolute;bottom:8px;left:calc(50% - 85px);width:170px;height:205px;filter:drop-shadow(0 7px 4px #29200d4d)}
+.exploration-guide .exploration-walker img{display:block;width:100%;height:100%;object-fit:contain;object-position:center bottom}
+.exploration-walker[data-pose=walk]{left:8px;animation:randonneur-traverse 8s linear forwards}
+.exploration-walker[data-pose=walk].returning{animation-direction:reverse}
+.exploration-walker[data-pose=walk].returning img{transform:scaleX(-1)}
+.exploration-guide .exploration-guide-speech{position:absolute;top:10px;left:50%;transform:translateX(-50%);margin:0;padding:8px 14px;background:#fff9eefa;border:1px solid #c9ae80;border-radius:18px;text-align:center;width:max-content;max-width:85%;font-size:13px;line-height:1.3;box-sizing:border-box}
+@keyframes randonneur-traverse{from{left:8px}to{left:calc(100% - 198px)}}
+@media(max-height:500px),(max-width:750px){.exploration-trail{height:190px}.exploration-walker{width:120px;height:140px;left:calc(50% - 60px)}.exploration-guide .exploration-guide-speech{font-size:11px;top:6px;padding:6px 10px}.exploration-walker[data-pose=walk]{animation-name:randonneur-traverse-small}@keyframes randonneur-traverse-small{from{left:8px}to{left:calc(100% - 128px)}}}
+@media(prefers-reduced-motion:reduce){.exploration-walker{animation:none!important}}
+.exploration-dialog[data-biome]{width:min(1280px,calc(100vw - 24px));background-image:linear-gradient(#fff8e81a,#2a241c33),var(--biome-image)}
+.exploration-dialog[data-biome] .exploration-layout{display:grid;grid-template-columns:minmax(260px,1fr) minmax(420px,1.1fr);align-items:start;gap:20px}
+.exploration-dialog[data-biome] .exploration-guide{position:sticky;top:12px}
+.exploration-trail{height:clamp(300px,58vh,540px);border:0;background:none;box-shadow:none}
+.exploration-walker{bottom:10px;width:190px;height:260px;left:calc(50% - 95px)}
+.exploration-guide .exploration-guide-speech{top:auto;bottom:0;left:50%;font-size:13px}
+.exploration-dialog[data-biome] .exploration-layout>section{padding:18px;background:#fff9eff5;border:1px solid #d4bf97}
+.exploration-form{grid-template-columns:1fr 1fr}.exploration-form label:first-child{grid-column:1/-1}
+.exploration-details{background:none;padding:0;margin:16px 0;font-size:14px}.exploration-details>strong{font-size:18px;color:#5b4630}.exploration-details>small{display:none}.exploration-details details{border-top:1px solid #dbcaaa;padding-top:8px;margin-top:8px}.exploration-details summary{cursor:pointer}
+.exploration-availability{padding:12px;border-radius:12px;background:#e9eedf;color:#3f5732;line-height:1.4;margin:12px 0;font-size:14px}.exploration-availability.blocked{background:#f8e6d5;color:#794425;border:1px solid #d6ae86}.exploration-availability p{margin:6px 0}.exploration-availability button{margin-top:8px;background:#fff9ee;font-size:12px}
+.exploration-dialog [data-exploration-start]{width:100%;background:#61774b;color:#fffdf3;border-color:#4c6238;font-size:16px;min-height:48px}.exploration-dialog [data-exploration-start]:disabled{background:#e5d8c2;color:#776c59;border-color:#cbbda3;opacity:1}
+.exploration-feedback:empty{display:none}.exploration-dialog h3{font-size:18px;margin:16px 0 10px}
+@media(max-width:850px){.exploration-dialog[data-biome] .exploration-layout{grid-template-columns:1fr}.exploration-dialog[data-biome] .exploration-guide{position:relative;top:auto}.exploration-trail{height:210px}.exploration-walker{width:140px;height:190px;left:calc(50% - 70px)}}
+@media(orientation:landscape) and (max-height:500px){.exploration-dialog[data-biome] .exploration-layout{grid-template-columns:minmax(140px,.7fr) minmax(280px,1.3fr);gap:10px}.exploration-dialog[data-biome] .exploration-guide{position:sticky;top:6px}.exploration-trail{height:210px}.exploration-walker{width:120px;height:170px}.exploration-details{font-size:12px}.exploration-availability{font-size:12px;padding:9px}.exploration-dialog[data-biome] .exploration-layout>section{padding:12px}}

@@ -45,9 +45,10 @@
     const data=await ready;if(!data||!api.valid())return;
     const questions=selectQuestions(data);
     if(!questions.length){api.toast('Aucune question active.');return;}
-    let index=0,score=0,answered=false,finished=false;
+    let index=0,score=0,answered=false,finished=false,nextTimer=null;
     const panel=document.createElement('section');panel.className='console-panel quiz-panel';api.root.replaceChildren(panel);
     function render(){
+      clearTimeout(nextTimer);nextTimer=null;
       if(!api.valid()||!panel.isConnected)return;
       answered=false;
       if(index===questions.length){
@@ -64,10 +65,17 @@
           if(!correct)button.classList.add('incorrect');
           panel.querySelector('.quiz-feedback').innerHTML=`<strong>${correct?'Bonne réponse !':'La bonne réponse : '+escape(q.choices[q.answer])}</strong><p>${escape(q.explanation)}</p>`;
           panel.querySelector('[data-quiz-next]').disabled=false;
+          panel.querySelector('[data-quiz-next]').textContent=index===questions.length-1?'Voir le résultat · automatique dans 15 s':'Suivant · automatique dans 15 s';
+          nextTimer=setTimeout(advance,15000);
         });
-        panel.querySelector('[data-quiz-next]').onclick=()=>{if(answered){index++;render();}};
+        panel.querySelector('[data-quiz-next]').onclick=advance;
       }
-      panel.querySelector('[data-quiz-back]').onclick=api.back;
+      panel.querySelector('[data-quiz-back]').onclick=()=>{clearTimeout(nextTimer);nextTimer=null;answered=false;api.back();};
+    }
+    function advance(){
+      clearTimeout(nextTimer);nextTimer=null;
+      if(!answered||finished||!api.valid()||!panel.isConnected)return;
+      index++;render();
     }
     render();
   }

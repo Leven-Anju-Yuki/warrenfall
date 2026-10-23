@@ -61,6 +61,24 @@
     let selected=game.species,zoneId=config.zones[0].id,hours=1;
     const title=el('header');title.append(el('h2','Les escapades du terrier'),button('×',()=>dialog.close()));
     const layout=el('div',undefined,'exploration-layout'),guide=el('aside',undefined,'exploration-guide'),image=el('img');image.src=config.companion.image;image.alt=config.companion.name;guide.append(image,el('p','Je connais les sentiers ! Choisis un compagnon et une destination.'));
+    const trail=el('div',undefined,'exploration-trail'),actor=el('div',undefined,'exploration-walker'),speech=el('p',undefined,'exploration-guide-speech');
+    actor.append(image);trail.append(actor,speech);guide.replaceChildren(trail);
+    const poses=config.companion.poses||{},sequence=['wave','map','walk','look','stand','walk'];
+    let poseIndex=0,poseTimer,returning=false;
+    const reducedMotion=matchMedia('(prefers-reduced-motion: reduce)').matches;
+    function pose(kind){
+      clearTimeout(poseTimer);
+      if(!dialog.isConnected||!dialog.open)return;
+      const actual=reducedMotion&&kind==='walk'?'stand':kind;
+      image.src=poses[actual]||config.companion.image;
+      actor.dataset.pose=actual;
+      actor.classList.toggle('returning',returning);
+      const lines={wave:'Coucou ! Prêt pour une escapade ?',map:'Voyons quel sentier emprunter…',walk:'En route, les merveilles nous attendent !',look:'Regarde ! Il y a des trésors par ici.',stand:'Le sac est prêt. À toi de choisir ton compagnon !'};
+      speech.textContent=lines[kind];
+      image.alt=`${config.companion.name} : ${speech.textContent}`;
+      if(kind==='walk')returning=!returning;
+      poseTimer=setTimeout(()=>pose(sequence[++poseIndex%sequence.length]),kind==='walk'?8000:4000);
+    }
     const content=el('section'),form=el('div',undefined,'exploration-form'),rabbit=el('select'),zones=el('select'),durations=el('select');
     rabbit.dataset.explorationRabbit='';zones.dataset.explorationZone='';durations.dataset.explorationDuration='';
     for(const id of game.ownedSpecies||[])if(species[id]){const option=el('option',name(id));option.value=id;rabbit.append(option);}rabbit.value=selected;
@@ -68,32 +86,47 @@
       for(const duration of config.durations){const option=el('option',`${duration.hours} h ${duration.hours===1?'réelle':'réelles'} · ${duration.rolls} trouvailles · ${duration.energy} énergie`);option.value=duration.hours;durations.append(option);}
     for(const [text,input] of [['Compagnon',rabbit],['Destination',zones],['Durée',durations]]){const label=el('label',text);label.append(input);form.append(label);}
     const details=el('div',undefined,'exploration-details'),feedback=el('p',undefined,'exploration-feedback');feedback.setAttribute('role','status');
-    const start=button('Préparer le sac et partir',()=>{try{const p=game.progress?.[selected];const planned=plan(config,items,selected,p?.currentLevel||1,zoneId,hours);depart(game,selected,planned,save);feedback.textContent=`${name(selected)} est parti ! Retour le ${new Date(planned.endsAt).toLocaleString('fr-FR')}.`;refresh();render();}catch(error){feedback.textContent=error.message;}});
-    const active=el('div',undefined,'exploration-trips');content.append(form,details,start,feedback,el('h3','Sur les sentiers'),active);layout.append(guide,content);dialog.append(title,el('p','1 h d’exploration = 1 h dans la vraie vie. Tu peux fermer le jeu : le voyage continue.','exploration-intro'),layout);
+    const availability=el('div',undefined,'exploration-availability');availability.setAttribute('role','status');
+    const start=button('Préparer le sac et partir',()=>{try{const p=game.progress?.[selected];const planned=plan(config,items,selected,p?.currentLevel||1,zoneId,hours);depart(game,selected,planned,save);feedback.textContent=`${name(selected)} est parti ! Retour le ${new Date(planned.endsAt).toLocaleString('fr-FR')}.`;refresh();render();pose('wave');}catch(error){feedback.textContent=error.message;}});
+    const active=el('div',undefined,'exploration-trips'),tripsTitle=el('h3','Sur les sentiers');content.append(form,details,availability,start,feedback,tripsTitle,active);layout.append(guide,content);dialog.append(title,el('p','1 h d’exploration = 1 h dans la vraie vie. Tu peux fermer le jeu : le voyage continue.','exploration-intro'),layout);
     start.dataset.explorationStart='';
     function render(){
       const zone=config.zones.find(z=>z.id===zoneId),duration=config.durations.find(d=>d.hours===hours),level=game.progress?.[selected]?.currentLevel||1,chances=rates(zone,duration,selected,level);
+      const background=zone.image?new URL(window.LapinousImages?.url(zone.image)||zone.image,document.baseURI).href:'';
+      dialog.style.setProperty('--biome-image',background?`url(${JSON.stringify(background)})`:'none');
+      dialog.dataset.biome=zone.id;
+      trail.style.setProperty('--biome-image',background?`url(${JSON.stringify(background)})`:'none');
       details.replaceChildren(el('p',`${name(selected)} · niveau ${level}${chances.affinity?' · 🌿 Dans son élément : bonus de trouvailles rares !':''}`),el('p',`Par trouvaille : ingrédients ${chances.ingredient} % · soins ${chances.care} % · soins rares ${chances.rare} % · œuf ${chances.egg} %.`));
       details.prepend(el('strong',`${zone.emoji} ${zone.name}`));details.append(el('p',`${duration.hours} h de voyage · ${duration.rolls} trouvailles · coût : ${duration.energy} énergie.`));
-      const pool=el('p');pool.textContent='Dans ce lieu : '+zone.ingredients.map(id=>items.find(i=>i.id===id)?.name||id).join(', ')+'.';details.append(pool);
+      const discoveries=el('details'),pool=el('p');discoveries.append(el('summary','Les trouvailles de ce lieu'));pool.textContent=zone.ingredients.map(id=>items.find(i=>i.id===id)?.name||id).join(', ')+'.';discoveries.append(pool);details.append(discoveries);
       const more=el('details');more.append(el('summary','Les soins à découvrir ici'),el('p','Soins : '+zone.care.map(id=>items.find(i=>i.id===id)?.name||id).join(', ')+'.'),el('p','Soins rares : '+zone.rare.map(id=>items.find(i=>i.id===id)?.name||id).join(', ')+'.'));details.append(more,el('small','Le niveau et l’affinité du lapin améliorent les chances. Les œufs trouvés rejoignent les œufs habituels du terrier.'));
       const current=trip(game,selected);start.disabled=level<zone.level||!!current&&!current.claimed||(game.progress?.[selected]?.energy||0)<duration.energy;
-      if(start.disabled)details.append(el('p',level<zone.level?`Niveau ${zone.level} requis pour ce lieu.`:current&&!current.claimed?'Ce compagnon a déjà une escapade en cours ou des trouvailles à récupérer.':'Ton compagnon doit se reposer avant de partir.'));
+      availability.replaceChildren();availability.classList.toggle('blocked',start.disabled);
+      start.textContent=start.disabled?'Départ indisponible':'🎒 Partir à l’aventure';
+      if(start.disabled){
+        const reason=level<zone.level?`${name(selected)} est niveau ${level}. Ce lieu demande le niveau ${zone.level}.`:current&&!current.claimed?'Ce compagnon est déjà en voyage ou attend que tu récupères ses trouvailles.':`Il faut ${duration.energy} énergie ; ${name(selected)} en a ${Math.floor(game.progress?.[selected]?.energy||0)}.`;
+        availability.append(el('strong',reason));
+        if(level<zone.level){
+          if(chances.affinity)availability.append(el('p','Son affinité augmente les chances de trouvailles rares, mais le niveau requis reste nécessaire.'));
+          const accessible=config.zones.find(z=>z.level<=level);
+          if(accessible)availability.append(button(`Choisir ${accessible.name}`,()=>{zoneId=accessible.id;zones.value=zoneId;render();pose('map');}));
+        }
+      }else availability.append(el('span',`✓ ${name(selected)} est prêt pour ce voyage.`));
       active.replaceChildren();
       for(const t of Object.values(game.exploration?.trips||{})){
         if(t.claimed)continue;
         const row=el('article',undefined,'exploration-trip'),zone=config.zones.find(z=>z.id===t.zone),left=Math.max(0,t.endsAt-Date.now());
         row.append(el('strong',`${name(t.rabbit)} · ${zone?.name||t.zone}`));
         const clock=el('span');clock.dataset.endsAt=t.endsAt;row.append(clock,el('small',`Retour : ${new Date(t.endsAt).toLocaleString('fr-FR')}`));
-        const collect=button('Accueillir et récupérer',()=>{try{const loot=claim(game,t.rabbit,items,save);feedback.textContent=`${name(t.rabbit)} rapporte : `+loot.map(e=>`${e.quantity} × ${e.id==='egg'?'œuf':items.find(i=>i.id===e.id)?.name||e.id}`).join(', ')+'.';refresh();render();}catch(error){feedback.textContent=error.message;}});collect.disabled=left>0;collect.dataset.collectRabbit=t.rabbit;row.append(collect);active.append(row);
+        const collect=button('Accueillir et récupérer',()=>{try{const loot=claim(game,t.rabbit,items,save);feedback.textContent=`${name(t.rabbit)} rapporte : `+loot.map(e=>`${e.quantity} × ${e.id==='egg'?'œuf':items.find(i=>i.id===e.id)?.name||e.id}`).join(', ')+'.';refresh();render();pose('wave');}catch(error){feedback.textContent=error.message;}});collect.disabled=left>0;collect.dataset.collectRabbit=t.rabbit;row.append(collect);active.append(row);
       }
-      if(!active.children.length)active.append(el('p','Personne sur les sentiers pour le moment.'));
+      tripsTitle.hidden=!active.children.length;active.hidden=!active.children.length;
       tick();
     }
     function tick(){for(const n of dialog.querySelectorAll('[data-ends-at]')){const seconds=Math.max(0,Math.ceil((Number(n.dataset.endsAt)-Date.now())/1000));n.textContent=seconds?`${Math.floor(seconds/3600)} h ${Math.floor(seconds%3600/60)} min ${seconds%60} s restantes`:'De retour au terrier !';n.parentElement.querySelector('button').disabled=seconds>0;}}
-    rabbit.onchange=()=>{selected=rabbit.value;render();};zones.onchange=()=>{zoneId=zones.value;render();};durations.onchange=()=>{hours=Number(durations.value);render();};
-    const timer=setInterval(()=>{if(!dialog.isConnected){clearInterval(timer);return;}tick();},1000);
-    dialog.onclose=()=>{clearInterval(timer);dialog.remove();refresh();};render();
+    rabbit.onchange=()=>{selected=rabbit.value;render();};zones.onchange=()=>{zoneId=zones.value;render();pose('look');};durations.onchange=()=>{hours=Number(durations.value);render();};
+    const timer=setInterval(()=>{if(!dialog.isConnected||!dialog.open){clearInterval(timer);clearTimeout(poseTimer);return;}tick();},1000);
+    dialog.onclose=()=>{clearTimeout(poseTimer);clearInterval(timer);dialog.remove();refresh();};render();pose('wave');
   }
   window.LapinousExploration={HOUR,trip,busy,rates,plan,depart,claim,open};
 })();
