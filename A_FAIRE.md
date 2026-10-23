@@ -1634,3 +1634,19 @@ Procédure et limites : [MIGRATION_GITHUB_ACTIONS.md](docs/MIGRATION_GITHUB_ACTI
 - Activation distante encore à valider : publication ciblée, secrets, export d’état privé et passage de responsabilité. Aucune tâche Windows ni politique de quarantaine modifiée.
 - Détails : `docs/DIAGNOSTIC_RAPPORTS_2026-10-23.md`.
 
+# Relais GitHub — validation distante du 23 octobre 2026
+
+- Secrets chiffrés et dépôt privé configurés ; 12 quarantaines, dates et reprises migrées sans réinitialisation, 355 sauvegardes exactes attestées, quatre versions conservées bloquées.
+- Deux exécutions GitHub Actions réussies : `39951783972`, `39952015467`. Trois pièces jointes complètes par run, relues sur Discord ; 71 cartes analysées sans erreur.
+- Persistance vérifiée entre les runners et empreinte métier inchangée. Aucun traitement réel Cloudinary/Trello appliqué et aucune tâche Windows modifiée.
+- Activation quotidienne et transfert de responsabilité encore en attente de validation après présentation des résultats.
+- Preuves : `docs/VALIDATION_ACTIONS_2026-10-23.md`.
+
+# Activation avec sauvegarde permanente — 23 octobre 2026
+
+- Relais Windows conservé pour transferts confirmés et sauvegarde des originaux dans `clikergame_avec_image`, avec arborescence et archives des versions.
+- Chemin Python/Node unifié, ancienne version vérifiée avant remplacement, attente du verrou partagé ajoutée.
+- Tests de sauvegarde réussis en local et sur Actions (`39956985759`) ; contrôle réel : 481 images, aucune absente ni modifiée.
+- Passage coordonné à `ownership=hybrid` autorisé, 12 quarantaines et reprise Trello conservées ; suppression après sept jours exclusivement sur Cloudinary avec preuve de sauvegarde exacte.
+- Tâches Windows inchangées ; production GitHub activée pour le créneau quotidien de 20 h Europe/Paris.
+

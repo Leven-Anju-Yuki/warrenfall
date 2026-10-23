@@ -1,5 +1,19 @@
 # Warrenfall : préparation du relais Windows / GitHub Actions
 
+## Production et sauvegarde permanente — 23 octobre 2026
+
+Activation autorisée après deux validations réelles Actions (`39951783972`, `39952015467`), puis validation distante des protections de sauvegarde (`39956985759`). Les paragraphes historiques ci-dessous ne décrivent plus l’état d’activation courant.
+
+La sauvegarde permanente reste **`C:\Users\flori\Desktop\clikergame_avec_image`**. Le relais Windows conservé appelle `update-images.mjs --backup-local` ; les deux scripts utilisent explicitement le même dossier. Un original n’est retiré du dossier du jeu qu’après transfert confirmé et copie locale identique vérifiée par SHA-256. Les anciennes versions sont archivées sous `.versions`, avec contrôle de leur copie avant remplacement. Aucune purge de ce dossier n’est prévue.
+
+Contrôle physique avant/après préparation de l’activation : **481 images, aucune absente ni modifiée**. Les suppressions à sept jours concernent uniquement Cloudinary et nécessitent toujours la preuve de sauvegarde exacte. Quatre versions restent bloquées, dont `chef.svg`.
+
+La tâche Windows de 20 h et son rattrapage sont conservés. Windows effectue transferts et sauvegardes ; Actions traite la corbeille distante et les bilans. Le verrou partagé empêche les traitements concurrents, avec attente bornée sans vol de verrou. L’état privé est passé de `ownership=windows` à `ownership=hybrid`, sans réinitialisation des 12 quarantaines ni du point de reprise Trello.
+
+Les nouveaux fichiers uniquement présents sur le PC attendent son prochain relais local. Les bilans et traitements distants sont planifiés à 20 h `Europe/Paris` sur GitHub.
+
+**Mise à jour :** secrets et état privé configurés, deux validations réelles GitHub réussies ; activation de production encore désactivée. Voir [les preuves de validation](VALIDATION_ACTIONS_2026-10-23.md). Les paragraphes ci-dessous décrivent aussi les étapes historiques de préparation.
+
 Diagnostic réel et corrections des rapports au 23 octobre : [rapport de vérification](DIAGNOSTIC_RAPPORTS_2026-10-23.md). Le workflow est publié mais n’a jamais tourné ; activation, secrets et état privé sont encore absents. Le test Discord local des trois pièces jointes a réussi. Le mode manuel `test-discord` permet de valider séparément les notifications sur Actions avant application des traitements.
 
 État au 21 octobre 2026 : code préparé, simulations locales réalisées, **migration non activée et non publiée**. Aucune tâche Windows supprimée, désactivée ou reprogrammée. Aucune opération Cloudinary, Trello ou Discord réelle pendant les essais.
