@@ -228,7 +228,7 @@ class HybridTests(unittest.TestCase):
             self.assertEqual(send_discord(locked, 'day', 'rapport', 'fake'), 'uncertain')
             self.assertEqual(transport.call_count, 1)
         response = unittest.mock.Mock(ok=True)
-        response.json.return_value = {'id': '123'}
+        response.json.return_value = {'id': '123', 'attachments': [{'filename': 'bilan.md'}]}
         with patch('transports.request', return_value=response) as transport:
             self.assertEqual(send_discord(locked, 'other-day', 'rapport', 'fake'), 'sent')
             self.assertEqual(send_discord(locked, 'other-day', 'rapport', 'fake'), 'sent')

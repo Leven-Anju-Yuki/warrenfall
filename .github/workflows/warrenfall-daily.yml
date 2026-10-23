@@ -10,7 +10,7 @@ on:
         description: Mode (application seulement après validation du relais Windows)
         type: choice
         default: simulation
-        options: [simulation, appliquer]
+        options: [simulation, appliquer, test-discord]
 
 permissions:
   contents: read
@@ -41,7 +41,7 @@ jobs:
   daily:
     needs: simulations
     # Absent par défaut : publier le fichier ne réactive aucune automatisation.
-    if: vars.WARRENFALL_HYBRID_ENABLED == 'true'
+    if: always() && vars.WARRENFALL_HYBRID_ENABLED == 'true' && inputs.mode != 'test-discord'
     runs-on: ubuntu-latest
     timeout-minutes: 40
     environment: warrenfall-automation
@@ -56,6 +56,8 @@ jobs:
       TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
       TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
       DISCORD_WEBHOOK_BILAN: ${{ secrets.DISCORD_WEBHOOK_BILAN }}
+      DISCORD_WEBHOOK_CLOUDINARY: ${{ secrets.DISCORD_WEBHOOK_CLOUDINARY }}
+      DISCORD_WEBHOOK_TRELLO: ${{ secrets.DISCORD_WEBHOOK_TRELLO }}
       PYTHONIOENCODING: utf-8
     steps:
       - uses: actions/checkout@v4
@@ -67,6 +69,7 @@ jobs:
           python-version: '3.12'
       - run: python -m pip install -r tools/agent_lapinous/requirements.txt
       - name: Chaîne distante (application uniquement après validation)
+        if: needs.simulations.result == 'success'
         env:
           REQUESTED_MODE: ${{ inputs.mode }}
           APPLY_ENABLED: ${{ vars.WARRENFALL_HYBRID_APPLY_VALIDATED }}
@@ -76,7 +79,39 @@ jobs:
             args+=(--apply)
           fi
           python -B tools/automation/remote.py "${args[@]}"
+      - name: Envoi de secours indépendant des traitements métier
+        if: always() && (github.event_name == 'schedule' || inputs.mode == 'appliquer')
+        run: python -B tools/automation/report_fallback.py
       - name: Résultat
         if: always()
         run: |
           echo 'Rapport détaillé conservé dans le dépôt privé d’état ; aucun artifact public.' >> "$GITHUB_STEP_SUMMARY"
+
+  notification-test:
+    needs: simulations
+    if: github.event_name == 'workflow_dispatch' && inputs.mode == 'test-discord'
+    runs-on: ubuntu-latest
+    timeout-minutes: 15
+    environment: warrenfall-automation
+    env:
+      WARRENFALL_STATE_REPO: ${{ vars.WARRENFALL_STATE_REPO }}
+      WARRENFALL_STATE_TOKEN: ${{ secrets.WARRENFALL_STATE_TOKEN }}
+      WARRENFALL_BACKUP_SIGNING_KEY: ${{ secrets.WARRENFALL_BACKUP_SIGNING_KEY }}
+      TRELLO_BOARD_ID: ${{ secrets.TRELLO_BOARD_ID }}
+      TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
+      TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+      DISCORD_WEBHOOK_BILAN: ${{ secrets.DISCORD_WEBHOOK_BILAN }}
+      DISCORD_WEBHOOK_CLOUDINARY: ${{ secrets.DISCORD_WEBHOOK_CLOUDINARY }}
+      DISCORD_WEBHOOK_TRELLO: ${{ secrets.DISCORD_WEBHOOK_TRELLO }}
+      PYTHONIOENCODING: utf-8
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+          fetch-depth: 0
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - run: python -m pip install -r tools/agent_lapinous/requirements.txt
+      - name: Test réel des pièces jointes — lectures uniquement
+        run: python -B tools/automation/report_probe.py --source actions --send

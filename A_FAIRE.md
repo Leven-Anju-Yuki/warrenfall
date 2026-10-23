@@ -1626,3 +1626,11 @@ Procédure et limites : [MIGRATION_GITHUB_ACTIONS.md](docs/MIGRATION_GITHUB_ACTI
 - Zone de coloriage agrandie, zoom et déplacement conservés, sauvegardes inchangées.
 - Rendu vérifié à 568 × 280 ; contrôle navigateur ajouté pour une toile occupant au moins 60 % de la hauteur sur téléphone.
 
+# Rapports quotidiens — vérification du 23 octobre 2026
+
+- Diagnostic GitHub réel : workflow sans exécution, configuration désactivée, secrets et variables absents ; les alertes historiques viennent de la tâche Windows.
+- Rapports complets séparés et pièces jointes dédiées pour bilan, Cloudinary/quarantaine et Trello ; erreurs isolées, reçus et secours d’envoi.
+- Test Discord non destructif réussi sur les trois salons avec pièces jointes confirmées ; 71 cartes analysées sans erreur Trello.
+- Activation distante encore à valider : publication ciblée, secrets, export d’état privé et passage de responsabilité. Aucune tâche Windows ni politique de quarantaine modifiée.
+- Détails : `docs/DIAGNOSTIC_RAPPORTS_2026-10-23.md`.
+

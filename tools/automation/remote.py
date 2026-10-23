@@ -14,6 +14,7 @@ import uuid
 from core import plan, apply_trash, paris_day
 from state_store import GitHubStore, LockedState, StateError
 from transports import Cloudinary, send_discord, request
+from reporting import cloudinary_details, bundle, deliver
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -51,14 +52,30 @@ def trello(locked):
             locked.save()
 
         buffer = io.StringIO()
-        # Un seul rapport Discord hybride, plutôt que plusieurs notifications locales.
-        with patch.object(agent, 'STATE_FILE', state_file), patch.object(agent, 'REPORTS', Path(folder)), \
-             patch.object(agent, 'write_transitions', transitions), patch.object(agent, 'save_checkpoint', checkpoint), \
-             patch.object(agent, 'replace_section', lambda *args: None), \
-             patch.object(agent, 'discord', lambda *args: True), patch.object(agent, 'send_report_file', lambda *args: True), \
-             patch.object(agent, 'cloudinary_report', lambda *args, **kwargs: ('Etat Cloudinary dans le bilan hybride.', True)), \
-             contextlib.redirect_stdout(buffer):
-            code = agent.bilan(True)
+        sections = locked.data.setdefault('report_sections', {})
+        def capture_file(channel, file, text, ok):
+            sections[channel] = text
+            return True
+        def capture_message(channel, message):
+            if channel == 'trello':
+                sections['trello'] = message
+            return True
+        # Capturer les rapports avant la disparition du répertoire temporaire.
+        try:
+            with patch.object(agent, 'STATE_FILE', state_file), patch.object(agent, 'REPORTS', Path(folder)), \
+                 patch.object(agent, 'write_transitions', transitions), patch.object(agent, 'save_checkpoint', checkpoint), \
+                 patch.object(agent, 'replace_section', lambda *args: None), \
+                 patch.object(agent, 'discord', capture_message), patch.object(agent, 'send_report_file', capture_file), \
+                 patch.object(agent, 'cloudinary_report', lambda *args, **kwargs: (sections.get('images', 'Cloudinary non vérifié.'), sections.get('_cloud_ok', False))), \
+                 contextlib.redirect_stdout(buffer):
+                code = agent.bilan(True)
+        except StateError:
+            raise
+        except Exception as exc:
+            code = 1
+            buffer.write('\nTrello / agent : ' + agent.safe_error(exc))
+        # La pièce jointe Trello conserve l'intégralité du bilan de l'agent et ses diagnostics.
+        sections['trello'] = buffer.getvalue() + '\n\n' + sections.get('trello', '')
         return code, buffer.getvalue()
 
 
@@ -138,6 +155,7 @@ def deletion_allowed(state):
 
 def execute(locked, key, cloud, now, source):
     state = locked.data
+    state['report_sections'] = {}
     errors, details = [], ''
     # Protège aussi les références locales non encore publiées sur GitHub.
     inventory = state.get('inventory', {})
@@ -150,7 +168,12 @@ def execute(locked, key, cloud, now, source):
         elif record.get('public_id') and record.get('url'):
             active_local.extend([record['public_id'], record['url']])
     source += '\n' + '\n'.join(active_local)
-    proposed = plan(state, source, key, now)
+    try:
+        proposed = plan(state, source, key, now)
+    except Exception as exc:
+        proposed = {'blocked': [{'reason': 'Plan de corbeille invalide : ' + type(exc).__name__}]}
+        inventory_ok = False
+        errors.append('Cloudinary : plan interrompu ; aucune suppression tentée.')
     policy_ok = deletion_allowed(state)
     if not policy_ok or os.getenv('LAPINOUS_CLOUDINARY_DELETE_DISABLED') == 'true':
         errors.append('Cloudinary corbeille : politique de suppression suspendue ou non confirmée.')
@@ -176,16 +199,24 @@ def execute(locked, key, cloud, now, source):
                 raise ValueError()
         except Exception:
             errors.append('Cloudinary ressources : inaccessible ou identité différente — ' + item['path'])
+    state['report_sections']['images'] = cloudinary_details(state, proposed, now)
+    state['report_sections']['_cloud_ok'] = not any(e.startswith('Cloudinary') for e in errors)
+    creations = []
     try:
         creations = create_explicit_tasks(locked) if state.get('new_tasks') else []
+    except StateError:
+        raise
+    except Exception as exc:
+        errors.append('Trello créations : ' + type(exc).__name__ + ' ; bilan des cartes maintenu.')
+    try:
         code, details = trello(locked)
         details += '\nCartes nouvelles : ' + json.dumps(creations, ensure_ascii=False)
         if code:
             errors.append('Trello / agent : étape en échec ; voir le détail du bilan.')
     except StateError:
         raise
-    except Exception:
-        errors.append('Trello / script : étape interrompue ; point de reprise conservé.')
+    except Exception as exc:
+        errors.append('Trello / script : ' + type(exc).__name__ + ' ; point de reprise conservé.')
     return render(state, proposed, errors, details), errors
 
 
@@ -237,13 +268,12 @@ def main():
     locked.save()
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(report, encoding='utf-8')
-    url = os.environ.get('DISCORD_WEBHOOK_BILAN')
-    if not url:
-        errors.append('Discord : webhook bilan absent ; rapport privé conservé.')
-    else:
-        event_id = 'daily:' + paris_day(now)
-        if send_discord(locked, event_id, report, url) != 'sent':
-            errors.append('Discord : confirmation absente ; voir état de notification.')
+    reports = bundle(locked.data, report, locked.data['report_sections'].get('images', report))
+    locked.data['last_reports'] = reports
+    locked.save()
+    outcomes = deliver(locked, reports, 'daily:' + paris_day(now), args.output.parent / 'reports')
+    locked.data['last_delivery'] = outcomes
+    errors.extend('Discord ' + channel + ' : ' + status for channel, status in outcomes.items() if status != 'sent')
     locked.save()
     locked.close()
     return int(bool(errors))

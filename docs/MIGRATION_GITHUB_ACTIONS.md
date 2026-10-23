@@ -1,5 +1,7 @@
 # Warrenfall : préparation du relais Windows / GitHub Actions
 
+Diagnostic réel et corrections des rapports au 23 octobre : [rapport de vérification](DIAGNOSTIC_RAPPORTS_2026-10-23.md). Le workflow est publié mais n’a jamais tourné ; activation, secrets et état privé sont encore absents. Le test Discord local des trois pièces jointes a réussi. Le mode manuel `test-discord` permet de valider séparément les notifications sur Actions avant application des traitements.
+
 État au 21 octobre 2026 : code préparé, simulations locales réalisées, **migration non activée et non publiée**. Aucune tâche Windows supprimée, désactivée ou reprogrammée. Aucune opération Cloudinary, Trello ou Discord réelle pendant les essais.
 
 ## Architecture actuelle constatée

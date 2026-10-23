@@ -62,7 +62,7 @@ class Cloudinary:
             raise RuntimeError(f'Cloudinary corbeille : suppression non confirmée (HTTP {r.status_code})')
 
 
-def send_discord(locked, event_id, text, url):
+def send_discord(locked, event_id, text, url, *, filename='bilan.md', title='Bilan Warrenfall — rapport détaillé'):
     """Envoi confirmé enregistré ; timeout ambigu bloqué, jamais doublé à l'aveugle."""
     import json
     entries = locked.data.setdefault('notifications', {})
@@ -74,12 +74,16 @@ def send_discord(locked, event_id, text, url):
     try:
         # Rapport complet en pièce jointe : pas de troncature à 2 000 caractères.
         r = request('POST', url, params={'wait': 'true'},
-                    data={'payload_json': json.dumps({'content': 'Bilan Warrenfall — rapport détaillé',
+                    data={'payload_json': json.dumps({'content': title,
                                                       'allowed_mentions': {'parse': []}})},
-                    files={'files[0]': ('bilan.md', text.encode(), 'text/markdown')})
+                    files={'files[0]': (filename, text.encode('utf-8'), 'text/markdown')})
         if not r.ok or not r.json().get('id'):
             raise RuntimeError(f'Discord : envoi non confirmé (HTTP {r.status_code})')
-        entries[event_id] = {'status': 'sent', 'message_id': r.json()['id']}
+        attachments = r.json().get('attachments', [])
+        if not any(a.get('filename') == filename for a in attachments):
+            raise RuntimeError('Discord : pièce jointe non confirmée')
+        entries[event_id] = {'status': 'sent', 'message_id': r.json()['id'],
+                             'attachment': filename, 'channel_id': r.json().get('channel_id')}
     except Exception:
         entries[event_id] = {'status': 'uncertain', 'error': 'Discord : confirmation absente ; vérifier avant de renvoyer'}
     locked.save()
