@@ -12,6 +12,8 @@ docs/*
 hybrid-export*.json
 warrenfall-state*.json
 tools/automation/__pycache__/
+__pycache__/
+*.pyc
 
 # Copies locales des catalogues et sauvegardes des joueurs
 /Sauvegardes JSON/

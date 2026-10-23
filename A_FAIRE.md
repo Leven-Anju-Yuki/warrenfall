@@ -1650,3 +1650,10 @@ Procédure et limites : [MIGRATION_GITHUB_ACTIONS.md](docs/MIGRATION_GITHUB_ACTI
 - Passage coordonné à `ownership=hybrid` autorisé, 12 quarantaines et reprise Trello conservées ; suppression après sept jours exclusivement sur Cloudinary avec preuve de sauvegarde exacte.
 - Tâches Windows inchangées ; production GitHub activée pour le créneau quotidien de 20 h Europe/Paris.
 
+# Nettoyage et documentation — 23 octobre 2026
+
+- Copies ponctuelles du code distant, scripts d’installation de migration devenus inutiles, cache Python et ancienne copie de l’agent retirés ; états, journaux utiles et preuves conservés.
+- Ancien export `arborescence.txt` retiré : le README contient désormais l’arborescence régénérée et les poids actuels.
+- README et générateur alignés sur le relais actif et la sauvegarde permanente `.versions` ; raccourci manuel raccordé au lanceur Windows partagé.
+- Images, futures créations, sauvegardes des joueurs et sauvegarde permanente intactes. Aucun push automatique.
+

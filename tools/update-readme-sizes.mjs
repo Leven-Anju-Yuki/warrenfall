@@ -12,11 +12,13 @@ const weight = n => n >= 1048576 ? (n / 1048576).toLocaleString('fr-FR', { minim
   : n >= 1024 ? (n / 1024).toLocaleString('fr-FR', { minimumFractionDigits: 1, maximumFractionDigits: 1 }) + ' Kio' : number(n) + ' octets';
 
 /** Mesure les métadonnées des fichiers sans lire leurs images ni suivre les liens symboliques. */
-function scan(folder) {
+function scan(folder, depth = 0) {
   const node = { name: path.basename(folder), directory: true, bytes: 0, children: [] };
   for (const entry of fs.readdirSync(folder, { withFileTypes: true })) {
     if (entry.isSymbolicLink()) continue;
-    const item = entry.isDirectory() ? scan(path.join(folder, entry.name))
+    const item = entry.isDirectory() && depth === 0 && excluded.has(entry.name)
+      ? { name: entry.name, directory: true, bytes: 0, children: [], unmeasured: true }
+      : entry.isDirectory() ? scan(path.join(folder, entry.name), depth + 1)
       : { name: entry.name, directory: false, bytes: fs.statSync(path.join(folder, entry.name)).size };
     node.children.push(item); node.bytes += item.bytes;
   }
@@ -28,7 +30,7 @@ function projectTree(full) {
   const children = full.children.filter(x => !excluded.has(x.name) && !/^\.env(?:\.|$)/.test(x.name));
   return { ...full, children, bytes: children.reduce((n, x) => n + x.bytes, 0) };
 }
-// Sauvegarde avant la mesure pour que son poids local figure aussi dans le bilan.
+// Conserve une copie du README avant régénération, hors du périmètre mesuré.
 fs.mkdirSync('.cloudinary-local/backups', { recursive: true });
 fs.writeFileSync('.cloudinary-local/backups/readme-before-sizes-' + Date.now() + '.md', original);
 const currentFull = scan(root), referenceFull = scan(referenceRoot);
@@ -49,22 +51,20 @@ function tree(node) {
   }
   visit(node, ''); return lines.join('\n');
 }
-/** Distingue économie sur les fichiers du projet et occupation locale, historique compris. */
+/** Compare les fichiers du projet ; les dossiers privés ne sont pas parcourus. */
 function section() {
   const saving = reference.bytes - current.bytes;
   const previousSaving = oldReadmeBytes - current.bytes;
-  const localTotal = current.bytes + currentFull.children.filter(x => excluded.has(x.name) || /^\.env(?:\.|$)/.test(x.name)).reduce((n, x) => n + x.bytes, 0);
-  const localSaving = referenceFull.bytes - localTotal;
-  const localRows = currentFull.children.filter(x => x.directory).map(x => `| \`${x.name}/\` | ${weight(x.bytes)} | ${number(x.bytes)} | ${excluded.has(x.name) ? 'Local, exclu du total comparable' : 'Inclus dans le projet'} |`).join('\n');
+  const localRows = currentFull.children.filter(x => x.directory).map(x => `| \`${x.name}/\` | ${x.unmeasured ? 'Non mesuré' : weight(x.bytes)} | ${x.unmeasured ? '—' : number(x.bytes)} | ${excluded.has(x.name) ? 'Local privé, exclu et non parcouru' : 'Inclus dans le projet'} |`).join('\n');
   return `## 🗂️ Structure du projet
 
 ### Images hébergées sur Cloudinary
 
 Les **${Object.keys(imageMap).length} images utilisées** sont hébergées sur Cloudinary, dans le cloud \`dgrszi9wf\`, sous \`lapinous/\`. Le jeu et le Dashboard utilisent les URL de \`assets/js/image-manifest.js\`, chargées par le résolveur commun. Les originaux transférés ont été retirés de \`assets/img/\` ; les dossiers restent disponibles grâce aux \`.gitkeep\`. Les futures créations et les images non transférées sont conservées.
 
-Une tâche Windows, **« Lapinous - Images Cloudinary 20h »**, vérifie chaque soir à **20 h, Europe/Paris**, les nouvelles images utilisées ou modifiées. Elle transfère les nouvelles versions, puis déplace les fichiers locaux vérifiés dans \`C:/Users/flori/Desktop/clikergame_avec_image/assets/img/\`, en gardant les mêmes sous-dossiers. Cette copie est en dehors du projet publié ; les versions précédentes sont conservées dans son dossier \`.image-history/\`. Sans nouvelle image utilisée, aucun appel Cloudinary n’est effectué. Le PC doit être allumé, éveillé et la session ouverte. Les anciennes images déjà supprimées n’ont pas été retéléchargées dans ce dossier.
+La tâche Windows **« Lapinous - Images Cloudinary 20h »** conserve les transferts et la sauvegarde permanente des originaux dans \`C:/Users/flori/Desktop/clikergame_avec_image/assets/img/\`, avec la même arborescence. Le relais vérifie la copie exacte avant de retirer la source du dossier du jeu ; les anciennes versions restent dans \`.versions/\`. Aucune purge de cette sauvegarde n’est prévue. Les nouveaux fichiers locaux sont transférés lorsque le PC est disponible, avec rattrapage des exécutions manquées. GitHub Actions assure les bilans Discord, Trello et la corbeille Cloudinary vers **20 h, Europe/Paris**, même si le PC est fermé ou éteint. La suppression après sept jours concerne uniquement Cloudinary et reste conditionnée à une preuve de sauvegarde exacte.
 
-Pour lancer la même opération manuellement : double-cliquer sur \`Synchroniser les images.cmd\`, ou exécuter \`node tools/update-images.mjs --backup-local\`. Les images doivent être référencées dans le jeu ou un catalogue JSON. Le contrôle du quota gratuit reste actif avant tout nouvel envoi. La tâche des images est distincte du bilan documentaire de 23 h.
+Pour lancer le relais manuellement : double-cliquer sur \`Synchroniser les images.cmd\`, ou exécuter \`python -B tools/automation/local_bridge.py run\`. Les images doivent être référencées dans le jeu ou un catalogue JSON. Le contrôle du quota reste actif avant tout nouvel envoi. Windows et Actions partagent un verrou ; aucun bilan Windows indépendant n’est programmé.
 
 ### Comparaison avant / après
 
@@ -84,7 +84,7 @@ Mesure du **${date}**. Les tailles correspondent à la somme des octets des fich
 | --- | ---: | ---: | --- |
 ${localRows}
 
-Les fichiers de Git gardent encore l’historique des anciennes images. Les journaux et sauvegardes locales ne sont pas envoyés avec les fichiers du projet. L’occupation locale totale, historique et fichiers privés compris, est **${weight(localTotal)}** (${number(localTotal)} octets), contre ${weight(referenceFull.bytes)} pour la copie avec images : ${weight(localSaving)} de moins. Cette occupation locale est distincte du poids comparable du projet.
+Les fichiers de Git gardent encore l’historique des anciennes images. Les caches, journaux, états privés et secrets sont exclus et ne sont pas parcourus par ce calcul. Les chiffres ci-dessus décrivent le projet comparable ; ils ne prétendent pas mesurer l’occupation totale du disque.
 
 ### Arborescence et poids détaillés
 
@@ -96,7 +96,7 @@ ${tree(current)}
 
 Poids total du projet : **${weight(current.bytes)}** (${number(current.bytes)} octets), calculé le ${date}.
 
-Pour recalculer cette section : \`node tools/update-readme-sizes.mjs\`. La copie \`clikergame_avec_image\` sert uniquement de référence et reste intacte.
+Pour recalculer cette section : \`node tools/update-readme-sizes.mjs\`. Ce script mesure la sauvegarde permanente \`clikergame_avec_image\` en lecture seule et ne la modifie jamais.
 `;
 }
 

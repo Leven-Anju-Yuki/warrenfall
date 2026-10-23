@@ -6,7 +6,7 @@ Le projet fonctionne comme un petit jeu web responsive, avec un univers visuel c
 
 ## Suivi du projet
 
-Documentation actualisée le **8 octobre 2026**. Après chaque évolution, mettre à jour ce README, `A_FAIRE.md` et les cartes concernées du [Trello du projet](https://trello.com/b/5VmsAFi7/clikergame). Le suivi est synchronisé lors des interventions, sans automatisation en arrière-plan.
+Documentation actualisée le **23 octobre 2026**. Le suivi repose sur ce README, `A_FAIRE.md` et les correspondances explicites du [Trello du projet](https://trello.com/b/5VmsAFi7/clikergame). GitHub Actions assure le bilan quotidien vers 20 h Europe/Paris ; le relais Windows conserve les transferts et sauvegardes d’images.
 
 - [Feuille de route et nouvelles évolutions](A_FAIRE.md)
 - [Audit SEO et améliorations à prévoir](docs/AUDIT_SEO.md)
@@ -55,7 +55,11 @@ La progression est sauvegardée séparément pour chaque lapin. Les pièces sont
 
 ### Memory et Lapidoku
 
-Memory propose 30 niveaux avec lapins et boss. Lapidoku propose une grille 4×4 utilisant les lapins comme symboles.
+Memory propose 30 niveaux avec lapins et boss. Le placard contient deux jeux de logique distincts : le sudoku à symboles et le Lapinoudoku à régions colorées, avec croix et têtes de lapins.
+
+### Coloriage et quiz
+
+Les Couleurs du terrier proposent des lapins et de grandes scènes à recolorier par numéros, avec plusieurs difficultés, zoom indépendant de la palette, peinture par glissement et reprise de la progression. Le quiz mélange les questions et les réponses ; la correction reste affichée quinze secondes avant le passage automatique à la suite.
 
 ## ⚔️ Combats
 
@@ -107,58 +111,53 @@ Le Dashboard permet de rechercher et filtrer les lapins par événement.
 
 ### Images hébergées sur Cloudinary
 
-Les **245 images utilisées** sont hébergées sur Cloudinary, dans le cloud `dgrszi9wf`, sous `lapinous/`. Le jeu et le Dashboard utilisent les URL de `assets/js/image-manifest.js`, chargées par le résolveur commun. Les originaux transférés ont été retirés de `assets/img/` ; les dossiers restent disponibles grâce aux `.gitkeep`. Les futures créations et les images non transférées sont conservées.
+Les **343 images utilisées** sont hébergées sur Cloudinary, dans le cloud `dgrszi9wf`, sous `lapinous/`. Le jeu et le Dashboard utilisent les URL de `assets/js/image-manifest.js`, chargées par le résolveur commun. Les originaux transférés ont été retirés de `assets/img/` ; les dossiers restent disponibles grâce aux `.gitkeep`. Les futures créations et les images non transférées sont conservées.
 
-La tâche Windows existante **« Lapinous - Images Cloudinary 20h »** lance la synchronisation chaque jour à **20 h, Europe/Paris**, puis le bilan global et Discord dès sa fin. Son nom technique historique est conservé. Elle transfère les nouvelles versions, puis déplace les fichiers locaux vérifiés dans `secours-images/`. Ce dossier est ignoré par Git et utilisable en secours uniquement en local. Sans nouvelle image utilisée, aucun appel Cloudinary n’est effectué. Le PC doit être allumé, éveillé et la session ouverte. Les anciennes images déjà supprimées n’ont pas été retéléchargées dans ce dossier.
+La tâche Windows **« Lapinous - Images Cloudinary 20h »** conserve les transferts et la sauvegarde permanente des originaux dans `C:/Users/flori/Desktop/clikergame_avec_image/assets/img/`, avec la même arborescence. Le relais vérifie la copie exacte avant de retirer la source du dossier du jeu ; les anciennes versions restent dans `.versions/`. Aucune purge de cette sauvegarde n’est prévue. Les nouveaux fichiers locaux sont transférés lorsque le PC est disponible, avec rattrapage des exécutions manquées. GitHub Actions assure les bilans Discord, Trello et la corbeille Cloudinary vers **20 h, Europe/Paris**, même si le PC est fermé ou éteint. La suppression après sept jours concerne uniquement Cloudinary et reste conditionnée à une preuve de sauvegarde exacte.
 
-Pour lancer la même opération manuellement : double-cliquer sur `Synchroniser les images.cmd`, ou exécuter `node tools/update-images.mjs --backup-local`. Les images doivent être référencées dans le jeu ou un catalogue JSON. Le contrôle du quota gratuit reste actif avant tout nouvel envoi. La tâche des images est distincte du bilan documentaire de 23 h.
+Pour lancer le relais manuellement : double-cliquer sur `Synchroniser les images.cmd`, ou exécuter `python -B tools/automation/local_bridge.py run`. Les images doivent être référencées dans le jeu ou un catalogue JSON. Le contrôle du quota reste actif avant tout nouvel envoi. Windows et Actions partagent un verrou ; aucun bilan Windows indépendant n’est programmé.
 
 ### Comparaison avant / après
 
-Mesure du **8 octobre 2026**. Les tailles correspondent à la somme des octets des fichiers, sans mesurer l’espace alloué par Windows. Le périmètre comparable exclut `.git`, les dépendances, les configurations locales de l’agent, `.env`, `.cloudinary-local` et `secours-images`, dans les deux copies.
+Mesure du **23 octobre 2026**. Les tailles correspondent à la somme des octets des fichiers, sans mesurer l’espace alloué par Windows. Le périmètre comparable exclut `.git`, les dépendances, les configurations locales de l’agent, `.env`, `.cloudinary-local` et `secours-images`, dans les deux copies.
 
 | Référence | Poids | Octets |
 | --- | ---: | ---: |
 | Ancien chiffre du README, avant migration | 586,52 Mio | 615 007 429 |
-| Copie `clikergame_avec_image/`, mesurée sans modification | 586,52 Mio | 615 009 524 |
-| Projet actuel, même périmètre | **219,22 Mio** | **229 869 990** |
+| Copie `clikergame_avec_image/`, mesurée sans modification | 720,46 Mio | 755 455 796 |
+| Projet actuel, même périmètre | **338,90 Mio** | **355 365 417** |
 
-**Économie par rapport à la copie avec images : 367,30 Mio (385 139 534 octets), soit 62,62 %.** Par rapport au chiffre précédent du README : 367,30 Mio (385 137 439 octets).
+**Économie par rapport à la copie avec images : 381,56 Mio (400 090 379 octets), soit 52,96 %.** Par rapport au chiffre précédent du README : 247,61 Mio (259 642 012 octets).
 
 ### Poids de tous les dossiers à la racine
 
 | Dossier | Poids cumulé | Octets | Périmètre |
 | --- | ---: | ---: | --- |
-| `_a_verifier_avant_suppression/` | 173,4 Kio | 177 538 | Inclus dans le projet |
-| `.cloudinary-local/` | 44,44 Mio | 46 603 737 | Local, exclu du total comparable |
-| `.git/` | 634,01 Mio | 664 811 621 | Local, exclu du total comparable |
+| `.cloudinary-local/` | Non mesuré | — | Local privé, exclu et non parcouru |
+| `.git/` | Non mesuré | — | Local privé, exclu et non parcouru |
+| `.github/` | 4,8 Kio | 4 936 | Inclus dans le projet |
 | `.vscode/` | 44 octets | 44 | Inclus dans le projet |
-| `assets/` | 218,54 Mio | 229 152 226 | Inclus dans le projet |
-| `docs/` | 146,2 Kio | 149 748 | Inclus dans le projet |
-| `Lapinous_documents_juridiques/` | 84,6 Kio | 86 604 | Inclus dans le projet |
-| `liste de futur création/` | 36,9 Kio | 37 750 | Inclus dans le projet |
-| `sauvegarde/` | 21,3 Kio | 21 795 | Inclus dans le projet |
-| `secours-images/` | 0 octets | 0 | Local, exclu du total comparable |
-| `tools/` | 44,7 Kio | 45 803 | Inclus dans le projet |
+| `assets/` | 335,26 Mio | 351 545 842 | Inclus dans le projet |
+| `docs/` | 207,7 Kio | 212 691 | Inclus dans le projet |
+| `Lapinous sauvegarde/` | 276,5 Kio | 283 156 | Inclus dans le projet |
+| `Lapinous_documents_juridiques/` | 84,6 Kio | 86 632 | Inclus dans le projet |
+| `liste de futur création/` | 36,2 Kio | 37 031 | Inclus dans le projet |
+| `tools/` | 466,7 Kio | 477 873 | Inclus dans le projet |
 
-Les fichiers de Git gardent encore l’historique des anciennes images. Les journaux et sauvegardes locales ne sont pas envoyés avec les fichiers du projet. L’occupation locale totale, historique et fichiers privés compris, est **897,68 Mio** (941 285 466 octets), contre 1 220,22 Mio pour la copie avec images : 322,54 Mio de moins. Cette occupation locale est distincte du poids comparable du projet.
+Les fichiers de Git gardent encore l’historique des anciennes images. Les caches, journaux, états privés et secrets sont exclus et ne sont pas parcourus par ce calcul. Les chiffres ci-dessus décrivent le projet comparable ; ils ne prétendent pas mesurer l’occupation totale du disque.
 
 ### Arborescence et poids détaillés
 
 Chaque fichier et chaque sous-dossier du périmètre comparable est indiqué ci-dessous. Les dossiers vides pèsent zéro octet hors métadonnées du système de fichiers. Les détails des caches, secrets et sauvegardes privées sont omis ; leurs dossiers figurent dans le tableau précédent.
 
 ```text
-Warrenfall/ — 219,22 Mio
-├── _a_verifier_avant_suppression/ — 173,4 Kio
-│   └── assets/ — 173,4 Kio
-│       ├── img/ — 162,1 Kio
-│       │   ├── entrenement 3.gif — 29,0 Kio
-│       │   └── entrenement2.gif — 133,1 Kio
-│       └── js/ — 11,3 Kio
-│           └── a revoi.js — 11,3 Kio
+Warrenfall/ — 338,90 Mio
+├── .github/ — 4,8 Kio
+│   └── workflows/ — 4,8 Kio
+│       └── warrenfall-daily.yml — 4,8 Kio
 ├── .vscode/ — 44 octets
 │   └── settings.json — 44 octets
-├── assets/ — 218,54 Mio
+├── assets/ — 335,26 Mio
 │   ├── audio/ — 17,49 Mio
 │   │   ├── action/ — 2,35 Mio
 │   │   │   ├── dormir.mp3 — 99,8 Kio
@@ -199,28 +198,87 @@ Warrenfall/ — 219,22 Mio
 │   │   │       └── ambience.mp3 — 4,00 Mio
 │   │   ├── ambience.mp3 — 2,59 Mio
 │   │   └── README_AUDIO.txt — 369 octets
-│   ├── css/ — 453,3 Kio
+│   ├── css/ — 686,7 Kio
 │   │   ├── bootstrap.min.css — 227,5 Kio
+│   │   ├── boss-abilities.css — 5,0 Kio
+│   │   ├── desktop-scene.css — 2,2 Kio
+│   │   ├── error-pages.css — 1,9 Kio
+│   │   ├── exploration.css — 8,0 Kio
+│   │   ├── fight-preparation.css — 7,9 Kio
+│   │   ├── game-guide.css — 8,7 Kio
+│   │   ├── install-button.css — 2,8 Kio
+│   │   ├── lapidoku.css — 6,5 Kio
 │   │   ├── legal.css — 3,1 Kio
-│   │   ├── shop.css — 32,5 Kio
-│   │   └── style.css — 190,2 Kio
-│   ├── img/ — 200,01 Mio
-│   │   ├── accompagnateurs/ — 0 octets
+│   │   ├── mobile.css — 17,2 Kio
+│   │   ├── number-sudoku.css — 5,8 Kio
+│   │   ├── painted-shop.css — 6,9 Kio
+│   │   ├── phone.css — 33,6 Kio
+│   │   ├── pixel-coloring.css — 11,3 Kio
+│   │   ├── player-controls.css — 950 octets
+│   │   ├── scene-proportions.css — 3,5 Kio
+│   │   ├── shop-polish.css — 28,6 Kio
+│   │   ├── shop.css — 71,2 Kio
+│   │   ├── startup.css — 2,0 Kio
+│   │   ├── style.css — 219,1 Kio
+│   │   └── workshop-layout.css — 12,8 Kio
+│   ├── fonts/ — 900,7 Kio
+│   │   ├── CinzelDecorative-Bold.ttf — 60,8 Kio
+│   │   ├── CinzelDecorative-OFL.txt — 4,3 Kio
+│   │   ├── EBGaramond-OFL.txt — 4,3 Kio
+│   │   └── EBGaramond.ttf — 831,2 Kio
+│   ├── icons/ — 8,07 Mio
+│   │   ├── apothecary-balm.svg — 477 octets
+│   │   ├── apothecary-bandage.svg — 492 octets
+│   │   ├── apothecary-herbs.svg — 487 octets
+│   │   ├── apothecary-potion.svg — 440 octets
+│   │   ├── error-403.png — 2,57 Mio
+│   │   ├── error-404.png — 2,52 Mio
+│   │   ├── error-offline.png — 2,37 Mio
+│   │   ├── market-table.svg — 1,4 Kio
+│   │   ├── vegetable-placeholder.svg — 514 octets
+│   │   ├── warrenfall-192.png — 85,4 Kio
+│   │   ├── warrenfall-48.png — 6,2 Kio
+│   │   └── warrenfall-512.png — 527,9 Kio
+│   ├── img/ — 307,36 Mio
+│   │   ├── accompagnateurs/ — 10,94 Mio
 │   │   │   ├── Apothicaire/ — 0 octets
 │   │   │   │   └── .gitkeep — 0 octets
-│   │   │   ├── caissier/ — 0 octets
+│   │   │   ├── Artisan/ — 0 octets
 │   │   │   │   └── .gitkeep — 0 octets
-│   │   │   └── couturiere/ — 0 octets
-│   │   │       └── .gitkeep — 0 octets
+│   │   │   ├── caissier/ — 1,57 Mio
+│   │   │   │   ├── .gitkeep — 0 octets
+│   │   │   │   └── exec-030757bc-ec79-452d-83d8-00b99494ec7f.png — 1,57 Mio
+│   │   │   ├── Chef/ — 0 octets
+│   │   │   │   └── .gitkeep — 0 octets
+│   │   │   ├── couturiere/ — 0 octets
+│   │   │   │   └── .gitkeep — 0 octets
+│   │   │   ├── Fragments/ — 0 octets
+│   │   │   │   └── .gitkeep — 0 octets
+│   │   │   └── Randonneur/ — 9,37 Mio
+│   │   │       ├── 07_marche_lapin_randonneur.gif — 426,0 Kio
+│   │   │       ├── Lapin randonneur aux jumelles-4.png — 2,30 Mio
+│   │   │       ├── Lapin randonneur debout avec sac à dos-3.png — 2,17 Mio
+│   │   │       ├── Lapin randonneur saluant joyeusement-5.png — 2,28 Mio
+│   │   │       └── Lapin randonneur, carte et boussole-1.png — 2,22 Mio
 │   │   ├── az/ — 6,00 Mio
 │   │   │   ├── az_assis_de_cote.png — 2,14 Mio
 │   │   │   ├── az_cote.png — 865,2 Kio
 │   │   │   ├── az_face.png — 1,10 Mio
 │   │   │   └── Azazel.png — 1,91 Mio
-│   │   ├── boss/ — 5,46 Mio
+│   │   ├── Boite_Mini_Jeu/ — 2,61 Mio
+│   │   │   ├── .gitkeep — 0 octets
+│   │   │   └── LapinPixels.png — 2,61 Mio
+│   │   ├── boss/ — 19,98 Mio
 │   │   │   ├── carotte_choux_oignon.png — 1,58 Mio
 │   │   │   ├── Gemini_Generated_Image_joczczjoczczjocz.jpg — 1 009,5 Kio
+│   │   │   ├── Navet_cote.png — 1,94 Mio
+│   │   │   ├── Navet_face.png — 1,93 Mio
+│   │   │   ├── Petit_Pois_cote.png — 1,42 Mio
+│   │   │   ├── Petit_Pois_face.png — 1,63 Mio
+│   │   │   ├── Planche de sprites de trois légumes héros-1.png — 2,68 Mio
 │   │   │   ├── poivron_courgette_banane.png — 1,42 Mio
+│   │   │   ├── Radis_cote.png — 2,46 Mio
+│   │   │   ├── Radis_face.png — 2,45 Mio
 │   │   │   └── tomate_ail_mais_aubergine_patate.png — 1,48 Mio
 │   │   ├── breeds/ — 7,3 Kio
 │   │   │   ├── glouton.svg — 1,0 Kio
@@ -230,8 +288,17 @@ Warrenfall/ — 219,22 Mio
 │   │   │   ├── normal.svg — 1,0 Kio
 │   │   │   ├── petit_dormeur.svg — 1,0 Kio
 │   │   │   └── petit_mangeur.svg — 1,0 Kio
-│   │   ├── fond/ — 13,10 Mio
+│   │   ├── Discord/ — 3,38 Mio
+│   │   │   ├── Alertes_erreur.png — 262,4 Kio
+│   │   │   ├── Badges de lapins enchantés au clair de lune.png — 1,75 Mio
+│   │   │   ├── Bilan_quotidien.png — 267,2 Kio
+│   │   │   ├── cloudinary_images.png — 268,1 Kio
+│   │   │   ├── Serveur.png — 626,5 Kio
+│   │   │   └── Trello_taches.png — 246,5 Kio
+│   │   ├── fond/ — 23,71 Mio
 │   │   │   ├── Halloween/ — 0 octets
+│   │   │   │   └── .gitkeep — 0 octets
+│   │   │   ├── Magasin/ — 0 octets
 │   │   │   │   └── .gitkeep — 0 octets
 │   │   │   ├── Noel/ — 0 octets
 │   │   │   │   └── .gitkeep — 0 octets
@@ -249,6 +316,11 @@ Warrenfall/ — 219,22 Mio
 │   │   │   │   └── Image ChatGPT 30 sept. 2026, 00_29_48-24.png — 2,08 Mio
 │   │   │   ├── Paques/ — 0 octets
 │   │   │   │   └── .gitkeep — 0 octets
+│   │   │   ├── randonnée/ — 10,62 Mio
+│   │   │   │   ├── Dunes dorées au soleil doux-3.png — 2,24 Mio
+│   │   │   │   ├── Forêt enchantée aux champignons luisants-2.png — 2,98 Mio
+│   │   │   │   ├── La grotte aux lucioles ambrées-4.png — 2,54 Mio
+│   │   │   │   └── Prairie dorée aux petites pousses-1.png — 2,86 Mio
 │   │   │   └── Saison/ — 0 octets
 │   │   │       ├── jour/ — 0 octets
 │   │   │       │   └── .gitkeep — 0 octets
@@ -369,13 +441,53 @@ Warrenfall/ — 219,22 Mio
 │   │   │       ├── Designer (1).png — 1,92 Mio
 │   │   │       ├── Designer.png — 2,08 Mio
 │   │   │       └── fleur.png — 1,72 Mio
-│   │   ├── magasin/ — 0 octets
-│   │   │   ├── aliments/ — 0 octets
+│   │   ├── magasin/ — 5,93 Mio
+│   │   │   ├── aliments/ — 5,93 Mio
+│   │   │   │   ├── .gitkeep — 0 octets
+│   │   │   │   ├── Planche d’icônes culinaires fleuries et colorées.png — 3,10 Mio
+│   │   │   │   └── Planche d’icônes gourmandes et fleuries.png — 2,83 Mio
+│   │   │   ├── apothicaire/ — 0 octets
 │   │   │   │   └── .gitkeep — 0 octets
 │   │   │   └── produits/ — 0 octets
 │   │   │       └── .gitkeep — 0 octets
 │   │   ├── oeuf/ — 0 octets
 │   │   │   └── .gitkeep — 0 octets
+│   │   ├── Ouverture_du_jeu/ — 59,32 Mio
+│   │   │   ├── animations/ — 40,20 Mio
+│   │   │   │   └── Warrenfall_ouverture_8_secondes.gif — 40,20 Mio
+│   │   │   ├── erreur/ — 7,46 Mio
+│   │   │   │   ├── Azazel devant la porte interdite-2.png — 2,57 Mio
+│   │   │   │   ├── Azazel et le signal interrompu-3.png — 2,37 Mio
+│   │   │   │   └── Le chemin perdu d’Azazel-1.png — 2,52 Mio
+│   │   │   ├── fonds_4K/ — 6,56 Mio
+│   │   │   │   ├── 01_apparition_3840x2160.jpg — 442,2 Kio
+│   │   │   │   ├── 02_illumination_3840x2160.jpg — 1,44 Mio
+│   │   │   │   ├── 03_ouverture_terrier_3840x2160.jpg — 2,38 Mio
+│   │   │   │   └── 04_transition_3840x2160.jpg — 2,30 Mio
+│   │   │   ├── logo/ — 619,6 Kio
+│   │   │   │   ├── icone_192.png — 85,4 Kio
+│   │   │   │   ├── icone_48.png — 6,2 Kio
+│   │   │   │   └── icone_512.png — 527,9 Kio
+│   │   │   ├── poses/ — 2,01 Mio
+│   │   │   │   ├── azazel_course/ — 1,16 Mio
+│   │   │   │   │   ├── 02.png — 179,3 Kio
+│   │   │   │   │   ├── 03.png — 179,3 Kio
+│   │   │   │   │   ├── 04.png — 168,1 Kio
+│   │   │   │   │   ├── 05.png — 170,8 Kio
+│   │   │   │   │   ├── 06.png — 163,8 Kio
+│   │   │   │   │   ├── 07.png — 165,4 Kio
+│   │   │   │   │   └── 08.png — 159,6 Kio
+│   │   │   │   └── carotte_course/ — 871,2 Kio
+│   │   │   │       ├── 02.png — 127,2 Kio
+│   │   │   │       ├── 03.png — 125,7 Kio
+│   │   │   │       ├── 04.png — 114,6 Kio
+│   │   │   │       ├── 05.png — 128,0 Kio
+│   │   │   │       ├── 06.png — 125,0 Kio
+│   │   │   │       ├── 07.png — 131,4 Kio
+│   │   │   │       └── 08.png — 119,4 Kio
+│   │   │   └── sources_animation/ — 2,48 Mio
+│   │   │       ├── azazel_course_planche.png — 1,50 Mio
+│   │   │       └── carotte_course_planche.png — 1 003,6 Kio
 │   │   ├── puzzle/ — 0 octets
 │   │   │   ├── de_base/ — 0 octets
 │   │   │   │   └── .gitkeep — 0 octets
@@ -393,40 +505,77 @@ Warrenfall/ — 219,22 Mio
 │   │   │   └── dodo.gif — 66,1 Kio
 │   │   ├── Zone_cuisine/ — 60,4 Kio
 │   │   │   └── lapin_cuisine.gif — 60,4 Kio
-│   │   ├── Zone_jardin/ — 91,0 Kio
-│   │   │   └── entrenement.gif — 91,0 Kio
-│   │   ├── Zone_SdB/ — 935,8 Kio
-│   │   │   └── lapin_SdB.gif — 935,8 Kio
-│   │   └── lapin_soin.gif — 14,1 Kio
-│   ├── js/ — 554,3 Kio
-│   │   ├── achievements.js — 5,3 Kio
-│   │   ├── bootstrap.min.js — 59,2 Kio
-│   │   ├── dashboard-access.js — 5,0 Kio
-│   │   ├── dashboard.js — 46,6 Kio
-│   │   ├── image-assets.js — 6,7 Kio
-│   │   ├── image-manifest.js — 59,6 Kio
-│   │   ├── jquery-3.6.1.min.js — 87,6 Kio
-│   │   ├── legal.js — 1,5 Kio
-│   │   ├── puzzle-data.js — 2,4 Kio
-│   │   ├── script.js — 234,7 Kio
-│   │   ├── shop.js — 35,0 Kio
-│   │   └── species-data.js — 10,7 Kio
-│   └── cloudinary-images.json — 46,5 Kio
-├── docs/ — 146,2 Kio
-│   ├── archives/ — 22,0 Kio
-│   │   └── a-faire/ — 22,0 Kio
+│   │   ├── Zone_jardin/ — 141,1 Kio
+│   │   │   └── entrainement.png — 141,1 Kio
+│   │   └── Zone_SdB/ — 935,8 Kio
+│   │       └── lapin_SdB.gif — 935,8 Kio
+│   └── js/ — 802,6 Kio
+│       ├── achievements.js — 7,0 Kio
+│       ├── apothecary-effects.js — 1,4 Kio
+│       ├── auto-nests.js — 1,6 Kio
+│       ├── bootstrap.min.js — 59,2 Kio
+│       ├── boss-abilities.js — 8,0 Kio
+│       ├── connection-notice.js — 1,2 Kio
+│       ├── dashboard-access.js — 5,0 Kio
+│       ├── dashboard-ui.js — 7,2 Kio
+│       ├── dashboard.js — 53,5 Kio
+│       ├── event-reminders.js — 1,4 Kio
+│       ├── exploration.js — 13,6 Kio
+│       ├── game-economy.js — 1,4 Kio
+│       ├── game-guide.js — 7,6 Kio
+│       ├── grid-stroke.js — 439 octets
+│       ├── image-assets.js — 7,7 Kio
+│       ├── image-interactions.js — 443 octets
+│       ├── image-manifest.js — 85,0 Kio
+│       ├── installer.js — 8,3 Kio
+│       ├── jquery-3.6.1.min.js — 87,6 Kio
+│       ├── lapidoku.js — 3,6 Kio
+│       ├── legal.js — 1,5 Kio
+│       ├── local-files.js — 6,7 Kio
+│       ├── mobile-ui.js — 4,2 Kio
+│       ├── number-sudoku.js — 3,3 Kio
+│       ├── pantry.js — 16,8 Kio
+│       ├── pixel-coloring.js — 15,9 Kio
+│       ├── plant-sheets.js — 956 octets
+│       ├── puzzle-data.js — 2,4 Kio
+│       ├── quiz-dashboard.js — 4,9 Kio
+│       ├── quiz.js — 5,9 Kio
+│       ├── save-safety.js — 3,5 Kio
+│       ├── save-validation.js — 3,9 Kio
+│       ├── scene-preload.js — 1,2 Kio
+│       ├── script.js — 287,2 Kio
+│       ├── shop.js — 61,6 Kio
+│       ├── species-data.js — 12,5 Kio
+│       ├── startup.js — 7,2 Kio
+│       ├── team-rules.js — 1,5 Kio
+│       └── welcome-gift.js — 367 octets
+├── docs/ — 207,7 Kio
+│   ├── archives/ — 38,4 Kio
+│   │   └── a-faire/ — 38,4 Kio
 │   │       ├── a faire - original.txt — 6,7 Kio
 │   │       ├── a faire.txt — 8,0 Kio
 │   │       ├── a faire(1).txt — 6,7 Kio
+│   │       ├── A_FAIRE_avant_2026-10-14.md — 16,4 Kio
 │   │       └── README.md — 536 octets
-│   ├── AUDIT_SEO.md — 3,6 Kio
-│   ├── AUDIT_VISUELS_GOOGLE_PLAY.md — 53,1 Kio
+│   ├── AUDIT_SEO.md — 3,7 Kio
+│   ├── AUDIT_VISUELS_GOOGLE_PLAY.md — 52,9 Kio
 │   ├── CUISINE.md — 1,5 Kio
+│   ├── DIAGNOSTIC_CLOUDINARY_2026-10-19.md — 5,2 Kio
+│   ├── DIAGNOSTIC_RAPPORTS_2026-10-23.md — 5,0 Kio
+│   ├── INSTALLATION_ET_SECURITE.md — 3,1 Kio
 │   ├── Lapinous_publication_et_revenus.pdf — 39,2 Kio
 │   ├── MAGASIN.md — 14,3 Kio
-│   ├── MIGRATION_CLOUDINARY.md — 4,6 Kio
+│   ├── MIGRATION_CLOUDINARY.md — 6,7 Kio
+│   ├── MIGRATION_GITHUB_ACTIONS.md — 17,9 Kio
 │   ├── NOUVEL_AN_CHINOIS.md — 3,1 Kio
-│   └── PUZZLES.md — 4,9 Kio
+│   ├── PUZZLES.md — 4,9 Kio
+│   ├── RENOMMAGE_WARRENFALL.md — 7,6 Kio
+│   └── VALIDATION_ACTIONS_2026-10-23.md — 4,2 Kio
+├── Lapinous sauvegarde/ — 276,5 Kio
+│   ├── admin.json — 233,3 Kio
+│   ├── lapinous-azazel-10-10-2026_21h11.json — 19,7 Kio
+│   ├── lapinous-azazel-10-10-2026_23h55.json — 19,7 Kio
+│   └── lapinous-azazel-2026-09-30_21h58.json — 3,8 Kio
 ├── Lapinous_documents_juridiques/ — 84,6 Kio
 │   ├── 00_LIRE_AVANT_PUBLICATION.md — 3,6 Kio
 │   ├── 01_CGU.html — 7,8 Kio
@@ -441,40 +590,139 @@ Warrenfall/ — 219,22 Mio
 │   ├── 10_sources.md — 2,4 Kio
 │   ├── 11_registre_traitements.csv — 2,1 Kio
 │   └── Lapinous_documents_juridiques.pdf — 36,9 Kio
-├── liste de futur création/ — 36,9 Kio
-│   ├── futur_lapin.md — 26,7 Kio
+├── liste de futur création/ — 36,2 Kio
+│   ├── futur_lapin.md — 25,9 Kio
 │   └── future_boss.md — 10,2 Kio
-├── sauvegarde/ — 21,3 Kio
-│   ├── admin.json — 17,4 Kio
-│   └── lapinous-azazel-2026-09-30_21h58.json — 3,8 Kio
-├── tools/ — 44,7 Kio
-│   ├── backup-transferred-images.mjs — 1,9 Kio
-│   ├── clean-transferred-images.mjs — 2,4 Kio
+├── tools/ — 466,7 Kio
+│   ├── agent_lapinous/ — 156,0 Kio
+│   │   ├── .gitignore — 18 octets
+│   │   ├── agent.py — 28,9 Kio
+│   │   ├── bot_discord.py — 2,4 Kio
+│   │   ├── chaine_20h.ps1 — 318 octets
+│   │   ├── chaine_commune.ps1 — 5,5 Kio
+│   │   ├── cloudinary_rapport.py — 4,8 Kio
+│   │   ├── configurer_rapports.ps1 — 1,2 Kio
+│   │   ├── etat_batterie.json — 115 octets
+│   │   ├── INSTALLATION.md — 732 octets
+│   │   ├── installer_batterie.ps1 — 1,3 Kio
+│   │   ├── installer_chaine_20h.ps1 — 166 octets
+│   │   ├── installer_taches.ps1 — 2,6 Kio
+│   │   ├── liaisons_trello.json — 42,4 Kio
+│   │   ├── README_INSTALLATION.md — 11,4 Kio
+│   │   ├── requirements.txt — 38 octets
+│   │   ├── reseau.py — 1,6 Kio
+│   │   ├── suivi_trello.py — 10,1 Kio
+│   │   ├── surveillance_batterie.py — 4,9 Kio
+│   │   ├── synchronisation_20h.ps1 — 213 octets
+│   │   ├── test_chaine_agent.py — 6,3 Kio
+│   │   ├── test_chaine.ps1 — 2,3 Kio
+│   │   ├── test_fiabilisation.py — 4,1 Kio
+│   │   ├── test_installateur.ps1 — 2,7 Kio
+│   │   ├── test_suivi_trello.py — 15,9 Kio
+│   │   ├── test_validation_resilience.py — 5,9 Kio
+│   │   └── trello_automatisation.json — 23 octets
+│   ├── automation/ — 75,3 Kio
+│   │   ├── .env.example — 255 octets
+│   │   ├── config.json — 177 octets
+│   │   ├── core.py — 6,0 Kio
+│   │   ├── local_bridge.py — 6,6 Kio
+│   │   ├── remote.py — 14,7 Kio
+│   │   ├── report_fallback.py — 1,5 Kio
+│   │   ├── report_probe.py — 5,6 Kio
+│   │   ├── reporting.py — 3,3 Kio
+│   │   ├── state_admin.py — 2,5 Kio
+│   │   ├── state_store.py — 3,9 Kio
+│   │   ├── test_hybrid.py — 14,1 Kio
+│   │   ├── test_permanent_backup.py — 2,4 Kio
+│   │   ├── test_reporting.py — 7,6 Kio
+│   │   ├── test_trello_resilience.py — 2,4 Kio
+│   │   └── transports.py — 4,2 Kio
+│   ├── tests-archives/ — 39,7 Kio
+│   │   ├── test-cashier-route.mjs — 1,6 Kio
+│   │   ├── test-dashboard-cards.mjs — 4,4 Kio
+│   │   ├── test-image-assets.mjs — 3,5 Kio
+│   │   ├── test-image-backup.mjs — 2,3 Kio
+│   │   ├── test-image-browser.mjs — 6,1 Kio
+│   │   ├── test-local-files.mjs — 2,1 Kio
+│   │   ├── test-market-layout.mjs — 7,7 Kio
+│   │   ├── test-pantry-eating.mjs — 3,3 Kio
+│   │   ├── test-pantry-route.mjs — 3,5 Kio
+│   │   ├── test-quiz.mjs — 3,6 Kio
+│   │   └── test-shop-catalog.mjs — 1,6 Kio
+│   ├── backup-transferred-images.mjs — 2,9 Kio
 │   ├── cloudinary-activate.mjs — 3,6 Kio
-│   ├── cloudinary-sync.mjs — 13,3 Kio
-│   ├── install-image-schedule.ps1 — 1,1 Kio
-│   ├── run-image-schedule.ps1 — 466 octets
-│   ├── test-image-assets.mjs — 3,5 Kio
-│   ├── test-image-backup.mjs — 2,2 Kio
-│   ├── test-image-browser.mjs — 4,3 Kio
-│   ├── update-images.mjs — 3,7 Kio
-│   └── update-readme-sizes.mjs — 8,2 Kio
-├── .gitignore — 119 octets
-├── A_FAIRE.md — 15,4 Kio
-├── AGENTS.md — 667 octets
-├── dashboard.html — 17,2 Kio
+│   ├── cloudinary-corbeille.mjs — 9,9 Kio
+│   ├── cloudinary-deletion-policy.json — 214 octets
+│   ├── cloudinary-deletion-policy.mjs — 275 octets
+│   ├── cloudinary-sync.mjs — 15,4 Kio
+│   ├── diagnostic-reveil-admin.ps1 — 1,4 Kio
+│   ├── image-manifest-store.mjs — 2,4 Kio
+│   ├── install-image-schedule.ps1 — 2,3 Kio
+│   ├── prepare-lossless-opening.py — 1,8 Kio
+│   ├── remote-network.mjs — 1,9 Kio
+│   ├── run-image-schedule.ps1 — 334 octets
+│   ├── serve-game.py — 1,7 Kio
+│   ├── test_serve_game.py — 1,7 Kio
+│   ├── test-achievements.mjs — 2,3 Kio
+│   ├── test-apothecary-effects.mjs — 3,0 Kio
+│   ├── test-audio-events.mjs — 1,5 Kio
+│   ├── test-auto-nests.mjs — 1,6 Kio
+│   ├── test-boss-abilities.mjs — 4,9 Kio
+│   ├── test-cloudinary-corbeille-api.mjs — 3,2 Kio
+│   ├── test-cloudinary-deletion-policy.mjs — 822 octets
+│   ├── test-cloudinary-partial.mjs — 1,9 Kio
+│   ├── test-combat-facing.cjs — 1,1 Kio
+│   ├── test-event-reminders.mjs — 1,9 Kio
+│   ├── test-exploration.mjs — 3,3 Kio
+│   ├── test-game-economy.mjs — 1,4 Kio
+│   ├── test-image-chain-safety.mjs — 1,7 Kio
+│   ├── test-install-visibility.mjs — 1,1 Kio
+│   ├── test-landscape-game.mjs — 60,9 Kio
+│   ├── test-lapidoku.mjs — 2,9 Kio
+│   ├── test-mobile-game.mjs — 5,4 Kio
+│   ├── test-number-sudoku.mjs — 2,4 Kio
+│   ├── test-permanent-backup.mjs — 2,8 Kio
+│   ├── test-pixel-coloring.mjs — 1,7 Kio
+│   ├── test-pwa.mjs — 4,1 Kio
+│   ├── test-quiz-selection.mjs — 1,4 Kio
+│   ├── test-remote-network.mjs — 1,2 Kio
+│   ├── test-reveil-horodatage.ps1 — 540 octets
+│   ├── test-reveil-s0.ps1 — 3,8 Kio
+│   ├── test-reveil-s4.ps1 — 1 011 octets
+│   ├── test-save-picker.mjs — 1,3 Kio
+│   ├── test-save-safety.mjs — 5,5 Kio
+│   ├── test-season-banner.mjs — 1,8 Kio
+│   ├── test-startup.mjs — 2,0 Kio
+│   ├── test-team-rules.mjs — 3,8 Kio
+│   ├── test-welcome-gift.mjs — 758 octets
+│   ├── update-images.mjs — 8,6 Kio
+│   └── update-readme-sizes.mjs — 8,4 Kio
+├── .gitignore — 518 octets
+├── 403.html — 748 octets
+├── 404.html — 760 octets
+├── 5VmsAFi7 - clikergame.json — 395,8 Kio
+├── A_FAIRE.md — 203,0 Kio
+├── AGENTS.md — 875 octets
+├── allimentation.pdf — 1,70 Mio
+├── dashboard.html — 17,5 Kio
+├── DIAGNOSTIC_REVEIL_S0.md — 16,8 Kio
+├── FIABILISATION_AUTOMATISATIONS.md — 7,5 Kio
 ├── fichier_inutiliser.ipynb — 11,1 Kio
-├── index.html — 25,2 Kio
-├── lapinous-content.json — 74,6 Kio
+├── index.html — 26,2 Kio
+├── lapinous-content.json — 83,4 Kio
 ├── lapinous-puzzles.json — 5,4 Kio
-├── lapinous-shop.json — 8,0 Kio
-├── readme.md — 36,0 Kio
-└── Synchroniser les images.cmd — 74 octets
+├── lapinous-quiz.json — 38,8 Kio
+├── lapinous-shop.json — 32,6 Kio
+├── manifest.json — 570 octets
+├── offline.html — 805 octets
+├── readme.md — 67,1 Kio
+├── sw.js — 4,1 Kio
+└── Synchroniser les images.cmd — 204 octets
 ```
 
-Poids total du projet : **219,22 Mio** (229 869 990 octets), calculé le 8 octobre 2026.
+Poids total du projet : **338,90 Mio** (355 365 417 octets), calculé le 23 octobre 2026.
 
-Pour recalculer cette section : `node tools/update-readme-sizes.mjs`. La copie `clikergame_avec_image` sert uniquement de référence et reste intacte.
+Pour recalculer cette section : `node tools/update-readme-sizes.mjs`. Ce script mesure la sauvegarde permanente `clikergame_avec_image` en lecture seule et ne la modifie jamais.
 
 ## 🧩 Ajouter un puzzle
 
@@ -716,10 +964,10 @@ Les formats anciens, intermédiaires et actuels sont migrés sur une copie, avec
 Un fichier illisible ou provenant d’une version future ne déclenche pas une partie neuve par-dessus : un écran permet de télécharger l’original et de restaurer la copie de secours. La déconnexion crée une sauvegarde nommée avant de retirer la reprise automatique ; elle est annulée si cette copie échoue. Le cache PWA ne purge pas les sauvegardes des joueurs.
 
 Ces protections ne remplacent pas un export JSON hors du navigateur : effacement des données du site, nettoyage du système ou panne du stockage peuvent détruire les copies locales. Conserver une copie externe avant une désinstallation ou un changement d’appareil. Tests : `node tools/test-save-safety.mjs` et `node tools/test-landscape-game.mjs --quick --ui-only --save-compat` ; ajouter `--save-corrupt` pour vérifier la récupération.
-# Automatisations hybrides : préparation du relais GitHub Actions
+## Automatisations hybrides : relais GitHub Actions actif
 
-La migration Windows / GitHub Actions est préparée mais **désactivée**. Windows conserve les transferts Cloudinary, les sauvegardes permanentes et la batterie. Le workflow distant préparé reprend l'agent Python existant pour Trello et les bilans ; il ajoute un état dans un dépôt privé, des attestations HMAC-SHA256, un verrou partagé et un journal de reprise pour la quarantaine de sept jours.
+Le relais Windows / GitHub Actions est **activé**. Windows conserve les transferts Cloudinary, la sauvegarde locale permanente et la surveillance de batterie. Actions exécute les bilans détaillés Discord, le suivi Trello et la corbeille Cloudinary vers 20 h Europe/Paris. L’état privé conserve les quarantaines, attestations HMAC-SHA256, confirmations Discord et points de reprise ; un verrou partagé coordonne les deux environnements.
 
 Technologies : Python (`requests`, `python-dotenv`, `zoneinfo`), Node.js pour les transferts existants, PowerShell pour le lanceur local, YAML GitHub Actions pour le cron `Europe/Paris`, API GitHub Contents/Blobs pour la persistance privée avec comparaison de SHA. Les images et sauvegardes privées ne sont pas envoyées à GitHub. Aucun push automatique du dépôt du jeu.
 
-Voir [l'architecture, les limites et la procédure de validation](docs/MIGRATION_GITHUB_ACTIONS.md). Les tâches Windows et leurs horaires restent inchangés ; aucune suppression Cloudinary, modification Trello ou notification Discord réelle pendant les tests de migration.
+Voir [l’architecture et les validations](docs/MIGRATION_GITHUB_ACTIONS.md). Deux validations distantes ont confirmé les trois pièces jointes Discord et la persistance entre runners, sans suppression Cloudinary ni modification Trello. Les tâches Windows et leurs horaires sont conservés. La sauvegarde permanente n’est jamais purgée ; seule Cloudinary applique les échéances de sept jours après contrôle des preuves.
