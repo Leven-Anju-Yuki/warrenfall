@@ -20,6 +20,13 @@ from reporting import cloudinary_details, bundle, deliver
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def delivery_id(now):
+    # Un rattrapage manuel ne doit pas consommer l'envoi automatique du soir.
+    if os.getenv('GITHUB_EVENT_NAME') == 'workflow_dispatch':
+        return 'catchup:' + os.environ['GITHUB_RUN_ID']
+    return 'daily:' + paris_day(now) + ':schedule'
+
+
 def references(root):
     # Inclut le manifeste public, CSS, JS et tous les catalogues. Surprotéger une
     # référence est préférable à effacer une ressource encore utilisée.
@@ -62,12 +69,16 @@ def trello(locked):
                 sections['trello'] = message
             return True
         # Capturer les rapports avant la disparition du répertoire temporaire.
+        # execute évalue Cloudinary ; agent.bilan doit ici isoler le statut Trello.
         try:
             with patch.object(agent, 'STATE_FILE', state_file), patch.object(agent, 'REPORTS', Path(folder)), \
                  patch.object(agent, 'write_transitions', transitions), patch.object(agent, 'save_checkpoint', checkpoint), \
                  patch.object(agent, 'replace_section', lambda *args: None), \
                  patch.object(agent, 'discord', capture_message), patch.object(agent, 'send_report_file', capture_file), \
-                 patch.object(agent, 'cloudinary_report', lambda *args, **kwargs: (sections.get('images', 'Cloudinary non vérifié.'), sections.get('_cloud_ok', False))), \
+                 patch.object(agent, 'cloudinary_report', lambda *args, **kwargs: (sections.get('images', 'Cloudinary non vérifié.'), True)), \
+                 patch.object(agent, 'quarantine_discord_summary', lambda: (
+                     'État privé Actions : ' + str(len(locked.data.get('quarantine', {}).get('items', {})))
+                     + ' images en quarantaine ; échéances détaillées dans le rapport Cloudinary ci-dessus.')), \
                  contextlib.redirect_stdout(buffer):
                 code = agent.bilan(True)
         except StateError:
@@ -281,7 +292,7 @@ def main():
     reports = {channel: provenance + text for channel, text in reports.items()}
     locked.data['last_reports'] = reports
     locked.save()
-    outcomes = deliver(locked, reports, 'daily:' + paris_day(now), args.output.parent / 'reports')
+    outcomes = deliver(locked, reports, delivery_id(now), args.output.parent / 'reports')
     locked.data['last_delivery'] = outcomes
     errors.extend('Discord ' + channel + ' : ' + status for channel, status in outcomes.items() if status != 'sent')
     locked.save()

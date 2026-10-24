@@ -13,6 +13,27 @@ from transports import send_discord
 
 
 class DetailedReports(unittest.TestCase):
+    def test_catchup_does_not_consume_the_evening_delivery(self):
+        with patch.dict(os.environ, {'GITHUB_EVENT_NAME': 'workflow_dispatch', 'GITHUB_RUN_ID': 'same-run'}):
+            catchup = remote.delivery_id(NOW)
+            self.assertEqual(catchup, remote.delivery_id(NOW))
+        with patch.dict(os.environ, {'GITHUB_EVENT_NAME': 'schedule'}):
+            daily = remote.delivery_id(NOW)
+            self.assertNotEqual(daily, catchup)
+            self.assertEqual(daily, remote.delivery_id(NOW))
+
+    def test_cloudinary_failure_is_not_mislabeled_as_trello_failure(self):
+        import agent
+        state = fixture()
+        state['report_sections'] = {'images': 'Cloudinary en erreur', '_cloud_ok': False}
+        def fake_bilan(apply):
+            self.assertTrue(apply)
+            self.assertTrue(agent.cloudinary_report()[1])
+            self.assertIn('1 images en quarantaine', agent.quarantine_discord_summary())
+            return 0
+        with patch.object(agent, 'bilan', side_effect=fake_bilan):
+            self.assertEqual(remote.trello(Mock(data=state))[0], 0)
+
     def test_missing_manifest_url_does_not_abort_reports_or_trello(self):
         state = fixture()
         state['manifest']['assets']['failed.png'] = {'path': 'failed.png', 'status': 'error'}
