@@ -13,6 +13,18 @@ from transports import send_discord
 
 
 class DetailedReports(unittest.TestCase):
+    def test_missing_manifest_url_does_not_abort_reports_or_trello(self):
+        state = fixture()
+        state['manifest']['assets']['failed.png'] = {'path': 'failed.png', 'status': 'error'}
+        locked = Mock(data=state)
+        with patch('remote.deletion_allowed', return_value=False), \
+             patch('remote.trello', return_value=(0, 'Bilan Trello complet')) as trello:
+            report, errors = remote.execute(locked, KEY, Cloud(), NOW, '')
+        trello.assert_called_once()
+        self.assertIn('Bilan Trello complet', report)
+        self.assertTrue(any('URL' in e and 'failed.png' in e for e in errors))
+        self.assertEqual(set(reporting.bundle(state, report, state['report_sections']['images'])), {'bilan', 'images', 'trello'})
+
     def test_three_channels_attempted_even_if_first_fails(self):
         locked = Mock(data={})
         reports = {key: 'Détail complet ' * 1000 for key in reporting.CHANNELS}
@@ -99,8 +111,10 @@ class DetailedReports(unittest.TestCase):
 
     def test_schedule_and_manual_test_do_not_require_business_mutations(self):
         workflow = (Path(__file__).resolve().parents[2] / '.github/workflows/warrenfall-daily.yml').read_text(encoding='utf-8')
-        self.assertIn("cron: '0 20 * * *'", workflow)
-        self.assertIn('timezone: Europe/Paris', workflow)
+        self.assertIn("cron: '7 18 * * *'", workflow)
+        self.assertIn("cron: '7 19 * * *'", workflow)
+        self.assertIn('schedule_gate.py', workflow)
+        self.assertIn("needs.schedule-gate.outputs.run == 'true'", workflow)
         self.assertIn('test-discord', workflow)
         self.assertIn('report_probe.py --source actions --send', workflow)
         self.assertIn('report_fallback.py', workflow)
