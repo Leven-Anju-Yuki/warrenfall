@@ -124,11 +124,63 @@ class DetailedReports(unittest.TestCase):
                 target = Path('.cloudinary-local/reports')
                 target.mkdir(parents=True)
                 (target / 'delivery.json').write_text(json.dumps({'bilan': 'uncertain'}))
-                with patch('report_fallback.deliver', return_value={'images': 'sent', 'trello': 'sent'}) as send:
+                with patch('report_fallback.deliver', return_value={'images': 'sent', 'trello': 'sent'}) as send, \
+                     patch('report_fallback.recover_reports', return_value={k: k + ' diagnostic' for k in reporting.CHANNELS}):
                     self.assertEqual(report_fallback.main(), 0)
                     self.assertEqual(set(send.call_args.args[1]), {'images', 'trello'})
             finally:
                 os.chdir(previous)
+
+    def test_cloudinary_crash_keeps_trello_and_checkpoints_each_report(self):
+        locked = LockedState(Store(fixture()), 'test')
+        with tempfile.TemporaryDirectory() as folder, \
+             patch('remote.cloudinary_stage', side_effect=TypeError()), \
+             patch('remote.trello', return_value=(0, 'Aucun deplacement justifie.')) as trello:
+            report, errors = remote.execute(locked, KEY, Cloud(), NOW, '', output=folder)
+            trello.assert_called_once()
+            self.assertIn('TypeError', (Path(folder) / 'images.md').read_text(encoding='utf-8'))
+            self.assertIn('Aucun deplacement', (Path(folder) / 'trello.md').read_text(encoding='utf-8'))
+            self.assertIn('TypeError', report)
+            self.assertTrue((Path(folder) / 'run-state.json').exists())
+
+    def test_storage_error_stops_mutations_but_keeps_snapshot_for_readonly_recovery(self):
+        from state_store import StateError
+        locked = LockedState(Store(fixture()), 'test')
+        with tempfile.TemporaryDirectory() as folder, \
+             patch('remote.cloudinary_stage', side_effect=StateError('Unavailable')), \
+             patch('remote.trello') as trello:
+            with self.assertRaises(StateError):
+                remote.execute(locked, KEY, Cloud(), NOW, '', output=folder)
+            trello.assert_not_called()
+            self.assertTrue((Path(folder) / 'run-state.json').exists())
+            self.assertIsNotNone(locked.data['lock'])
+
+    def test_fallback_has_individual_diagnostics_when_state_unavailable(self):
+        import report_fallback
+        with tempfile.TemporaryDirectory() as folder, patch.dict(os.environ, {}, clear=True):
+            reports = report_fallback.recover_reports(Path(folder))
+        self.assertNotEqual(reports['images'], reports['trello'])
+        self.assertIn('Cloudinary', reports['images'])
+        self.assertIn('Trello', reports['trello'])
+        self.assertIn('Aucune modification', reports['trello'])
+
+    def test_fallback_snapshot_reports_quarantine_and_reads_trello_without_writes(self):
+        import report_fallback
+        state = fixture()
+        with tempfile.TemporaryDirectory() as folder, patch.dict(os.environ, {}, clear=True):
+            path = Path(folder) / 'run-state.json'
+            original = json.dumps(state)
+            path.write_text(original, encoding='utf-8')
+            def read_trello(local):
+                self.assertEqual(os.environ['LAPINOUS_TRELLO_READ_ONLY'], 'true')
+                local.data['report_sections']['trello'] = 'Cartes analysees : 71. Aucun deplacement justifie.'
+                return 0, 'Aucun deplacement justifie.'
+            with patch('remote.trello', side_effect=read_trello):
+                reports = report_fallback.recover_reports(Path(folder))
+            self.assertEqual(path.read_text(encoding='utf-8'), original)
+        self.assertIn('Corbeille', reports['images'])
+        self.assertIn('71', reports['trello'])
+        self.assertIn('Aucun deplacement', reports['bilan'])
 
     def test_schedule_and_manual_test_do_not_require_business_mutations(self):
         workflow = (Path(__file__).resolve().parents[2] / '.github/workflows/warrenfall-daily.yml').read_text(encoding='utf-8')
