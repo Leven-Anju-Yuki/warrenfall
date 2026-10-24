@@ -6,7 +6,7 @@ Le projet fonctionne comme un petit jeu web responsive, avec un univers visuel c
 
 ## Suivi du projet
 
-Documentation actualisée le **23 octobre 2026**. Le suivi repose sur ce README, `A_FAIRE.md` et les correspondances explicites du [Trello du projet](https://trello.com/b/5VmsAFi7/clikergame). GitHub Actions assure le bilan quotidien vers 20 h Europe/Paris ; le relais Windows conserve les transferts et sauvegardes d’images.
+Documentation actualisée le **24 octobre 2026**. Le suivi repose sur ce README, `A_FAIRE.md` et les correspondances explicites du [Trello du projet](https://trello.com/b/5VmsAFi7/clikergame). GitHub Actions programme les bilans détaillés à 20 h 07 Europe/Paris, été comme hiver ; l’envoi automatique des trois rapports a été vérifié, mais GitHub a déclenché tardivement le run du 24 octobre à 22 h 37. Le relais Windows conserve les transferts et sauvegardes d’images. Voir le [diagnostic et les preuves d’exécution](docs/DIAGNOSTIC_PLANNING_ACTIONS_2026-10-24.md).
 
 - [Feuille de route et nouvelles évolutions](A_FAIRE.md)
 - [Audit SEO et améliorations à prévoir](docs/AUDIT_SEO.md)
@@ -111,7 +111,7 @@ Le Dashboard permet de rechercher et filtrer les lapins par événement.
 
 ### Images hébergées sur Cloudinary
 
-Les **343 images utilisées** sont hébergées sur Cloudinary, dans le cloud `dgrszi9wf`, sous `lapinous/`. Le jeu et le Dashboard utilisent les URL de `assets/js/image-manifest.js`, chargées par le résolveur commun. Les originaux transférés ont été retirés de `assets/img/` ; les dossiers restent disponibles grâce aux `.gitkeep`. Les futures créations et les images non transférées sont conservées.
+Les **359 images utilisées** sont hébergées sur Cloudinary, dans le cloud `dgrszi9wf`, sous `lapinous/`. Le jeu et le Dashboard utilisent les URL de `assets/js/image-manifest.js`, chargées par le résolveur commun. Les originaux transférés ont été retirés de `assets/img/` ; les dossiers restent disponibles grâce aux `.gitkeep`. Les futures créations et les images non transférées sont conservées.
 
 La tâche Windows **« Lapinous - Images Cloudinary 20h »** conserve les transferts et la sauvegarde permanente des originaux dans `C:/Users/flori/Desktop/clikergame_avec_image/assets/img/`, avec la même arborescence. Le relais vérifie la copie exacte avant de retirer la source du dossier du jeu ; les anciennes versions restent dans `.versions/`. Aucune purge de cette sauvegarde n’est prévue. Les nouveaux fichiers locaux sont transférés lorsque le PC est disponible, avec rattrapage des exécutions manquées. GitHub Actions assure les bilans Discord, Trello et la corbeille Cloudinary vers **20 h, Europe/Paris**, même si le PC est fermé ou éteint. La suppression après sept jours concerne uniquement Cloudinary et reste conditionnée à une preuve de sauvegarde exacte.
 
@@ -119,15 +119,15 @@ Pour lancer le relais manuellement : double-cliquer sur `Synchroniser les images
 
 ### Comparaison avant / après
 
-Mesure du **23 octobre 2026**. Les tailles correspondent à la somme des octets des fichiers, sans mesurer l’espace alloué par Windows. Le périmètre comparable exclut `.git`, les dépendances, les configurations locales de l’agent, `.env`, `.cloudinary-local` et `secours-images`, dans les deux copies.
+Mesure du **24 octobre 2026**. Les tailles correspondent à la somme des octets des fichiers, sans mesurer l’espace alloué par Windows. Le périmètre comparable exclut `.git`, les dépendances, les configurations locales de l’agent, `.env`, `.cloudinary-local` et `secours-images`, dans les deux copies.
 
 | Référence | Poids | Octets |
 | --- | ---: | ---: |
 | Ancien chiffre du README, avant migration | 586,52 Mio | 615 007 429 |
-| Copie `clikergame_avec_image/`, mesurée sans modification | 720,46 Mio | 755 455 796 |
-| Projet actuel, même périmètre | **338,91 Mio** | **355 376 112** |
+| Copie `clikergame_avec_image/`, mesurée sans modification | 754,90 Mio | 791 569 017 |
+| Projet actuel, même périmètre | **309,27 Mio** | **324 292 712** |
 
-**Économie par rapport à la copie avec images : 381,55 Mio (400 079 684 octets), soit 52,96 %.** Par rapport au chiffre précédent du README : 247,60 Mio (259 631 317 octets).
+**Économie par rapport à la copie avec images : 445,63 Mio (467 276 305 octets), soit 59,03 %.** Par rapport au chiffre précédent du README : 277,25 Mio (290 714 717 octets).
 
 ### Poids de tous les dossiers à la racine
 
@@ -135,14 +135,14 @@ Mesure du **23 octobre 2026**. Les tailles correspondent à la somme des octets 
 | --- | ---: | ---: | --- |
 | `.cloudinary-local/` | Non mesuré | — | Local privé, exclu et non parcouru |
 | `.git/` | Non mesuré | — | Local privé, exclu et non parcouru |
-| `.github/` | 4,8 Kio | 4 936 | Inclus dans le projet |
+| `.github/` | 5,4 Kio | 5 505 | Inclus dans le projet |
 | `.vscode/` | 44 octets | 44 | Inclus dans le projet |
-| `assets/` | 335,26 Mio | 351 549 705 | Inclus dans le projet |
-| `docs/` | 2,31 Mio | 2 426 081 | Inclus dans le projet |
-| `Lapinous sauvegarde/` | 276,5 Kio | 283 156 | Inclus dans le projet |
+| `assets/` | 300,83 Mio | 315 442 334 | Inclus dans le projet |
+| `docs/` | 2,32 Mio | 2 436 069 | Inclus dans le projet |
+| `Lapinous sauvegarde/` | 4,97 Mio | 5 213 731 | Inclus dans le projet |
 | `Lapinous_documents_juridiques/` | 84,6 Kio | 86 632 | Inclus dans le projet |
 | `liste de futur création/` | 36,2 Kio | 37 031 | Inclus dans le projet |
-| `tools/` | 481,9 Kio | 493 461 | Inclus dans le projet |
+| `tools/` | 560,2 Kio | 573 679 | Inclus dans le projet |
 
 Les fichiers de Git gardent encore l’historique des anciennes images. Les caches, journaux, états privés et secrets sont exclus et ne sont pas parcourus par ce calcul. Les chiffres ci-dessus décrivent le projet comparable ; ils ne prétendent pas mesurer l’occupation totale du disque.
 
@@ -151,13 +151,13 @@ Les fichiers de Git gardent encore l’historique des anciennes images. Les cach
 Chaque fichier et chaque sous-dossier du périmètre comparable est indiqué ci-dessous. Les dossiers vides pèsent zéro octet hors métadonnées du système de fichiers. Les détails des caches, secrets et sauvegardes privées sont omis ; leurs dossiers figurent dans le tableau précédent.
 
 ```text
-Warrenfall/ — 338,91 Mio
-├── .github/ — 4,8 Kio
-│   └── workflows/ — 4,8 Kio
-│       └── warrenfall-daily.yml — 4,8 Kio
+Warrenfall/ — 309,27 Mio
+├── .github/ — 5,4 Kio
+│   └── workflows/ — 5,4 Kio
+│       └── warrenfall-daily.yml — 5,4 Kio
 ├── .vscode/ — 44 octets
 │   └── settings.json — 44 octets
-├── assets/ — 335,26 Mio
+├── assets/ — 300,83 Mio
 │   ├── audio/ — 17,49 Mio
 │   │   ├── action/ — 2,35 Mio
 │   │   │   ├── dormir.mp3 — 99,8 Kio
@@ -239,8 +239,8 @@ Warrenfall/ — 338,91 Mio
 │   │   ├── warrenfall-192.png — 85,4 Kio
 │   │   ├── warrenfall-48.png — 6,2 Kio
 │   │   └── warrenfall-512.png — 527,9 Kio
-│   ├── img/ — 307,36 Mio
-│   │   ├── accompagnateurs/ — 10,94 Mio
+│   ├── img/ — 272,92 Mio
+│   │   ├── accompagnateurs/ — 1,57 Mio
 │   │   │   ├── Apothicaire/ — 0 octets
 │   │   │   │   └── .gitkeep — 0 octets
 │   │   │   ├── Artisan/ — 0 octets
@@ -254,31 +254,20 @@ Warrenfall/ — 338,91 Mio
 │   │   │   │   └── .gitkeep — 0 octets
 │   │   │   ├── Fragments/ — 0 octets
 │   │   │   │   └── .gitkeep — 0 octets
-│   │   │   └── Randonneur/ — 9,37 Mio
-│   │   │       ├── 07_marche_lapin_randonneur.gif — 426,0 Kio
-│   │   │       ├── Lapin randonneur aux jumelles-4.png — 2,30 Mio
-│   │   │       ├── Lapin randonneur debout avec sac à dos-3.png — 2,17 Mio
-│   │   │       ├── Lapin randonneur saluant joyeusement-5.png — 2,28 Mio
-│   │   │       └── Lapin randonneur, carte et boussole-1.png — 2,22 Mio
+│   │   │   └── Randonneur/ — 0 octets
+│   │   │       └── .gitkeep — 0 octets
 │   │   ├── az/ — 6,00 Mio
 │   │   │   ├── az_assis_de_cote.png — 2,14 Mio
 │   │   │   ├── az_cote.png — 865,2 Kio
 │   │   │   ├── az_face.png — 1,10 Mio
 │   │   │   └── Azazel.png — 1,91 Mio
-│   │   ├── Boite_Mini_Jeu/ — 2,61 Mio
-│   │   │   ├── .gitkeep — 0 octets
-│   │   │   └── LapinPixels.png — 2,61 Mio
-│   │   ├── boss/ — 19,98 Mio
+│   │   ├── Boite_Mini_Jeu/ — 0 octets
+│   │   │   └── .gitkeep — 0 octets
+│   │   ├── boss/ — 8,14 Mio
 │   │   │   ├── carotte_choux_oignon.png — 1,58 Mio
 │   │   │   ├── Gemini_Generated_Image_joczczjoczczjocz.jpg — 1 009,5 Kio
-│   │   │   ├── Navet_cote.png — 1,94 Mio
-│   │   │   ├── Navet_face.png — 1,93 Mio
-│   │   │   ├── Petit_Pois_cote.png — 1,42 Mio
-│   │   │   ├── Petit_Pois_face.png — 1,63 Mio
 │   │   │   ├── Planche de sprites de trois légumes héros-1.png — 2,68 Mio
 │   │   │   ├── poivron_courgette_banane.png — 1,42 Mio
-│   │   │   ├── Radis_cote.png — 2,46 Mio
-│   │   │   ├── Radis_face.png — 2,45 Mio
 │   │   │   └── tomate_ail_mais_aubergine_patate.png — 1,48 Mio
 │   │   ├── breeds/ — 7,3 Kio
 │   │   │   ├── glouton.svg — 1,0 Kio
@@ -295,7 +284,7 @@ Warrenfall/ — 338,91 Mio
 │   │   │   ├── cloudinary_images.png — 268,1 Kio
 │   │   │   ├── Serveur.png — 626,5 Kio
 │   │   │   └── Trello_taches.png — 246,5 Kio
-│   │   ├── fond/ — 23,71 Mio
+│   │   ├── fond/ — 13,10 Mio
 │   │   │   ├── Halloween/ — 0 octets
 │   │   │   │   └── .gitkeep — 0 octets
 │   │   │   ├── Magasin/ — 0 octets
@@ -316,11 +305,8 @@ Warrenfall/ — 338,91 Mio
 │   │   │   │   └── Image ChatGPT 30 sept. 2026, 00_29_48-24.png — 2,08 Mio
 │   │   │   ├── Paques/ — 0 octets
 │   │   │   │   └── .gitkeep — 0 octets
-│   │   │   ├── randonnée/ — 10,62 Mio
-│   │   │   │   ├── Dunes dorées au soleil doux-3.png — 2,24 Mio
-│   │   │   │   ├── Forêt enchantée aux champignons luisants-2.png — 2,98 Mio
-│   │   │   │   ├── La grotte aux lucioles ambrées-4.png — 2,54 Mio
-│   │   │   │   └── Prairie dorée aux petites pousses-1.png — 2,86 Mio
+│   │   │   ├── randonnée/ — 0 octets
+│   │   │   │   └── .gitkeep — 0 octets
 │   │   │   └── Saison/ — 0 octets
 │   │   │       ├── jour/ — 0 octets
 │   │   │       │   └── .gitkeep — 0 octets
@@ -509,7 +495,7 @@ Warrenfall/ — 338,91 Mio
 │   │   │   └── entrainement.png — 141,1 Kio
 │   │   └── Zone_SdB/ — 935,8 Kio
 │   │       └── lapin_SdB.gif — 935,8 Kio
-│   └── js/ — 806,4 Kio
+│   └── js/ — 812,1 Kio
 │       ├── achievements.js — 7,0 Kio
 │       ├── apothecary-effects.js — 1,4 Kio
 │       ├── auto-nests.js — 1,6 Kio
@@ -526,12 +512,12 @@ Warrenfall/ — 338,91 Mio
 │       ├── grid-stroke.js — 439 octets
 │       ├── image-assets.js — 7,7 Kio
 │       ├── image-interactions.js — 443 octets
-│       ├── image-manifest.js — 85,0 Kio
+│       ├── image-manifest.js — 89,2 Kio
 │       ├── installer.js — 8,3 Kio
 │       ├── jquery-3.6.1.min.js — 87,6 Kio
 │       ├── lapidoku.js — 3,6 Kio
 │       ├── legal.js — 1,5 Kio
-│       ├── local-files.js — 7,4 Kio
+│       ├── local-files.js — 8,7 Kio
 │       ├── mobile-ui.js — 4,2 Kio
 │       ├── number-sudoku.js — 3,3 Kio
 │       ├── pantry.js — 16,8 Kio
@@ -543,13 +529,13 @@ Warrenfall/ — 338,91 Mio
 │       ├── save-safety.js — 3,5 Kio
 │       ├── save-validation.js — 3,9 Kio
 │       ├── scene-preload.js — 1,2 Kio
-│       ├── script.js — 288,1 Kio
+│       ├── script.js — 288,3 Kio
 │       ├── shop.js — 61,6 Kio
 │       ├── species-data.js — 12,5 Kio
 │       ├── startup.js — 7,2 Kio
 │       ├── team-rules.js — 1,5 Kio
 │       └── welcome-gift.js — 367 octets
-├── docs/ — 2,31 Mio
+├── docs/ — 2,32 Mio
 │   ├── archives/ — 38,4 Kio
 │   │   └── a-faire/ — 38,4 Kio
 │   │       ├── a faire - original.txt — 6,7 Kio
@@ -565,6 +551,7 @@ Warrenfall/ — 338,91 Mio
 │   ├── AUDIT_VISUELS_GOOGLE_PLAY.md — 52,9 Kio
 │   ├── CUISINE.md — 1,5 Kio
 │   ├── DIAGNOSTIC_CLOUDINARY_2026-10-19.md — 5,2 Kio
+│   ├── DIAGNOSTIC_PLANNING_ACTIONS_2026-10-24.md — 9,2 Kio
 │   ├── DIAGNOSTIC_RAPPORTS_2026-10-23.md — 5,0 Kio
 │   ├── DIAGNOSTIC_REVEIL_S0.md — 16,8 Kio
 │   ├── FIABILISATION_AUTOMATISATIONS.md — 7,5 Kio
@@ -576,13 +563,16 @@ Warrenfall/ — 338,91 Mio
 │   ├── NOUVEL_AN_CHINOIS.md — 3,1 Kio
 │   ├── PUZZLES.md — 4,9 Kio
 │   ├── RENOMMAGE_WARRENFALL.md — 7,6 Kio
-│   ├── SAUVEGARDES_JOUEURS.md — 1,6 Kio
+│   ├── SAUVEGARDES_JOUEURS.md — 2,2 Kio
 │   └── VALIDATION_ACTIONS_2026-10-23.md — 4,2 Kio
-├── Lapinous sauvegarde/ — 276,5 Kio
+├── Lapinous sauvegarde/ — 4,97 Mio
 │   ├── admin.json — 233,3 Kio
 │   ├── lapinous-azazel-10-10-2026_21h11.json — 19,7 Kio
 │   ├── lapinous-azazel-10-10-2026_23h55.json — 19,7 Kio
-│   └── lapinous-azazel-2026-09-30_21h58.json — 3,8 Kio
+│   ├── lapinous-azazel-2026-09-30_21h58.json — 3,8 Kio
+│   ├── warrenfall-petit-nid-auto-1.json — 1,57 Mio
+│   ├── warrenfall-petit-nid-auto-2.json — 1,57 Mio
+│   └── warrenfall-petit-nid-auto-3.json — 1,57 Mio
 ├── Lapinous_documents_juridiques/ — 84,6 Kio
 │   ├── 00_LIRE_AVANT_PUBLICATION.md — 3,6 Kio
 │   ├── 01_CGU.html — 7,8 Kio
@@ -600,7 +590,7 @@ Warrenfall/ — 338,91 Mio
 ├── liste de futur création/ — 36,2 Kio
 │   ├── futur_lapin.md — 25,9 Kio
 │   └── future_boss.md — 10,2 Kio
-├── tools/ — 481,9 Kio
+├── tools/ — 560,2 Kio
 │   ├── agent_lapinous/ — 156,0 Kio
 │   │   ├── .gitignore — 18 octets
 │   │   ├── agent.py — 28,9 Kio
@@ -628,20 +618,29 @@ Warrenfall/ — 338,91 Mio
 │   │   ├── test_suivi_trello.py — 15,9 Kio
 │   │   ├── test_validation_resilience.py — 5,9 Kio
 │   │   └── trello_automatisation.json — 23 octets
-│   ├── automation/ — 75,3 Kio
+│   ├── automation/ — 152,7 Kio
+│   │   ├── __pycache__/ — 63,4 Kio
+│   │   │   ├── core.cpython-313.pyc — 9,5 Kio
+│   │   │   ├── remote.cpython-313.pyc — 25,5 Kio
+│   │   │   ├── report_probe.cpython-313.pyc — 9,8 Kio
+│   │   │   ├── reporting.cpython-313.pyc — 4,5 Kio
+│   │   │   ├── state_store.cpython-313.pyc — 6,9 Kio
+│   │   │   └── transports.cpython-313.pyc — 7,1 Kio
 │   │   ├── .env.example — 255 octets
 │   │   ├── config.json — 177 octets
 │   │   ├── core.py — 6,0 Kio
 │   │   ├── local_bridge.py — 6,6 Kio
-│   │   ├── remote.py — 14,7 Kio
-│   │   ├── report_fallback.py — 1,5 Kio
+│   │   ├── remote.py — 18,2 Kio
+│   │   ├── report_fallback.py — 5,0 Kio
 │   │   ├── report_probe.py — 5,6 Kio
 │   │   ├── reporting.py — 3,3 Kio
+│   │   ├── schedule_gate.py — 1,1 Kio
 │   │   ├── state_admin.py — 2,5 Kio
 │   │   ├── state_store.py — 3,9 Kio
 │   │   ├── test_hybrid.py — 14,1 Kio
 │   │   ├── test_permanent_backup.py — 2,4 Kio
-│   │   ├── test_reporting.py — 7,6 Kio
+│   │   ├── test_reporting.py — 12,6 Kio
+│   │   ├── test_schedule.py — 772 octets
 │   │   ├── test_trello_resilience.py — 2,4 Kio
 │   │   └── transports.py — 4,2 Kio
 │   ├── notebooks/ — 11,1 Kio
@@ -675,7 +674,7 @@ Warrenfall/ — 338,91 Mio
 │   ├── test-achievements.mjs — 2,3 Kio
 │   ├── test-apothecary-effects.mjs — 3,0 Kio
 │   ├── test-audio-events.mjs — 1,5 Kio
-│   ├── test-auto-nest-files.mjs — 1,5 Kio
+│   ├── test-auto-nest-files.mjs — 2,4 Kio
 │   ├── test-auto-nests.mjs — 1,6 Kio
 │   ├── test-boss-abilities.mjs — 4,9 Kio
 │   ├── test-cloudinary-corbeille-api.mjs — 3,2 Kio
@@ -707,10 +706,10 @@ Warrenfall/ — 338,91 Mio
 │   ├── test-welcome-gift.mjs — 758 octets
 │   ├── update-images.mjs — 8,6 Kio
 │   └── update-readme-sizes.mjs — 8,4 Kio
-├── .gitignore — 654 octets
+├── .gitignore — 703 octets
 ├── 403.html — 748 octets
 ├── 404.html — 760 octets
-├── A_FAIRE.md — 203,6 Kio
+├── A_FAIRE.md — 205,5 Kio
 ├── AGENTS.md — 875 octets
 ├── dashboard.html — 17,5 Kio
 ├── index.html — 26,2 Kio
@@ -720,12 +719,12 @@ Warrenfall/ — 338,91 Mio
 ├── lapinous-shop.json — 32,6 Kio
 ├── manifest.json — 570 octets
 ├── offline.html — 805 octets
-├── readme.md — 67,4 Kio
+├── readme.md — 67,9 Kio
 ├── sw.js — 4,1 Kio
 └── Synchroniser les images.cmd — 204 octets
 ```
 
-Poids total du projet : **338,91 Mio** (355 376 112 octets), calculé le 23 octobre 2026.
+Poids total du projet : **309,27 Mio** (324 292 712 octets), calculé le 24 octobre 2026.
 
 Pour recalculer cette section : `node tools/update-readme-sizes.mjs`. Ce script mesure la sauvegarde permanente `clikergame_avec_image` en lecture seule et ne la modifie jamais.
 

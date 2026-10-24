@@ -755,7 +755,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = `lapinous-${(currentRabbitName() || "save").toLowerCase()}.json`;
+            a.download = timestampedFilename(`lapinous-${(currentRabbitName() || "save").toLowerCase()}`);
             a.click();
             URL.revokeObjectURL(url);
             showToast("Partie exportée en JSON ⬇️ (un vrai fichier sur ton disque)", "success");
@@ -809,7 +809,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
             files.sort((a, b) => b.modified - a.modified || a.name.localeCompare(b.name));
-            for (const { name } of files) {
+            for (const { name, modified } of files) {
                 const row = document.createElement("div");
                 row.className = "save-slot";
                 const info = document.createElement("div");
@@ -817,6 +817,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 const title = document.createElement("strong");
                 title.textContent = name;
                 info.appendChild(title);
+                const date=document.createElement('small');
+                date.textContent=new Date(modified).toLocaleString('fr-FR',{dateStyle:'short',timeStyle:'medium'});
+                info.appendChild(date);
                 const actions = document.createElement("div");
                 actions.className = "save-slot-actions";
                 const load = document.createElement("button");

@@ -20,6 +20,13 @@ from reporting import cloudinary_details, bundle, deliver
 ROOT = Path(__file__).resolve().parents[2]
 
 
+def delivery_id(now):
+    # Un rattrapage manuel ne doit pas consommer l'envoi automatique du soir.
+    if os.getenv('GITHUB_EVENT_NAME') == 'workflow_dispatch':
+        return 'catchup:' + os.environ['GITHUB_RUN_ID']
+    return 'daily:' + paris_day(now) + ':schedule'
+
+
 def references(root):
     # Inclut le manifeste public, CSS, JS et tous les catalogues. Surprotéger une
     # référence est préférable à effacer une ressource encore utilisée.
@@ -62,12 +69,16 @@ def trello(locked):
                 sections['trello'] = message
             return True
         # Capturer les rapports avant la disparition du répertoire temporaire.
+        # execute évalue Cloudinary ; agent.bilan doit ici isoler le statut Trello.
         try:
             with patch.object(agent, 'STATE_FILE', state_file), patch.object(agent, 'REPORTS', Path(folder)), \
                  patch.object(agent, 'write_transitions', transitions), patch.object(agent, 'save_checkpoint', checkpoint), \
                  patch.object(agent, 'replace_section', lambda *args: None), \
                  patch.object(agent, 'discord', capture_message), patch.object(agent, 'send_report_file', capture_file), \
-                 patch.object(agent, 'cloudinary_report', lambda *args, **kwargs: (sections.get('images', 'Cloudinary non vérifié.'), sections.get('_cloud_ok', False))), \
+                 patch.object(agent, 'cloudinary_report', lambda *args, **kwargs: (sections.get('images', 'Cloudinary non vérifié.'), True)), \
+                 patch.object(agent, 'quarantine_discord_summary', lambda: (
+                     'État privé Actions : ' + str(len(locked.data.get('quarantine', {}).get('items', {})))
+                     + ' images en quarantaine ; échéances détaillées dans le rapport Cloudinary ci-dessus.')), \
                  contextlib.redirect_stdout(buffer):
                 code = agent.bilan(True)
         except StateError:
@@ -154,10 +165,9 @@ def deletion_allowed(state):
         return False
 
 
-def execute(locked, key, cloud, now, source):
+def cloudinary_stage(locked, key, cloud, now, source):
     state = locked.data
-    state['report_sections'] = {}
-    errors, details = [], ''
+    errors = []
     # Protège aussi les références locales non encore publiées sur GitHub.
     inventory = state.get('inventory', {})
     active_local = []
@@ -206,6 +216,40 @@ def execute(locked, key, cloud, now, source):
             errors.append('Cloudinary ressources : inaccessible ou identité différente — ' + item['path'])
     state['report_sections']['images'] = cloudinary_details(state, proposed, now)
     state['report_sections']['_cloud_ok'] = not any(e.startswith('Cloudinary') for e in errors)
+    return proposed, errors
+
+
+def checkpoint_report(output, channel, text):
+    if output is not None:
+        folder = Path(output)
+        folder.mkdir(parents=True, exist_ok=True)
+        header = ('Collecte du ' + dt.datetime.now(dt.timezone.utc).isoformat()
+                  + '\nExécution Actions : ' + os.getenv('GITHUB_RUN_ID', 'hors Actions') + '\n\n')
+        (folder / (channel + '.md')).write_text(header + text, encoding='utf-8')
+
+
+def execute(locked, key, cloud, now, source, output=None):
+    state = locked.data
+    state['report_sections'] = {}
+    errors, details = [], ''
+    if output is not None:
+        folder = Path(output)
+        folder.mkdir(parents=True, exist_ok=True)
+        # Instantane prive du run, jamais un artifact public ni un etat a reimporter.
+        (folder / 'run-state.json').write_text(json.dumps(state, ensure_ascii=False), encoding='utf-8')
+    try:
+        proposed, cloud_errors = cloudinary_stage(locked, key, cloud, now, source)
+        errors.extend(cloud_errors)
+    except StateError:
+        raise  # Pas de nouvelle mutation si la persistance ne peut plus etre confirmee.
+    except Exception as exc:
+        errors.append('Cloudinary / etape : ' + type(exc).__name__ + ' ; Trello maintenu.')
+        proposed = {'blocked': [{'reason': errors[-1]}]}
+        state['report_sections']['images'] = ('# Cloudinary - echec de cette etape\n' + errors[-1]
+            + '\n\nEtat de quarantaine conserve, pas un resultat de suppression :\n'
+            + json.dumps(state.get('quarantine', {}), ensure_ascii=False, indent=2))
+        state['report_sections']['_cloud_ok'] = False
+    checkpoint_report(output, 'images', state['report_sections']['images'])
     creations = []
     try:
         creations = create_explicit_tasks(locked) if state.get('new_tasks') else []
@@ -222,7 +266,11 @@ def execute(locked, key, cloud, now, source):
         raise
     except Exception as exc:
         errors.append('Trello / script : ' + type(exc).__name__ + ' ; point de reprise conservé.')
-    return render(state, proposed, errors, details), errors
+        state['report_sections']['trello'] = '# Trello — diagnostic de cette exécution\n' + errors[-1]
+    checkpoint_report(output, 'trello', state['report_sections'].get('trello') or details or 'Trello : aucune modification necessaire.')
+    report = render(state, proposed, errors, details)
+    checkpoint_report(output, 'bilan', report)
+    return report, errors
 
 
 def main():
@@ -268,7 +316,7 @@ def main():
             def get(self, *args):
                 raise RuntimeError('Cloudinary : configuration absente')
         cloud = UnavailableCloud()
-    report, errors = execute(locked, key, cloud, now, references(ROOT))
+    report, errors = execute(locked, key, cloud, now, references(ROOT), output=args.output.parent / 'reports')
     locked.data['last_report'] = report
     locked.save()
     args.output.parent.mkdir(parents=True, exist_ok=True)
@@ -281,7 +329,7 @@ def main():
     reports = {channel: provenance + text for channel, text in reports.items()}
     locked.data['last_reports'] = reports
     locked.save()
-    outcomes = deliver(locked, reports, 'daily:' + paris_day(now), args.output.parent / 'reports')
+    outcomes = deliver(locked, reports, delivery_id(now), args.output.parent / 'reports')
     locked.data['last_delivery'] = outcomes
     errors.extend('Discord ' + channel + ' : ' + status for channel, status in outcomes.items() if status != 'sent')
     locked.save()
@@ -293,6 +341,15 @@ if __name__ == '__main__':
     try:
         raise SystemExit(main())
     except Exception as exc:
+        import traceback
+        frame = traceback.extract_tb(exc.__traceback__)[-1]
+        diagnostic = {'type': type(exc).__name__, 'file': Path(frame.filename).name, 'line': frame.lineno}
+        try:
+            folder = ROOT / '.cloudinary-local/reports'
+            folder.mkdir(parents=True, exist_ok=True)
+            (folder / 'failure.json').write_text(json.dumps(diagnostic), encoding='utf-8')
+        except OSError:
+            pass
         # Pas de traceback de requests susceptible de contenir un webhook/token.
-        print('Chaîne hybride interrompue : ' + (str(exc) if isinstance(exc, StateError) else 'erreur de script ou configuration ; état privé conservé.'), file=sys.stderr)
+        print('Chaîne hybride interrompue : ' + (str(exc) if isinstance(exc, StateError) else json.dumps(diagnostic)), file=sys.stderr)
         raise SystemExit(1)

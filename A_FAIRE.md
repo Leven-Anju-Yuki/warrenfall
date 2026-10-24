@@ -1670,3 +1670,11 @@ Procédure et limites : [MIGRATION_GITHUB_ACTIONS.md](docs/MIGRATION_GITHUB_ACTI
 - [x] Diagnostics et références rangés dans `docs/`, export Trello dans `docs/exports/`, notebook dans `tools/notebooks/` ; arborescence README régénérée. Images, futures créations et sauvegardes existantes conservées.
 - [ ] Anti-triche fiable : nécessite un serveur de validation et une politique de reprise des anciennes sauvegardes. Le jeu statique ne peut pas empêcher un joueur de modifier ses données locales. Voir `docs/SAUVEGARDES_JOUEURS.md`.
 
+# Sauvegardes datées — révision 168
+
+Les noms des trois Petits nids sur disque portent désormais leur date et heure de capture. Les exports manuels téléchargés sont également horodatés. La rotation confirme les nouvelles copies par relecture avant de retirer les anciens instantanés reconnus ; les fichiers manuels restent conservés. Tests de rotation, migration des anciens noms, échec d’écriture, permissions et compatibilité des anciennes parties réussis.
+
+# Bilans détaillés indépendants — 24 octobre 2026
+
+Corrections publiées : conservation immédiate du bilan de chaque étape, isolation des exceptions Cloudinary/Trello et secours détaillé en lecture seule. Validation GitHub `40130390562` réussie, trois pièces jointes complètes relues sur Discord et empreinte métier inchangée. Le run automatique `40130615438` a également envoyé ses trois vrais bilans à 22:40 le 24 octobre. Les sauvegardes et états ne sont pas réinitialisés. La ponctualité autour de 20 h reste non démontrée : l’événement attendu à 20:07 a été créé à 22:37. Le GIF d’ouverture sans URL reste en erreur, sans bloquer Trello ni les rapports. Voir `docs/DIAGNOSTIC_PLANNING_ACTIONS_2026-10-24.md`.
+

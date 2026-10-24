@@ -43,22 +43,39 @@
   async function exportJSON(name,data){if(!filenames.has(name))throw new Error('Nom de catalogue incorrect.');const text=JSON.stringify(data,null,2);JSON.parse(text);if(!supported()){download(name,text);return 'download';}if(exporting)throw new Error('Un export est deja en cours.');exporting=true;try{const folder=await recall('project')||await chooseProject();if(!await permission(folder))throw new Error('Autorisation refusee. Reconnecte le dossier ou utilise le telechargement.');const file=await folder.getFileHandle(name);const old=await file.getFile();const backup=await folder.getDirectoryHandle('Sauvegardes JSON',{create:true});const stamp=new Date().toISOString().replace(/[:.]/g,'-');await write(await backup.getFileHandle(name.replace('.json','')+'-'+stamp+'.json',{create:true}),await old.text());await write(file,text);try{await cleanBackups(backup);}catch(error){console.warn('Export enregistre ; nettoyage des anciennes copies impossible.',error.name);}return 'written';}finally{exporting=false;}}
   const exportWithFallback=(name,data)=>{if(downloadOnly){download(name,JSON.stringify(data,null,2));return Promise.resolve('download');}return exportJSON(name,data);};
   let nestQueue=Promise.resolve();
+  function nestFilename(entry,slot){
+    const d=new Date(entry.savedAt),pad=n=>String(n).padStart(2,'0');
+    if(!Number.isFinite(d.getTime()))throw Error('Date du petit nid invalide.');
+    const stamp=`${pad(d.getDate())}-${pad(d.getMonth()+1)}-${d.getFullYear()}_${pad(d.getHours())}h${pad(d.getMinutes())}-${pad(d.getSeconds())}-${String(d.getMilliseconds()).padStart(3,'0')}`;
+    return `warrenfall-petit-nid-auto-${slot}-${stamp}.json`;
+  }
   function writeAutoNests(entries){
+    if(!Array.isArray(entries)||entries.length>3)throw Error('Trois petits nids maximum.');
     const snapshot=JSON.parse(JSON.stringify(entries));
     const job=nestQueue.then(async()=>{
       const folder=await recall('player');
       if(!folder||!await permission(folder,false))return false;
-      // Trois emplacements réservés ; aucun fichier manuel n'est supprimé.
+      const keep=new Set();
+      // Confirmer toutes les nouvelles copies avant de retirer les anciens nids.
       for(let i=0;i<snapshot.length;i++){
         const entry=snapshot[i];
-        const text=JSON.stringify({...entry.data,autoNest:{name:entry.name,savedAt:entry.savedAt}},null,2);
-        await write(await folder.getFileHandle(`warrenfall-petit-nid-auto-${i+1}.json`,{create:true}),text);
+        const name=nestFilename(entry,i+1),text=JSON.stringify({...entry.data,savedAt:entry.savedAt,autoNest:{name:entry.name,savedAt:entry.savedAt,savedAtISO:new Date(entry.savedAt).toISOString()}},null,2);
+        const file=await folder.getFileHandle(name,{create:true});
+        await write(file,text);
+        if(await (await file.getFile()).text()!==text)throw Error('Copie du petit nid non confirmée.');
+        keep.add(name);
+      }
+      if(keep.size)for await(const [name,file]of folder.entries()){
+        if(file.kind!=='file'||keep.has(name)||!/^warrenfall-petit-nid-auto-[123](?:-\d{2}-\d{2}-\d{4}_\d{2}h\d{2}-\d{2}-\d{3})?\.json$/.test(name))continue;
+        // Les anciens noms fixes sont reconnus, mais seuls nos instantanés sont retirés.
+        let old;try{old=JSON.parse(await (await file.getFile()).text());}catch{continue;}
+        if(typeof old.autoNest?.name==='string'&&Number.isFinite(old.autoNest.savedAt))await folder.removeEntry(name);
       }
       return true;
     });
     nestQueue=job.catch(()=>{});return job;
   }
-  window.LapinousLocalFiles={supported,recall,permission,chooseProject,chooseSaves,openSaveFile,writeAutoNests,exportJSON:exportWithFallback,download};
+  window.LapinousLocalFiles={supported,recall,permission,chooseProject,chooseSaves,openSaveFile,nestFilename,writeAutoNests,exportJSON:exportWithFallback,download};
   document.addEventListener('DOMContentLoaded',()=>{
     const exportButton=document.getElementById('exportContentBtn');if(!exportButton)return;
     const panel=document.createElement('section');panel.className='dash-section';
