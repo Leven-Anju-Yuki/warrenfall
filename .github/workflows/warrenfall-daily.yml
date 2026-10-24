@@ -2,8 +2,9 @@ name: Warrenfall — bilan hybride (migration)
 
 on:
   schedule:
-    - cron: '0 20 * * *'
-      timezone: Europe/Paris
+    # UTC explicite ; schedule_gate retient 20:07 Europe/Paris selon la saison.
+    - cron: '7 18 * * *'
+    - cron: '7 19 * * *'
   workflow_dispatch:
     inputs:
       mode:
@@ -20,7 +21,23 @@ concurrency:
   cancel-in-progress: false
 
 jobs:
+  schedule-gate:
+    runs-on: ubuntu-latest
+    outputs:
+      run: ${{ steps.paris.outputs.run }}
+    steps:
+      - uses: actions/checkout@v4
+        with:
+          persist-credentials: false
+      - uses: actions/setup-python@v5
+        with:
+          python-version: '3.12'
+      - id: paris
+        run: python -B tools/automation/schedule_gate.py
+
   simulations:
+    needs: schedule-gate
+    if: needs.schedule-gate.outputs.run == 'true'
     runs-on: ubuntu-latest
     timeout-minutes: 10
     steps:
@@ -44,9 +61,9 @@ jobs:
         run: python -B -m unittest test_suivi_trello test_chaine_agent test_fiabilisation test_validation_resilience
 
   daily:
-    needs: simulations
+    needs: [schedule-gate, simulations]
     # Absent par défaut : publier le fichier ne réactive aucune automatisation.
-    if: always() && vars.WARRENFALL_HYBRID_ENABLED == 'true' && inputs.mode != 'test-discord'
+    if: always() && needs.schedule-gate.outputs.run == 'true' && vars.WARRENFALL_HYBRID_ENABLED == 'true' && inputs.mode != 'test-discord'
     runs-on: ubuntu-latest
     timeout-minutes: 40
     environment: warrenfall-automation

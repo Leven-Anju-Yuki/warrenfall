@@ -16,7 +16,7 @@
     const names=['Lapinous_Sauvegardes','lapinous_sauvegardes','Lapinous sauvegarde'];
     let handle=names.includes(parent.name)?parent:null;
     if(!handle)for(const name of names){try{handle=await parent.getDirectoryHandle(name);break;}catch(error){if(error.name!=='NotFoundError')throw error;}}
-    if(!handle)handle=await parent.getDirectoryHandle('Lapinous_Sauvegardes',{create:true});
+    if(!handle)handle=await parent.getDirectoryHandle('Lapinous sauvegarde',{create:true});
     await remember('player',handle);return handle;
   }
   // Restore the handle before the click, keeping the file picker in the user gesture.
@@ -42,7 +42,23 @@
   }
   async function exportJSON(name,data){if(!filenames.has(name))throw new Error('Nom de catalogue incorrect.');const text=JSON.stringify(data,null,2);JSON.parse(text);if(!supported()){download(name,text);return 'download';}if(exporting)throw new Error('Un export est deja en cours.');exporting=true;try{const folder=await recall('project')||await chooseProject();if(!await permission(folder))throw new Error('Autorisation refusee. Reconnecte le dossier ou utilise le telechargement.');const file=await folder.getFileHandle(name);const old=await file.getFile();const backup=await folder.getDirectoryHandle('Sauvegardes JSON',{create:true});const stamp=new Date().toISOString().replace(/[:.]/g,'-');await write(await backup.getFileHandle(name.replace('.json','')+'-'+stamp+'.json',{create:true}),await old.text());await write(file,text);try{await cleanBackups(backup);}catch(error){console.warn('Export enregistre ; nettoyage des anciennes copies impossible.',error.name);}return 'written';}finally{exporting=false;}}
   const exportWithFallback=(name,data)=>{if(downloadOnly){download(name,JSON.stringify(data,null,2));return Promise.resolve('download');}return exportJSON(name,data);};
-  window.LapinousLocalFiles={supported,recall,permission,chooseProject,chooseSaves,openSaveFile,exportJSON:exportWithFallback,download};
+  let nestQueue=Promise.resolve();
+  function writeAutoNests(entries){
+    const snapshot=JSON.parse(JSON.stringify(entries));
+    const job=nestQueue.then(async()=>{
+      const folder=await recall('player');
+      if(!folder||!await permission(folder,false))return false;
+      // Trois emplacements réservés ; aucun fichier manuel n'est supprimé.
+      for(let i=0;i<snapshot.length;i++){
+        const entry=snapshot[i];
+        const text=JSON.stringify({...entry.data,autoNest:{name:entry.name,savedAt:entry.savedAt}},null,2);
+        await write(await folder.getFileHandle(`warrenfall-petit-nid-auto-${i+1}.json`,{create:true}),text);
+      }
+      return true;
+    });
+    nestQueue=job.catch(()=>{});return job;
+  }
+  window.LapinousLocalFiles={supported,recall,permission,chooseProject,chooseSaves,openSaveFile,writeAutoNests,exportJSON:exportWithFallback,download};
   document.addEventListener('DOMContentLoaded',()=>{
     const exportButton=document.getElementById('exportContentBtn');if(!exportButton)return;
     const panel=document.createElement('section');panel.className='dash-section';

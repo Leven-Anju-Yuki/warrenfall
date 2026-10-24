@@ -7,6 +7,12 @@ secours-images/
 docs/*
 !docs/RENOMMAGE_WARRENFALL.md
 !docs/MIGRATION_GITHUB_ACTIONS.md
+!docs/DIAGNOSTIC_REVEIL_S0.md
+!docs/FIABILISATION_AUTOMATISATIONS.md
+!docs/references/
+!docs/exports/
+!docs/SAUVEGARDES_JOUEURS.md
+!docs/DIAGNOSTIC_PLANNING_ACTIONS_2026-10-24.md
 
 # Etats privés hybrides et preuves de sauvegarde (jamais dans le dépôt du jeu)
 hybrid-export*.json

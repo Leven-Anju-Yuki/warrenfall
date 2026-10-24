@@ -1,0 +1,17 @@
+import fs from 'node:fs';
+import vm from 'node:vm';
+import assert from 'node:assert/strict';
+const files=new Map([['admin.json','manual untouched']]);
+let allowed=true;
+const folder={name:'Lapinous sauvegarde',queryPermission:async()=>allowed?'granted':'denied',getFileHandle:async name=>({createWritable:async()=>{let pending;return {write:async text=>{pending=text;},close:async()=>files.set(name,pending),abort:async()=>{}};}})};
+const context={window:{showDirectoryPicker:async()=>folder},document:{addEventListener(){}},indexedDB:{open(){throw Error('No database in fixture');}}};
+vm.createContext(context);vm.runInContext(fs.readFileSync('assets/js/local-files.js','utf8'),context);
+const api=context.window.LapinousLocalFiles;
+assert.equal(await api.writeAutoNests([]),false);
+await api.chooseSaves();
+for(let n=0;n<5;n++)assert.equal(await api.writeAutoNests(Array.from({length:3},(_,i)=>({name:'Petit nid',savedAt:n*100+i,data:{carrots:n-i,inventory:{mint:10}}}))),true);
+assert.equal(files.size,4);assert.equal(files.get('admin.json'),'manual untouched');
+assert.equal(JSON.parse(files.get('warrenfall-petit-nid-auto-1.json')).carrots,4);
+assert.equal(JSON.parse(files.get('warrenfall-petit-nid-auto-3.json')).autoNest.savedAt,402);
+allowed=false;const before=JSON.stringify([...files]);assert.equal(await api.writeAutoNests([{data:{}}]),false);assert.equal(JSON.stringify([...files]),before);
+console.log('Autosaves disque : rotation, dates, fichiers manuels et permissions OK.');

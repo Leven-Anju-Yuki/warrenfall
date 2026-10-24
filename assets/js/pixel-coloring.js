@@ -4,12 +4,38 @@
   const allowedLevels=image=>image.kind==='rabbit'?[0,1]:image.kind==='scene'?[1,2]:[0,1,2];
   const imageLevel=(image,index)=>({...levels[index],size:image.kind==='rabbit'&&index===1?96:levels[index].size});
   function nextColor(state,current){
-    const remaining=new Set(state.targets.filter((c,i)=>!state.painted[i]));
+    const remaining=new Set(state.targets.filter((c,i)=>!state.background?.[i]&&!state.painted[i]));
     if(remaining.has(current))return current;
     for(let step=1;step<=state.colors.length;step++){const c=(current+step)%state.colors.length;if(remaining.has(c))return c;}
     return current;
   }
   const distance=(a,b)=>(a[0]-b[0])**2+(a[1]-b[1])**2+(a[2]-b[2])**2;
+  function progress(state){
+    let done=0,total=0;
+    state.targets.forEach((_,i)=>{if(!state.background?.[i]){total++;if(state.painted[i])done++;}});
+    return {done,total};
+  }
+  function rabbitBackground(raw,width,height){
+    const mask=Array.from({length:width*height},(_,i)=>Number(raw[i*4+3]<32));
+    const edges=[];
+    for(let x=0;x<width;x++)edges.push(x,(height-1)*width+x);
+    for(let y=0;y<height;y++)edges.push(y*width,y*width+width-1);
+    // La transparence d'origine protège notamment la fourrure blanche et noire.
+    if(edges.some(i=>mask[i]))return mask;
+    const corners=[0,width-1,(height-1)*width,width*height-1];
+    const rgb=i=>[raw[i*4],raw[i*4+1],raw[i*4+2]];
+    const matte=corners.map(rgb).find(c=>corners.filter(i=>distance(rgb(i),c)<=432).length>=3);
+    if(!matte)return mask;
+    // Un fond opaque uniforme est retiré seulement s'il communique avec le bord.
+    const queue=[],seen=new Uint8Array(width*height);
+    const visit=i=>{if(i<0||i>=mask.length||seen[i])return;seen[i]=1;if(distance(rgb(i),matte)<=972){mask[i]=1;queue.push(i);}};
+    edges.forEach(visit);
+    for(let q=0;q<queue.length;q++){
+      const i=queue[q],x=i%width;
+      if(x>0)visit(i-1);if(x<width-1)visit(i+1);visit(i-width);visit(i+width);
+    }
+    return mask;
+  }
   function quantize(pixels,count){
     const colors=[pixels[0].slice()];
     const nearest=pixels.map(p=>distance(p,colors[0]));
@@ -28,7 +54,7 @@
     return {colors,targets};
   }
   function paint(state,index,color){
-    if(index<0||index>=state.targets.length||state.targets[index]!==color||state.painted[index])return false;
+    if(index<0||index>=state.targets.length||state.background?.[index]||state.targets[index]!==color||state.painted[index])return false;
     state.painted[index]=1;return true;
   }
   function open(options){
@@ -51,7 +77,7 @@
       levels.forEach((l,i)=>{const size=kind==='rabbit'&&i===1?96:l.size,b=button('',()=>{level=i;hub();});b.append(el('strong',`${['🌱','🌼','🌳'][i]} ${l.name}`),el('span',`${size} cases de large · ${l.colors} couleurs maximum`));b.disabled=kind==='rabbit'&&i===2||kind==='scene'&&i===0;b.setAttribute('aria-pressed',String(level===i));choices.append(b);});if(kind!=='saved')panel.append(choices);
       const list=el('div',undefined,'coloring-images');panel.append(list);
       const entries=kind==='saved'?Object.keys(storage).flatMap(key=>{const match=key.match(/^(.*):([012])(?::v[23])?$/),image=match&&catalog.find(x=>x.id===match[1]);return image?[{image,difficulty:Number(match[2]),key}]:[];}):catalog.filter(image=>kind==='all'||image.kind===kind).map(image=>({image,difficulty:level,key:`${image.id}:${level}:v3`}));
-      entries.forEach(({image,difficulty,key})=>{const b=button('',()=>start(image,difficulty,key));const frame=el('span',undefined,'coloring-picture');const img=el('img');img.src=imageUrl(image);img.alt='';img.loading='lazy';frame.append(img);b.append(frame,el('strong',image.title));const st=storage[key];b.append(el('small',st?`${st.painted.filter(Boolean).length}/${st.targets.length} cases coloriées · ${levels[difficulty].name}${key.endsWith(':v3')?'':' · Ancienne grille'}`:'À tes pinceaux !'));list.append(b);});
+      entries.forEach(({image,difficulty,key})=>{const b=button('',()=>start(image,difficulty,key));const frame=el('span',undefined,'coloring-picture');const img=el('img');img.src=imageUrl(image);img.alt='';img.loading='lazy';frame.append(img);b.append(frame,el('strong',image.title));const st=storage[key];b.append(el('small',st?`${progress(st).done}/${progress(st).total} cases coloriées · ${levels[difficulty].name}${key.endsWith(':v3')?'':' · Ancienne grille'}`:'À tes pinceaux !'));list.append(b);});
       if(!entries.length&&kind==='saved')list.append(el('p','Tes coloriages commencés et tes anciennes grilles apparaîtront ici.'));
       if(!catalog.length)panel.append(el('p','Les images seront disponibles avec le catalogue des puzzles.'));
     }
@@ -60,7 +86,7 @@
       const loading=el('dialog',undefined,'coloring-hub');loading.append(el('p','Préparation des petites couleurs…'),button('← Images',hub));host.replaceChildren(loading);loading.showModal();loading.oncancel=e=>{e.preventDefault();hub();};
       let state=storage[key];
       try{
-        if(!state){
+        if(!state || image.kind==='rabbit'&&!Array.isArray(state.background)){
           const img=new Image();img.crossOrigin='anonymous';
           // Une requête lisible évite les anciennes copies opaques du cache d'images.
           const response=await fetch(imageUrl(image),{mode:'cors',cache:'reload'});
@@ -69,13 +95,24 @@
           try{await new Promise((resolve,reject)=>{img.onload=resolve;img.onerror=reject;img.src=objectURL;});}
           finally{URL.revokeObjectURL(objectURL);}
           if(token!==session||!host.contains(loading))return;
-          const width=l.size,height=Math.max(1,Math.round(width*img.naturalHeight/img.naturalWidth));
+          const width=state?.width||l.size,height=state?.height||Math.max(1,Math.round(width*img.naturalHeight/img.naturalWidth));
           const source=document.createElement('canvas');source.width=width;source.height=height;
-          const ctx=source.getContext('2d',{willReadFrequently:true});ctx.fillStyle='#fff';ctx.fillRect(0,0,width,height);ctx.drawImage(img,0,0,width,height);
+          const ctx=source.getContext('2d',{willReadFrequently:true});
+          if(image.kind!=='rabbit'){ctx.fillStyle='#fff';ctx.fillRect(0,0,width,height);}
+          ctx.drawImage(img,0,0,width,height);
           const raw=ctx.getImageData(0,0,width,height).data,pixels=[];
-          for(let i=0;i<raw.length;i+=4)pixels.push([raw[i],raw[i+1],raw[i+2]]);
-          const result=quantize(pixels,l.colors);
-          state={version:3,width,height,...result,painted:Array(width*height).fill(0)};
+          const background=image.kind==='rabbit'?rabbitBackground(raw,width,height):null;
+          if(state){
+            // Conserve chaque couleur et chaque case déjà coloriée des anciennes grilles.
+            state.background=background;
+          }else{
+            for(let i=0;i<raw.length;i+=4)if(!background?.[i/4])pixels.push([raw[i],raw[i+1],raw[i+2]]);
+            if(!pixels.length)throw Error('Portrait vide');
+            const result=quantize(pixels,l.colors);
+            let foreground=0;
+            const targets=Array.from({length:width*height},(_,i)=>background?.[i]?0:result.targets[foreground++]);
+            state={version:3,width,height,colors:result.colors,targets,painted:Array(width*height).fill(0),...(background?{background}:{})};
+          }
           storage[key]=state;save();
         }
         if(token!==session||!host.contains(loading))return;
@@ -111,10 +148,11 @@
         const previousColor=selected;
         if(!gesture)selected=nextColor(state,selected);
         const ctx=canvas.getContext('2d');ctx.font=`${Math.min(11,Math.floor(cell*.48))}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';
-        state.targets.forEach((color,i)=>{const cx=i%state.width*cell,cy=Math.floor(i/state.width)*cell,filled=preview||state.painted[i];ctx.fillStyle=filled?`rgb(${state.colors[color].join(',')})`:'#fff9ed';ctx.fillRect(cx,cy,cell,cell);ctx.strokeStyle=!filled&&color===selected?'#715532':'#cfc5b5';ctx.lineWidth=!filled&&color===selected?2:0.5;if(!filled)ctx.strokeRect(cx+.5,cy+.5,cell-1,cell-1);if(!filled){ctx.fillStyle='#493a2b';ctx.fillText(color+1,cx+cell/2,cy+cell/2);}});
-        const done=state.painted.filter(Boolean).length;status.textContent=done===state.targets.length?'🎉 Toutes les couleurs sont retrouvées !':`${done}/${state.targets.length} cases · Couleur ${selected+1} sélectionnée`;
+        ctx.clearRect(0,0,canvas.width,canvas.height);
+        state.targets.forEach((color,i)=>{if(state.background?.[i])return;const cx=i%state.width*cell,cy=Math.floor(i/state.width)*cell,filled=preview||state.painted[i];ctx.fillStyle=filled?`rgb(${state.colors[color].join(',')})`:'#fff9ed';ctx.fillRect(cx,cy,cell,cell);ctx.strokeStyle=!filled&&color===selected?'#715532':'#cfc5b5';ctx.lineWidth=!filled&&color===selected?2:0.5;if(!filled)ctx.strokeRect(cx+.5,cy+.5,cell-1,cell-1);if(!filled){ctx.fillStyle='#493a2b';ctx.fillText(color+1,cx+cell/2,cy+cell/2);}});
+        const {done,total}=progress(state);status.textContent=done===total?'🎉 Toutes les couleurs sont retrouvées !':`${done}/${total} cases · Couleur ${selected+1} sélectionnée`;
         if(preview)status.textContent='👁 Aperçu admin du tableau terminé · Ta progression est conservée.';
-        palette.querySelectorAll('[data-color]').forEach(b=>{const c=Number(b.dataset.color),left=state.targets.reduce((n,v,i)=>n+(v===c&&!state.painted[i]?1:0),0);b.setAttribute('aria-pressed',String(c===selected));b.setAttribute('aria-label',`Couleur ${c+1}, ${left} cases restantes`);b.textContent=`${c+1}${left===0?' ✓':''}`;});
+        palette.querySelectorAll('[data-color]').forEach(b=>{const c=Number(b.dataset.color),left=state.targets.reduce((n,v,i)=>n+(!state.background?.[i]&&v===c&&!state.painted[i]?1:0),0);b.hidden=!state.targets.some((v,i)=>v===c&&!state.background?.[i]);b.setAttribute('aria-pressed',String(c===selected));b.setAttribute('aria-label',`Couleur ${c+1}, ${left} cases restantes`);b.textContent=`${c+1}${left===0?' ✓':''}`;});
         if(previousColor!==selected){
           const chosen=palette.querySelector(`[data-color="${selected}"]`);
           if(chosen){const item=chosen.getBoundingClientRect(),frame=palette.getBoundingClientRect();
@@ -124,8 +162,8 @@
         }
       }
       state.colors.forEach((color,i)=>{const b=button(String(i+1),()=>{selected=i;draw();});b.dataset.color=i;b.style.background=`rgb(${color.join(',')})`;b.style.color=color.reduce((s,v,j)=>s+v*[.299,.587,.114][j],0)>145?'#20170e':'#fff';palette.append(b);});
-      function apply(index){if(preview)return;if(paint(state,index,selected)){draw();save();}else if(state.targets[index]!==undefined&&!state.painted[index])status.textContent=`Cette case attend la couleur ${state.targets[index]+1}.`;}
-      tools.insertBefore(button('Colorier une case',()=>apply(state.targets.findIndex((c,i)=>c===selected&&!state.painted[i]))),tools.querySelector('small'));
+      function apply(index){if(preview)return;if(paint(state,index,selected)){draw();save();}else if(!state.background?.[index]&&state.targets[index]!==undefined&&!state.painted[index])status.textContent=`Cette case attend la couleur ${state.targets[index]+1}.`;}
+      tools.insertBefore(button('Colorier une case',()=>apply(state.targets.findIndex((c,i)=>!state.background?.[i]&&c===selected&&!state.painted[i]))),tools.querySelector('small'));
       if(options.admin){const toggle=button('👁 Voir le tableau terminé',()=>{preview=!preview;toggle.textContent=preview?'🖌 Reprendre mon coloriage':'👁 Voir le tableau terminé';toggle.setAttribute('aria-pressed',String(preview));draw();});toggle.className='coloring-admin-preview';toggle.setAttribute('aria-pressed','false');tools.append(toggle);}
       viewport.onwheel=e=>{
         e.preventDefault();
@@ -147,5 +185,5 @@
     }
     hub();
   }
-  window.LapinousColoring={open,levels,quantize,paint,nextColor,allowedLevels,imageLevel};
+  window.LapinousColoring={open,levels,quantize,paint,nextColor,allowedLevels,imageLevel,rabbitBackground,progress};
 })();

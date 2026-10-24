@@ -11,6 +11,7 @@ from pathlib import Path
 import sys
 import tempfile
 import uuid
+from zoneinfo import ZoneInfo
 from core import plan, apply_trash, paris_day
 from state_store import GitHubStore, LockedState, StateError, wait_for_state
 from transports import Cloudinary, send_discord, request
@@ -191,11 +192,15 @@ def execute(locked, key, cloud, now, source):
             errors.append('Cloudinary corbeille : erreur de script ; reprise nécessaire.')
     # Vérification quotidienne des URL actives, indépendante du traitement corbeille.
     for item in state['manifest']['assets'].values():
-        if item.get('url') not in source:
+        url = item.get('url')
+        if not isinstance(url, str) or not url or not item.get('public_id'):
+            errors.append('Cloudinary manifeste : URL ou identité absente — ' + str(item.get('path', '?')))
+            continue
+        if url not in source:
             continue
         try:
             remote = cloud.get(item['public_id'])
-            if not remote or remote.get('secure_url') != item['url']:
+            if not remote or remote.get('secure_url') != url:
                 raise ValueError()
         except Exception:
             errors.append('Cloudinary ressources : inaccessible ou identité différente — ' + item['path'])
@@ -269,6 +274,11 @@ def main():
     args.output.parent.mkdir(parents=True, exist_ok=True)
     args.output.write_text(report, encoding='utf-8')
     reports = bundle(locked.data, report, locked.data['report_sections'].get('images', report))
+    stamp = now.astimezone(ZoneInfo('Europe/Paris')).isoformat()
+    run_url = ('https://github.com/' + os.getenv('GITHUB_REPOSITORY', '') + '/actions/runs/'
+               + os.getenv('GITHUB_RUN_ID', ''))
+    provenance = f'Exécution du {stamp}\nSource : {run_url}\n\n'
+    reports = {channel: provenance + text for channel, text in reports.items()}
     locked.data['last_reports'] = reports
     locked.save()
     outcomes = deliver(locked, reports, 'daily:' + paris_day(now), args.output.parent / 'reports')

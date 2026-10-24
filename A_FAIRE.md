@@ -212,7 +212,7 @@ Les cases principales des cartes restent ouvertes tant que leur validation ou le
 
 ## Validations humaines reprises de l’export Trello
 
-Export fourni par l’utilisateur : `5VmsAFi7 - clikergame.json`, relu le 21 octobre 2026. Les 30 cartes placées par l’utilisateur dans Réalisé sont reconnues comme validations humaines, dont 28 également marquées terminées (dueComplete). Les cases principales correspondantes étaient déjà cochées ; le résumé ancien ne recensait que neuf cartes.
+Export fourni par l’utilisateur : `docs/exports/5VmsAFi7 - clikergame.json`, relu le 21 octobre 2026. Les 30 cartes placées par l’utilisateur dans Réalisé sont reconnues comme validations humaines, dont 28 également marquées terminées (dueComplete). Les cases principales correspondantes étaient déjà cochées ; le résumé ancien ne recensait que neuf cartes.
 
 - Validation humaine cochée : Équipes favorites — renvoi à la case principale [Carte](https://trello.com/c/6ac39e147db15f1edab9c326)
 - Validation humaine cochée : faire une modal qui souvre avec un bouton image livre pour afficher les regles du jeu — renvoi à la case principale [Carte](https://trello.com/c/6661a8eefa746159ea2700da)
@@ -667,8 +667,8 @@ Aucun deplacement justifie.
 - 404.html
 - AGENTS.md
 - A_FAIRE.md
-- DIAGNOSTIC_REVEIL_S0.md
-- FIABILISATION_AUTOMATISATIONS.md
+- docs/DIAGNOSTIC_REVEIL_S0.md
+- docs/FIABILISATION_AUTOMATISATIONS.md
 - Lapinous_documents_juridiques/00_LIRE_AVANT_PUBLICATION.md
 - Lapinous_documents_juridiques/01_CGU.html
 - Lapinous_documents_juridiques/02_CGV_carottes.html
@@ -1459,14 +1459,14 @@ Suivi du 16 octobre : tableau [Warrenfall](https://trello.com/b/5VmsAFi7/warrenf
 
 ## Fiabilisation des automatisations — 17 octobre 2026
 
-- [x] Diagnostic documenté dans FIABILISATION_AUTOMATISATIONS.md : timeout VM inventaire, SSL Trello distinct et conditions Windows batterie contradictoires. [trello:6ac39f30bfe4848ec3eca940:code:automation-diagnostic-100]
+- [x] Diagnostic documenté dans docs/FIABILISATION_AUTOMATISATIONS.md : timeout VM inventaire, SSL Trello distinct et conditions Windows batterie contradictoires. [trello:6ac39f30bfe4848ec3eca940:code:automation-diagnostic-100]
 - [x] Reprises réseau limitées, certificats vérifiés, diagnostic enfant conservé et compteurs d’erreurs séparés. Tests isolés sans service réel. [trello:6ac39f30bfe4848ec3eca940:code:automation-network-100]
 - [x] Contrôle batterie à chaque appel, secteur exclu, seuils confirmés après HTTP accepté, journal local ; installateur limité à la tâche existante. [trello:6ac39f30bfe4848ec3eca940:code:battery-reliability-100]
 - [ ] Valider les simulations puis appliquer uniquement les conditions Windows batterie ; historique opérationnel et test de veille contrôlé à effectuer. Aucun horaire ni réglage d’alimentation modifié. [trello:6ac39f30bfe4848ec3eca940:manuel:automation-windows-100]
 
 ## Réveil S0 — diagnostic et essai réel à poursuivre
 
-- [x] Capacités S0, capot, minuteurs AC/DC et tâches vérifiés en lecture seule ; protocole et tâche temporaire préparés sans opération distante. Voir DIAGNOSTIC_REVEIL_S0.md. [trello:6ac39f30bfe4848ec3eca940:code:wake-s0-diagnostic-101]
+- [x] Capacités S0, capot, minuteurs AC/DC et tâches vérifiés en lecture seule ; protocole et tâche temporaire préparés sans opération distante. Voir docs/DIAGNOSTIC_REVEIL_S0.md. [trello:6ac39f30bfe4848ec3eca940:code:wake-s0-diagnostic-101]
 - [ ] Armer puis effectuer réellement le test sur secteur, capot fermé ; corréler horodatage et événements S0 avant de conclure. Aucun succès présumé. [trello:6ac39f30bfe4848ec3eca940:manuel:wake-s0-real-101]
 
 - [x] 19/10 : seule activation RTCWAKE sur batterie autorisée et appliquée ; tâches existantes inchangées. Test ponctuel armé à 09:32:22, résultat en attente de vérification après essai capot fermé. [trello:6ac39f30bfe4848ec3eca940:code:wake-s0-armed-102]
@@ -1528,7 +1528,7 @@ Ces deux idées sont enregistrées dans « Idées à sélectionner » après lec
 
 - [x] Téléphone 112 : une ancienne confirmation d’installation ne masque plus définitivement l’accès dans le navigateur ; bouton Application si installation mémorisée, Installer sinon, masqué dans l’application autonome. Aide avec aperçu de la nouvelle icône Warrenfall et précaution de sauvegarde.
 
-- [ ] Veille S0 / capot fermé : diagnostic Windows actualisé le 20/10 dans DIAGNOSTIC_REVEIL_S0.md. Réveil, rattrapage et batterie déjà autorisés ; aucune fiabilité capot fermé démontrée. Nouveau test local de vingt minutes en attente de disponibilité de Florie ; aucun paramètre système ni tâche de production modifié.
+- [ ] Veille S0 / capot fermé : diagnostic Windows actualisé le 20/10 dans docs/DIAGNOSTIC_REVEIL_S0.md. Réveil, rattrapage et batterie déjà autorisés ; aucune fiabilité capot fermé démontrée. Nouveau test local de vingt minutes en attente de disponibilité de Florie ; aucun paramètre système ni tâche de production modifié.
 
 - [x] Interface 113 : table décalée dans le renfoncement derrière la marchande ; apothicairerie sans bandes latérales, tiroirs réduits, consultation avant double touche d’utilisation ; cuisine avec plats prêts séparés et choix par fiches ; cadeau de bienvenue confirmé dans la sauvegarde et coché dans le carnet ; badge ! sur succès à récupérer ; accès Application maintenu dans la PWA.
 - [x] Chargement 113 : concurrence limitée à quatre, délai réseau adapté, tentative automatique et reprise explicite. Audit CDN en lecture seule : 90 images accessibles sur 91 références du catalogue ; tartelette.png non répertoriée, exclue du préchargement anticipé. Aucun transfert ni suppression effectué.
@@ -1656,4 +1656,17 @@ Procédure et limites : [MIGRATION_GITHUB_ACTIONS.md](docs/MIGRATION_GITHUB_ACTI
 - Ancien export `arborescence.txt` retiré : le README contient désormais l’arborescence régénérée et les poids actuels.
 - README et générateur alignés sur le relais actif et la sauvegarde permanente `.versions` ; raccourci manuel raccordé au lanceur Windows partagé.
 - Images, futures créations, sauvegardes des joueurs et sauvegarde permanente intactes. Aucun push automatique.
+
+# Coloriage des lapins — révision 166
+
+- Fond transparent ou fond uni relié aux bords exclu des portraits à colorier ; les grandes scènes conservent leurs décors.
+- Pas de numéros ni de cases à peindre dans le fond ; progression et sélection automatique des couleurs limitées au lapin.
+- Anciennes grilles conservées avec leurs couleurs et cases déjà peintes ; le masque du fond est ajouté sans réinitialisation.
+- Images originales et sauvegardes JSON locales inchangées.
+
+# Autosauvegardes sur disque et rangement — révision 167
+
+- [x] Copie des trois Petits nids dans le dossier de sauvegardes autorisé par le joueur ; trois emplacements réservés, date et heure conservées, fichiers manuels préservés. Repli navigateur explicite lorsque l’accès disque n’est pas disponible.
+- [x] Diagnostics et références rangés dans `docs/`, export Trello dans `docs/exports/`, notebook dans `tools/notebooks/` ; arborescence README régénérée. Images, futures créations et sauvegardes existantes conservées.
+- [ ] Anti-triche fiable : nécessite un serveur de validation et une politique de reprise des anciennes sauvegardes. Le jeu statique ne peut pas empêcher un joueur de modifier ses données locales. Voir `docs/SAUVEGARDES_JOUEURS.md`.
 

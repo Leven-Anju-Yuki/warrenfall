@@ -592,7 +592,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }
             if(body.classList.contains('game-running'))try{
                 const nest=window.LapinousAutoNests.capture(localStorage,lastSavedRaw,currentRabbitName(),Date.now(),leaving===true);
-                if(nest){autoNestWarningShown=false;showToast('🐰 Sauvegarde automatique : ton petit nid est à l’abri !','success',3500);}
+                if(nest){autoNestWarningShown=false;showToast('🐰 Petit nid enregistré dans ce navigateur.','success',3500);syncAutoNestsToFolder();}
             }catch(error){if(!autoNestWarningShown){autoNestWarningShown=true;showToast('Partie enregistrée, mais le petit nid n’a pas pu être créé : '+error.message,'warn',10000);}}
             return true;
         }
@@ -601,6 +601,14 @@ document.addEventListener("DOMContentLoaded", () => {
         window.addEventListener("pagehide",()=>{if(body.classList.contains("game-running"))autoSave(true);});
         setInterval(()=>{if(!document.hidden&&body.classList.contains('game-running'))autoSave();},window.LapinousAutoNests.INTERVAL);
         function readAutoNests(){try{return window.LapinousAutoNests.read(localStorage);}catch(error){showToast(error.message,'warn',10000);return [];}}
+        let nestFolderWarning=false;
+        function syncAutoNestsToFolder(){
+            return window.LapinousLocalFiles.writeAutoNests(readAutoNests()).then(written=>{
+                if(written){nestFolderWarning=false;showToast('📁 Petits nids copiés dans ton dossier de sauvegardes.','success',3500);}
+                else if(!nestFolderWarning){nestFolderWarning=true;showToast('Pour copier les autosauvegardes sur disque : Sauvegardes → Choisir / reconnecter le dossier « Lapinous sauvegarde ». Ce navigateur doit autoriser l’écriture.','warn',12000);}
+                return written;
+            }).catch(()=>{showToast('Copie des petits nids sur disque impossible. Les copies du navigateur sont conservées.','warn',10000);return false;});
+        }
         function loadSavesList() {
             try {
                 const list=JSON.parse(localStorage.getItem(SAVES_KEY) || "[]");
@@ -853,6 +861,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 savesDirHandle=remembered&&await window.LapinousLocalFiles.permission(remembered)?remembered:await window.LapinousLocalFiles.chooseSaves();
                 document.getElementById("saveToFolderBtn").disabled = false;
                 showToast("Dossier de sauvegardes sélectionné 📁", "success");
+                await syncAutoNestsToFolder();
                 renderFolderSaves();
             } catch (e) {
                 // Sélection annulée par l'utilisateur : rien à faire.
@@ -907,8 +916,8 @@ document.addEventListener("DOMContentLoaded", () => {
         // DISPONIBILITÉ SAISONNIÈRE (Halloween / Noël / Pâques)
         // Mêmes règles utilisées côté Dashboard pour l'aperçu admin.
         // ============================================================
-        window.LapinousLocalFiles.recall('player').then(async handle=>{if(!handle)return;savesDirHandle=handle;document.getElementById('saveToFolderBtn').disabled=false;document.getElementById('chooseFolderBtn').textContent='Reconnecter le dossier';if(await window.LapinousLocalFiles.permission(handle,false))await renderFolderSaves();}).catch(()=>{});
-        const changeFolder=document.createElement('button');changeFolder.type='button';changeFolder.className='io-btn';changeFolder.textContent='Changer de dossier';document.getElementById('chooseFolderBtn').after(changeFolder);changeFolder.onclick=async()=>{try{savesDirHandle=await window.LapinousLocalFiles.chooseSaves();document.getElementById('saveToFolderBtn').disabled=false;await renderFolderSaves();}catch(error){if(error.name!=='AbortError')showToast(error.message,'warn');}};
+        window.LapinousLocalFiles.recall('player').then(async handle=>{if(!handle)return;savesDirHandle=handle;document.getElementById('saveToFolderBtn').disabled=false;document.getElementById('chooseFolderBtn').textContent='Reconnecter le dossier';if(await window.LapinousLocalFiles.permission(handle,false)){await syncAutoNestsToFolder();await renderFolderSaves();}}).catch(()=>{});
+        const changeFolder=document.createElement('button');changeFolder.type='button';changeFolder.className='io-btn';changeFolder.textContent='Changer de dossier';document.getElementById('chooseFolderBtn').after(changeFolder);changeFolder.onclick=async()=>{try{savesDirHandle=await window.LapinousLocalFiles.chooseSaves();document.getElementById('saveToFolderBtn').disabled=false;await syncAutoNestsToFolder();await renderFolderSaves();}catch(error){if(error.name!=='AbortError')showToast(error.message,'warn');}};
         function getEasterDate(year) {
             // Algorithme de Meeus/Jones/Butcher (calendrier grégorien)
             const a = year % 19;
