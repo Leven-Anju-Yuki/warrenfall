@@ -1,6 +1,37 @@
 name: Warrenfall — bilan hybride (migration)
 
 on:
+  workflow_call:
+    inputs:
+      relay:
+        type: boolean
+        default: false
+      mode:
+        type: string
+        default: simulation
+    secrets:
+      WARRENFALL_STATE_TOKEN:
+        required: true
+      WARRENFALL_BACKUP_SIGNING_KEY:
+        required: true
+      CLOUDINARY_CLOUD_NAME:
+        required: true
+      CLOUDINARY_API_KEY:
+        required: true
+      CLOUDINARY_API_SECRET:
+        required: true
+      TRELLO_BOARD_ID:
+        required: true
+      TRELLO_API_KEY:
+        required: true
+      TRELLO_TOKEN:
+        required: true
+      DISCORD_WEBHOOK_BILAN:
+        required: true
+      DISCORD_WEBHOOK_CLOUDINARY:
+        required: true
+      DISCORD_WEBHOOK_TRELLO:
+        required: true
   schedule:
     # UTC explicite ; schedule_gate retient 20:07 Europe/Paris selon la saison.
     - cron: '7 18 * * *'
@@ -28,11 +59,16 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          repository: Leven-Anju-Yuki/warrenfall
+          ref: ${{ github.repository == 'Leven-Anju-Yuki/warrenfall' && github.sha || 'main' }}
           persist-credentials: false
       - uses: actions/setup-python@v5
         with:
           python-version: '3.12'
       - id: paris
+        env:
+          WARRENFALL_RELAY_CALL: ${{ inputs.relay }}
+          WARRENFALL_STATE_REPO: ${{ vars.WARRENFALL_STATE_REPO }}
         run: python -B tools/automation/schedule_gate.py
 
   simulations:
@@ -43,6 +79,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          repository: Leven-Anju-Yuki/warrenfall
+          ref: ${{ github.repository == 'Leven-Anju-Yuki/warrenfall' && github.sha || 'main' }}
           persist-credentials: false
           fetch-depth: 0
       - uses: actions/setup-python@v5
@@ -84,6 +122,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          repository: Leven-Anju-Yuki/warrenfall
+          ref: ${{ github.repository == 'Leven-Anju-Yuki/warrenfall' && github.sha || 'main' }}
           persist-credentials: false
           fetch-depth: 0
       - uses: actions/setup-python@v5
@@ -129,6 +169,8 @@ jobs:
     steps:
       - uses: actions/checkout@v4
         with:
+          repository: Leven-Anju-Yuki/warrenfall
+          ref: ${{ github.repository == 'Leven-Anju-Yuki/warrenfall' && github.sha || 'main' }}
           persist-credentials: false
           fetch-depth: 0
       - uses: actions/setup-python@v5

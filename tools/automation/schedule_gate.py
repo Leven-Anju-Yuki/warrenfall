@@ -6,7 +6,9 @@ from pathlib import Path
 from zoneinfo import ZoneInfo
 
 
-def allowed(event, cron='', now=None):
+def allowed(event, cron='', now=None, *, relay=False, repository='', state_repository=''):
+    if event == 'push':
+        return relay and bool(state_repository) and repository == state_repository
     if event == 'workflow_dispatch':
         return True
     if event != 'schedule':
@@ -20,10 +22,13 @@ def allowed(event, cron='', now=None):
 
 def main():
     event = json.loads(Path(os.environ['GITHUB_EVENT_PATH']).read_text(encoding='utf-8'))
-    run = allowed(os.environ['GITHUB_EVENT_NAME'], event.get('schedule', ''))
+    run = allowed(os.environ['GITHUB_EVENT_NAME'], event.get('schedule', ''),
+                  relay=os.getenv('WARRENFALL_RELAY_CALL') == 'true',
+                  repository=os.getenv('GITHUB_REPOSITORY', ''),
+                  state_repository=os.getenv('WARRENFALL_STATE_REPO', ''))
     with open(os.environ['GITHUB_OUTPUT'], 'a', encoding='utf-8') as out:
         out.write('run=' + str(run).lower() + '\n')
-    print('Europe/Paris 20:07 : ' + ('créneau retenu' if run else 'autre saison, traitement ignoré'))
+    print('Relais Windows ou secours Europe/Paris 20:07 : ' + ('retenu' if run else 'ignoré'))
 
 
 if __name__ == '__main__':

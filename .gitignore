@@ -13,6 +13,8 @@ docs/*
 !docs/exports/
 !docs/SAUVEGARDES_JOUEURS.md
 !docs/DIAGNOSTIC_PLANNING_ACTIONS_2026-10-24.md
+!docs/APERCU_RAPPORTS_DISCORD.md
+!docs/DIAGNOSTIC_RELAIS_2026-10-25.md
 
 # Etats privés hybrides et preuves de sauvegarde (jamais dans le dépôt du jeu)
 hybrid-export*.json

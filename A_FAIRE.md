@@ -1,6 +1,13 @@
 # Warrenfall - suivi des travaux et validations
 
-Mise à jour : 22 octobre 2026.
+Mise à jour : 25 octobre 2026.
+
+## Rapports après Cloudinary — diagnostic du 25 octobre
+
+- [x] Vérifier les horaires réels : fin Cloudinary 22 h 35 Paris (20:35Z), bilan 22 h 40, pas deux heures après. Planning GitHub créé tardivement à 22 h 37 ; détail dans `docs/DIAGNOSTIC_RELAIS_2026-10-25.md`.
+- [x] Corriger uniquement le déclencheur de la tâche Images existante : prochaine exécution à 20 h locale après passage à l'heure d'hiver ; action, sécurité, batterie et rattrapage inchangés, XML privé conservé.
+- [x] Préparer le signal privé de fin de relais, le workflow réutilisable et la déduplication relais/planning ; 75 tests Python et vérification actionlint des deux workflows réussis. Aucun nouvel envoi Discord ni mutation Cloudinary/Trello de test.
+- [ ] Publication explicite des corrections et configuration chiffrée du workflow privé, puis simulation GitHub et validation humaine avant activation du nouveau déclencheur. Le planning actuel reste actif ; ne pas présenter cette liaison comme déjà opérationnelle.
 
 ## Préparation du combat lisible — révision 156
 
@@ -1677,4 +1684,12 @@ Les noms des trois Petits nids sur disque portent désormais leur date et heure 
 # Bilans détaillés indépendants — 24 octobre 2026
 
 Corrections publiées : conservation immédiate du bilan de chaque étape, isolation des exceptions Cloudinary/Trello et secours détaillé en lecture seule. Validation GitHub `40130390562` réussie, trois pièces jointes complètes relues sur Discord et empreinte métier inchangée. Le run automatique `40130615438` a également envoyé ses trois vrais bilans à 22:40 le 24 octobre. Les sauvegardes et états ne sont pas réinitialisés. La ponctualité autour de 20 h reste non démontrée : l’événement attendu à 20:07 a été créé à 22:37. Le GIF d’ouverture sans URL reste en erreur, sans bloquer Trello ni les rapports. Voir `docs/DIAGNOSTIC_PLANNING_ACTIONS_2026-10-24.md`.
+
+# Présentation des bilans Discord — 24 octobre 2026
+
+Résumés lisibles directement dans les salons Bilan, Cloudinary et Trello, avec date/heure Paris, statut propre à chaque traitement, compteurs, erreurs expliquées et actions nécessaires. Les transferts Windows historiques sont séparés des opérations distantes ; les quarantaines sont regroupées par échéance J-x. Les cartes Trello inchangées et les inventaires restent dans les pièces jointes intégrales. Découpage sans perte des informations essentielles en cas de dépassement de la limite Discord ; pièces jointes envoyées une seule fois et confirmations conservées. Aperçu testé sur l’exécution automatique `40130615438`, sans rejouer de traitement ni envoyer de message. Voir `docs/APERCU_RAPPORTS_DISCORD.md`. Modifications locales de présentation uniquement, non publiées.
+
+# Listes nominatives Cloudinary — 25 octobre 2026
+
+Le message Cloudinary liste toutes les images en quarantaine (nom, J-7 à J-0, échéance originale), les suppressions réellement confirmées pour l’exécution et les blocages avec leur raison précise. Les nouveaux envois et remplacements sont séparés et appuyés par des reçus conservés dans le manifeste privé, y compris après une passe partiellement échouée. Les confirmations Discord mémorisent les versions annoncées ; une annonce incertaine n’est pas répétée comme un nouvel envoi. Les anciens bilans confirmés servent de frontière historique ; les anciennes données sans reçu ne sont pas transformées en nouveaux transferts. Listes réparties sans perte sur plusieurs messages, une seule pièce jointe technique complète. Métadonnées de rapport seulement : aucun changement aux règles de suppression ni à la sauvegarde permanente. Tests simulés et aperçu réel dans `docs/APERCU_RAPPORTS_DISCORD.md`. Modification locale, non publiée.
 

@@ -6,7 +6,7 @@ Le projet fonctionne comme un petit jeu web responsive, avec un univers visuel c
 
 ## Suivi du projet
 
-Documentation actualisée le **24 octobre 2026**. Le suivi repose sur ce README, `A_FAIRE.md` et les correspondances explicites du [Trello du projet](https://trello.com/b/5VmsAFi7/clikergame). GitHub Actions programme les bilans détaillés à 20 h 07 Europe/Paris, été comme hiver ; l’envoi automatique des trois rapports a été vérifié, mais GitHub a déclenché tardivement le run du 24 octobre à 22 h 37. Le relais Windows conserve les transferts et sauvegardes d’images. Voir le [diagnostic et les preuves d’exécution](docs/DIAGNOSTIC_PLANNING_ACTIONS_2026-10-24.md).
+Documentation actualisée le **25 octobre 2026**. Le suivi repose sur ce README, `A_FAIRE.md` et les correspondances explicites du [Trello du projet](https://trello.com/b/5VmsAFi7/clikergame). GitHub Actions programme les bilans détaillés à 20 h 07 Europe/Paris, été comme hiver ; l’envoi automatique des trois rapports a été vérifié, mais GitHub a déclenché tardivement le run du 24 octobre à 22 h 37. Le relais Windows conserve les transferts et sauvegardes d’images. Le 25 octobre, son heure locale a été corrigée à 20 h ; le signal direct de fin de synchronisation et la déduplication sont préparés, **pas encore publiés**. Voir le [diagnostic des horaires et du relais](docs/DIAGNOSTIC_RELAIS_2026-10-25.md).
 
 - [Feuille de route et nouvelles évolutions](A_FAIRE.md)
 - [Audit SEO et améliorations à prévoir](docs/AUDIT_SEO.md)
@@ -885,7 +885,7 @@ Le service worker conserve les fichiers publics du jeu et les 120 dernières ima
 
 ### Automatisation du soir
 
-Une seule tâche Windows existante à **20 h Europe/Paris** lance Cloudinary puis, dès sa fin, le bilan Python, même si la synchronisation échoue. Le rapport complet couvre Cloudinary, Git, Trello, README, A_FAIRE, quarantaine et erreurs, puis part sur Discord. Aucun bilan indépendant. La chaîne corrigée a passé le test réel autorisé du 15 octobre et est active, avec mises à jour Trello autorisées après validation du 15 octobre, simulation en lecture seule et suppressions Cloudinary bloquées ; consulter `tools/agent_lapinous/README_INSTALLATION.md`.
+Une seule tâche Windows Images existante à **20 h Europe/Paris** conserve Cloudinary et les sauvegardes permanentes. En mode hybride actif, les bilans et traitements Trello/corbeille sont distants, avec un planning GitHub de secours à 20 h 07 ; le lancement du bilan dès publication de la synchronisation est préparé mais pas encore publié. Le rapport complet couvre Cloudinary, Git, Trello, README, A_FAIRE, quarantaine et erreurs, puis part sur Discord. La corbeille Cloudinary conserve sa règle de sept jours et les attestations exactes de sauvegarde ; aucune purge locale. Voir le [diagnostic du relais](docs/DIAGNOSTIC_RELAIS_2026-10-25.md) et `tools/agent_lapinous/README_INSTALLATION.md`.
 
 Le serveur `tools/serve-game.py` renvoie les illustrations Warrenfall avec les vrais codes HTTP 403/404, même sans service worker installé. Après remplacement d’un ancien serveur `python -m http.server`, arrêter celui-ci (Ctrl+C dans son terminal), puis lancer la commande ci-dessus. GitHub Pages utilise le fichier racine `404.html` après publication.
 

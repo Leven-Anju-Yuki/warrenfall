@@ -16,14 +16,17 @@ from core import plan, apply_trash, paris_day
 from state_store import GitHubStore, LockedState, StateError, wait_for_state
 from transports import Cloudinary, send_discord, request
 from reporting import cloudinary_details, bundle, deliver
+from report_cycle import cycle_id, completed, acknowledge_existing, resume_reports, confirm
 
 ROOT = Path(__file__).resolve().parents[2]
 
 
-def delivery_id(now):
+def delivery_id(now, state=None):
     # Un rattrapage manuel ne doit pas consommer l'envoi automatique du soir.
     if os.getenv('GITHUB_EVENT_NAME') == 'workflow_dispatch':
         return 'catchup:' + os.environ['GITHUB_RUN_ID']
+    if state is not None:
+        return cycle_id(state, now)
     return 'daily:' + paris_day(now) + ':schedule'
 
 
@@ -186,6 +189,7 @@ def cloudinary_stage(locked, key, cloud, now, source):
         inventory_ok = False
         errors.append('Cloudinary : plan interrompu ; aucune suppression tentée.')
     policy_ok = deletion_allowed(state)
+    applied = False
     if not policy_ok or os.getenv('LAPINOUS_CLOUDINARY_DELETE_DISABLED') == 'true':
         errors.append('Cloudinary corbeille : politique de suppression suspendue ou non confirmée.')
     elif not inventory_ok:
@@ -195,12 +199,14 @@ def cloudinary_stage(locked, key, cloud, now, source):
     else:
         try:
             proposed['deleted'], trash_errors = apply_trash(locked, proposed, cloud)
+            applied = True
             errors.extend('Cloudinary corbeille : ' + json.dumps(e, ensure_ascii=False) for e in trash_errors)
         except StateError:
             raise  # Stockage cassé : conserver le verrou, aucune nouvelle mutation.
         except Exception:
             errors.append('Cloudinary corbeille : erreur de script ; reprise nécessaire.')
     # Vérification quotidienne des URL actives, indépendante du traitement corbeille.
+    checked = 0
     for item in state['manifest']['assets'].values():
         url = item.get('url')
         if not isinstance(url, str) or not url or not item.get('public_id'):
@@ -208,6 +214,7 @@ def cloudinary_stage(locked, key, cloud, now, source):
             continue
         if url not in source:
             continue
+        checked += 1
         try:
             remote = cloud.get(item['public_id'])
             if not remote or remote.get('secure_url') != url:
@@ -216,6 +223,10 @@ def cloudinary_stage(locked, key, cloud, now, source):
             errors.append('Cloudinary ressources : inaccessible ou identité différente — ' + item['path'])
     state['report_sections']['images'] = cloudinary_details(state, proposed, now)
     state['report_sections']['_cloud_ok'] = not any(e.startswith('Cloudinary') for e in errors)
+    # Compteurs de présentation de cette exécution, sans modifier les règles métier.
+    state['report_sections']['summary_images'] = {
+        'checked': checked, 'quarantined': len(proposed.get('quarantine', [])) if applied else 0,
+        'restored': len(proposed.get('restored', [])) if applied else 0}
     return proposed, errors
 
 
@@ -307,6 +318,22 @@ def main():
     if locked.data.get('ownership') != 'hybrid':
         locked.close()
         raise StateError('Relais Windows non validé : refus de double traitement.')
+    event_id = delivery_id(now, locked.data)
+    if completed(locked.data, event_id):
+        acknowledge_existing(args.output.parent / 'reports')
+        locked.close()
+        print('Cycle déjà traité et trois rapports confirmés ; aucun traitement ni envoi répété.')
+        return 0
+    previous_reports = resume_reports(locked.data, event_id)
+    if previous_reports:
+        # Une reprise d'envoi ne rejoue ni Trello ni la corbeille Cloudinary.
+        outcomes = deliver(locked, previous_reports, event_id, args.output.parent / 'reports')
+        locked.data['last_delivery'] = outcomes
+        locked.save()
+        errors = locked.data['prepared_report_cycle'].get('errors', [])
+        confirm(locked, event_id, outcomes, now.isoformat(), errors)
+        locked.close()
+        return int(bool(errors) or any(v != 'sent' for v in outcomes.values()))
     # Si le processus s'interrompt, le verrou reste présent. Aucun finally qui
     # libérerait un verrou après une écriture distante non réconciliée.
     try:
@@ -328,9 +355,11 @@ def main():
     provenance = f'Exécution du {stamp}\nSource : {run_url}\n\n'
     reports = {channel: provenance + text for channel, text in reports.items()}
     locked.data['last_reports'] = reports
+    locked.data['prepared_report_cycle'] = {'id': event_id, 'errors': errors.copy()}
     locked.save()
-    outcomes = deliver(locked, reports, delivery_id(now), args.output.parent / 'reports')
+    outcomes = deliver(locked, reports, event_id, args.output.parent / 'reports')
     locked.data['last_delivery'] = outcomes
+    confirm(locked, event_id, outcomes, now.isoformat(), errors)
     errors.extend('Discord ' + channel + ' : ' + status for channel, status in outcomes.items() if status != 'sent')
     locked.save()
     locked.close()

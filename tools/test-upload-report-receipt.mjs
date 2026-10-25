@@ -1,0 +1,15 @@
+import assert from 'node:assert/strict';
+import {uploadReceipt} from './upload-report-receipt.mjs';
+const entry={path:'assets/img/test.png',hash:'a'.repeat(64),public_id:'lapinous/test'},response={public_id:entry.public_id,secure_url:'https://example.invalid/test.png',version:1};
+const at='2026-10-25T10:00:00Z';
+const first=uploadReceipt(entry,response,null,[],at);
+assert.equal(first.kind,'added');assert.equal(first.confirmed,true);
+assert.equal(uploadReceipt(entry,{...response,existing:true},null,[],at),null);
+assert.equal(uploadReceipt(entry,response,{url:'old'},[],at).kind,'modified');
+assert.equal(uploadReceipt(entry,response,null,[{path:entry.path,hash:'b'.repeat(64)}],at).kind,'modified');
+assert.equal(uploadReceipt(entry,response,null,[{path:entry.path,hash:entry.hash}],at).kind,'modified');
+assert.equal(uploadReceipt(entry,response,null,null,at).kind,'unclassified');
+assert.equal(uploadReceipt(entry,response,null,[],at).id,first.id);
+assert.notEqual(uploadReceipt(entry,{...response,version:2},null,[],at).id,first.id);
+assert.equal(uploadReceipt(entry,{...response,public_id:'other'},null,[],at),null);
+console.log('Reçus de rapport : ajout, remplacement, ressource réutilisée et identité stable OK. Aucun transfert exécuté.');

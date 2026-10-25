@@ -4,6 +4,7 @@ import fs from 'node:fs/promises';
 import path from 'node:path';
 import crypto from 'node:crypto';
 import vm from 'node:vm';
+import { uploadReceipt } from './upload-report-receipt.mjs';
 
 const root = process.cwd(), stateDir = path.join(root, '.cloudinary-local');
 const mode = process.argv[2] || 'dry-run';
@@ -157,6 +158,9 @@ async function sync(inv, env, pilot) {
   await quota(env, chosen.filter(x => x.sourceExists !== false).reduce((n, x) => n + x.bytes, 0));
   let transferred = 0, reused = 0;
   const failedPaths = [];
+  let reportHistory = [];
+  try { reportHistory = Object.values(JSON.parse(await fs.readFile(path.join(stateDir, 'versions-connues.json'), 'utf8')).assets); }
+  catch (error) { if(error.code !== 'ENOENT') reportHistory = null; }
   // Séquentiel : concurrence bornée à 1, manifestes cohérents et consommation prévisible.
   for (const entry of chosen) {
     const old = manifest.assets[entry.path];
@@ -184,7 +188,13 @@ async function sync(inv, env, pilot) {
           if (resource.context?.custom?.sha256 !== entry.hash) throw new Error('Identifiant distant déjà occupé : vérification manuelle requise.');
         }
         if (!await verify(data.secure_url)) throw new Error('URL HTTPS non vérifiée.');
-        manifest.assets[entry.path] = { ...entry, url: data.secure_url, status: 'verified', date: stamp() }; failure = null; break;
+        const confirmedAt = stamp();
+        const receipt = uploadReceipt(entry, data, old, reportHistory, confirmedAt);
+        manifest.assets[entry.path] = { ...entry, url: data.secure_url, status: 'verified', date: confirmedAt,
+          ...(receipt ? {upload_receipt:receipt} : {}) };
+        // Conserver aussi les reçus si une autre image fait échouer la passe.
+        if (receipt) manifest.report_uploads = {...(manifest.report_uploads || {}), [receipt.id]:receipt};
+        failure = null; break;
       } catch (e) { failure = e.message; if(e.status>=400 && e.status<500 && e.status!==429) break; if (attempt < 2) await new Promise(resolve => setTimeout(resolve, 1000 * (attempt + 1))); }
     }
     if (failure) manifest.assets[entry.path] = { ...entry, status: 'failed', date: stamp(), error: failure };
@@ -203,7 +213,9 @@ async function sync(inv, env, pilot) {
   if (!ledger || typeof ledger.assets !== 'object' || Array.isArray(ledger.assets)) throw new Error('Historique des versions invalide.');
   for (const [local, record] of Object.entries(manifest.assets)) {
     if (record?.status === 'verified' && record.public_id?.startsWith('lapinous/') && record.hash && record.url) {
-      ledger.assets[record.public_id] = { path: local, hash: record.hash, url: record.url, public_id: record.public_id, date: record.date };
+      ledger.assets[record.public_id] = { path: local, hash: record.hash, url: record.url, public_id: record.public_id, date: record.date,
+        ...((record.upload_receipt || ledger.assets[record.public_id]?.upload_receipt)
+          ? {upload_receipt: record.upload_receipt || ledger.assets[record.public_id].upload_receipt} : {}) };
     }
   }
   await save(ledgerFile, ledger);

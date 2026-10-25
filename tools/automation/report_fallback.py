@@ -64,6 +64,18 @@ def recover_reports(folder):
 def main():
     folder = Path('.cloudinary-local/reports')
     receipt = folder / 'delivery.json'
+    if not receipt.exists() and os.getenv('WARRENFALL_STATE_TOKEN') and os.getenv('WARRENFALL_STATE_REPO'):
+        try:
+            from state_store import GitHubStore
+            from remote import delivery_id
+            from report_cycle import completed, acknowledge_existing
+            state, _ = GitHubStore(os.environ['WARRENFALL_STATE_REPO'], os.environ['WARRENFALL_STATE_TOKEN']).read()
+            if completed(state, delivery_id(dt.datetime.now(dt.timezone.utc), state)):
+                acknowledge_existing(folder)
+                print('Cycle déjà livré : aucun rapport de secours en doublon.')
+                return 0
+        except Exception:
+            pass  # Le secours détaillé reste disponible si l'état n'est pas lisible.
     previous = json.loads(receipt.read_text()) if receipt.exists() else {}
     old_receipt = folder / 'fallback-receipt.json'
     old_notifications = json.loads(old_receipt.read_text()).get('notifications', {}) if old_receipt.exists() else {}

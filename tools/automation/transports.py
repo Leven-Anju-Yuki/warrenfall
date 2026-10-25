@@ -62,29 +62,35 @@ class Cloudinary:
             raise RuntimeError(f'Cloudinary corbeille : suppression non confirmée (HTTP {r.status_code})')
 
 
-def send_discord(locked, event_id, text, url, *, filename='bilan.md', title='Bilan Warrenfall — rapport détaillé'):
+def send_discord(locked, event_id, text, url, *, filename='bilan.md', title='Bilan Warrenfall — rapport détaillé', content=None, receipt_metadata=None):
     """Envoi confirmé enregistré ; timeout ambigu bloqué, jamais doublé à l'aveugle."""
     import json
+    from report_presentation import units
+    message = title if content is None else content
+    if units(message) > 2000:
+        raise ValueError('Présentation Discord trop longue ; découper avant envoi.')
     entries = locked.data.setdefault('notifications', {})
     previous = entries.get(event_id)
     if previous:
         return previous['status']
-    entries[event_id] = {'status': 'sending'}
+    metadata = receipt_metadata or {}
+    entries[event_id] = {**metadata, 'status': 'sending'}
     locked.save()
     try:
         # Rapport complet en pièce jointe : pas de troncature à 2 000 caractères.
-        r = request('POST', url, params={'wait': 'true'},
-                    data={'payload_json': json.dumps({'content': title,
-                                                      'allowed_mentions': {'parse': []}})},
-                    files={'files[0]': (filename, text.encode('utf-8'), 'text/markdown')})
+        kwargs = {'params': {'wait': 'true'}, 'data': {'payload_json': json.dumps({
+            'content': message, 'allowed_mentions': {'parse': []}})}}
+        if filename is not None:
+            kwargs['files'] = {'files[0]': (filename, text.encode('utf-8'), 'text/markdown')}
+        r = request('POST', url, **kwargs)
         if not r.ok or not r.json().get('id'):
             raise RuntimeError(f'Discord : envoi non confirmé (HTTP {r.status_code})')
         attachments = r.json().get('attachments', [])
-        if not any(a.get('filename') == filename for a in attachments):
+        if filename is not None and not any(a.get('filename') == filename for a in attachments):
             raise RuntimeError('Discord : pièce jointe non confirmée')
-        entries[event_id] = {'status': 'sent', 'message_id': r.json()['id'],
+        entries[event_id] = {**metadata, 'status': 'sent', 'message_id': r.json()['id'],
                              'attachment': filename, 'channel_id': r.json().get('channel_id')}
     except Exception:
-        entries[event_id] = {'status': 'uncertain', 'error': 'Discord : confirmation absente ; vérifier avant de renvoyer'}
+        entries[event_id] = {**metadata, 'status': 'uncertain', 'error': 'Discord : confirmation absente ; vérifier avant de renvoyer'}
     locked.save()
     return entries[event_id]['status']

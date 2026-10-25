@@ -1,0 +1,36 @@
+# À publier dans le dépôt PRIVÉ d'état : .github/workflows/warrenfall-relay.yml
+# Aucun schedule ici : le planning de secours reste dans le dépôt du jeu.
+name: Warrenfall — bilan après relais Windows
+
+on:
+  workflow_dispatch: # Simulation distante uniquement ; aucun envoi Discord.
+  push:
+    branches: [main]
+    paths: [report-request.json]
+
+permissions:
+  contents: read
+
+concurrency:
+  group: warrenfall-local-report-request
+  cancel-in-progress: false
+
+jobs:
+  report:
+    if: vars.WARRENFALL_HYBRID_ENABLED == 'true' && (github.event_name == 'workflow_dispatch' || vars.WARRENFALL_HYBRID_APPLY_VALIDATED == 'true')
+    uses: Leven-Anju-Yuki/warrenfall/.github/workflows/warrenfall-daily.yml@main
+    with:
+      relay: true
+      mode: ${{ github.event_name == 'push' && 'appliquer' || 'simulation' }}
+    secrets:
+      WARRENFALL_STATE_TOKEN: ${{ secrets.WARRENFALL_STATE_TOKEN }}
+      WARRENFALL_BACKUP_SIGNING_KEY: ${{ secrets.WARRENFALL_BACKUP_SIGNING_KEY }}
+      CLOUDINARY_CLOUD_NAME: ${{ secrets.CLOUDINARY_CLOUD_NAME }}
+      CLOUDINARY_API_KEY: ${{ secrets.CLOUDINARY_API_KEY }}
+      CLOUDINARY_API_SECRET: ${{ secrets.CLOUDINARY_API_SECRET }}
+      TRELLO_BOARD_ID: ${{ secrets.TRELLO_BOARD_ID }}
+      TRELLO_API_KEY: ${{ secrets.TRELLO_API_KEY }}
+      TRELLO_TOKEN: ${{ secrets.TRELLO_TOKEN }}
+      DISCORD_WEBHOOK_BILAN: ${{ secrets.DISCORD_WEBHOOK_BILAN }}
+      DISCORD_WEBHOOK_CLOUDINARY: ${{ secrets.DISCORD_WEBHOOK_CLOUDINARY }}
+      DISCORD_WEBHOOK_TRELLO: ${{ secrets.DISCORD_WEBHOOK_TRELLO }}

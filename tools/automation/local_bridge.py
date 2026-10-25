@@ -14,6 +14,7 @@ import uuid
 from dotenv import load_dotenv
 from core import attest, valid_path
 from state_store import GitHubStore, LockedState, StateError, wait_for_state
+from relay_request import publish_and_request
 
 ROOT = Path(__file__).resolve().parents[2]
 
@@ -110,8 +111,11 @@ def main():
         # Invalide une ancienne réussite si le processus n'a pas achevé sa passe.
         if completed.returncode:
             locked.data.setdefault('local_sync', {})['syncStatus'] = 'failed'
-        locked.save()
-        locked.close()
+        status = publish_and_request(locked, store, folder / 'relay-report-request.json')
+        if status == 'request-failed':
+            print('Signal Actions non confirmé ; état sauvegardé, planning distant conservé comme secours.', file=sys.stderr)
+        else:
+            print('Demande de bilan distant : ' + status)
         print('Etat Windows transmis au stockage privé ; aucun bilan/Trello local en mode hybride.')
         return completed.returncode
     state = export(ROOT, args.backup_dir, key)
