@@ -7,7 +7,9 @@ Mise à jour : 25 octobre 2026.
 - [x] Vérifier les horaires réels : fin Cloudinary 22 h 35 Paris (20:35Z), bilan 22 h 40, pas deux heures après. Planning GitHub créé tardivement à 22 h 37 ; détail dans `docs/DIAGNOSTIC_RELAIS_2026-10-25.md`.
 - [x] Corriger uniquement le déclencheur de la tâche Images existante : prochaine exécution à 20 h locale après passage à l'heure d'hiver ; action, sécurité, batterie et rattrapage inchangés, XML privé conservé.
 - [x] Préparer le signal privé de fin de relais, le workflow réutilisable et la déduplication relais/planning ; 75 tests Python et vérification actionlint des deux workflows réussis. Aucun nouvel envoi Discord ni mutation Cloudinary/Trello de test.
-- [ ] Publication explicite des corrections et configuration chiffrée du workflow privé, puis simulation GitHub et validation humaine avant activation du nouveau déclencheur. Le planning actuel reste actif ; ne pas présenter cette liaison comme déjà opérationnelle.
+- [x] Publication autorisée des 24 fichiers sur `main` (90454ec), workflow privé et onze secrets chiffrés configurés ; simulation GitHub 40227382731 réussie avec 75 tests d'automatisation et 46 tests Trello. État strictement identique avant/après ; aucun envoi Discord ni mutation Cloudinary/Trello.
+- [x] Vérifier le signal avec le jeton limité : run push 40227674619 créé puis ignoré, conformément au garde-fou d'activation désactivé.
+- [ ] Validation humaine de la simulation avant activation du nouveau déclencheur privé ; vérifier ensuite un vrai cycle et l'absence de doublon du secours. Le planning actuel reste actif ; ne pas présenter le relais immédiat comme déjà activé.
 
 ## Préparation du combat lisible — révision 156
 

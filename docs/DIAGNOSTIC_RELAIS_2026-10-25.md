@@ -28,7 +28,7 @@ Le déclencheur enregistré était `2026-10-08T19:00:00+01:00`. Après le change
 
 La comparaison des XML avant/après confirme que **seul StartBoundary a changé**. Même tâche, action, compte, réglages batterie et sécurité, rattrapage et sauvegardes. L'ancienne définition XML est conservée en privé sous `.cloudinary-local/task-images-before-local-time-20261025-181657.xml`. Le script `tools/automation/repair-local-time.ps1` est en simulation par défaut ; ne pas réinstaller la tâche avec un autre script.
 
-## Liaison immédiate préparée, pas encore publiée
+## Liaison immédiate publiée, activation en attente de validation humaine
 
 1. La tâche Windows existante transfère les images et vérifie les copies permanentes, sans nouvelle tâche.
 2. Le relais publie l'état privé et les attestations puis libère son verrou.
@@ -44,15 +44,21 @@ Le relais et le planning utilisent la même identité de cycle : jour Paris + em
 
 Après une livraison partielle, les rapports préparés sont repris sans rejouer les opérations Cloudinary/Trello. Un envoi ambigu n'est jamais renvoyé à l'aveugle. Le verrou privé et les journaux d'opérations continuent de protéger les mutations. Un autre résultat de synchronisation ou un nouveau jour ouvre un nouveau cycle. Un rattrapage manuel explicite reste distinct de l'envoi automatique.
 
-### Publication requise et validation restante
+### Publication et simulation réalisées avec autorisation
 
-- Publier les corrections de `warrenfall-daily.yml`, `local_bridge.py`, `remote.py`, `schedule_gate.py`, `report_fallback.py`, les modules de signal/cycle et leurs tests sur `main`. Inclure les modules de présentation déjà préparés dont `reporting.py` dépend, sans les sauvegardes de joueurs ni l'état batterie modifiés en arrière-plan.
-- Dans **le dépôt privé d'état**, publier le modèle `tools/automation/templates/state-relay.yml` sous `.github/workflows/warrenfall-relay.yml`.
-- Y configurer les mêmes onze secrets chiffrés utilisés par la chaîne publique : deux secrets d'état/attestation, trois Cloudinary, trois Trello et trois Discord. Les réutiliser depuis `.env` sans afficher leur valeur. Configurer `WARRENFALL_STATE_REPO` et les deux indicateurs d'activation. Aucun jeton administrateur ne doit être copié dans l'automatisation.
-- D'abord régler `WARRENFALL_HYBRID_ENABLED=true` et `WARRENFALL_HYBRID_APPLY_VALIDATED=false` dans le dépôt privé, puis lancer son déclenchement manuel de simulation ; il n'envoie pas Discord. Les signaux Windows sont ignorés tant que l'application n'est pas validée. Vérifier les checkouts du dépôt du jeu, les secrets, le verrou et l'état persistant, sans suppression ni mutation Trello.
-- Après validation humaine de la simulation, activer le relais privé et vérifier le prochain signal Windows, son exécution GitHub et ses trois confirmations Discord. Vérifier ensuite que le secours reconnaît ce cycle et n'expédie pas de doublon.
+- Les 24 fichiers autorisés ont été publiés sur `main` dans le [commit 90454ec](https://github.com/Leven-Anju-Yuki/warrenfall/commit/90454ecb43426d6033a53e5f0d15ed128ad88066). Les sauvegardes de joueurs et l'état batterie modifiés en arrière-plan sont exclus du commit.
+- Le workflow privé `.github/workflows/warrenfall-relay.yml` a été publié dans le dépôt d'état. Les deux workflows publiés correspondent aux fichiers contrôlés avec actionlint.
+- Les onze secrets ont été réutilisés depuis `.env` et chiffrés avec la clé publique GitHub Actions du dépôt privé : deux secrets d'état/attestation, trois Cloudinary, trois Trello et trois Discord. Aucune valeur ni jeton administrateur n'a été publié.
+- Le dépôt privé contient `WARRENFALL_HYBRID_ENABLED=true` et **`WARRENFALL_HYBRID_APPLY_VALIDATED=false`**. Les indicateurs du planning public existant n'ont pas changé.
+- La [simulation distante 40227382731](https://github.com/Leven-Anju-Yuki/warrenfall-automation-state/actions/runs/40227382731), lancée le 25 octobre à 20:43:32 Paris, est **réussie**. Les journaux confirment le checkout du commit public 90454ec, 75 tests d'automatisation, 46 tests Trello, le test Node des sauvegardes fictives et le calcul distant du bilan en mode `simulation`, avec application désactivée. Le secours d'envoi et le test Discord sont ignorés.
+- L'état est strictement identique avant/après : même blob `5f3ae0b84a14b094c660bb525350aada6aa0870d`, même empreinte SHA-256, 375 versions, 371 attestations toutes valides, 12 quarantaines, 15 confirmations de notification et zéro opération Cloudinary. Aucun verrou abandonné, aucune date ni reprise réinitialisée.
+- Le signal a également été testé avec le jeton limité du relais Windows et une demande marquée comme validation. Le [run push 40227674619](https://github.com/Leven-Anju-Yuki/warrenfall-automation-state/actions/runs/40227674619) est bien créé, puis **ignoré**, comme prévu tant que l'application n'est pas validée. L'état métier reste identique. Aucun transfert, mutation Trello ou envoi Discord de test n'a eu lieu.
 
-**État actuel :** heure Windows réparée ; liaison et déduplication testées localement, pas encore déployées. Aucun nouveau rapport de test n'a été envoyé. La preuve de fonctionnement du signal distant attend sa publication et sa validation, elle ne peut pas être remplacée par des tests locaux.
+### Validation humaine restante
+
+Après validation humaine de ces résultats, activer le relais privé puis vérifier le prochain signal réel Windows, son exécution GitHub et ses trois confirmations Discord. Vérifier ensuite que le secours reconnaît ce cycle et n'expédie pas de doublon. Le test du push ignoré démontre le chemin du signal et le garde-fou ; il ne prétend pas démontrer une exécution réelle de production.
+
+**État actuel :** heure Windows réparée ; corrections publiées, secrets chiffrés configurés et simulation GitHub réussie. Le nouveau déclencheur reste désactivé dans l'attente de la validation humaine. Le planning public de secours reste actif. Aucun nouveau rapport de test n'a été envoyé sur Discord.
 
 ## Protections conservées
 
