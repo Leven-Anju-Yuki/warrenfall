@@ -5,7 +5,7 @@ import os
 import tempfile
 import unittest
 from unittest.mock import Mock, patch
-from cloudinary_report_view import upload_view
+from cloudinary_report_view import upload_view, image_link, label
 from report_presentation import summary_lines, chunks, units
 from reporting import deliver
 from test_hybrid import LockedState, Store
@@ -19,6 +19,71 @@ def receipt(pid, kind='added', at='2026-10-25T10:00:00Z', path=None):
 
 
 class NamedCloudinaryReports(unittest.TestCase):
+    def test_clickable_name_uses_exact_ledger_version_and_keeps_state_unchanged(self):
+        url = 'https://res.cloudinary.com/test/image/upload/v123/lapinous/lapin%20rose.png'
+        record = {'path':'assets/img/lapin_rose.png', 'public_id':'lapinous/rose', 'hash':'hash', 'url':url}
+        state = {'ledger':{'assets':{'lapinous/rose':record}}}
+        before = copy.deepcopy(state)
+        self.assertEqual(image_link({'id':'lapinous/rose'}, state), url)
+        self.assertIn('[lapin\\_rose.png](<' + url + '>)', label({'id':'lapinous/rose'}, state))
+        self.assertIsNone(image_link({'id':'lapinous/rose','hash':'other-version'}, state))
+        self.assertEqual(state, before)
+
+    def test_receipt_identifier_does_not_hide_public_id_for_uploaded_images(self):
+        item = receipt('apple')
+        item['url'] = 'https://res.cloudinary.com/test/image/upload/v1/lapinous/apple.png'
+        self.assertEqual(image_link(item['upload_receipt'], {'ledger':{'assets':{'lapinous/apple':item}}}), item['url'])
+
+    def test_never_selects_another_image_with_the_same_filename(self):
+        state = {'ledger':{'assets':{'other':{'path':'assets/img/other/lapin.png',
+                 'url':'https://res.cloudinary.com/test/image/upload/v1/other.png'}}}}
+        self.assertIsNone(image_link({'path':'assets/img/missing/lapin.png'}, state))
+        self.assertEqual(label({'path':'assets/img/missing/lapin.png'}, state), 'lapin.png')
+
+    def test_ambiguous_version_requires_a_hash(self):
+        a = {'public_id':'lapinous/a','hash':'old','url':'https://res.cloudinary.com/test/image/upload/v1/a.png'}
+        b = {**a,'hash':'new','url':'https://res.cloudinary.com/test/image/upload/v2/a.png'}
+        state = {'ledger':{'assets':{'old':a,'new':b}}}
+        self.assertIsNone(image_link({'public_id':'lapinous/a'}, state))
+        self.assertEqual(image_link({'public_id':'lapinous/a','hash':'old'}, state), a['url'])
+
+    def test_untrusted_or_sensitive_url_is_not_exposed(self):
+        for url in ['http://res.cloudinary.com/test/a.png','https://example.com/a.png',
+                    'https://res.cloudinary.com.evil.invalid/a.png','https://user:secret@res.cloudinary.com/a.png',
+                    'https://res.cloudinary.com/a.png?api_key=private','https://res.cloudinary.com/a.png\ntext',
+                    'https://res.cloudinary.com:invalid/a.png']:
+            with self.subTest(url=url):
+                self.assertIsNone(image_link({'path':'assets/img/a.png','url':url}, {}))
+
+    def test_urls_with_parentheses_are_encoded_and_markdown_name_is_escaped(self):
+        row = {'path':'assets/img/[lapin]_(1).png',
+               'url':'https://res.cloudinary.com/test/image/upload/v1/lapin (1).png'}
+        text = label(row,{})
+        self.assertIn('%20%281%29.png',text)
+        self.assertIn(r'\[lapin\]\_(1).png',text)
+
+    def test_quarantine_and_blocked_links_survive_multiple_discord_pages(self):
+        reports,state=data()
+        state['quarantine']['items']={}
+        state['ledger']={'assets':{}}
+        urls=[]
+        for i in range(24):
+            pid='lapinous/'+str(i)
+            url='https://res.cloudinary.com/test/image/upload/v123/'+pid+'.png'
+            urls.append(url)
+            record={'path':f'assets/img/rabbit-{i}.png','url':url,'public_id':pid,'since':'2026-10-19T20:32:59.011Z'}
+            state['quarantine']['items'][pid]=record
+            state['ledger']['assets'][pid]=record
+        state['ledger']['assets']['test']={'path':'assets/img/test.png','url':'https://res.cloudinary.com/test/image/upload/v1/test.png'}
+        before=copy.deepcopy(state)
+        messages=chunks(summary_lines('images',reports,state))
+        self.assertGreater(len(messages),1)
+        self.assertTrue(all(units(message)<=2000 for message in messages))
+        text='\n'.join(messages)
+        for url in urls:self.assertIn('](<'+url+'>)',text)
+        self.assertIn('[test.png](<https://res.cloudinary.com/test/image/upload/v1/test.png>)',text)
+        self.assertEqual(state,before)
+
     def test_distinguishes_added_modified_and_deduplicates_ledger_manifest(self):
         first, replaced = receipt('apple'), receipt('pear', 'modified')
         state = {'ledger': {'assets': {'one': first, 'two': replaced}}, 'manifest': {'assets': {'one': first}}}

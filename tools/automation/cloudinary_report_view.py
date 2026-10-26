@@ -1,6 +1,8 @@
 """Listes nominatives et suivi des annonces ; aucune suppression ou synchronisation."""
 import datetime as dt
 import math
+import re
+from urllib.parse import urlsplit, quote
 from report_presentation import PARIS, header, human
 
 
@@ -73,6 +75,56 @@ def name(row, state):
     return human(path.rsplit('/', 1)[-1])
 
 
+def image_link(row, state):
+    """Lien de consultation vers la version connue, jamais une URL reconstruite.
+
+    Un nom identique n'est pas une identité : privilégier l'ID immuable et le
+    hash. Ne pas pointer vers une autre version ni vers une URL administrative.
+    """
+    pid = row.get('public_id') or row.get('id')
+    assets = state.get('ledger', {}).get('assets', {})
+    candidates = [row]
+    if pid:
+        if isinstance(assets.get(pid), dict):
+            candidates.append(assets[pid])
+        candidates.extend(item for item in assets.values() if item.get('public_id') == pid)
+    elif row.get('path'):
+        record = state.get('manifest', {}).get('assets', {}).get(row['path'])
+        if isinstance(record, dict):
+            candidates.append(record)
+    urls = set()
+    for record in candidates:
+        if row.get('hash') and record.get('hash') != row['hash']:
+            continue
+        if row.get('path') and record.get('path') != row['path']:
+            continue
+        url = record.get('url')
+        if not isinstance(url, str) or len(url) > 1000 or any(ord(c) < 32 for c in url):
+            continue
+        try:
+            parsed = urlsplit(url)
+            if (parsed.scheme != 'https' or parsed.hostname != 'res.cloudinary.com'
+                or parsed.username or parsed.password or parsed.port not in (None, 443)
+                or not parsed.path.startswith('/') or parsed.query or parsed.fragment):
+                continue
+        except ValueError:
+            continue
+        urls.add(quote(url, safe=':/%~!$&\'*+,;=@-._'))
+    # Plusieurs versions pour un ID incomplet : demander une identification exacte.
+    if len(urls) != 1:
+        return None
+    return urls.pop()
+
+
+def label(row, state):
+    title = name(row, state)
+    url = image_link(row, state)
+    if not url:
+        return title
+    escaped = re.sub(r'([\\\[\]*_`])', r'\\\1', title)
+    return f'[{escaped}](<{url}>)'
+
+
 def due(item):
     return date(item.get('due')) or ((date(item.get('since')) + dt.timedelta(days=7)) if date(item.get('since')) else None)
 
@@ -101,11 +153,11 @@ def lines(data):
     for kind, title in [('added', 'Nouveaux envois confirmés depuis le dernier bilan'), ('modified', 'Images modifiées ou remplacées depuis le dernier bilan')]:
         rows = uploads[kind]
         result += [f'**{title} : {len(rows)}**']
-        result += [f'• {name(row, state)} · {date(row["at"]).astimezone(PARIS).strftime("%d/%m à %H h %M")}' for row in rows] or ['Aucun nouveau transfert à annoncer dans cette catégorie.']
+        result += [f'• {label(row, state)} · {date(row["at"]).astimezone(PARIS).strftime("%d/%m à %H h %M")}' for row in rows] or ['Aucun nouveau transfert à annoncer dans cette catégorie.']
     if uploads['unclassified']:
-        result += [f'**Transferts confirmés, type à vérifier : {len(uploads["unclassified"])}**', *('• ' + name(row, state) for row in uploads['unclassified'])]
+        result += [f'**Transferts confirmés, type à vérifier : {len(uploads["unclassified"])}**', *('• ' + label(row, state) for row in uploads['unclassified'])]
     if uploads['uncertain']:
-        result += ['**Annonce précédente à vérifier — pas de réannonce comme nouvel envoi**', *('• ' + name(row, state) for row in uploads['uncertain'])]
+        result += ['**Annonce précédente à vérifier — pas de réannonce comme nouvel envoi**', *('• ' + label(row, state) for row in uploads['uncertain'])]
     if uploads['legacy']:
         result += ['**Changements du relais sans reçu de nouveau transfert — à vérifier**',
                    *(f'• {name(row, state)} · {"ajout" if row["kind"] == "added" else "modification"} communiqué par le relais.' for row in uploads['legacy'])]
@@ -114,14 +166,16 @@ def lines(data):
     result += ['Aucun transfert local n’est lancé par ce bilan GitHub.', '']
     rows = data['quarantine_rows']
     result += [f'**Toutes les quarantaines et leurs échéances : {len(rows)}**']
+    if rows or blocked:
+        result += ['Appuie sur le nom pour voir l’image quand un lien est disponible. Une image absente de Cloudinary peut renvoyer une erreur 404.']
     for row in sorted(rows, key=lambda row: (due(row) or dt.datetime.max.replace(tzinfo=dt.timezone.utc), name(row, state))):
         expiry = due(row)
         if expiry and reference:
             days = max(0, min(7, math.ceil((expiry - reference).total_seconds() / 86400)))
             status = ' · échéance atteinte, suppression en attente' if expiry <= reference else ''
-            result += [f'• {name(row, state)} · **J-{days}** · suppression prévue le {expiry.astimezone(PARIS).strftime("%d/%m/%Y à %H h %M")}{status}']
+            result += [f'• {label(row, state)} · **J-{days}** · suppression prévue le {expiry.astimezone(PARIS).strftime("%d/%m/%Y à %H h %M")}{status}']
         else:
-            result += [f'• {name(row, state)} · date à vérifier, suppression non annoncée.']
+            result += [f'• {label(row, state)} · date à vérifier, suppression non annoncée.']
     if not rows:
         result += ['Aucune quarantaine.' if data['cloud'].get('pending') == 0 else 'Liste des quarantaines indisponible : aucune échéance inventée.']
     result += ['Échéances Cloudinary uniquement, sous réserve des contrôles techniques et de la sauvegarde exacte attestée.', '']
@@ -131,7 +185,7 @@ def lines(data):
     if not deleted and 'deleted' in plan:
         result += ['Aucune suppression Cloudinary effectuée.']
     result += ['', f'**Suppressions bloquées : {len(blocked)}**']
-    result += [f'• {name(row, state)} — ' + ' / '.join(row['reasons']) for row in blocked.values()] or ['Aucun blocage signalé.']
+    result += [f'• {label(row, state)} — ' + ' / '.join(row['reasons']) for row in blocked.values()] or ['Aucun blocage signalé.']
     result += ['', f'**Erreurs Cloudinary : {data["cloud_error_count"]}**', *('• ' + error for error in data['cloud_errors'])]
     if failures:
         result += ['**Échecs du dernier relais Windows — historique**']
@@ -141,8 +195,8 @@ def lines(data):
     if step_failures:
         result += ['**Erreurs du dernier relais Windows — historique**']
         for step in step_failures:
-            label = 'Sauvegarde locale' if 'backup' in step.get('file', '') else 'Transfert' if 'cloudinary-sync' in step.get('file', '') else 'Étape du relais'
-            result += [f'• {label} — {human(step.get("diagnostic") or "échec signalé sans diagnostic détaillé") }']
+            step_label = 'Sauvegarde locale' if 'backup' in step.get('file', '') else 'Transfert' if 'cloudinary-sync' in step.get('file', '') else 'Étape du relais'
+            result += [f'• {step_label} — {human(step.get("diagnostic") or "échec signalé sans diagnostic détaillé") }']
     finished = date(sync.get('finishedAt'))
     if finished:
         result += ['', '**Dernier relais Windows — historique :** ' + finished.astimezone(PARIS).strftime('%d/%m à %H h %M'),
