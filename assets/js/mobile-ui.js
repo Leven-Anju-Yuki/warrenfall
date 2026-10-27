@@ -8,6 +8,33 @@
   eggs.innerHTML = '<header><h2 id="phoneEggTitle">Les œufs du terrier</h2><button type="button" aria-label="Fermer les œufs">×</button></header><div class="phone-egg-content"></div>';
   eggs.querySelector('header button').onclick = () => eggs.close();
   document.body.append(eggs);
+  // L'éclosion reste dans le même dialogue, donc dans la même couche native.
+  window.LapinousEggView = {
+    mount(node) {
+      const content = eggs.querySelector('.phone-egg-content');
+      const close = eggs.querySelector('header button');
+      const title = eggs.querySelector('h2');
+      const previousTitle = title.textContent;
+      content.hidden = true;
+      close.disabled = true;
+      title.textContent = 'Éclosion des œufs';
+      eggs.classList.add('egg-opening');
+      const preventCancel = event => event.preventDefault();
+      eggs.addEventListener('cancel', preventCancel);
+      eggs.append(node);
+      if (!eggs.open) eggs.showModal();
+      node.querySelector('button:not(:disabled)')?.focus();
+      return () => {
+        node.remove();
+        content.hidden = false;
+        close.disabled = false;
+        title.textContent = previousTitle;
+        eggs.classList.remove('egg-opening');
+        eggs.removeEventListener('cancel', preventCancel);
+        close.focus();
+      };
+    }
+  };
   let queued = false, puzzleZoom = null;
   function adapt() {
     queued = false;

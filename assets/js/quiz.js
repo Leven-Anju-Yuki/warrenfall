@@ -45,15 +45,15 @@
     const data=await ready;if(!data||!api.valid())return;
     const questions=selectQuestions(data);
     if(!questions.length){api.toast('Aucune question active.');return;}
-    let index=0,score=0,answered=false,finished=false,nextTimer=null;
+    let index=0,score=0,answered=false,finished=false,nextTimer=null,friendshipGained=0;
     const panel=document.createElement('section');panel.className='console-panel quiz-panel';api.root.replaceChildren(panel);
     function render(){
       clearTimeout(nextTimer);nextTimer=null;
       if(!api.valid()||!panel.isConnected)return;
       answered=false;
       if(index===questions.length){
-        if(!finished){finished=true;api.complete(score,questions.length);}
-        panel.innerHTML=`<h2>Quiz terminé !</h2><p class="quiz-score">${score} / ${questions.length}</p><p>Chaque partie propose de nouvelles questions et mélange les réponses.</p><p class="quiz-more">Envie de préparer de bons repas pour un vrai lapin ?<br><a href="https://leven-anju-yuki.github.io/nourriture-lapin/" target="_blank" rel="noopener noreferrer">Découvrir le guide de l’alimentation du lapin ↗</a></p><button data-quiz-replay>Rejouer</button><button data-quiz-back>Retour aux mini-jeux</button>`;
+        if(!finished){finished=true;friendshipGained=api.complete(score,questions.length)||0;}
+        panel.innerHTML=`<h2>Quiz terminé !</h2><p class="quiz-score">${score} / ${questions.length}</p><p>Amitié gagnée : +${friendshipGained}</p><p>Chaque partie propose de nouvelles questions et mélange les réponses.</p><p class="quiz-more">Envie de préparer de bons repas pour un vrai lapin ?<br><a href="https://leven-anju-yuki.github.io/nourriture-lapin/" target="_blank" rel="noopener noreferrer">Découvrir le guide de l’alimentation du lapin ↗</a></p><button data-quiz-replay>Rejouer</button><button data-quiz-back>Retour aux mini-jeux</button>`;
         panel.querySelector('[data-quiz-replay]').onclick=()=>open(api);
       }else{
         const q=questions[index],choices=shuffle(q.choices.map((text,id)=>({text,id})));

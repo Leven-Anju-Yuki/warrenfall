@@ -91,3 +91,8 @@ html.phone-ui .pantry-workshop #pantryIngredients.pantry-recipe-ingredients{left
 .quiz-more{margin:18px 0;line-height:1.6}
 .quiz-more a{display:inline-block;padding:8px 0;color:#4d642f;font-weight:700;text-decoration:underline;text-underline-offset:3px}
 .pantry-illustrated .pantry-chef>p,html.phone-ui .pantry-illustrated .pantry-chef>p{top:auto!important;bottom:calc(100% + 6px)!important;left:50%!important;right:auto!important;transform:translateX(-50%)!important;margin:0!important;width:max-content!important;max-width:min(30vw,340px)!important;z-index:12}
+/* Accompagnateurs plus lisibles sur téléphone, dans l'espace libre du décor. */
+html.phone-ui .shop-dialog.zone-evolution .shop-zone-companion{right:10%!important;width:29%!important;height:76%!important;bottom:10%!important}
+html.phone-ui .shop-dialog.zone-fragments .shop-zone-companion{left:30%!important;width:27%!important;height:76%!important;bottom:8%!important}
+html.phone-ui .shop-dialog .shop-zone-companion>img{width:100%!important;height:100%!important;max-height:none!important;object-fit:contain;object-position:center bottom}
+html.phone-ui .shop-dialog.inventory-dialog .inventory-herbalist{right:1%!important;width:30%!important;height:80%!important;bottom:8%!important}

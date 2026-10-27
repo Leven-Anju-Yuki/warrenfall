@@ -60,6 +60,8 @@ def export(root, backup, key):
             state[dest] = read(folder, source)
     if 'trello' in state:
         state['trello']['root'] = None  # Les chemins restent relatifs au dépôt.
+    if (folder / 'nightly-git.json').is_file():
+        state['local_git'] = read(folder, 'nightly-git.json')
     return state
 
 
@@ -105,7 +107,7 @@ def main():
             if previous and any(previous.get(k) != item.get(k) for k in ('hash', 'url', 'path', 'public_id')):
                 raise StateError('Version historique contradictoire : relais bloqué.')
         locked.data['ledger']['assets'].update(state['ledger']['assets'])
-        for name in ('manifest', 'inventory', 'deletion_policy', 'attestations', 'blocked', 'source_commit', 'exported_at', 'local_sync'):
+        for name in ('manifest', 'inventory', 'deletion_policy', 'attestations', 'blocked', 'source_commit', 'exported_at', 'local_sync', 'local_git'):
             if name in state:
                 locked.data[name] = state[name]
         # Invalide une ancienne réussite si le processus n'a pas achevé sa passe.

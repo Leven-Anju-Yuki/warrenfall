@@ -285,7 +285,7 @@
                 if(bubble.hidden)continue;
                 const box=bubble.getBoundingClientRect();
                 bubble.style.setProperty('--bubble-x',Math.max(6,Math.min(frame.width-box.width-6,bounds.left-frame.left+(bounds.width-box.width)/2))+'px');
-                bubble.style.setProperty('--bubble-y',Math.max(2,(phone?bounds.top-frame.top-box.height-4:bounds.bottom-frame.top+4))+'px');
+                bubble.style.setProperty('--bubble-y',Math.max(phone?body.top-frame.top+2:2,(phone?bounds.top-frame.top-box.height-4:bounds.bottom-frame.top+4))+'px');
             }
             if(cashierMoving||retrieving)actorFrame=requestAnimationFrame(actorBounds);
         }
@@ -297,7 +297,9 @@
             const x=(content.clientWidth-width)/2,y=(content.clientHeight-height)/2;
             Object.assign(stage.style,{width:width+'px',height:height+'px',left:x+'px',top:y+'px'});
             const rect=stage.getBoundingClientRect();
-            for(const [name,value] of Object.entries({x:rect.left+width*.79,y:rect.top+height*(innerHeight<700?.23:.27),w:width*.20,h:height*(innerHeight<700?.54:.45)}))dialog.style.setProperty('--painted-actor-'+name,value+'px');
+            const phone=matchMedia('(pointer:coarse)').matches&&Math.min(innerWidth,innerHeight)<=900;
+            const actor=phone?{x:.70,y:.20,w:.29,h:.76}:{x:.79,y:innerHeight<700?.23:.27,w:.20,h:innerHeight<700?.54:.45};
+            for(const [name,value] of Object.entries({x:rect.left+width*actor.x,y:rect.top+height*actor.y,w:width*actor.w,h:height*actor.h}))dialog.style.setProperty('--painted-actor-'+name,value+'px');
         }
         new ResizeObserver(()=>{fitPaintedShop();requestAnimationFrame(actorBounds);}).observe(content);
         function render() {

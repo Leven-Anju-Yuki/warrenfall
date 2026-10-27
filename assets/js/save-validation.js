@@ -12,6 +12,7 @@
       }
     }
     inspect(data);
+    if(data.pendingEgg!==undefined&&(!data.pendingEgg||typeof data.pendingEgg!=='object'||Array.isArray(data.pendingEgg)||typeof data.pendingEgg.speciesKey!=='string'||!data.pendingEgg.speciesKey||typeof data.pendingEgg.trait!=='string'))throw new Error('Éclosion en attente incorrecte.');
     if(!data.species&&!data.status&&!data.progress)throw new Error('Le fichier ne contient pas de partie reconnue.');
     if(data.species!==undefined&&(typeof data.species!=='string'||!data.species))throw new Error('Lapin actif incorrect.');
     if(data.ownedSpecies!==undefined&&(!Array.isArray(data.ownedSpecies)||data.ownedSpecies.some(key=>typeof key!=='string'||!key)))throw new Error('Collection incorrecte.');

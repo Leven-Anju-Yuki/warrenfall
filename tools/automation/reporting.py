@@ -39,6 +39,8 @@ def cloudinary_details(state, proposed, now):
 
 
 def bundle(state, report, cloud_report):
+    if state.get('local_git'):
+        report += '\n\n## Dernière publication Windows avant Cloudinary\n' + json.dumps(state['local_git'], ensure_ascii=False, indent=2)
     sections = state.get('report_sections', {})
     trello = sections.get('trello') or sections.get('bilan') or (
         '# Trello / Git / documentation\nÉtape interrompue ou non exécutée.\n\n' + report)

@@ -113,7 +113,15 @@
   let index = 0;
   const body = modal.querySelector('.modal-body');
   function render() {
-    const step = steps[index];
+    const allowed=name=>window.LapinousVisibility?.allowed(name)!==false;
+    const step = {...steps[index],points:[...steps[index].points]};
+    if(index===2){
+      const games=[['puzzles','puzzles'],['memory','jeu des paires'],['quiz','quiz'],['lapidoku','Lapidoku (chiffres)'],['lapinoudoku','Lapinoudoku (couleurs, lapins et croix)']].filter(([key])=>allowed(key)).map(([,label])=>label);
+      step.points=[...(games.length?['Au Salon : '+games.join(', ')+'.']:[]),...((allowed('agility')||allowed('combat'))?['Au Jardin : '+[allowed('agility')?'cours':null,allowed('combat')?'remporte des combats':null].filter(Boolean).join(' et ')+'.']:[]),steps[index].points[2]];
+      step.where=[games.length?'Salon → Coin jeux':null,(allowed('agility')||allowed('combat'))?'Jardin':null].filter(Boolean).join(' · ');
+    }
+    if(index===4&&!allowed('combat')){step.title='À chacun son rythme';step.where='Ton terrier';step.text='Prends soin de ton compagnon et découvre les activités disponibles.';step.points=['Nourris-le, laisse-le se reposer et entretiens son pelage.'];step.tip='Les autres activités apparaîtront lorsqu’elles seront disponibles.';}
+    if(index===5){if(!allowed('recipes'))step.points[1]='Chef : retrouve tes ingrédients dans le frigo.';step.points=step.points.filter((_,i)=>allowed(['market','pantry','inventory'][i]));step.text='Retrouve les services disponibles pour tes lapins.';step.where=[allowed('market')?'Marché':null,allowed('pantry')?'Cuisine':null,allowed('inventory')?'Apothicairerie':null].filter(Boolean).join(' · ');}
     const gift=window.LapinousWelcomeGiftStatus?.();
     const receipt=(index===0||index===steps.length-1)?`<p class="guide-gift-status" role="status">${gift?.granted?'✓ Œuf de bienvenue offert ! Retrouve-le dans Œufs (sauf si tu l’as déjà ouvert).':'Ton œuf sera offert après l’adoption de ton premier lapin.'}</p>`:'';
     body.innerHTML = `<div class="guide-progress" role="status">${step.section} <span>${index + 1} / ${steps.length}</span></div><div class="guide-layout"><aside class="guide-art"><img src="${step.image}" alt="${step.title}"><span>${step.where}</span></aside><article class="guide-copy"><h2>${step.title}</h2><p>${step.text}</p><ul>${step.points.map(point=>`<li>${point}</li>`).join('')}</ul><p class="guide-tip">${step.tip}</p>${receipt}</article></div><nav class="guide-actions" aria-label="Étapes du tutoriel"><button type="button" data-read hidden>Lire le texte ↓</button><button type="button" data-prev ${index===0?'disabled':''}>← Retour</button><button type="button" data-next ${index===steps.length-1?'hidden':''}>La suite →</button><button type="button" data-bs-dismiss="modal">${index===steps.length-1?'Entrer dans le terrier':'Explorer maintenant'}</button></nav>`;
@@ -130,6 +138,7 @@
     requestAnimationFrame(() => { if(modal.classList.contains('show')) modal.classList.add('book-opening'); });
   });
   modal.addEventListener('hidden.bs.modal',()=>modal.classList.remove('book-opening'));
+  window.addEventListener('lapinous:visibility-changed',render);
   modal.addEventListener('shown.bs.modal', () => { try { localStorage.setItem(seenKey,'1'); } catch {} });
   function firstVisit() {
     let seen=false; try { seen=localStorage.getItem(seenKey)==='1'; } catch {}

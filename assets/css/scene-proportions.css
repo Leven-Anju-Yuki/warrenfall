@@ -27,3 +27,22 @@ html.phone-ui .shop-dialog.zone-evolution .shop-zone-companion{height:45%!import
 #phoneEggDialog .egg-rate-guide>summary{font-size:13px;color:#674e34}
 #phoneEggDialog .upgrade-locked-note{order:3;margin:0}
 @media(max-height:400px){#phoneEggDialog{padding:14px 18px}#phoneEggDialog>header{padding-bottom:8px}#phoneEggDialog .egg-shop{gap:8px;padding-top:10px!important}#phoneEggDialog .action-btn{min-height:54px;font-size:12px}#phoneEggDialog .action-icon-emoji{font-size:18px}}
+#phoneEggDialog.egg-opening .egg-reveal-overlay,
+#phoneEggDialog.egg-opening .egg-batch-overlay{position:static;inset:auto;display:block;background:none;padding:0}
+#phoneEggDialog.egg-opening .egg-reveal-card,
+#phoneEggDialog.egg-opening .egg-batch-card{width:100%;box-sizing:border-box;min-height:0;max-height:none;padding:12px 0 0;background:none;box-shadow:none;gap:10px}
+#friendshipGoal{display:block;font-size:11px;line-height:1.3;padding:2px 8px;color:inherit}
+#phoneEggDialog.egg-opening .egg-rates-display{display:none}
+#phoneEggDialog.egg-opening .egg-shell.illustrated-egg{width:min(240px,50vw);height:min(260px,40dvh)}
+#phoneEggDialog.egg-opening .egg-rabbit img{height:min(210px,35dvh);width:auto;max-width:100%}
+#phoneEggDialog.egg-opening header button:disabled{visibility:hidden}
+@media(max-height:400px){
+  #phoneEggDialog.egg-opening{padding:8px 16px}
+  #phoneEggDialog.egg-opening>header{padding-bottom:4px}
+  #phoneEggDialog.egg-opening>header h2{margin:4px 0;font-size:20px}
+  #phoneEggDialog.egg-opening .egg-reveal-card{gap:5px;padding-top:5px}
+  #phoneEggDialog.egg-opening .egg-rabbit{gap:3px}
+  #phoneEggDialog.egg-opening .egg-rabbit img{height:25dvh}
+  #phoneEggDialog.egg-opening .egg-rabbit .action-btn{min-height:36px;padding:6px 16px}
+  #phoneEggDialog.egg-opening .egg-reveal-hint{font-size:13px}
+}

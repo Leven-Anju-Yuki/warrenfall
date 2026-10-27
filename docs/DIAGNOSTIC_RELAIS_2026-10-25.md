@@ -28,7 +28,7 @@ Le déclencheur enregistré était `2026-10-08T19:00:00+01:00`. Après le change
 
 La comparaison des XML avant/après confirme que **seul StartBoundary a changé**. Même tâche, action, compte, réglages batterie et sécurité, rattrapage et sauvegardes. L'ancienne définition XML est conservée en privé sous `.cloudinary-local/task-images-before-local-time-20261025-181657.xml`. Le script `tools/automation/repair-local-time.ps1` est en simulation par défaut ; ne pas réinstaller la tâche avec un autre script.
 
-## Liaison immédiate publiée, activation en attente de validation humaine
+## Liaison immédiate publiée et activée après validation humaine
 
 1. La tâche Windows existante transfère les images et vérifie les copies permanentes, sans nouvelle tâche.
 2. Le relais publie l'état privé et les attestations puis libère son verrou.
@@ -54,11 +54,23 @@ Après une livraison partielle, les rapports préparés sont repris sans rejouer
 - L'état est strictement identique avant/après : même blob `5f3ae0b84a14b094c660bb525350aada6aa0870d`, même empreinte SHA-256, 375 versions, 371 attestations toutes valides, 12 quarantaines, 15 confirmations de notification et zéro opération Cloudinary. Aucun verrou abandonné, aucune date ni reprise réinitialisée.
 - Le signal a également été testé avec le jeton limité du relais Windows et une demande marquée comme validation. Le [run push 40227674619](https://github.com/Leven-Anju-Yuki/warrenfall-automation-state/actions/runs/40227674619) est bien créé, puis **ignoré**, comme prévu tant que l'application n'est pas validée. L'état métier reste identique. Aucun transfert, mutation Trello ou envoi Discord de test n'a eu lieu.
 
-### Validation humaine restante
+### Activation validée et rattrapage réel
 
-Après validation humaine de ces résultats, activer le relais privé puis vérifier le prochain signal réel Windows, son exécution GitHub et ses trois confirmations Discord. Vérifier ensuite que le secours reconnaît ce cycle et n'expédie pas de doublon. Le test du push ignoré démontre le chemin du signal et le garde-fou ; il ne prétend pas démontrer une exécution réelle de production.
+La validation humaine a ensuite été reçue et le relais privé a été activé le 25 octobre à 22:19:56 Paris. `WARRENFALL_HYBRID_APPLY_VALIDATED=true` est confirmé dans les deux dépôts. Cette activation est permanente : aucune confirmation quotidienne n'est requise. Le relais Windows utilise son signal après chaque passe ; le planning public de secours conserve ses deux crons UTC et le filtre Europe/Paris pour le fonctionnement PC éteint.
 
-**État actuel :** heure Windows réparée ; corrections publiées, secrets chiffrés configurés et simulation GitHub réussie. Le nouveau déclencheur reste désactivé dans l'attente de la validation humaine. Le planning public de secours reste actif. Aucun nouveau rapport de test n'a été envoyé sur Discord.
+Le [rattrapage réel 40234987346](https://github.com/Leven-Anju-Yuki/warrenfall-automation-state/actions/runs/40234987346) a été déclenché par ce signal, sans relancer de transfert Windows. Les messages et leurs fichiers ont été relus directement sur Discord et correspondent tous à cette exécution :
+
+| Rapport | Heure Paris | Pièce jointe | Pages de résumé |
+| --- | --- | --- | --- |
+| Bilan | 22:23:08 | `bilan.md`, 925 211 octets | 1 |
+| Cloudinary | 22:23:19 et 22:23:25 | `images.md`, 555 017 octets | 2 |
+| Trello | 22:23:33 | `trello.md`, 571 922 octets | 1 |
+
+Les trois envois et leurs pages sont confirmés, et le cycle automatique du jour est marqué terminé. Le prochain déclenchement pour ce même résultat ne doit rejouer ni les traitements ni les messages. L'état final conserve 12 quarantaines, 375 versions, 371 attestations toutes valides et zéro suppression Cloudinary ; le verrou est libéré. Les notifications passent de 15 à 19, correspondant aux quatre messages réels.
+
+Le run est rouge à cause de l'erreur métier existante sur `Warrenfall_ouverture_8_secondes.gif` (URL ou identité Cloudinary absente). Cette erreur est conservée dans le bilan ; elle ne signifie pas un échec des trois livraisons et ne justifie pas de relancer leurs envois. Aucun ancien journal n'est présenté comme une nouvelle synchronisation.
+
+**État actuel :** relais et secours quotidien actifs après validation humaine ; rattrapage réel livré et confirmé sur Discord. Les futurs bilans ne nécessitent aucune intervention de l'utilisateur. L'heure exacte de démarrage des runners reste soumise aux délais GitHub. La ponctualité du prochain cron, ordinateur éteint, reste à observer ; elle ne se déduit pas de la réussite du signal.
 
 ## Protections conservées
 

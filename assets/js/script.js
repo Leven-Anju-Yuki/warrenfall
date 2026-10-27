@@ -253,7 +253,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     .join("");
             return `<section class="achievement-section" data-records-panel="daily"><h3>☀️ Défis du jour</h3><p>Renouvelés à minuit, selon l’heure de ton appareil. Les récompenses acquises restent récupérables.</p>${rows(entries.today)}
                 ${entries.pending.length ? `<h3>🎁 Récompenses des jours précédents</h3>${rows(entries.pending)}` : ""}</section>
-                <section class="achievement-section" data-records-panel="longterm"><h3>🌟 Grands succès</h3><p>Récupère ta récompense pour révéler le palier suivant. Memory, puzzles cousus, Lapidoku, quiz et agilité ont leurs objectifs. Les récompenses déjà récupérées restent acquises.</p>${rows(entries.permanent)}</section>`;
+                <section class="achievement-section" data-records-panel="longterm"><h3>🌟 Grands succès</h3><p>Récupère ta récompense pour révéler le palier suivant. Les activit?s disponibles ont leurs objectifs. Les récompenses déjà récupérées restent acquises.</p>${rows(entries.permanent)}</section>`;
         }
 
         function attachAchievementPanel(overlay) {
@@ -1406,6 +1406,8 @@ document.addEventListener("DOMContentLoaded", () => {
             document.getElementById("level").innerText = progress().currentLevel;
             updateGameArea("default");
             window.LapinousPreloadScene?.();
+            const session=game;
+            setTimeout(()=>{if(game===session&&game.pendingEgg&&!openingEggs)window.openEgg();},0);
             // Petit ho-ho-ho d'accueil dans le salon, si Noël est actif
             if (currentActiveEvents().includes("noel")) playSfx("hohoho");
         }
@@ -1440,6 +1442,9 @@ document.addEventListener("DOMContentLoaded", () => {
                             100,
                     ),
                 ) + "%";
+            let goal=document.getElementById('friendshipGoal');
+            if(!goal){goal=document.createElement('small');goal.id='friendshipGoal';document.getElementById('friendshipBarContainer').append(goal);}
+            goal.textContent=progress().currentLevel>=100?'Niveau maximum atteint':`Amitié totale : ${progress().friendshipTotal} / ${progress().currentLevel*25} · prochain niveau : ${progress().currentLevel+1}`;
         }
         function bounceRabbit() {
             rabbitImage.classList.remove("bounce");
@@ -1485,7 +1490,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         ROOM_REQUIRED_LEVEL[room] +
                         " · " +
                         UPGRADE_COST +
-                        " 💛"
+                        " amitié dépensée (lapin actif)"
                       : "Évolution " + (stage + 1) + "/5 · " + roomUpgradeCost(room) + " 🥕") +
                 "</span></button>"
             );
@@ -1872,10 +1877,12 @@ document.addEventListener("DOMContentLoaded", () => {
                     mg.quiz.completed++;
                     recordAchievement("quizCompleted");
                     mg.quiz.bestScore = Math.max(mg.quiz.bestScore, score / total);
-                    if (score > 0) {gainFriendship(score);rewardMinigame("quiz",Math.min(9,Math.floor(score/3)));}
+                    const gained=score>0?gainFriendship(score):0;
+                    if(score>0)rewardMinigame("quiz",Math.min(9,Math.floor(score/3)));
                     progress().energy = Math.max(0, progress().energy - 2);
                     autoSave();
                     updateStatusBars();
+                    return gained;
                 },
             });
         };
@@ -2355,13 +2362,14 @@ document.addEventListener("DOMContentLoaded", () => {
             if (puzzleIndex < puzzleCatalog().length - 1)
                 mg.unlockedPuzzle = Math.max(mg.unlockedPuzzle || 0, puzzleIndex + 1);
 
+            const needsBefore={food:progress().food,energy:progress().energy,cleanliness:progress().cleanliness};
             progress().food = Math.max(0, progress().food - Number(lvl.food || 0));
             progress().energy = Math.max(0, progress().energy - Number(lvl.energy || 0));
             progress().cleanliness = Math.max(
                 0,
                 progress().cleanliness - window.LapinousRemedies.cleanCost(progress(),Number(lvl.cleanliness || 0)),
             );
-            gainFriendship(lvl.friendship);
+            const friendshipGained=gainFriendship(lvl.friendship);
             rewardMinigame("puzzle:"+puz.id, levelIndex);
             updateStatusBars();
             autoSave();
@@ -2372,7 +2380,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 <img class="puzzle-tailor-celebration" src="${window.LapinousShop.companionImage("tailor", "couturiere_felicitation.png")}" alt="La couturière te félicite pour ton puzzle">
                 <div class="console-title">Puzzle terminé !</div>
                 <img class="puzzle-preview" src="${puz.image}" alt="${puz.title}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';">
-                <p><strong>${moves}</strong> coups · +${lvl.friendship} 💛 · -${Number(lvl.food || 0)} 🥕 · -${lvl.energy} 😴 · -${lvl.cleanliness} 🫧</p>
+                <p><strong>${moves}</strong> coups · Amitié gagnée : +${friendshipGained} 💛</p>
+                <p>Besoins consommés : −${needsBefore.food-progress().food} nourriture · −${needsBefore.energy-progress().energy} énergie · −${needsBefore.cleanliness-progress().cleanliness} propreté.</p>
                 <p class="agility-hint">Progression enregistrée pour ${currentRabbitName()}.</p>
                 <button class="action-btn" onclick="openPuzzleLevels(${puzzleIndex})"><span>Continuer 🧩</span></button>
                 <button class="ghost-btn" onclick="openPuzzleHub()">Voir les puzzles</button>
@@ -2714,6 +2723,7 @@ document.addEventListener("DOMContentLoaded", () => {
             progress().friendshipTotal = Math.max(0, progress().friendshipTotal + scaled);
             progress().friendship = Math.max(0, Math.min(100, progress().friendship + scaled));
             checkLevelUp();
+            return scaled;
         }
 
         // ============================================================
@@ -2952,10 +2962,10 @@ document.addEventListener("DOMContentLoaded", () => {
                     mg.bestMoves[st.level] = Math.min(mg.bestMoves[st.level] || Infinity, st.moves);
                     recordAchievement("gamesWon");
                     recordAchievement("memoryCompleted");
-                    gainFriendship(6);
+                    const friendshipGained=gainFriendship(6);
                     rewardMinigame("memory",st.level);
                     game.records.puzzlesCompleted += 1;
-                    showToast(`Memory niveau ${st.level + 1} terminé !`, "success");
+                    showToast(`Memory niveau ${st.level + 1} terminé ! +${friendshipGained} 💛 réellement gagnée.`, "success");
                     autoSave();
                 }
             } else {
@@ -3010,8 +3020,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const mg=ensureMinigameProgress().lapidoku;
             mg.completed=(Number(mg.completed)||0)+1;
             mg.level=Math.max(Number(mg.level)||0,Math.min(11,st.index+1));
-            recordAchievement("gamesWon");gainFriendship(8);rewardMinigame("lapidoku",numberSudokuState.rewardLevel);
-            st.notice="Grille réussie ! +8 💛 — progression enregistrée.";
+            recordAchievement("gamesWon");const friendshipGained=gainFriendship(8);rewardMinigame("lapidoku",numberSudokuState.rewardLevel);
+            st.notice=`Grille réussie ! +${friendshipGained} 💛 — progression enregistrée.`;
             autoSave();renderNumberSudoku();
         };
         document.addEventListener("keydown", event=>{
@@ -3117,8 +3127,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const mg=ensureMinigameProgress().lapinoudoku;
             mg.completed=(Number(mg.completed)||0)+1;
             mg.level=Math.max(Number(mg.level)||0,Math.min(11,st.index+1));
-            recordAchievement('gamesWon');gainFriendship(8);rewardMinigame('lapinoudoku',st.rewardLevel);
-            st.notice='Clairière réussie ! +8 💛 — progression enregistrée.';
+            recordAchievement('gamesWon');const friendshipGained=gainFriendship(8);rewardMinigame('lapinoudoku',st.rewardLevel);
+            st.notice=`Clairière réussie ! +${friendshipGained} 💛 — progression enregistrée.`;
             autoSave();renderLapidoku();
         };
         document.addEventListener('keydown',event=>{
@@ -3272,7 +3282,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 traitGain("friendship", 0) +
                 progress().boosts.friendship;
             const preparedTraining=meters>=20?window.LapinousRemedies.training(progress(),8):{cost:8,experience:1};
-            gainFriendship(reward*preparedTraining.experience);
+            const friendshipGained=gainFriendship(reward*preparedTraining.experience);
             if(meters>=20)rewardMinigame("agility",Math.floor(meters/100));
             progress().food = Math.max(0, progress().food - 6);
             progress().energy = Math.max(0, progress().energy - preparedTraining.cost);
@@ -3284,7 +3294,7 @@ document.addEventListener("DOMContentLoaded", () => {
             checkStatus();
             autoSave();
             showToast(
-                `${finished ? "Parcours terminé" : "Entraînement arrêté"} : ${meters} m — +${reward} 💛 d'amitié.`,
+                `${finished ? "Parcours terminé" : "Entraînement arrêté"} : ${meters} m — +${friendshipGained} 💛 d'amitié réellement gagnée.`,
                 finished ? "warn" : "success",
             );
             agilityRun = null;
@@ -3327,7 +3337,7 @@ document.addEventListener("DOMContentLoaded", () => {
                               : "🙂 Faisable";
                     return `<button class="boss-card" onclick="prepareFight('${key}')">
                     <img src="${b.faceImg || b.coteImg}" alt="${b.name}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';">
-                    <div class="boss-name">${b.name}</div><small>${b.kind === "vegetable" ? "Petit adversaire : +3 amitié, "+b.rewardCarrots+" carottes, sans butin" : "Boss : défi plus corsé"}</small>
+                    <div class="boss-name">${b.name}</div><small>${b.kind === "vegetable" ? "Petit adversaire : amitié et "+b.rewardCarrots+" carottes, sans butin" : "Boss : défi plus corsé"}</small>
                     <div class="boss-power">⚔️ Puissance ${stats.power}</div>
                     <div class="boss-power">❤️ ${stats.maxHp} PV</div>
                     <div class="boss-diff">${label}</div>
@@ -3568,8 +3578,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 ensureNewSystems();
                 if (rewards.bossAchievement) recordAchievement("bossesDefeated");
                 playSfx("victory");
-                gainFriendship(3);
-                if (log) log.textContent = `🏆 Victoire ! +${reward} 🥕 et +3 💛`;
+                const friendshipGained=gainFriendship(3);
+                if (log) log.textContent = `🏆 Victoire ! +${reward} carottes et +${friendshipGained} 💛 réellement gagnée`;
                 spawnParticles("🥕", 8);
             } else {
                 playSfx("defeat"); // Une défaite ne retire aucune amitié ni aucun niveau.
@@ -4080,14 +4090,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 game.carrots += reward;
                 if (rewards.loot) awardBattleLoot();
                 if (rewards.bossAchievement) recordAchievement("bossesDefeated");
+                const friendshipRewards=[];
                 f.team.forEach((x) => {
                     const old = game.species;
                     game.species = x.key;
-                    gainFriendship(3);
+                    x.friendshipGained=gainFriendship(3);
+                    friendshipRewards.push(`${game.speciesNames[x.key]||getSpecies()[x.key].name} : +${x.friendshipGained} 💛`);
                     game.species = old;
                 });
                 playSfx("victory");
-                showToast(`Victoire ! +${reward} 🥕 · +3 💛 pour l’équipe`, "success");
+                showToast(`Victoire ! +${reward} carottes · ${friendshipRewards.join(' · ')}`, "success");
             } else {
                 playSfx("defeat");
                 showToast("Ton équipe est K.O. Elle a besoin de repos.", "warn");
@@ -4102,7 +4114,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const key = f.key;
             tacticalFight = null;
             const portraits=f.team.map(x=>`<figure><img src="${combatEscape(x.sp.faceImg||x.sp.coteImg||'./assets/img/lapins_jouables/sans_evenements/mystery.svg')}" alt=""><figcaption>${combatEscape(rabbitDisplayName(x))}</figcaption></figure>`).join('');
-            gameArea.innerHTML = `<section class="battle-result ${win?'won':'lost'}" aria-labelledby="battleResultTitle"><span class="battle-result-medal" aria-hidden="true">${win?'🏆':'🌙'}</span><p class="battle-result-eyebrow">${win?'Une belle aventure en équipe':'Une pause au terrier'}</p><h2 id="battleResultTitle">${win?'Victoire !':'On reprend des forces ?'}</h2><p class="battle-result-opponent">${win?'Face à':'Après le combat contre'} ${combatEscape(f.boss.name)}</p><div class="battle-result-team">${portraits}</div>${win?`<div class="battle-result-rewards"><span>🥕 +${window.LapinousTeamRules.victory(f.boss).carrots} carottes</span><span>💛 +3 amitié par lapin</span></div>`:'<p class="battle-result-rest">Ton équipe a besoin de repos avant sa prochaine aventure.</p>'}<div class="battle-result-actions"><button class="battle-result-replay" onclick="prepareFight('${key}')">↻ ${win?'Rejouer ce combat':'Préparer une nouvelle tentative'}</button><button class="battle-result-back" onclick="openAdventure()">← Choisir un adversaire</button></div></section>`;
+            gameArea.innerHTML = `<section class="battle-result ${win?'won':'lost'}" aria-labelledby="battleResultTitle"><span class="battle-result-medal" aria-hidden="true">${win?'🏆':'🌙'}</span><p class="battle-result-eyebrow">${win?'Une belle aventure en équipe':'Une pause au terrier'}</p><h2 id="battleResultTitle">${win?'Victoire !':'On reprend des forces ?'}</h2><p class="battle-result-opponent">${win?'Face à':'Après le combat contre'} ${combatEscape(f.boss.name)}</p><div class="battle-result-team">${portraits}</div>${win?`<div class="battle-result-rewards"><span>🥕 +${window.LapinousTeamRules.victory(f.boss).carrots} carottes</span><span>💛 ${f.team.map(x=>combatEscape(rabbitDisplayName(x))+': +'+x.friendshipGained+' amiti'+String.fromCharCode(233)).join('<br>')}</span></div>`:'<p class="battle-result-rest">Ton équipe a besoin de repos avant sa prochaine aventure.</p>'}<div class="battle-result-actions"><button class="battle-result-replay" onclick="prepareFight('${key}')">↻ ${win?'Rejouer ce combat':'Préparer une nouvelle tentative'}</button><button class="battle-result-back" onclick="openAdventure()">← Choisir un adversaire</button></div></section>`;
         }
 
         // ---- Boutique à œufs (Salon) ----
@@ -4173,7 +4185,9 @@ document.addEventListener("DOMContentLoaded", () => {
                 const overlay = document.createElement("div");
                 overlay.className = `egg-reveal-overlay rarity-${rarity}`;
                 overlay.innerHTML = `<div class="egg-reveal-card"><div class="egg-rates-display" data-egg-rates></div><button type="button" class="egg-shell illustrated-egg" aria-label="Toucher l'œuf pour le faire éclore"><img src="${image}" alt="Œuf ${RARITY_META[rarity]?.label || rarity}" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span hidden aria-hidden="true">🥚</span></button><div class="egg-reveal-hint" role="status">Touche l'œuf plusieurs fois : 0/${EGG_TAPS_TO_HATCH}</div><div class="egg-rabbit" hidden><img src="${speciesData.faceImg || speciesData.coteImg}" alt="${speciesData.name}"><strong>${speciesData.name}</strong><span>${RARITY_META[rarity]?.label || rarity}</span><button type="button" class="action-btn">Continuer</button></div></div>`;
-                document.body.appendChild(overlay);
+                const finishReveal = window.LapinousEggView
+                    ? window.LapinousEggView.mount(overlay)
+                    : (document.body.appendChild(overlay), () => overlay.remove());
                 updateEggRateDisplays();
                 const shell = overlay.querySelector(".egg-shell");
                 const hint = overlay.querySelector(".egg-reveal-hint");
@@ -4205,7 +4219,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     }, 750);
                 };
                 rabbit.querySelector("button").onclick = () => {
-                    overlay.remove();
+                    finishReveal();
                     resolve();
                 };
             });
@@ -4229,7 +4243,7 @@ document.addEventListener("DOMContentLoaded", () => {
         let openingEggs = false;
         window.openEgg = async function () {
             if (openingEggs) return;
-            if (game.eggs <= 0) {
+            if (!game.pendingEgg && game.eggs <= 0) {
                 showToast("Tu n'as aucun œuf à ouvrir. Achète-en un d'abord !", "warn");
                 return;
             }
@@ -4239,13 +4253,22 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             openingEggs = true;
-            game.eggs -= 1;
-            ensureNewSystems();
-            recordAchievement("eggsOpened");
-            const result = rollEgg();
+            if(!game.pendingEgg){
+                const before=JSON.stringify(game);
+                game.eggs -= 1;
+                ensureNewSystems();
+                recordAchievement("eggsOpened");
+                game.pendingEgg=rollEgg();
+                if(!autoSave()){game=JSON.parse(before);openingEggs=false;return;}
+            }
+            const session=game;
+            const result = game.pendingEgg;
             const s = getSpecies()[result.speciesKey];
+            if(!s){openingEggs=false;showToast("Cet œuf attend le retour de son catalogue. Il reste sauvegardé.","warn");return;}
             await eggRevealAnimation(s);
+            if(game!==session){openingEggs=false;return;}
             openingEggs = false;
+            delete game.pendingEgg;
             const isNew = !game.ownedSpecies.includes(result.speciesKey);
             if (isNew) {
                 game.ownedSpecies.push(result.speciesKey);
@@ -4290,7 +4313,7 @@ document.addEventListener("DOMContentLoaded", () => {
         };
 
         window.openTenEggs = function () {
-            if (openingEggs || game.eggs < 10 || game.pendingDuplicate) return;
+            if (openingEggs || game.pendingEgg || game.eggs < 10 || game.pendingDuplicate) return;
             openingEggs = true;
             ensureNewSystems();
             const results = Array.from({ length: 10 }, () => rollEgg());
@@ -4388,13 +4411,15 @@ document.addEventListener("DOMContentLoaded", () => {
             done.textContent = "Éclosion en cours…";
             done.disabled = true;
             done.onclick = () => {
-                overlay.remove();
+                finishBatch();
                 openingEggs = false;
                 refreshCurrentZone();
             };
             panel.append(grid, done);
             overlay.appendChild(panel);
-            document.body.appendChild(overlay);
+            const finishBatch = window.LapinousEggView
+                ? window.LapinousEggView.mount(overlay)
+                : (document.body.appendChild(overlay), () => overlay.remove());
             // Un son commun au lot évite de superposer dix craquements.
             setTimeout(() => playSfx("eggCrack"), 2600);
             animatedCards.forEach(({ shell, reveal }, index) => {
@@ -4497,7 +4522,9 @@ document.addEventListener("DOMContentLoaded", () => {
             try { createSave("Partie conservée avant déconnexion"); }
             catch (error) { showToast("Déconnexion annulée : la copie de ta partie n'a pas pu être enregistrée. Exporte-la en JSON.","warn",12000); return; }
 
+            if(localStorage.getItem(AUTOSAVE_KEY)!==lastSavedRaw){showToast("Déconnexion annulée : la partie a changé dans une autre fenêtre. Recharge avant de continuer.","warn");return;}
             localStorage.removeItem(AUTOSAVE_KEY);
+            lastSavedRaw=null;
             game = freshGame();
             currentZone = "default";
             gameRoot.style.display = "none";

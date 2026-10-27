@@ -49,6 +49,12 @@ function Start-LapinousChain {
     try { $lock=[IO.File]::Open((Join-Path $folder 'chaine.lock'),'OpenOrCreate','ReadWrite','None') }
     catch { Write-Warning 'Chaine deja en cours ou verrou inaccessible : aucune seconde execution.'; return 1 }
     try {
+        # Demande explicite : publier le travail public avant Cloudinary, sans
+        # ajouter de tâche et sans empêcher les traitements en cas d'échec Git.
+        try {
+            & python -B (Join-Path $ProjectRoot 'tools\automation\nightly_git.py') --apply
+            if ($LASTEXITCODE -ne 0) { Write-Warning 'Publication Git non aboutie ; Cloudinary et le bilan restent executes. Consulter .cloudinary-local/nightly-git.json.' }
+        } catch { Write-Warning 'Publication Git interrompue ; Cloudinary et le bilan restent executes.' }
         $hybridFile=Join-Path $ProjectRoot 'tools\automation\config.json'
         if (Test-Path -LiteralPath $hybridFile) {
             $hybridConfig=Get-Content -LiteralPath $hybridFile -Raw -Encoding UTF8 | ConvertFrom-Json

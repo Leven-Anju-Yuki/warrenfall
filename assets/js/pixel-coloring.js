@@ -1,7 +1,7 @@
 /* Coloriages indépendants des puzzles : la palette ne fait jamais partie du zoom. */
 (() => {
   const levels=[{name:'Simple',size:64,colors:24},{name:'Modéré',size:128,colors:40},{name:'Difficile',size:192,colors:56}];
-  const allowedLevels=image=>image.kind==='rabbit'?[0,1]:image.kind==='scene'?[1,2]:[0,1,2];
+  const allowedLevels=image=>image.kind==='discovery'?[0]:image.kind==='rabbit'?[0,1]:image.kind==='scene'?[1,2]:[0,1,2];
   const imageLevel=(image,index)=>({...levels[index],size:image.kind==='rabbit'&&index===1?96:levels[index].size});
   function nextColor(state,current){
     const remaining=new Set(state.targets.filter((c,i)=>!state.background?.[i]&&!state.painted[i]));
@@ -58,7 +58,14 @@
     state.painted[index]=1;return true;
   }
   function open(options){
-    const {host,catalog,storage,save,back}=options;
+    const {host,catalog:providedCatalog,storage,save,back}=options;
+    // Petit dessin natif : pas de téléchargement ni de modification des portraits.
+    const pattern=['..11....11..','..121..121..','..121..121..','..111..111..','...111111...','..11111111..','.1111111111.','.1131111311.','.1111221111.','..11122111..','...111111...','....1111....'];
+    const colors=[[255,255,255],[233,157,171],[61,48,43]];
+    const targets=pattern.join('').split('').map(c=>c==='.'?0:Number(c)-1),background=pattern.join('').split('').map(c=>Number(c==='.'));
+    const rectangles=targets.map((c,i)=>background[i]?'':`<rect x="${i%12}" y="${Math.floor(i/12)}" width="1" height="1" fill="rgb(${colors[c]})"/>`).join('');
+    const starter={id:'discovery-bunny-v1',title:'Mes premiers petits coups de pinceau',kind:'discovery',image:'data:image/svg+xml,'+encodeURIComponent(`<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 12 12">${rectangles}</svg>`)};
+    const catalog=[starter,...providedCatalog];
     let session=0,kind=catalog[0]?.kind||'all',level=kind==='scene'?1:0;
     const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
     const button=(text,action)=>{const n=el('button',text);n.type='button';n.onclick=action;return n;};
@@ -69,12 +76,12 @@
       const intro=el('div');intro.append(el('small','L’atelier des petites couleurs'),el('h2','Les Couleurs du terrier'));
       heading.append(intro,button('← Mini-jeux',back));panel.append(heading,el('p','Choisis ton dessin et fais renaître ses couleurs. Tu peux reprendre ton coloriage quand tu veux.','coloring-album-intro'));
       const tabs=el('nav',undefined,'coloring-categories');
-      for(const [value,label] of [['rabbit','🐰 Mes lapins'],['scene','🖼️ Grandes images'],['saved','🎨 Mes coloriages']]){
+      for(const [value,label] of [['discovery','🌱 Découverte'],['rabbit','🐰 Mes lapins'],['scene','🖼️ Grandes images'],['saved','🎨 Mes coloriages']]){
         if(value!=='saved'&&!catalog.some(image=>image.kind===value))continue;
-        const b=button(label,()=>{kind=value;if(value==='rabbit'&&level===2)level=1;if(value==='scene'&&level===0)level=1;hub();});b.setAttribute('aria-pressed',String(kind===value));tabs.append(b);
+        const b=button(label,()=>{kind=value;if(value==='discovery')level=0;if(value==='rabbit'&&level===2)level=1;if(value==='scene'&&level===0)level=1;hub();});b.setAttribute('aria-pressed',String(kind===value));tabs.append(b);
       }panel.append(tabs);
       const choices=el('div',undefined,'coloring-difficulties');
-      levels.forEach((l,i)=>{const size=kind==='rabbit'&&i===1?96:l.size,b=button('',()=>{level=i;hub();});b.append(el('strong',`${['🌱','🌼','🌳'][i]} ${l.name}`),el('span',`${size} cases de large · ${l.colors} couleurs maximum`));b.disabled=kind==='rabbit'&&i===2||kind==='scene'&&i===0;b.setAttribute('aria-pressed',String(level===i));choices.append(b);});if(kind!=='saved')panel.append(choices);
+      levels.forEach((l,i)=>{const size=kind==='rabbit'&&i===1?96:l.size,b=button('',()=>{level=i;hub();});b.append(el('strong',`${['🌱','🌼','🌳'][i]} ${l.name}`),el('span',`${size} cases de large · ${l.colors} couleurs maximum`));b.disabled=kind==='rabbit'&&i===2||kind==='scene'&&i===0;b.setAttribute('aria-pressed',String(level===i));choices.append(b);});if(kind!=='saved'&&kind!=='discovery')panel.append(choices);if(kind==='discovery')panel.append(el('p','Un petit lapin de 12 cases de large, avec seulement 3 couleurs.'));
       const list=el('div',undefined,'coloring-images');panel.append(list);
       const entries=kind==='saved'?Object.keys(storage).flatMap(key=>{const match=key.match(/^(.*):([012])(?::v[23])?$/),image=match&&catalog.find(x=>x.id===match[1]);return image?[{image,difficulty:Number(match[2]),key}]:[];}):catalog.filter(image=>kind==='all'||image.kind===kind).map(image=>({image,difficulty:level,key:`${image.id}:${level}:v3`}));
       entries.forEach(({image,difficulty,key})=>{const b=button('',()=>start(image,difficulty,key));const frame=el('span',undefined,'coloring-picture');const img=el('img');img.src=imageUrl(image);img.alt='';img.loading='lazy';frame.append(img);b.append(frame,el('strong',image.title));const st=storage[key];b.append(el('small',st?`${progress(st).done}/${progress(st).total} cases coloriées · ${levels[difficulty].name}${key.endsWith(':v3')?'':' · Ancienne grille'}`:'À tes pinceaux !'));list.append(b);});
@@ -85,6 +92,7 @@
       const token=++session,key=savedKey||`${image.id}:${difficulty}:v3`,l=imageLevel(image,difficulty);
       const loading=el('dialog',undefined,'coloring-hub');loading.append(el('p','Préparation des petites couleurs…'),button('← Images',hub));host.replaceChildren(loading);loading.showModal();loading.oncancel=e=>{e.preventDefault();hub();};
       let state=storage[key];
+      if(!state&&image.kind==='discovery'){state={width:12,height:12,colors,targets:[...targets],background:[...background],painted:targets.map(()=>0)};storage[key]=state;save();}
       try{
         if(!state || image.kind==='rabbit'&&!Array.isArray(state.background)){
           const img=new Image();img.crossOrigin='anonymous';

@@ -1,6 +1,39 @@
 # Warrenfall - suivi des travaux et validations
 
+## Publication avant Cloudinary — autorisation du 27 octobre 2026
+
+- [x] Ajouter la publication Git à la chaîne Windows existante, avant le relais Cloudinary, sans nouvelle tâche ni changement d'horaire. Ne publier que le code et la documentation autorisés ; exclure secrets, sauvegardes, états privés, batterie et images originales.
+- [x] Produire un message cohérent avec les domaines et corrections réellement présents dans le diff ; conserver les messages des commits déjà préparés.
+- [x] Refuser les conflits distants, les pushes forcés et les index manuels ; continuer Cloudinary et le bilan après échec Git. Reçu local horodaté et transmission au bilan distant.
+- [ ] Constater la première publication automatique de 20 h : configuration vérifiée et simulations testées, aucune publication réelle déclenchée pour le test.
+
+## Fiabilité et lisibilité après les essais prolongés — 27 octobre 2026
+
+Correctifs locaux, non publiés. Prix, coefficient de progression (0,45) et déblocages progressifs conservés.
+
+- [x] Afficher l'amitié réellement créditée dans les combats, quiz, Memory, Lapidoku, Lapinoudoku, puzzles et parcours ; le coefficient existant expliquait les +3 annoncés devenant +1.
+- [x] Afficher l'amitié totale et le seuil du prochain niveau ; préciser que le premier déblocage dépense l'amitié du lapin actif.
+- [x] Séparer les gains et la nourriture/énergie/propreté consommées sur le résultat des puzzles, avec les coûts réellement appliqués.
+- [x] Réinitialiser la référence de sauvegarde après déconnexion, en conservant le contrôle de conflit entre fenêtres et la copie nommée de la partie précédente.
+- [x] Enregistrer le tirage d'un œuf avant animation et reprendre le même résultat après rechargement ; accès simple et ×10 dans la même fenêtre.
+- [x] Demander une confirmation explicite avant le départ du dernier compagnon disponible.
+- [x] Ajouter un coloriage de découverte de 12 × 12 cases, trois couleurs et fond exclu ; anciennes grilles conservées.
+- [x] Quiz rendu public et dépendances de visibilité vérifiées (correctif local précédent).
+- [ ] Réactions propres aux compagnons et conseils d'objectifs à court terme : étape ultérieure, à concevoir sans modifier l'équilibrage.
+- [ ] Faire retester la version publique après publication explicitement autorisée ; les observations sur l'ancienne version restent distinctes des contrôles locaux.
+
 Mise à jour : 25 octobre 2026.
+
+## Reconnaître les images des rapports Cloudinary
+
+- [x] Préparer les noms cliquables vers la version Cloudinary exacte pour les transferts, quarantaines et suppressions bloquées ; URL absente ou ambiguë laissée sans lien plutôt que reconstruite. Rapports découpés sans perdre les noms ; 82 tests réussis.
+- [x] Créer une galerie locale de consultation sous `.cloudinary-local/galerie-cloudinary-2026-10-25/index.html` : 12 aperçus issus de copies exactes SHA-256 des sauvegardes, plus 3 aperçus Cloudinary pour les blocages. Sept anciennes URL renvoient 404 ; `chef.svg` reste sans aperçu exact. Aucun original déplacé, aucune échéance ni attestation modifiée, aucun envoi Discord rejoué.
+- [x] Publication ciblée autorisée des deux fichiers de rapport et tests sur `main` (d03f66b) ; les rapports déjà livrés restent inchangés. Simulation GitHub 40310109198 réussie, état distant strictement identique avant/après et aucun nouvel envoi Discord.
+
+## Accompagnateurs du magasin sur téléphone
+
+- [x] Agrandir la caissière, le forgeron, le mage et l'apothicaire sur téléphone, avec les bulles conservées dans la scène. Produits et étals inchangés ; proportions ordinateur conservées.
+- [x] Vérifier les cinq vues dans Chrome tactile isolé en 568 × 280 et 844 × 390 ; captures et absence d'erreur JavaScript contrôlées. Versions CSS/JS actualisées pour le cache. Modifications locales, non publiées.
 
 ## Rapports après Cloudinary — diagnostic du 25 octobre
 
@@ -9,7 +42,8 @@ Mise à jour : 25 octobre 2026.
 - [x] Préparer le signal privé de fin de relais, le workflow réutilisable et la déduplication relais/planning ; 75 tests Python et vérification actionlint des deux workflows réussis. Aucun nouvel envoi Discord ni mutation Cloudinary/Trello de test.
 - [x] Publication autorisée des 24 fichiers sur `main` (90454ec), workflow privé et onze secrets chiffrés configurés ; simulation GitHub 40227382731 réussie avec 75 tests d'automatisation et 46 tests Trello. État strictement identique avant/après ; aucun envoi Discord ni mutation Cloudinary/Trello.
 - [x] Vérifier le signal avec le jeton limité : run push 40227674619 créé puis ignoré, conformément au garde-fou d'activation désactivé.
-- [ ] Validation humaine de la simulation avant activation du nouveau déclencheur privé ; vérifier ensuite un vrai cycle et l'absence de doublon du secours. Le planning actuel reste actif ; ne pas présenter le relais immédiat comme déjà activé.
+- [x] Validation humaine reçue et relais privé activé le 25 octobre à 22 h 19 ; rattrapage 40234987346 confirmé sur Discord à 22 h 23 : Bilan, Cloudinary (deux pages) et Trello avec leurs trois fichiers. Cycle marqué livré, verrou libéré, 12 quarantaines et 371 attestations valides conservées ; zéro suppression Cloudinary.
+- [ ] Observer le prochain déclenchement quotidien PC éteint et sa ponctualité ; planning public déjà actif, aucune validation quotidienne requise. Le GIF d'ouverture sans URL Cloudinary reste à diagnostiquer séparément ; il ne bloque pas l'envoi des bilans.
 
 ## Préparation du combat lisible — révision 156
 

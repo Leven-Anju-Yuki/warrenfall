@@ -2459,7 +2459,7 @@
     "games": "public",
     "favorites": "public",
     "records": "public",
-    "quiz": "admin"
+    "quiz": "public"
   },
   "opponents": {
     "debut_radis": {

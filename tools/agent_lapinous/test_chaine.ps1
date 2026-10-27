@@ -36,3 +36,18 @@ function node { throw 'Aucune synchronisation autorisee' }
 $captured=@(Start-LapinousChain -ProjectRoot (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) 6>&1)
 if (($captured | Out-String) -notmatch 'BILAN FICTIF AFFICHE' -or $captured[-1] -ne 7) { throw 'Sortie ou code de simulation perdu' }
 Write-Host '7e scenario OK : simulation native affichee, code conserve et Node interdit.'
+
+# Le nouveau preambule Git doit preceder le relais et ne jamais le bloquer.
+$publicationOrder=[Collections.Generic.List[string]]::new()
+function python {
+    if (($args -join ' ') -match 'nightly_git.py') {
+        $publicationOrder.Add('git')
+        $global:LASTEXITCODE=3
+    } elseif (($args -join ' ') -match 'local_bridge.py') {
+        $publicationOrder.Add('cloudinary-et-bilan')
+        $global:LASTEXITCODE=0
+    } else { throw 'Operation Python inattendue dans le test' }
+}
+$captured=@(Start-LapinousChain -ProjectRoot (Split-Path -Parent (Split-Path -Parent $PSScriptRoot)) -AppliquerChaine 3>&1 6>&1)
+if (($publicationOrder -join ',') -ne 'git,cloudinary-et-bilan') { throw 'Publication Git non placee avant Cloudinary ou echec bloquant.' }
+Write-Host '8e scenario OK : Git avant le relais ; Cloudinary et bilan tentes meme apres echec Git. Aucun appel reel.'

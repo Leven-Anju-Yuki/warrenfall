@@ -219,6 +219,11 @@ def summary_lines(channel, reports, state=None):
         if blocked:
             lines += [f'À faire : sécuriser les sauvegardes exactes des {blocked} images bloquées.']
         lines += ['Les transferts Windows historiques sont séparés des opérations distantes dans le message Cloudinary.']
+        publication=data['state'].get('local_git', {})
+        if publication:
+            lines += [f'**Dernière publication Windows avant Cloudinary** ({publication.get("finishedAt", "date inconnue")}) : {publication.get("status", "inconnu")}.']
+            if publication.get('reason'):
+                lines += ['À vérifier : ' + publication['reason']]
     return lines + ['', '📎 Rapport complet joint : détails techniques, historique et inventaires.']
 
 

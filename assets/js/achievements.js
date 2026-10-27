@@ -70,7 +70,11 @@
         });
         const rank = a => a.value >= a.target ? (a.claimed ? 1 : 0) : 2;
         const completedFirst = rows => rows.sort((a,b) => rank(a) - rank(b));
-        return { today: completedFirst(todayRows), pending, permanent: completedFirst(permanent) };
+        const features={quizCompleted:'quiz',memoryCompleted:'memory',puzzleCompleted:'puzzles',bossesDefeated:'combat',agilityPlayed:'agility'};
+        // Masquer les objectifs inaccessibles, sans toucher à leur historique ni
+        // empêcher de récupérer une récompense déjà gagnée.
+        const visible=row=>row.claimed||row.value>=row.target||!features[row.metric]||root.LapinousVisibility?.allowed(features[row.metric])!==false;
+        return { today: completedFirst(todayRows.filter(visible)), pending, permanent: completedFirst(permanent.filter(visible)) };
     }
     function claim(game, id, day = null, date = new Date()) {
         const state = ensure(game, date);
