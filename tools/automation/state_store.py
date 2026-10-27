@@ -17,6 +17,10 @@ class StateBusy(StateError):
     pass
 
 
+class StateTransient(StateError):
+    pass
+
+
 class GitHubStore:
     def __init__(self, repo, token, branch='main', filename='warrenfall-state.json', session=None):
         if not re.fullmatch(r'[\w.-]+/[\w.-]+', repo or '') or not token:
@@ -29,14 +33,19 @@ class GitHubStore:
         self.http.headers.update({'Authorization': 'Bearer ' + token, 'Accept': 'application/vnd.github+json'})
 
     def request(self, method, path, **kwargs):
-        # Une écriture ambiguë n'est jamais répétée automatiquement.
-        try:
-            r = self.http.request(method, self.base + path, timeout=45, **kwargs)
-        except requests.RequestException as exc:
-            raise StateError('Stockage GitHub : réseau ou TLS indisponible ; arrêt sécurisé.') from None
-        if not r.ok:
-            raise StateError(f'Stockage GitHub HTTP {r.status_code} ; aucun écrasement forcé.')
-        return r.json()
+        for attempt in range(3 if method == 'GET' else 1):
+            try:
+                r = self.http.request(method, self.base + path, timeout=45, **kwargs)
+                if r.ok:
+                    return r.json()
+                if r.status_code not in (429, 500, 502, 503, 504):
+                    raise StateError(f'Stockage GitHub HTTP {r.status_code} ; aucun écrasement forcé.')
+                issue = f'Stockage GitHub HTTP {r.status_code} ; reprise après vérification.'
+            except requests.RequestException:
+                issue = 'Stockage GitHub : réseau ou TLS indisponible ; reprise après vérification.'
+            if method != 'GET' or attempt == 2:
+                raise StateTransient(issue)
+            time.sleep(attempt + 1)
 
     def read(self):
         import base64
@@ -51,11 +60,24 @@ class GitHubStore:
 
     def write(self, state, revision):
         import base64
-        result = self.request('PUT', '/contents/' + self.filename, json={
-            'message': 'Enregistre le suivi des automatisations Warrenfall',
-            'branch': self.branch, 'sha': revision,
-            'content': base64.b64encode(json.dumps(state, ensure_ascii=False).encode()).decode()})
-        return result['content']['sha']
+        payload={'message': 'Enregistre le suivi des automatisations Warrenfall',
+                 'branch': self.branch, 'sha': revision,
+                 'content': base64.b64encode(json.dumps(state, ensure_ascii=False).encode()).decode()}
+        for attempt in range(3):
+            try:
+                result = self.request('PUT', '/contents/' + self.filename, json=payload)
+                return result['content']['sha']
+            except StateTransient:
+                # Le serveur peut avoir enregistré malgré le HTTP 500 : relire
+                # avant toute répétition, sans jamais changer le SHA attendu.
+                current, actual = self.read()
+                if current == state:
+                    return actual
+                if actual != revision:
+                    raise StateError('Etat modifié simultanément : aucune répétition ni écrasement.') from None
+                if attempt == 2:
+                    raise
+                time.sleep(attempt + 1)
 
 
 class LockedState:

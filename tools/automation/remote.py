@@ -26,6 +26,16 @@ def delivery_id(now, state=None):
     if os.getenv('GITHUB_EVENT_NAME') == 'workflow_dispatch':
         return 'catchup:' + os.environ['GITHUB_RUN_ID']
     if state is not None:
+        sync_stamp=state.get('local_sync',{}).get('finishedAt')
+        try:
+            sync_day=dt.datetime.fromisoformat(sync_stamp.replace('Z','+00:00')).astimezone(ZoneInfo('Europe/Paris')).date()
+        except (ValueError,AttributeError):
+            sync_day=None
+        local=now.astimezone(ZoneInfo('Europe/Paris'))
+        if os.getenv('GITHUB_EVENT_NAME') == 'schedule' and local.hour < 20 and sync_day is not None and sync_day < local.date():
+            # Un cron du soir démarré après minuit appartient à la veille.
+            # Ne pas retraiter l'ancien relais sous la date du lendemain.
+            now -= dt.timedelta(days=1)
         return cycle_id(state, now)
     return 'daily:' + paris_day(now) + ':schedule'
 

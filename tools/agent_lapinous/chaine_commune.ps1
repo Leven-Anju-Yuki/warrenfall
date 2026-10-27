@@ -52,15 +52,21 @@ function Start-LapinousChain {
         # Demande explicite : publier le travail public avant Cloudinary, sans
         # ajouter de tâche et sans empêcher les traitements en cas d'échec Git.
         try {
-            & python -B (Join-Path $ProjectRoot 'tools\automation\nightly_git.py') --apply
+            & python -B (Join-Path $ProjectRoot 'tools\automation\nightly_git.py') --apply | ForEach-Object { Write-Host $_ }
             if ($LASTEXITCODE -ne 0) { Write-Warning 'Publication Git non aboutie ; Cloudinary et le bilan restent executes. Consulter .cloudinary-local/nightly-git.json.' }
         } catch { Write-Warning 'Publication Git interrompue ; Cloudinary et le bilan restent executes.' }
         $hybridFile=Join-Path $ProjectRoot 'tools\automation\config.json'
         if (Test-Path -LiteralPath $hybridFile) {
             $hybridConfig=Get-Content -LiteralPath $hybridFile -Raw -Encoding UTF8 | ConvertFrom-Json
             if ($hybridConfig.enabled -eq $true) {
-                & python -B (Join-Path $ProjectRoot 'tools\automation\local_bridge.py') run
-                return $LASTEXITCODE
+                $hybridLog=Join-Path $folder ((Get-Date -Format 'yyyy-MM-dd_HHmmss_fff')+'_hybride.log')
+                $previous=$ErrorActionPreference
+                try {
+                    $ErrorActionPreference='Continue'
+                    & python -B (Join-Path $ProjectRoot 'tools\automation\local_bridge.py') run 2>&1 | ForEach-Object { $_.ToString() | Add-Content -LiteralPath $hybridLog -Encoding UTF8; Write-Host $_ }
+                    $bridgeExit=$LASTEXITCODE
+                } finally { $ErrorActionPreference=$previous }
+                return [int]$bridgeExit
             }
         }
         $log=Join-Path $folder ((Get-Date -Format 'yyyy-MM-dd_HHmmss_fff')+'_chaine.log')
