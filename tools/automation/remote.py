@@ -12,7 +12,7 @@ import sys
 import tempfile
 import uuid
 from zoneinfo import ZoneInfo
-from core import plan, apply_trash, paris_day
+from core import plan, apply_trash, paris_day, reconcile_absences
 from state_store import GitHubStore, LockedState, StateError, wait_for_state
 from transports import Cloudinary, send_discord, request
 from reporting import cloudinary_details, bundle, deliver
@@ -164,6 +164,7 @@ def render(state, proposed, errors, details=''):
              '', '## Sauvegardes locales attestées',
              *[f'- {p["payload"]["path"]} — SHA-256 {p["payload"]["hash"]}' for p in state.get('attestations', {}).values()],
              '', '## Opérations persistées / reprises', json.dumps(state.get('operations', {}), ensure_ascii=False, indent=2),
+             '', '## Absences Cloudinary constatées (sans suppression par cette exécution)', json.dumps(state.get('cloudinary_absences', {}), ensure_ascii=False, indent=2),
              '', '## Notifications', json.dumps(state.get('notifications', {}), ensure_ascii=False, indent=2),
              '', '## Trello / Git / documentation', details or 'Non exécuté en simulation.',
              '', '## Erreurs', *errors]
@@ -192,8 +193,12 @@ def cloudinary_stage(locked, key, cloud, now, source):
         elif record.get('public_id') and record.get('url'):
             active_local.extend([record['public_id'], record['url']])
     source += '\n' + '\n'.join(active_local)
+    observed_absent, existence_errors = reconcile_absences(locked, source, key, cloud, now)
+    errors.extend('Cloudinary existence : ' + json.dumps(error, ensure_ascii=False) for error in existence_errors)
     try:
         proposed = plan(state, source, key, now)
+        if observed_absent:
+            proposed['already_absent'] = observed_absent
     except Exception as exc:
         proposed = {'blocked': [{'reason': 'Plan de corbeille invalide : ' + type(exc).__name__}]}
         inventory_ok = False

@@ -136,6 +136,11 @@ def lines(data):
     blocked = {}
     for row in plan.get('blocked', []) + state.get('blocked', []):
         key = row.get('id') or row.get('public_id') or row.get('path')
+        absence = state.get('cloudinary_absences', {}).get(key, {})
+        item = state.get('ledger', {}).get('assets', {}).get(key)
+        if (item and absence.get('status') == 'already_absent' and
+                all(absence.get(k) == item.get(k) for k in ('path', 'public_id', 'url', 'hash'))):
+            continue
         if key not in blocked:
             blocked[key] = {**row, 'reasons': []}
         reason = human(row.get('reason') or row.get('error') or 'Raison non communiquée ; conservation obligatoire.')
@@ -184,6 +189,11 @@ def lines(data):
     result += ['• ' + name(row, state) for row in deleted]
     if not deleted and 'deleted' in plan:
         result += ['Aucune suppression Cloudinary effectuée.']
+    absent = plan.get('already_absent', [])
+    if absent:
+        result += ['', f'**Images déjà absentes de Cloudinary, attente clôturée : {len(absent)}**',
+                   'Absence confirmée par l’API ; aucune suppression effectuée pour ces images. Historique et sauvegardes conservés.']
+        result += ['• ' + name(row, state) for row in absent]
     result += ['', f'**Suppressions bloquées : {len(blocked)}**']
     result += [f'• {label(row, state)} — ' + ' / '.join(row['reasons']) for row in blocked.values()] or ['Aucun blocage signalé.']
     result += ['', f'**Erreurs Cloudinary : {data["cloud_error_count"]}**', *('• ' + error for error in data['cloud_errors'])]

@@ -18,7 +18,7 @@ def cloudinary_details(state, proposed, now):
              'Aucun transfert depuis le PC n’est exécuté par ce bilan distant.',
              'Dernier transfert communiqué (historique, pas une réussite de ce soir) :',
              json.dumps(sync, ensure_ascii=False, indent=2), '', '## Corbeille — suivi des 7 jours']
-    for kind in ('quarantine', 'pending', 'delete', 'deleted', 'restored', 'blocked', 'errors'):
+    for kind in ('quarantine', 'pending', 'delete', 'deleted', 'already_absent', 'restored', 'blocked', 'errors'):
         rows = proposed.get(kind, [])
         lines.append(f'\n### {kind} : {len(rows)}')
         for row in rows:
