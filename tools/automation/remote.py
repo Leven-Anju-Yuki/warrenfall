@@ -222,12 +222,19 @@ def cloudinary_stage(locked, key, cloud, now, source):
             errors.append('Cloudinary corbeille : erreur de script ; reprise nécessaire.')
     # Vérification quotidienne des URL actives, indépendante du traitement corbeille.
     checked = 0
-    for item in state['manifest']['assets'].values():
+    selected_paths = {item.get('path') for item in inventory.get('selected', [])}
+    for path, item in state['manifest']['assets'].items():
         url = item.get('url')
+        # Le manifeste garde aussi les anciens essais et versions abandonnées.
+        # Leur absence de métadonnées n'est pas un échec du jeu actuel. En revanche,
+        # toute entrée sélectionnée ou référencée doit toujours être vérifiée.
+        active = (path in selected_paths or item.get('path') in selected_paths or
+                  any(isinstance(value, str) and value and value in source
+                      for value in (path, item.get('path'), item.get('public_id'), url)))
+        if not active:
+            continue
         if not isinstance(url, str) or not url or not item.get('public_id'):
             errors.append('Cloudinary manifeste : URL ou identité absente — ' + str(item.get('path', '?')))
-            continue
-        if url not in source:
             continue
         checked += 1
         try:
