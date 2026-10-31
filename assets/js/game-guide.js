@@ -140,9 +140,14 @@
   modal.addEventListener('hidden.bs.modal',()=>modal.classList.remove('book-opening'));
   window.addEventListener('lapinous:visibility-changed',render);
   modal.addEventListener('shown.bs.modal', () => { try { localStorage.setItem(seenKey,'1'); } catch {} });
+  let newGamePending=false;
+  window.addEventListener('lapinous:new-game',()=>{
+    newGamePending=true;
+    if(document.getElementById('startupScreen')?.hidden!==false)firstVisit();
+  });
   function firstVisit() {
     let seen=false; try { seen=localStorage.getItem(seenKey)==='1'; } catch {}
-    if (!seen) bootstrap.Modal.getOrCreateInstance(modal).show();
+    if (newGamePending||!seen){newGamePending=false;index=0;render();bootstrap.Modal.getOrCreateInstance(modal).show();}
   }
   window.addEventListener('lapinous:startup-complete',firstVisit,{once:true});
   if(document.getElementById('startupScreen')?.hidden) firstVisit();

@@ -11,6 +11,7 @@ Depuis le 27 octobre 2026, à la demande explicite de Florie, la chaîne Windows
 Documentation actualisée le **25 octobre 2026**. Le suivi repose sur ce README, `A_FAIRE.md` et les correspondances explicites du [Trello du projet](https://trello.com/b/5VmsAFi7/clikergame). GitHub Actions programme les bilans détaillés à 20 h 07 Europe/Paris, été comme hiver ; ses délais de démarrage peuvent décaler l'envoi. Le relais Windows conserve les transferts et sauvegardes d’images, à 20 h locale. **Le signal de fin de synchronisation et la déduplication sont activés après validation humaine**, avec rattrapage réel des trois rapports confirmé le 25 octobre à 22 h 23. Les prochains bilans ne nécessitent pas de confirmation quotidienne. Voir le [diagnostic des horaires et du relais](docs/DIAGNOSTIC_RELAIS_2026-10-25.md).
 
 - [Feuille de route et nouvelles évolutions](A_FAIRE.md)
+- [Textes joueurs, comptage et langues](docs/LANGUES.md) : catalogue français dédupliqué, traductions séparées et chargées à la demande ; préparation sans appel à une API.
 - [Audit SEO et améliorations à prévoir](docs/AUDIT_SEO.md)
 - [Anciennes demandes archivées](docs/archives/a-faire/README.md)
 - [Concepts de futurs lapins](liste%20de%20futur%20cr%C3%A9ation/futur_lapin.md) et [futurs boss](liste%20de%20futur%20cr%C3%A9ation/future_boss.md)
@@ -149,6 +150,23 @@ Mesure du **24 octobre 2026**. Les tailles correspondent à la somme des octets 
 Les fichiers de Git gardent encore l’historique des anciennes images. Les caches, journaux, états privés et secrets sont exclus et ne sont pas parcourus par ce calcul. Les chiffres ci-dessus décrivent le projet comparable ; ils ne prétendent pas mesurer l’occupation totale du disque.
 
 ### Arborescence et poids détaillés
+
+Ajout du 30 octobre 2026, indépendant de l'instantané de poids ci-dessous :
+
+```text
+assets/i18n/                    # Ressources de langues, séparées de la logique du jeu
+├── fr.json                     # Textes joueurs uniques, générés pour préparer les traductions
+├── en.json                     # Anglais : chargé seulement lorsqu'il est choisi
+├── es.json                     # Espagnol
+├── de.json                     # Allemand
+└── ja.json                     # Japonais
+tools/
+├── build-player-texts.mjs       # Générateur et comptage des textes affichés
+├── player-texts.mjs             # Lecture HTML/JS et normalisation partagées
+├── player-text-review.json      # Décisions sur les cas indirects, sans recopier les phrases
+├── test-player-texts.mjs         # Vérification du périmètre et des doublons
+└── test-game-languages.mjs       # Chargement, retour au français et absence d'effet sur les sauvegardes
+```
 
 Chaque fichier et chaque sous-dossier du périmètre comparable est indiqué ci-dessous. Les dossiers vides pèsent zéro octet hors métadonnées du système de fichiers. Les détails des caches, secrets et sauvegardes privées sont omis ; leurs dossiers figurent dans le tableau précédent.
 

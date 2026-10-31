@@ -84,7 +84,26 @@
       levels.forEach((l,i)=>{const size=kind==='rabbit'&&i===1?96:l.size,b=button('',()=>{level=i;hub();});b.append(el('strong',`${['🌱','🌼','🌳'][i]} ${l.name}`),el('span',`${size} cases de large · ${l.colors} couleurs maximum`));b.disabled=kind==='rabbit'&&i===2||kind==='scene'&&i===0;b.setAttribute('aria-pressed',String(level===i));choices.append(b);});if(kind!=='saved'&&kind!=='discovery')panel.append(choices);if(kind==='discovery')panel.append(el('p','Un petit lapin de 12 cases de large, avec seulement 3 couleurs.'));
       const list=el('div',undefined,'coloring-images');panel.append(list);
       const entries=kind==='saved'?Object.keys(storage).flatMap(key=>{const match=key.match(/^(.*):([012])(?::v[23])?$/),image=match&&catalog.find(x=>x.id===match[1]);return image?[{image,difficulty:Number(match[2]),key}]:[];}):catalog.filter(image=>kind==='all'||image.kind===kind).map(image=>({image,difficulty:level,key:`${image.id}:${level}:v3`}));
-      entries.forEach(({image,difficulty,key})=>{const b=button('',()=>start(image,difficulty,key));const frame=el('span',undefined,'coloring-picture');const img=el('img');img.src=imageUrl(image);img.alt='';img.loading='lazy';frame.append(img);b.append(frame,el('strong',image.title));const st=storage[key];b.append(el('small',st?`${progress(st).done}/${progress(st).total} cases coloriées · ${levels[difficulty].name}${key.endsWith(':v3')?'':' · Ancienne grille'}`:'À tes pinceaux !'));list.append(b);});
+      entries.forEach(({image,difficulty,key})=>{
+        const b=button('',()=>start(image,difficulty,key));
+        const st=storage[key],count=st?progress(st):{done:0,total:0};
+        const status=count.total>0&&count.done>=count.total?'complete':count.done>0?'ongoing':'new';
+        const label={complete:'✓ Terminé',ongoing:'En cours',new:'À commencer'}[status];
+        b.classList.add('coloring-card-'+status);
+        const frame=el('span',undefined,'coloring-picture');
+        const img=el('img');img.src=imageUrl(image);img.alt='';img.loading='lazy';
+        frame.append(img,el('span',label,'coloring-card-ribbon'));
+        b.append(frame,el('strong',image.title));
+        b.append(el('small',st?`${count.done}/${count.total} cases coloriées · ${levels[difficulty].name}${key.endsWith(':v3')?'':' · Ancienne grille'}`:'À tes pinceaux !'));
+        if(st){
+          const bar=el('progress',undefined,'coloring-card-progress');
+          bar.max=Math.max(1,count.total);bar.value=count.done;
+          bar.setAttribute('aria-label',`Progression de ${image.title} : ${count.done} sur ${count.total} cases coloriées`);
+          bar.title=`${count.total?Math.round(count.done/count.total*100):0} %`;
+          b.append(bar);
+        }
+        list.append(b);
+      });
       if(!entries.length&&kind==='saved')list.append(el('p','Tes coloriages commencés et tes anciennes grilles apparaîtront ici.'));
       if(!catalog.length)panel.append(el('p','Les images seront disponibles avec le catalogue des puzzles.'));
     }
@@ -137,8 +156,24 @@
       const cell=state.width>=128?16:28;
       const viewport=el('div',undefined,'coloring-viewport'),canvas=el('canvas');canvas.width=state.width*cell;canvas.height=state.height*cell;
       canvas.setAttribute('aria-label','Coloriage numéroté. Choisis une couleur puis une case ; le bouton Colorier une case permet aussi de jouer au clavier.');
-      viewport.append(canvas);const palette=el('aside',undefined,'coloring-palette');palette.setAttribute('aria-label','Palette de couleurs fixe');
-      panel.append(tools,viewport,palette,status);
+      viewport.append(canvas);
+      const sidebar=el('aside',undefined,'coloring-sidebar');sidebar.setAttribute('aria-label','Aperçu et couleurs');
+      const miniature=el('figure',undefined,'coloring-miniature'),miniCanvas=el('canvas'),miniCaption=el('figcaption','Aperçu · 0 %');
+      miniCanvas.width=state.width;miniCanvas.height=state.height;miniCanvas.setAttribute('role','img');
+      miniature.append(miniCanvas,miniCaption);
+      const palette=el('div',undefined,'coloring-palette');palette.setAttribute('aria-label','Palette de couleurs défilante');
+      sidebar.append(miniature,palette);panel.append(tools,viewport,sidebar,status);
+      const initialProgress=progress(state),completedOnOpen=initialProgress.total>0&&initialProgress.done===initialProgress.total;
+      let celebrated=false;
+      const celebration=el('section',undefined,'coloring-finale');celebration.hidden=true;
+      celebration.setAttribute('aria-labelledby','coloringFinaleTitle');
+      const medal=el('span','🏅','coloring-finale-medal');medal.setAttribute('aria-hidden','true');
+      const copy=el('div',undefined,'coloring-finale-copy'),heading=el('h3','Bravo, tableau terminé !');heading.id='coloringFinaleTitle';
+      copy.append(el('small','Toutes les couleurs retrouvées'),heading,el('p',`${image.title} · ${l.name}`));
+      const finaleActions=el('div',undefined,'coloring-finale-actions');
+      const showFinale=button('🏅 Ma réussite',()=>{panel.classList.remove('artwork-only');showFinale.hidden=true;requestAnimationFrame(fit);});showFinale.hidden=true;navigation.append(showFinale);
+      finaleActions.append(button('✨ Admirer mon dessin',()=>{panel.classList.add('artwork-only');showFinale.hidden=false;requestAnimationFrame(fit);}),button('🎨 Choisir un autre dessin',hub),button('🧺 Placard de jeux',back));
+      celebration.append(medal,copy,finaleActions);panel.append(celebration);
       let selected=0,scale=1,minScale=1,x=0,y=0,gesture=null,preview=false;const pointers=new Map();
       const transform=()=>{
         const width=canvas.width*scale,height=canvas.height*scale;
@@ -157,9 +192,26 @@
         if(!gesture)selected=nextColor(state,selected);
         const ctx=canvas.getContext('2d');ctx.font=`${Math.min(11,Math.floor(cell*.48))}px sans-serif`;ctx.textAlign='center';ctx.textBaseline='middle';
         ctx.clearRect(0,0,canvas.width,canvas.height);
+        const mini=miniCanvas.getContext('2d');mini.clearRect(0,0,state.width,state.height);
+        state.targets.forEach((color,i)=>{if(state.background?.[i])return;mini.fillStyle=state.painted[i]?`rgb(${state.colors[color].join(',')})`:'#e6ddcd';mini.fillRect(i%state.width,Math.floor(i/state.width),1,1);});
         state.targets.forEach((color,i)=>{if(state.background?.[i])return;const cx=i%state.width*cell,cy=Math.floor(i/state.width)*cell,filled=preview||state.painted[i];ctx.fillStyle=filled?`rgb(${state.colors[color].join(',')})`:'#fff9ed';ctx.fillRect(cx,cy,cell,cell);ctx.strokeStyle=!filled&&color===selected?'#715532':'#cfc5b5';ctx.lineWidth=!filled&&color===selected?2:0.5;if(!filled)ctx.strokeRect(cx+.5,cy+.5,cell-1,cell-1);if(!filled){ctx.fillStyle='#493a2b';ctx.fillText(color+1,cx+cell/2,cy+cell/2);}});
         const {done,total}=progress(state);status.textContent=done===total?'🎉 Toutes les couleurs sont retrouvées !':`${done}/${total} cases · Couleur ${selected+1} sélectionnée`;
+        miniCaption.textContent=`Aperçu · ${total?Math.round(done/total*100):0} %`;
+        miniCanvas.setAttribute('aria-label',`Aperçu du coloriage : ${done} cases coloriées sur ${total}`);
         if(preview)status.textContent='👁 Aperçu admin du tableau terminé · Ta progression est conservée.';
+        const finished=!preview&&(!gesture||celebrated||completedOnOpen)&&total>0&&done===total;
+        const wasFinished=panel.classList.contains('is-complete');
+        panel.classList.toggle('is-complete',finished);celebration.hidden=!finished;
+        if(finished&&!wasFinished){
+          copy.querySelector('small').textContent=`${done} cases coloriées · Tableau terminé`;
+          requestAnimationFrame(fit);
+          if(!celebrated&&!completedOnOpen){
+            celebrated=true;celebration.setAttribute('aria-live','polite');
+            const sparks=el('div',undefined,'coloring-celebration-sparks');sparks.setAttribute('aria-hidden','true');
+            for(let i=0;i<18;i++){const spark=el('span',i%3===0?'✦':'●');spark.style.setProperty('--spark-x',`${8+(i*29)%85}%`);spark.style.setProperty('--spark-delay',`${i*.055}s`);spark.style.setProperty('--spark-color',['#cf9e48','#aa6d8e','#7c9561'][i%3]);sparks.append(spark);}
+            viewport.append(sparks);setTimeout(()=>sparks.remove(),3500);
+          }
+        }
         palette.querySelectorAll('[data-color]').forEach(b=>{const c=Number(b.dataset.color),left=state.targets.reduce((n,v,i)=>n+(!state.background?.[i]&&v===c&&!state.painted[i]?1:0),0);b.hidden=!state.targets.some((v,i)=>v===c&&!state.background?.[i]);b.setAttribute('aria-pressed',String(c===selected));b.setAttribute('aria-label',`Couleur ${c+1}, ${left} cases restantes`);b.textContent=`${c+1}${left===0?' ✓':''}`;});
         if(previousColor!==selected){
           const chosen=palette.querySelector(`[data-color="${selected}"]`);

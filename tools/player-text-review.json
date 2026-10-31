@@ -1,0 +1,796 @@
+{
+  "version": 1,
+  "method": "Decisions manuelles indexees par fichier et empreinte de chaine, sans recopier les textes. Un nouveau texte demande une nouvelle verification.",
+  "decisions": {
+    "assets/js/image-assets.js:d96cdf6b2af72cafeb4130ea0259d11c700387604fb847b6a4e2d1c91fab9adf": {
+      "visible": false,
+      "line": 3,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/plant-sheets.js:9670906a9575046cb4807ff4e8209ca00f0dfb5f8a932483d5c07c724ab10a1c": {
+      "visible": false,
+      "line": 7,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/plant-sheets.js:b372e411dd9ab7fa26e63868c4c0f3b3dbd0e066db9fb3db6def7401b92909a6": {
+      "visible": false,
+      "line": 8,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/startup.js:d96cdf6b2af72cafeb4130ea0259d11c700387604fb847b6a4e2d1c91fab9adf": {
+      "visible": false,
+      "line": 2,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/startup.js:fce63bfb9ebaba3d69fc9c9c02547367b47bcc63b3d99e8afdf4b7e429ce4368": {
+      "visible": false,
+      "line": 13,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/startup.js:9f4d9a9ce7fd2cde8a8f2cec50ae8090b54212448f39cff0c7b8f074be2fccad": {
+      "visible": false,
+      "line": 70,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/local-files.js:d96cdf6b2af72cafeb4130ea0259d11c700387604fb847b6a4e2d1c91fab9adf": {
+      "visible": false,
+      "line": 2,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/local-files.js:8378dba472472f95000285ed34aeb98b2f2ebbe472b4a62119f13b0439392c23": {
+      "visible": false,
+      "line": 19,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/local-files.js:de24601a91b96dc9456214315a3de5f2b0d2712fc9ff0256223eadb63a92eebb": {
+      "visible": false,
+      "line": 43,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/local-files.js:0ecd6eaf1b92cacf0a988250c717e4b90649feb0e7367d1e952939fd5a9ed046": {
+      "visible": false,
+      "line": 43,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/species-data.js:7fc6a255d3ff1ba00cb154ead0fde130551eae242ca7790e2c40d516f4855058": {
+      "visible": false,
+      "line": 181,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/species-data.js:94abc0991ca6a544da231a07d5571f068dece69f084a32e4a07efce8f939d0ec": {
+      "visible": false,
+      "line": 181,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/species-data.js:8a86c95dd66aef786cf6fd9489192c5fe5f02475a643471730feb97d43802ed8": {
+      "visible": false,
+      "line": 181,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/species-data.js:76613c769554a8540799047fec3af42fc082e5cfcdef3ec8a05ff817b1251d93": {
+      "visible": false,
+      "line": 181,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/species-data.js:0f124c3e893c712e8bdeb7a691800f5b8150edd1b3e0ecc1bc5ac9b9cd26fe88": {
+      "visible": false,
+      "line": 181,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/species-data.js:81b29b88cf51099414690801827531103471584004f6a321c6106d7084ff34bc": {
+      "visible": false,
+      "line": 181,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/species-data.js:f25e930f3d051375e4ec07593ad1e1173b3ca458ba9f36f9831c7fb7fa5b540b": {
+      "visible": false,
+      "line": 181,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/species-data.js:845aa26e748ac1d0d88c7db1272a1fbdb29201fe0e9588fb321ede742e39a82f": {
+      "visible": false,
+      "line": 181,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/species-data.js:f44ee8f093ef54845dc25758d1bacef25ff6862840500e84581fe44e76f7efdf": {
+      "visible": false,
+      "line": 181,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/pixel-coloring.js:0e093f1ce51a00ba5822cf8cbc1e92245e79d970321bc570d7461d135746ed04": {
+      "visible": true,
+      "line": 97,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/pixel-coloring.js:fdcad2655399d50499d9fcd8229ac52350e1215fe89a14e77806457ad7c21f88": {
+      "visible": false,
+      "line": 152,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/pixel-coloring.js:420acc9f0d1293f0ee7ad6f201ae61316cad1f7c027a7dc24cac0169277c960e": {
+      "visible": false,
+      "line": 158,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/pixel-coloring.js:e68e993901ef0a0205094febd65ab5455e530fbd8382997e31b99e0d4928fc9a": {
+      "visible": false,
+      "line": 160,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/pixel-coloring.js:a0b6ead013ec8f7753510d8d48c726d39fc180eeb96e2eccb6933541afc2f3d7": {
+      "visible": false,
+      "line": 164,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/pixel-coloring.js:a79110bad26b3e24fb33426cb5c963327cb215630668953c109192f4907d8c07": {
+      "visible": false,
+      "line": 189,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/shop.js:c1a3dd83f689ec6eab6677a6ab2b56a04170756570fca462f81b9f50f0393142": {
+      "visible": true,
+      "line": 56,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/shop.js:01ca669c21caafd5522236f9be0a78a6cd78816f90e32b17b1c6ab14bb649308": {
+      "visible": false,
+      "line": 96,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/shop.js:8c113d74d2222da1f4d2580281660745c17ae40893055d70ee2da39e6103e42d": {
+      "visible": false,
+      "line": 99,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/shop.js:e332e31dfc8817f27f5fa0dcab19bac55dd2407c4fd841fc79adc13f1bba5f5a": {
+      "visible": false,
+      "line": 113,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/shop.js:11e10e87f0a81afe39b34bcbc127a3e09d1bf00549c3a6635fad5a63c24a3a32": {
+      "visible": false,
+      "line": 121,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/shop.js:48358590f0207064d7bc7292f354b81154a8ecd31da515ceefd6763b61f52f0f": {
+      "visible": false,
+      "line": 131,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/shop.js:350f478aac5c02c25b4c311202b580eeeb0f5a10caafbe96329c0d23914119dc": {
+      "visible": false,
+      "line": 131,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/shop.js:7ef820d605146aa08848120ad86510ec2917927530df1663517ce34300f80d8b": {
+      "visible": false,
+      "line": 144,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/shop.js:627c4409744923f7ee166589fe3e347b50d7fa980cee090193a55ec7b59c46a1": {
+      "visible": false,
+      "line": 144,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/shop.js:de12b2cbc57a2771cfd99a6acc597528a03f9c2a56976b424066f845dd354aaf": {
+      "visible": false,
+      "line": 144,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/shop.js:fce63bfb9ebaba3d69fc9c9c02547367b47bcc63b3d99e8afdf4b7e429ce4368": {
+      "visible": false,
+      "line": 533,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/shop.js:0ad61fd5bb371ff2c892c883469769d0c048c019e8eeb6161bfa17076bb20ab9": {
+      "visible": false,
+      "line": 346,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/shop.js:9d195d0d240ecc6bd3d3bea81f4d0f617a1e79b59f19da1f04accd6c046512a2": {
+      "visible": false,
+      "line": 346,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/shop.js:9bdf5d6200ee560ae749cce2e300176f1b3c240ad77f4fad6376a4d90b40c858": {
+      "visible": true,
+      "line": 370,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/shop.js:9341abaebd0d4c76f45a199421ba2000dab2361a36e56f8d9678aa847ebdb423": {
+      "visible": true,
+      "line": 395,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/shop.js:b270052ba8c7c7b993bce32cce2c5f277c3049cd2a31a82305c176016745ac3c": {
+      "visible": true,
+      "line": 395,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/shop.js:aaa8ed388ba9def1b4fc76a393d66a523e72c82ea6091b7b1cc4f97b28b1669a": {
+      "visible": true,
+      "line": 402,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/shop.js:8d6c26ce32530bd62f11f5f5ad104525fc2862fb394a24fe3d979688c2ee1217": {
+      "visible": true,
+      "line": 402,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/shop.js:d205d2212b2ce16862115387194bd9f5dfe0c4a0bf6a33a94d1420988b76575f": {
+      "visible": true,
+      "line": 402,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/shop.js:7cad6626fb5ef80a3ee0f9be48c8c619cbddebfde7f440fed8c1ddbbec7be2b3": {
+      "visible": false,
+      "line": 420,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/shop.js:1af00775d79838816dc4a62db1c77d46c1d0737e973764b3163bfc7d17436811": {
+      "visible": false,
+      "line": 427,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/shop.js:bbeb679f76b589c08da8a2ebd28c3dbd0cd5d36a4358038aa0250a9e96cf265f": {
+      "visible": true,
+      "line": 437,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/shop.js:f8f688db799926fd26629e148ee0fedb2a7770992db0b56006cf1ccca9f727ef": {
+      "visible": true,
+      "line": 438,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/shop.js:909343e78c506b452e1ec7c5f8737d2fb138fd407631978b29092168057241d8": {
+      "visible": true,
+      "line": 439,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/shop.js:d39a502fa8a10df50f3557bf1d786f879604e867a1b36743eec15415d9f9655a": {
+      "visible": false,
+      "line": 462,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/shop.js:d05d6945ae116a976e4f920cd9e56e44f4615f96d875334b9d81527616f894a2": {
+      "visible": true,
+      "line": 490,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/shop.js:3665bad26aa4960e2d4f5a6e98d213b4c28dd2ad644b259a93d642618fbf8ada": {
+      "visible": false,
+      "line": 491,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/shop.js:c63e6ca186d6b1e68d67a8771d67d66677b5b76c2b8576d2680f58fe7cb10528": {
+      "visible": true,
+      "line": 509,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/shop.js:daaeb923f52b470cec1af86681dfb031cb410bfa8525cb9a71badf5548f85db1": {
+      "visible": false,
+      "line": 538,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/shop.js:4bdbf7e0f9d1d24dd8662c1ed5cc3a9f352f30a68813569decc2d14c73cd1335": {
+      "visible": false,
+      "line": 538,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/shop.js:4dd69f2bc230d7e351f800d47901a2073c52be464f90b41cb22858909a4b8848": {
+      "visible": false,
+      "line": 538,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/shop.js:7e58a7dbddd8c5aecd40df7687ac49a48322729e18f4768f1f7c0a32ca5806ea": {
+      "visible": false,
+      "line": 554,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/quiz.js:5ad0f077c3cc6294a4cd49f027a445c0b56c0c284739d9ae82b4e4199a52eb9c": {
+      "visible": true,
+      "line": 24,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/quiz.js:13bb864b3547ca70fc1c29e50ce530b333e1be5675f5127f93d7c9cd21ac8981": {
+      "visible": true,
+      "line": 47,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/quiz.js:c98b1b7ee4f29bef2efdfb6196772a60513111e6e93b980974502ffb90d16ac6": {
+      "visible": false,
+      "line": 49,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/pantry.js:8c12bfe86ec676a5262110294c9e18f406e1daede436fc45b8fcba25a3e92dd4": {
+      "visible": false,
+      "line": 7,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/pantry.js:5c0078fdfbfcea962cf727e661a76db1f43ed018baddd9d6d93d5ea481530d3c": {
+      "visible": false,
+      "line": 13,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/pantry.js:2d709c5394fd790c04aeaa7d638921ef73cd28b2ea637fe3d9fe8f4a806cc705": {
+      "visible": false,
+      "line": 16,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/pantry.js:fce63bfb9ebaba3d69fc9c9c02547367b47bcc63b3d99e8afdf4b7e429ce4368": {
+      "visible": false,
+      "line": 136,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/pantry.js:dcc2c71bbb949d3d330811898e5c263169872b33527ff309186006b310ff5ba2": {
+      "visible": false,
+      "line": 63,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/pantry.js:df989e74496c7341c6e10ec086324ff3b04a5c0fa78537766d09a31d27a24694": {
+      "visible": false,
+      "line": 123,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/scene-preload.js:9f4d9a9ce7fd2cde8a8f2cec50ae8090b54212448f39cff0c7b8f074be2fccad": {
+      "visible": false,
+      "line": 7,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/exploration.js:7c70f1bbbd78419fa8ffbab8020dc70b3e2fa0c3a7b82323e29eea31af8f8e9a": {
+      "visible": true,
+      "line": 56,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/exploration.js:fce63bfb9ebaba3d69fc9c9c02547367b47bcc63b3d99e8afdf4b7e429ce4368": {
+      "visible": false,
+      "line": 68,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/exploration.js:eb1802c0f9db9fb6b0d83a64a90aeffe5c16e456400e5653b8dfe3ddfb3d5440": {
+      "visible": true,
+      "line": 86,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/exploration.js:2269c1f5e6d32a109ea6e249cd3904224cc3005acd783d09341025621453b0ae": {
+      "visible": true,
+      "line": 86,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/exploration.js:71d0bad42af1144fec4d19620d2d5e12cae2fd451b398967eba200724984a1da": {
+      "visible": true,
+      "line": 87,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/exploration.js:1879ca3d86f3d69eaba27ef696f3d4afab0a6e00621558484a6548cb9b479fd2": {
+      "visible": true,
+      "line": 99,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:9d7aa8e803325d5e0222b5b82e748b0c349a2cca29a626dfdc8f13df2013dbd2": {
+      "visible": false,
+      "line": 187,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:3ed122ecf93d63a61aa42fd3b877f9d54fad741fdc0a2bbd48e2c33fc13e77f2": {
+      "visible": false,
+      "line": 200,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:7ddc52a75aff0383c12ebe39d7a169c81bb5ede2a66b91d50861564cd448cd3b": {
+      "visible": true,
+      "line": 248,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:5aa469940029b25d46593d5156a6599e580c7d767ff3926c3696e7c7b361cad1": {
+      "visible": false,
+      "line": 267,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:2306e176bd3c4537b4450328528c0b923d4101bedf82cac75def04d4a9ec5116": {
+      "visible": true,
+      "line": 269,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:0375ef201c34b61cc13b33f64df8bdf7da4cc0f21122c58c244dd683e09a226b": {
+      "visible": true,
+      "line": 270,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:1a0d80637738e42378d1a8dc38c12cae14636c45c0c8823d9d613f61cd0bac6f": {
+      "visible": true,
+      "line": 715,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:8f699e616adbf8bf230429cf24559630e79854538429f3ea2ed1adeeb2fc438c": {
+      "visible": false,
+      "line": 826,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:6a961f3fe59847f6b8e835d5780977727c4e55fb82c27eceddd67e26f3e4a29b": {
+      "visible": false,
+      "line": 829,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:7a7cde38461b27bb84596289ce09d2aa86c5cb2177ecaaf08600feb6109d3394": {
+      "visible": false,
+      "line": 830,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:6ff68e42e92c2778996c68507ce8fc3051f978137d42f9196da474fa82b00953": {
+      "visible": true,
+      "line": 1034,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:5c9c152ef2ba838f0c5c7daa560cc34336c6bb19fb73ad09573b65a42ffd4420": {
+      "visible": false,
+      "line": 1201,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:f0c664b2550927039e4060e4eed563a0e403eecb953d8d0c50cdfade6e7bd04a": {
+      "visible": true,
+      "line": 1227,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:619c489106576ed0c0a82dfb5f47536ee61793199a795bc4eaddd4cbe9d79fc1": {
+      "visible": true,
+      "line": 1227,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:0b058a92a5a306098ed57480783e2b9cfc19ee7d8bca95f46f709b61ff6eac93": {
+      "visible": false,
+      "line": 1339,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:6e38c780184d2720bbe7f75b3caa8e8730a7533780350b5f69bc1a30e022875c": {
+      "visible": false,
+      "line": 1316,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:dccc52506e48773d6ad7c130f6480125d2be92809dc65425f59ecadbda041205": {
+      "visible": false,
+      "line": 1316,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:d8991f4c9b03c68c58a885c34c3ea83a7e8298f635a97b55482ccc6cc0fe05ed": {
+      "visible": true,
+      "line": 1487,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:9bb916067cfc6d5885e85d2fe3560a9118e7152f614cbfd6ba494f29046f2838": {
+      "visible": true,
+      "line": 1489,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:115d0213d03d773678f4d77513189ef14b541e819c331293d6f49ad3fc155bb4": {
+      "visible": true,
+      "line": 1493,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:68b3eded53294156eca3d9d6ec13831f7272589b4f93e31b969c1b28d328a1d3": {
+      "visible": true,
+      "line": 1522,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:83475157e98cb6516d190d6e64085d670662ead08de75e5e5c907c68459963b7": {
+      "visible": false,
+      "line": 2109,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:13dc66b3e7bd6cc3c361ffa6dfc8242214d64185776cbfbd564426fda6b6d5ac": {
+      "visible": false,
+      "line": 2109,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:d999e4f04858077e53496156d9a81c2b2e864e83f7ae9c3b34f3e54b64191589": {
+      "visible": true,
+      "line": 2112,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:d609acecbbea3a6edb5340086e45ad5a92f07177a2a15caed4b66028a0e7bbf4": {
+      "visible": false,
+      "line": 2134,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:854c3975e1ede1700eaedc1a10bd34574e12e4bc955811ca1596ae2216c5eb7a": {
+      "visible": false,
+      "line": 2157,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:8d212dd7c7317b2f828a75d682b39407f0400e0201faa4061db35fa5725e2b12": {
+      "visible": true,
+      "line": 2533,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:84921466049a9a8364be82c52badb82b512fb25ea93a6dd847ead4cd494ccd1d": {
+      "visible": false,
+      "line": 2589,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:fb824d6364b9b160252f8fa95fb854641f9acb1eceb23c1a44f72083bd06c92b": {
+      "visible": true,
+      "line": 4944,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:abcbb6b57d5783295c97a46cc6af8fad4245d7788b8a6056975b10aa683c96c9": {
+      "visible": false,
+      "line": 2898,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:a01887ba0681184838499bd1a797889ccde7423f132cfb4226621e7e47787fc1": {
+      "visible": false,
+      "line": 2898,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:fce63bfb9ebaba3d69fc9c9c02547367b47bcc63b3d99e8afdf4b7e429ce4368": {
+      "visible": false,
+      "line": 2903,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:81d9ae6418f82827f0498d3cfc197c0ad6b824e663b35551ffd69f4ff16b0bd9": {
+      "visible": false,
+      "line": 2925,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:9406453702eaf682fe1bcbd46571730800b924775df22cd39a7141a249557c33": {
+      "visible": false,
+      "line": 3010,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:c8bc3993587cfd4b7012ce22f5e36e94ca676e4fea41f847ef02efc879ce097a": {
+      "visible": false,
+      "line": 3010,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:c4bc0040352c150c562ca463092317573a1f27a6e62e45fbd357806c1c758039": {
+      "visible": false,
+      "line": 3073,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:d1e4a7f2d1d63b0813ff7430571d7e8b5239e3c12bcb5278bc6833e45255d31d": {
+      "visible": false,
+      "line": 3073,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:d3206e509b6cdbea200ed9727f209611fdec4d428530a25aeb7c7e9a6cfab37a": {
+      "visible": false,
+      "line": 3095,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:5afd5884c5ed455280b28f44eb43aa6a6998332a4aaed64dd2916222265212c5": {
+      "visible": false,
+      "line": 3095,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:152ac9f0cfcc7d06fa928c8bd69fafc2fdc89109ab303602d8dad7d52174447a": {
+      "visible": false,
+      "line": 3250,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:908d266440698194c65563b60c46a8d10212e82b6df3d26afc0d2d7903352cf6": {
+      "visible": false,
+      "line": 3250,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:9e0dd032a28c0d962fff624782033ef777abd71329090886c59872f5b15732d1": {
+      "visible": true,
+      "line": 3306,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:ab3acf605a507df58624f6689fc4b7d463918f066fd48459545fa5bacb9ed15c": {
+      "visible": true,
+      "line": 3306,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:a0bf3a52cf61b9668215ef58def876e7d0ef0f3db34053a5d820cf12d7a3d76f": {
+      "visible": true,
+      "line": 3433,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:fc7572949097f341aeef8e270604fc165628358408bcb3e194899893a54f0ef9": {
+      "visible": false,
+      "line": 3481,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:cd20bcf4832c465b771274a99f3bffc2507f399c16136a610eca718bf891ca3e": {
+      "visible": true,
+      "line": 3672,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:763be295b4a365fd314a1b86b63c44978edea2c84a49bb215243b9bdb0cd0520": {
+      "visible": true,
+      "line": 3791,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:b08f8ba8480c95e98463ef9edaa8516579e2f59758c9a45ac077dfd380a8e4e3": {
+      "visible": false,
+      "line": 3811,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:6634643e176efb3448652927ec19016bc0a6d7c272502fab5b5b52d5aac964d5": {
+      "visible": false,
+      "line": 3821,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:02c941444d58e0c7f09b389951df45285999cc310a3828c160dc56eb53df3b21": {
+      "visible": false,
+      "line": 3822,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:e72544668cc969995fc02dd7b2d2a38d4219e0b3d968c686ba58d9abe7dd9b4f": {
+      "visible": false,
+      "line": 3829,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:eac6d9831983f5d03ccdeceab435790dfac08f7d184f735c4199beea273f8ba9": {
+      "visible": false,
+      "line": 3830,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:97801d20671a6235ca8f3db834a776f9b2b1092c7c87e0f1b413c501574f9b85": {
+      "visible": false,
+      "line": 3841,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:5e9a1c9b1763b9793c3729f6e9eee9756058b32a36d7f544dc2e77e4b37c8f9e": {
+      "visible": true,
+      "line": 4048,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:728907489bca5b95b0bbc04715fcfdfba3362a45fcdc7fe5826c6db86b665070": {
+      "visible": false,
+      "line": 4126,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:1da7dde8319803083f75590260d358ba0ea8be6fe3ad67dbc1ad0707d0e5e753": {
+      "visible": false,
+      "line": 4174,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:932cd465c9cc7949c57cdeb910a98df734c8f2e1b83ff0e618dc6343609e6d67": {
+      "visible": true,
+      "line": 4363,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:9912422f44e13bf9ef48c173c9e16b7e690cea4aa0dcef22a2183d432ad8666c": {
+      "visible": true,
+      "line": 4531,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:ccfa2289e0f35cb5e9e9460d094895e1044a13da519bb83fb7ab81d9d326f5f7": {
+      "visible": false,
+      "line": 4692,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:24b3167c5e72e8e255134beeea327fcf6599663f070b34b5d48d8321d46ab3db": {
+      "visible": false,
+      "line": 5117,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:d835d6aefe23ac3730ceb19c3a23c6391f886ce16ba3a82873d9ead9557f8146": {
+      "visible": true,
+      "line": 5170,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/script.js:9802cd43371b14f2a595c041cc7a7bc74428c084e08c31ca3663e7a26ac8908d": {
+      "visible": false,
+      "line": 5223,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/script.js:05c2f201cf5670aa95e13df69ba4b6721c57d2b5e0d70ad834ba87b5249ae175": {
+      "visible": false,
+      "line": 5230,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/installer.js:d96cdf6b2af72cafeb4130ea0259d11c700387604fb847b6a4e2d1c91fab9adf": {
+      "visible": false,
+      "line": 3,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/installer.js:e8b2975a7711f7c1ff03200e20ad0904ebd0025404bdea012d96edf5b5361d9f": {
+      "visible": false,
+      "line": 55,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/installer.js:82a85aa22a9861d409c92262bf89bc655d62c4bb4783f40c82de6645e6888c0c": {
+      "visible": false,
+      "line": 81,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/installer.js:a2ab274d119eb8024faeae762edd64cf6d42da9606ab8c41848f61ab201d1432": {
+      "visible": false,
+      "line": 81,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/installer.js:04a3296f6c1b27c267c3122468b80f7e7af8dc0b689446f449c4259c67c22bc5": {
+      "visible": false,
+      "line": 81,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/mobile-ui.js:a316ed40ec1d107171e00dc12514f25299a253fc336d8435e32d5bda801d6e1d": {
+      "visible": false,
+      "line": 15,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/mobile-ui.js:72eff79352b8799ed4db01b199d9c9163ee42f98a92b5914e093d61d0194bd01": {
+      "visible": false,
+      "line": 75,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/connection-notice.js:51b4710ab3a6e422ea6dc8e17b7271095f277fef5ed7f347a9219eb30ef31f5a": {
+      "visible": false,
+      "line": 4,
+      "reason": "Chemin, code, console, configuration admin ou attribut uniquement accessible : hors texte visible."
+    },
+    "assets/js/game-guide.js:d954793b30869e9bda9e9e99eb41146675f2b8d9d5630696b2deb8e9de455d3c": {
+      "visible": true,
+      "line": 119,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/game-guide.js:7dc4836501ac2477456a17ade108087b5d7608b8196535ebe6a25f2aad8b64a3": {
+      "visible": true,
+      "line": 119,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/game-guide.js:addece23cddc195bf804e3dfcde6ace5a14e427eb1f605815f46b4b9ef046b7a": {
+      "visible": true,
+      "line": 119,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/game-guide.js:4b465a119a2899d2e3ccec31975bc0d77694c7ae2a0729fd823b4216343d7fa2": {
+      "visible": true,
+      "line": 120,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/game-guide.js:a30d540c536f9c2b8340e2d6b5cadf416b43ec26e165b4564b0bbb20982a6684": {
+      "visible": true,
+      "line": 120,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/game-guide.js:2c9cb1f055fa48bab662388eb382491161a907f50906ddae764c6cf2401e434a": {
+      "visible": true,
+      "line": 120,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/game-guide.js:6ff68e42e92c2778996c68507ce8fc3051f978137d42f9196da474fa82b00953": {
+      "visible": true,
+      "line": 120,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/game-guide.js:a9858bf6a9f9c9e6dd78a73f21c7e44606de8fd0d346dc4ae56bdb42e52b59c1": {
+      "visible": true,
+      "line": 121,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/game-guide.js:6f9c51881b7ea13f9545c58a1a66e67dec9e62e4b9532317f8aee5e5fbd3c1b4": {
+      "visible": true,
+      "line": 123,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/game-guide.js:8e5374593d2bf069b8e014358ea79f9fba91a98a89f76e66062a2099b3b824a5": {
+      "visible": true,
+      "line": 123,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/game-guide.js:df7c6bb3446b7e80c6ce61e1606784edf00d6ee27ca40f754ce933e3d16137c2": {
+      "visible": true,
+      "line": 123,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/game-guide.js:63c94aa4649546121de52db116c5c69131caed46689ed7cc426e4aa2bfaf9fba": {
+      "visible": true,
+      "line": 123,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/game-guide.js:79ef558fe25f8b40a3290f44718d4a1f3247da5e613ad4f95a4b5f1bb31f38e1": {
+      "visible": true,
+      "line": 124,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    },
+    "assets/js/game-guide.js:c58f2aefb46cddfe12f7b849f927b246b25d846f6a3a309f3e2f092b70e154ed": {
+      "visible": true,
+      "line": 124,
+      "reason": "Texte rendu dans le parcours joueur, confirme par lecture du composant."
+    }
+  }
+}

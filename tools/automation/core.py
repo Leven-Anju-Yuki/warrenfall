@@ -61,6 +61,10 @@ def plan(state, references, key, now):
             if queued:
                 result['restored'].append(base)
             continue
+        absence = state.get('cloudinary_absences', {}).get(pid, {})
+        if (not queued and absence.get('status') == 'already_absent' and
+                all(absence.get(k) == item.get(k) for k in ('path', 'public_id', 'url', 'hash'))):
+            continue  # Version déjà absente : historique conservé, pas de nouvelle quarantaine.
         if not confirmed(item, state.get('attestations', {}).get(pid), key):
             result['blocked'].append({**base, 'reason': 'Sauvegarde exacte non attestée ; conservation obligatoire'})
             continue
@@ -83,6 +87,42 @@ def plan(state, references, key, now):
     return result
 
 
+def reconcile_absences(locked, references, key, cloud, now):
+    """Lecture API uniquement ; aucun DELETE, même sans attestation de sauvegarde."""
+    state = locked.data
+    initial = plan(state, references, key, now)
+    candidates = {row['id'] for group in ('blocked', 'quarantine', 'pending')
+                  for row in initial[group] if row.get('id')}
+    candidates.update(state.get('cloudinary_absences', {}))
+    absent, errors = [], []
+    for pid in sorted(candidates):
+        item = state['ledger']['assets'].get(pid)
+        if (not item or not valid_path(item.get('path', '')) or
+                not pid.startswith('lapinous/') or item.get('public_id') != pid or
+                pid in references or (item.get('url') and item['url'] in references)):
+            continue
+        try:
+            remote = cloud.get(pid)
+        except Exception:
+            errors.append({'id': pid, 'error': 'Vérification d’existence indisponible ; état conservé'})
+            continue
+        previous = state.get('cloudinary_absences', {}).get(pid)
+        if remote is None:
+            first = not previous or previous.get('status') != 'already_absent' or any(previous.get(k) != item.get(k) for k in ('path', 'public_id', 'url', 'hash'))
+            queued = state['quarantine']['items'].get(pid, {})
+            record = {**item, 'status': 'already_absent', 'observed_at': now.isoformat(),
+                      'since': queued.get('since') or (previous or {}).get('since')}
+            state.setdefault('cloudinary_absences', {})[pid] = record
+            state['quarantine']['items'].pop(pid, None)
+            locked.save()
+            if first:
+                absent.append({'id': pid, 'path': item['path'], 'observed_at': record['observed_at']})
+        elif previous and previous.get('status') == 'already_absent':
+            state['cloudinary_absences'][pid] = {**previous, 'status': 'present_again', 'reappeared_at': now.isoformat()}
+            locked.save()
+    return absent, errors
+
+
 def apply_trash(locked, proposed, cloud):
     """Journal durable AVANT DELETE ; absence après crash conciliée, pas de second DELETE."""
     state = locked.data
@@ -102,7 +142,15 @@ def apply_trash(locked, proposed, cloud):
             remote = cloud.get(pid)
             if remote is None:
                 if not op or op.get('status') not in ('intent', 'done'):
-                    raise ValueError('Image absente sans suppression journalisée : contrôle requis')
+                    # Un 404 authentifié n'est pas une preuve d'un DELETE de cet agent.
+                    # Conserver historique et attestation, retirer seulement l'attente devenue sans objet.
+                    record = {**item, 'status': 'already_absent', 'since': row['since'],
+                              'observed_at': dt.datetime.now(UTC).isoformat()}
+                    state.setdefault('cloudinary_absences', {})[pid] = record
+                    state['quarantine']['items'].pop(pid, None)
+                    locked.save()
+                    proposed.setdefault('already_absent', []).append({**row, 'observed_at': record['observed_at']})
+                    continue
             else:
                 if (remote.get('public_id') != pid or remote.get('secure_url') != item['url'] or
                         remote.get('resource_type') != 'image' or remote.get('type') != 'upload'):
@@ -122,6 +170,7 @@ def apply_trash(locked, proposed, cloud):
             errors.append({'id': pid, 'error': str(exc)})
             # Une erreur de stockage peut laisser le DELETE déjà effectué : arrêter,
             # conserver le verrou si sa réconciliation n'est pas persistable.
-            if exc.__class__.__name__ == 'StateError':
+            from state_store import StateError
+            if isinstance(exc, StateError):
                 raise
     return deleted, errors

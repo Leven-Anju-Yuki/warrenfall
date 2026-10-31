@@ -1,6 +1,6 @@
 /* Les caches sont propres à ce projet, y compris sur un domaine GitHub Pages partagé. */
 const PREFIX = 'lapinous-' + new URL(self.registration.scope).pathname + '-';
-const SHELL = PREFIX + 'shell-v64', IMAGES = PREFIX + 'images-v1';
+const SHELL = PREFIX + 'shell-v70', IMAGES = PREFIX + 'images-v1';
 const HOME = new URL('index.html', self.registration.scope).href;
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
@@ -25,7 +25,7 @@ self.addEventListener('fetch', event => {
   const image = event.request.destination === 'image' && (url.hostname === 'res.cloudinary.com' || (url.origin === self.location.origin && (url.pathname.startsWith(new URL('assets/img/Ouverture_du_jeu/', self.registration.scope).pathname) || /^Zone_(?:cuisine|Chambre|SdB|jardin)\//.test(url.pathname.slice(new URL('assets/img/', self.registration.scope).pathname.length)))));
   const local = url.origin === self.location.origin && url.href.startsWith(self.registration.scope);
   const relative = url.pathname.slice(new URL(self.registration.scope).pathname.length);
-  const allowed = local && (relative === '' || relative === 'index.html' || /^assets\/(?:js|css|icons|fonts)\//.test(relative) || /^lapinous-(?:content|shop|puzzles|quiz)\.json$/.test(relative));
+  const allowed = local && (relative === '' || relative === 'index.html' || /^assets\/(?:js|css|icons|fonts)\//.test(relative) || /^assets\/i18n\/(?:en|es|de|ja)\.json$/.test(relative) || /^lapinous-(?:content|shop|puzzles|quiz)\.json$/.test(relative));
   const navigation = local && event.request.mode === 'navigate' && relative !== 'dashboard.html' && !relative.startsWith('assets/') && !relative.startsWith('.') && !relative.includes('Sauvegardes');
   if (!allowed && !image && !navigation) return;
   event.respondWith((async () => {

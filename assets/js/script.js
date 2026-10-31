@@ -1143,7 +1143,7 @@ document.addEventListener("DOMContentLoaded", () => {
             game.ownedSpecies = [game.species];
             game.speciesTraits = { [game.species]: game.trait };
             startGameUI();
-            autoSave();
+            if(autoSave())window.dispatchEvent(new Event('lapinous:new-game'));
             spawnParticles("🎉", 8);
             if (welcomeEgg) showToast("Un œuf de bienvenue t’attend dans Œufs ! Le livre explique tes premiers pas.", "success");
         });
@@ -1618,75 +1618,11 @@ document.addEventListener("DOMContentLoaded", () => {
             refreshCurrentZone();
         };
 
-        // Chaque compagnon dispose d'une zone propre, avec un léger décalage naturel.
+        // Le fond et les zones des meubles partagent leur geometrie reelle.
+        let salonBackdrop = {width:1672, height:941};
         function fitSalonFriends() {
             const area = gameArea.querySelector(".salon-friends");
-            if (!area) return;
-            const friends = [...area.querySelectorAll(".salon-rabbit-friend")];
-            // Les trois favoris partagent le sol, sans distribution sur les meubles.
-            friends.forEach((friend, index) => {
-                friend.style.left = `${[20, 78, 35][index] || 50}%`;
-                friend.style.top = "auto";
-                friend.style.bottom = "0";
-                friend.style.setProperty("--companion-size", "120px");
-            });
-            return;
-
-            const width = area.clientWidth,
-                height = area.clientHeight;
-            if (!friends.length || !width || !height) return;
-            const hero = gameArea.querySelector(".salon-active-rabbit-spot");
-            const areaBox = area.getBoundingClientRect();
-            const heroBox = hero?.getBoundingClientRect();
-            const blocked = heroBox
-                ? {
-                      left: heroBox.left - areaBox.left - 14,
-                      right: heroBox.right - areaBox.left + 14,
-                      top: heroBox.top - areaBox.top - 10,
-                      bottom: heroBox.bottom - areaBox.top + 18,
-                  }
-                : null;
-            let slots = [],
-                size = 96;
-            for (; size >= 4; size -= 2) {
-                const cellW = size + 22,
-                    cellH = size * 1.2 + 40;
-                const cols = Math.floor(width / cellW),
-                    rows = Math.floor(height / cellH);
-                slots = [];
-                for (let row = 0; row < rows; row++)
-                    for (let col = 0; col < cols; col++) {
-                        const x =
-                            ((col + 0.5) * width) / cols + (((row * 13 + col * 7) % 5) - 2) * 3;
-                        const y =
-                            ((row + 0.5) * height) / rows + (((row * 7 + col * 11) % 5) - 2) * 4;
-                        const left = x - size / 2,
-                            right = x + size / 2;
-                        const top = y - (size * 1.2 + 20) / 2,
-                            bottom = y + (size * 1.2 + 20) / 2;
-                        if (
-                            blocked &&
-                            left < blocked.right &&
-                            right > blocked.left &&
-                            top < blocked.bottom &&
-                            bottom > blocked.top
-                        )
-                            continue;
-                        slots.push({ x, y, row, col });
-                    }
-                if (slots.length >= friends.length) break;
-            }
-            // Répartition stable, décalée et sans cartes ni rangées de collection.
-            slots.sort(
-                (a, b) => ((a.row * 31 + a.col * 17) % 101) - ((b.row * 31 + b.col * 17) % 101),
-            );
-            friends.forEach((friend, index) => {
-                const slot = slots[index];
-                if (!slot) return;
-                friend.style.left = `${slot.x}px`;
-                friend.style.top = `${slot.y}px`;
-                friend.style.setProperty("--companion-size", `${size}px`);
-            });
+            if (area) window.LapinousSalonLayout.fit(area, salonBackdrop);
         }
 
         // Les favoris sont independants du lapin actif et conserves dans la sauvegarde.
@@ -1824,16 +1760,25 @@ document.addEventListener("DOMContentLoaded", () => {
             const active = currentActiveEvents();
             return required.some((e) => active.includes(e));
         }
+        function puzzleCollectionAccess(puz) {
+            if (isLocalAdmin && adminTesting) return true;
+            const linked=puz.linkedSpecies||[];
+            return !linked.length||linked.some(key=>(game.ownedSpecies||[]).includes(key));
+        }
         // Un puzzle est débloqué si l'index est atteint, ou si tous les puzzles
         // précédents actuellement disponibles sont terminés (les puzzles
         // événementiels masqués ne bloquent donc pas la suite).
         function isPuzzleUnlocked(index) {
             if (isLocalAdmin && adminTesting) return true;
+            const puz=puzzleCatalog()[index];
+            if(!puz||!isPuzzleAvailableNow(puz)||!puzzleCollectionAccess(puz))return false;
+            // Posséder un compagnon débloque directement son image de groupe.
+            if(puz.linkedSpecies?.length)return true;
             const mg = ensureMinigameProgress().puzzle;
             if (index <= (mg.unlockedPuzzle || 0)) return true;
             return puzzleCatalog()
                 .slice(0, index)
-                .every((q) => !isPuzzleAvailableNow(q) || puzzleState(q.id).completed);
+                .every((q) => !isPuzzleAvailableNow(q) || !puzzleCollectionAccess(q) || puzzleState(q.id).completed);
         }
         let activePuzzle = null;
         let selectedPuzzleSlot = null;
@@ -1906,14 +1851,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const mg=ensureMinigameProgress();
             if(!mg.coloring)mg.coloring={};
             const rabbits=(game.ownedSpecies||[]).filter(id=>getSpecies()[id]?.faceImg).map(id=>({id:'rabbit-'+id,title:rabbitDisplayName({key:id,sp:getSpecies()[id]}),image:getSpecies()[id].faceImg,kind:'rabbit'}));
-            const scenes=puzzleCatalog().filter(isPuzzleAvailableNow).map(image=>({...image,kind:'scene'}));
+            const scenes=puzzleCatalog().filter(image=>isPuzzleAvailableNow(image)&&(puzzleCollectionAccess(image)||Object.entries(mg.coloring).some(([key,state])=>key.startsWith(image.id+':')&&state.painted?.some(Boolean)))).map(image=>({...image,kind:'scene'}));
             window.LapinousColoring.open({host:gameArea,catalog:[...rabbits,...scenes],admin:isLocalAdmin && adminTesting,storage:mg.coloring,save:autoSave,back:()=>openGameConsole()});
         };
         window.openGameConsole = function () {
             if(explorationUnavailable())return;
             if (!window.LapinousVisibility.allowed("games")) return;
             const mg = ensureMinigameProgress();
-            const availablePuzzles = puzzleCatalog().filter(isPuzzleAvailableNow);
+            const availablePuzzles = puzzleCatalog().filter(puz=>isPuzzleAvailableNow(puz)&&puzzleCollectionAccess(puz));
             const completed = availablePuzzles.filter(
                 (puz) => mg.puzzle.puzzles[puz.id]?.completed,
             ).length;
@@ -1982,7 +1927,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const catalog = puzzleCatalog();
             const visible = catalog
                 .map((puz, index) => ({ puz, index }))
-                .filter(({ puz }) => isPuzzleAvailableNow(puz));
+                .filter(({ puz }) => isPuzzleAvailableNow(puz)&&puzzleCollectionAccess(puz));
             const cards = visible
                 .map(({ puz, index }) => {
                     const st = puzzleState(puz.id);
@@ -4854,6 +4799,7 @@ document.addEventListener("DOMContentLoaded", () => {
             return backgroundCandidates(zone, events, hour, season)[0];
         }
         const backgroundAvailability = new Map();
+        const backgroundDimensions = new Map();
         const backgroundFailures = new Map();
         let requestedBackground = "";
         let resolveBackground;
@@ -4877,8 +4823,11 @@ document.addEventListener("DOMContentLoaded", () => {
             requestedBackground = request;
             const apply = (path) => {
                 resolveThisBackground(true);
-                if (requestedBackground === request)
+                if (requestedBackground === request) {
                     body.style.setProperty("background-image", `url("${path}")`, "important");
+                    salonBackdrop = backgroundDimensions.get(path) || salonBackdrop;
+                    fitSalonFriends();
+                }
             };
             function tryPath(index) {
                 const path = paths[index];
@@ -4897,6 +4846,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const img = new Image();
                 img.onload = () => {
                     backgroundAvailability.set(path, true);
+                    backgroundDimensions.set(path, {width:img.naturalWidth, height:img.naturalHeight});
                     apply(path);
                 };
                 img.onerror = () => {
@@ -4980,7 +4930,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     )
                     .join(
                         "",
-                    )}<button data-test="needs-low">Les trois à 25 %</button></fieldset><button data-test="collection">Tous les lapins</button><button data-test="level1">Lapin actif : +1 niveau</button><button data-test="level10">Lapin actif : +10 niveaux</button><button data-test="skills">+30 fragments par lapin</button><label>Événement <select id="adminEventSelect"><option value="auto">Calendrier normal</option><option value="none">Aucun</option><option value="halloween">Halloween</option><option value="noel">Noël</option><option value="nouvel_an_chinois">Nouvel An chinois</option><option value="paques">Pâques</option><option value="all">Tous</option></select></label><label>Saison <select id="adminSeasonSelect"><option value="auto">Saison actuelle</option><option value="printemps">Printemps</option><option value="ete">Été</option><option value="automne">Automne</option><option value="hiver">Hiver</option></select></label><label>Lumière <select id="adminTimeSelect"><option value="auto">Heure actuelle</option><option value="jour">Jour</option><option value="nuit">Nuit</option></select></label><small>Les événements ont priorité sur les saisons.</small><button data-test="restore">Restaurer la partie avant les tests</button><button data-test="close">Fermer</button>`;
+                    )}<button data-test="needs-low">Les trois à 25 %</button></fieldset><button data-test="collection">Tous les lapins</button><button data-test="level1">Lapin actif : +1 niveau</button><button data-test="level10">Lapin actif : +10 niveaux</button><button data-test="skills">+30 fragments par lapin</button><label>Événement <select id="adminEventSelect"><option value="auto">Calendrier normal</option><option value="none">Aucun</option><option value="halloween">Halloween</option><option value="noel">Noël</option><option value="nouvel_an_chinois">Nouvel An chinois</option><option value="paques">Pâques</option><option value="all">Tous</option></select></label><label>Saison <select id="adminSeasonSelect"><option value="auto">Saison actuelle</option><option value="printemps">Printemps</option><option value="ete">Été</option><option value="automne">Automne</option><option value="hiver">Hiver</option></select></label><label>Lumière <select id="adminTimeSelect"><option value="auto">Heure actuelle</option><option value="jour">Jour</option><option value="nuit">Nuit</option></select></label><small>Les événements ont priorité sur les saisons.</small><button data-test="restore">Restaurer la partie avant les tests</button><button data-test="salon-zones">Afficher / masquer les zones du salon</button><button data-test="close">Fermer</button>`;
                 document.body.appendChild(panel);
                 panel.querySelector("#adminEventSelect").value = adminEvent;
                 panel.querySelector("#adminSeasonSelect").value = adminSeason;
@@ -5019,6 +4969,11 @@ document.addEventListener("DOMContentLoaded", () => {
                 panel.onclick = (e) => {
                     const action = e.target.dataset.test;
                     if (!action || !adminTesting) return;
+                    if (action === "salon-zones") {
+                        body.classList.toggle("salon-zones-visible");
+                        panel.remove();
+                        return;
+                    }
                     if (action === "games") {
                         panel.remove();
                         window.openGameConsole();

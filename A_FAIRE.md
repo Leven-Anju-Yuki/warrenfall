@@ -1,11 +1,29 @@
 # Warrenfall - suivi des travaux et validations
 
+## Textes joueurs et nettoyage ciblé — 30 octobre 2026
+
+- [x] Remplacer les deux comptages bruts par un inventaire des destinations d'affichage, champs de catalogue et cas indirects vérifiés. Dédupliquer le catalogue sans supprimer les phrases des écrans qui en ont besoin.
+- [x] Sortir les quatre traductions du JavaScript ; charger seulement la langue choisie et garder le français en repli. Commenter le fonctionnement et documenter l'arborescence dans `docs/LANGUES.md`.
+- [x] Retirer la seconde déclaration d'encodage HTML et un calcul inutilisé des plats dans le garde-manger. Ne supprimer aucun code ou fichier d'image sur la seule base d'une absence de référence statique ; les appels dynamiques et futures créations restent protégés.
+- [x] Retirer jQuery 3.6.1 (89 666 octets) : aucun chargement dans les pages et aucun appel dans le code propre au jeu. Bootstrap est conservé ; son adaptation facultative à jQuery ne nécessite pas cette bibliothèque.
+- [x] Tester les catalogues, le chargement à la demande, les changements rapides de langue et la compatibilité des sauvegardes. Japonais et allemand vérifiés dans le navigateur ; contrôle interrompu pendant le retour au français, couvert par le test automatisé.
+- [ ] Générer puis relire les traductions manquantes : la réorganisation conserve les traductions existantes, elle ne rend pas encore tout le jeu multilingue. Aucun appel Google ni nouvelle clé configurée.
+- [ ] Poursuivre l'audit général module par module avant de supprimer d'autres fonctions : ce lot ne certifie pas que tout le code historique est sans doublon ou inutilisé.
+
+## Sélections Cloudinary depuis Discord — 28 octobre 2026
+
+- [x] Préparer `/supprime` réservé au propriétaire, sélection exacte et confirmation expirant en trois minutes ; noms ambigus et suppression globale refusés.
+- [x] Réutiliser la corbeille existante : sept jours, dates conservées, références actives protégées, attestation exacte et contrôle technique avant toute suppression. Journal privé des demandes et absence de rejeu des demandes confirmées.
+- [x] Tester sur des données fictives, sans commande ni suppression réelle. Aucun original local lu ou modifié par le module de sélection.
+- [ ] Activer après configuration `DISCORD_BOT_TOKEN`, `DISCORD_OWNER_ID` et choix d'un hébergement permanent pour fonctionner PC éteint. Guide : `docs/COMMANDES_DISCORD.md`.
+
 ## Publication avant Cloudinary — autorisation du 27 octobre 2026
 
 - [x] Ajouter la publication Git à la chaîne Windows existante, avant le relais Cloudinary, sans nouvelle tâche ni changement d'horaire. Ne publier que le code et la documentation autorisés ; exclure secrets, sauvegardes, états privés, batterie et images originales.
 - [x] Produire un message cohérent avec les domaines et corrections réellement présents dans le diff ; conserver les messages des commits déjà préparés.
 - [x] Refuser les conflits distants, les pushes forcés et les index manuels ; continuer Cloudinary et le bilan après échec Git. Reçu local horodaté et transmission au bilan distant.
-- [ ] Constater la première publication automatique de 20 h : configuration vérifiée et simulations testées, aucune publication réelle déclenchée pour le test.
+- [x] Première publication automatique confirmée le 27 octobre à 20:00:30 (889b4fa), secrets et sauvegardes exclus. L'absence de bilan venait d'un verrou Actions abandonné après HTTP 500, et non du push.
+- [x] Incident du 27 octobre : exécution 40417264539 terminée mais verrou conservé ; reprise contrôlée sans opération en attente, puis correctifs publiés (49654b4). Écriture d'état réconciliée après HTTP 500, cycle du soir retardé après minuit dédupliqué, journal et code de sortie hybrides Windows corrigés. Rattrapage 40587838137 : trois pièces jointes confirmées par lecture Discord à 22:36:21, 22:36:30 et 22:36:52, cycle entièrement livré.
 
 ## Fiabilité et lisibilité après les essais prolongés — 27 octobre 2026
 

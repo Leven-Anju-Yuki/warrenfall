@@ -51,9 +51,6 @@ body.battle-scene #eventBanner{display:none!important}
  html.phone-ui body.game-running.default #gameArea{overflow:hidden!important}
  html.phone-ui body.game-running.default .salon-active-rabbit-spot{position:absolute!important;left:50%!important;bottom:13%!important;width:26%!important;height:58%!important;z-index:20!important;transform:translateX(-50%)!important}
  html.phone-ui body.game-running.default .salon-active-rabbit-spot #rabbitImage{position:static!important;width:100%!important;height:100%!important;max-height:100%!important;object-fit:contain!important;transform:none!important;translate:none!important}
- html.phone-ui body.game-running.default .salon-friends{inset:auto 8% 13%!important;height:43%!important}
- html.phone-ui body.game-running.default .salon-rabbit-friend{height:100%!important;max-height:100%!important;width:19%!important}
- html.phone-ui body.game-running.default .salon-rabbit-friend img{height:calc(100% - 20px)!important;width:100%!important;object-fit:contain!important}
  #phoneEggButton{position:absolute;left:22%;bottom:4%;z-index:30;padding:8px 14px;min-height:44px;border:1px solid #b99a67;border-radius:15px;background:#fff8e8;color:#574132;font-size:14px}
  html.phone-ui .salon-console{max-width:140px!important;max-height:85px!important;font-size:13px!important}
  html.phone-ui body.game-running:is(.cuisine,.chambre,.sdb,.jardin):not(.battle-scene) #rabbitImage{left:28%!important;bottom:12%!important;width:23%!important;height:48%!important;max-height:none!important;object-fit:contain!important}
@@ -176,11 +173,6 @@ body.battle-scene #eventBanner{display:none!important}
  html.phone-ui #mainNav #phoneEggButton{position:static!important;left:auto!important;bottom:auto!important;z-index:auto!important;min-height:40px!important;min-width:0!important;padding:2px!important;border:0!important;border-radius:14px!important;background:#fff8e8!important;font-size:12px!important;flex:1}
  html.phone-ui body.game-running .brand{top:54px!important;left:105px!important;bottom:auto!important}
  html.phone-ui body.game-running.default .salon-favorites-button{top:96px!important;font-size:10px!important;padding:4px 6px!important}
- html.phone-ui body.game-running.default .salon-friends{height:30%!important}
- html.phone-ui body.game-running.default .salon-rabbit-friend{width:16%!important}
- html.phone-ui body.game-running.default .salon-rabbit-friend:nth-child(1){left:0!important}
- html.phone-ui body.game-running.default .salon-rabbit-friend:nth-child(2){left:82%!important}
- html.phone-ui body.game-running.default .salon-rabbit-friend:nth-child(3){left:18%!important}
 }
 @media(pointer:coarse) and (orientation:landscape) and (max-height:700px){
  html.phone-ui .pantry-workshop>.pantry-meals>label{grid-column:1!important;grid-row:1!important}

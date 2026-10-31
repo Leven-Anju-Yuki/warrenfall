@@ -39,11 +39,9 @@ body.game-running.sdb #gameArea>.action-row .action-btn{min-width:90px}
 @media(max-height:500px){body.game-running.sdb #gameArea>.action-row{left:43%;right:18%;bottom:6%;padding:6px}body.game-running.sdb #gameArea>.action-row .action-btn{min-width:0;min-height:44px;flex:1}}
 /* Appuis au sol et installation accessible hors des onglets serrés. */
 body.game-running.default .salon-active-rabbit-spot{bottom:12%}
-body.game-running.default .salon-rabbit-friend,body.game-running.default .salon-rabbit-friend:hover{bottom:6%!important}
 body.game-running.cuisine #gameArea #rabbitImage{bottom:5%}
 body.game-running.sdb:not(.battle-scene) #gameArea #rabbitImage{bottom:19%}
 html.phone-ui body.game-running.default .salon-active-rabbit-spot{bottom:5%!important}
-html.phone-ui body.game-running.default .salon-friends{bottom:5%!important}
 html.phone-ui body.game-running.cuisine #gameArea #rabbitImage,html.phone-ui body.game-running.jardin #gameArea #rabbitImage{bottom:5%!important}
 html.phone-ui body.game-running.sdb #gameArea #rabbitImage{bottom:19%!important}
 body.game-running #mainNav #installInNav:not([hidden]){position:fixed!important;top:62px;left:12px;bottom:auto!important;right:auto!important;width:auto!important;min-width:88px!important;height:44px!important;min-height:44px!important;padding:6px 12px!important;z-index:1100;display:flex;gap:4px;align-items:center;background:#fff1cc;border:1px solid #b99a67;border-radius:12px;color:#574132}
@@ -58,7 +56,6 @@ body.game-running #mainNav #installInNav:not([hidden]){position:fixed!important;
 .guide-step{min-height:0;flex:1;overflow:auto;align-items:start}.guide-progress{flex:none}.guide-actions{flex:none;padding-top:8px;background:#fff8eb}
 body:has(#myModal.show) :is(.rules-btn,.encyclopedia-btn,.save-btn,.shop-trigger,#installInNav,#lapinousAudioBtn,.achievements-btn,#adminBtn){visibility:hidden!important}
 @media(max-height:400px){.guide-progress{font-size:12px;margin-bottom:4px}.guide-actions{gap:5px}.guide-actions button{padding:5px 8px;font-size:12px}.guide-step img{position:sticky;top:0}}
-html.phone-ui body.game-running.default .salon-friends{bottom:0!important}
 
 body:has(#myModal.show) :is(.records-toggle,.admin-test-toggle){visibility:hidden!important}
 body.game-running #mainNav #installInNav:not([hidden]){left:106px;top:6px}

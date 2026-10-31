@@ -25,6 +25,18 @@ dialog.coloring-hub{inset:18px 0 auto;width:min(1240px,calc(100vw - 40px));heigh
 .coloring-hub .coloring-images{flex:1;min-height:0;max-height:none;margin:0;grid-template-columns:repeat(4,minmax(0,1fr));align-content:start;gap:18px;overflow:auto;padding:4px 6px 10px 3px}
 .coloring-hub .coloring-images button{display:flex;flex-direction:column;align-items:stretch;gap:9px;min-width:0;padding:9px 9px 13px;border:1px solid #c6aa7c;border-radius:17px;background:#fffbf1;box-shadow:0 4px 9px #654a2720;transition:box-shadow .15s,border-color .15s;text-align:center}.coloring-hub .coloring-images button:hover{border-color:#6b804f;box-shadow:0 5px 16px #654a2740}
 .coloring-picture{display:block;position:relative;aspect-ratio:1.55;background:#eee1c9;border-radius:11px;overflow:hidden}
+.coloring-card-ribbon{position:absolute;z-index:1;top:8px;left:0;padding:6px 13px 6px 10px;border-radius:0 12px 12px 0;background:#f9f1e2f5;color:#715c45;font-size:12px;font-weight:700;line-height:1.2;box-shadow:0 2px 7px #36281430;pointer-events:none}
+.coloring-card-complete .coloring-card-ribbon{background:#5e7849f5;color:#fffced;border:1px solid #b8be80;border-left:0}
+.coloring-card-ongoing .coloring-card-ribbon{background:#e5b66af5;color:#4b341e}
+.coloring-hub .coloring-images .coloring-card-complete{border-color:#8b9b66;background:linear-gradient(145deg,#fffdf4,#eef2dd)}
+.coloring-card-progress{appearance:none;-webkit-appearance:none;display:block;width:100%;height:6px;border:0;border-radius:10px;overflow:hidden;background:#e7dcc7;accent-color:#bd8d46;grid-column:1/-1}
+.coloring-card-progress::-webkit-progress-bar{background:#e7dcc7;border-radius:10px}
+.coloring-card-progress::-webkit-progress-value{background:#bd8d46;border-radius:10px}
+.coloring-card-progress::-moz-progress-bar{background:#bd8d46;border-radius:10px}
+.coloring-card-complete .coloring-card-progress{accent-color:#718851}
+.coloring-card-complete .coloring-card-progress::-webkit-progress-value{background:#718851}
+.coloring-card-complete .coloring-card-progress::-moz-progress-bar{background:#718851}
+@media(max-height:500px){.coloring-card-ribbon{top:4px;padding:4px 6px;font-size:9px;max-width:100%;box-sizing:border-box}.coloring-card-progress{height:4px}}
 .coloring-hub .coloring-images .coloring-picture img{position:absolute!important;inset:0!important;width:100%!important;height:100%!important;max-width:none!important;max-height:none!important;object-fit:contain!important;object-position:center!important;transform:none!important;clip-path:none!important;opacity:1!important;margin:0!important}
 .coloring-images strong{font-size:17px;line-height:1.25;min-height:2.5em;display:grid;place-content:center;color:#563b2c}.coloring-images small{font-size:12px;color:#728054;margin-top:auto}
 @media(max-width:800px){dialog.coloring-hub{padding:16px;gap:12px}.coloring-hub .coloring-images{grid-template-columns:repeat(3,minmax(0,1fr));gap:12px}.coloring-difficulties strong{font-size:15px}.coloring-hub .coloring-difficulties button{padding:10px}}
@@ -61,6 +73,38 @@ dialog.coloring-game{background:radial-gradient(ellipse at top left,#fffdf5,#f3e
 .coloring-status{color:#624558;font-size:14px;padding:3px 0}
 @media(max-height:500px){dialog.coloring-game{padding:8px;gap:6px;grid-template-columns:minmax(0,1fr) 104px}.coloring-game header{padding-bottom:4px;flex-wrap:nowrap}.coloring-game h2{font-size:14px}.coloring-navigation{gap:4px}.coloring-navigation button{font-size:11px;min-height:28px;padding:4px 8px}.coloring-tools button{font-size:11px;min-height:28px;padding:4px 8px}.coloring-game .coloring-palette{gap:10px 7px;padding:7px}.coloring-viewport{border-width:5px}.coloring-status{font-size:11px;margin:0}}
 .coloring-help-toggle{display:none}
+.coloring-finale[hidden],.coloring-navigation button[hidden]{display:none!important}
+.coloring-game.is-complete{grid-template-columns:minmax(0,1fr) minmax(240px,300px);grid-template-rows:auto minmax(0,1fr)}
+.coloring-game.is-complete .coloring-tools,.coloring-game.is-complete .coloring-palette,.coloring-game.is-complete .coloring-status{display:none!important}
+.coloring-game.is-complete .coloring-viewport{grid-column:1;grid-row:2;border-color:#c49b57;background:radial-gradient(ellipse,#fff7df,#e8dcc6)}
+.coloring-finale{grid-row:2;grid-column:2;min-height:0;overflow:auto;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:18px;padding:22px 16px;text-align:center;border:1px solid #cbb180;border-radius:24px;background:radial-gradient(ellipse at top,#fffdf2,#efe1bd);box-shadow:inset 0 0 0 5px #fff9ea88,0 5px 20px #60432120;animation:coloring-finale-arrive .5s ease-out}
+.coloring-finale-medal{display:grid;place-items:center;width:85px;height:85px;border-radius:50%;font-size:52px;background:#fff3c6;box-shadow:0 0 0 7px #d6b26930,0 0 35px #e9bd6370}
+.coloring-finale-copy small{font:700 11px system-ui;letter-spacing:.1em;text-transform:uppercase;color:#8b6a32}
+.coloring-finale-copy h3{margin:12px 0;color:#63465d;font-size:29px;line-height:1.15}
+.coloring-finale-copy p{margin:0;font-size:13px;line-height:1.5;color:#705c42}
+.coloring-finale-actions{display:flex;flex-direction:column;gap:9px;width:100%}
+.coloring-game .coloring-finale-actions button{min-height:42px;padding:9px 12px;background:#fffaf0}
+.coloring-game .coloring-finale-actions button:first-child{background:#728756;border-color:#5f7446;color:#fffdf1;box-shadow:0 3px 0 #52673e}
+.coloring-game.is-complete.artwork-only{grid-template-columns:minmax(0,1fr)}
+.coloring-game.artwork-only .coloring-finale{display:none}
+.coloring-celebration-sparks{position:absolute;inset:0;overflow:hidden;pointer-events:none;z-index:2}
+.coloring-celebration-sparks span{position:absolute;top:-25px;left:var(--spark-x);color:var(--spark-color);font-size:20px;opacity:0;animation:coloring-spark-fall 2.5s var(--spark-delay) ease-out forwards}
+@keyframes coloring-finale-arrive{from{opacity:0;transform:translateY(12px) scale(.97)}to{opacity:1;transform:none}}
+@keyframes coloring-spark-fall{0%{opacity:0;transform:translateY(0) rotate(0)}15%{opacity:1}80%{opacity:.8}100%{opacity:0;transform:translate(25px,60vh) rotate(190deg)}}
+@media(pointer:coarse),(max-height:500px){
+ dialog.coloring-game.is-complete{grid-template-columns:minmax(0,1fr);grid-template-rows:30px minmax(0,1fr) auto}
+ .coloring-game.is-complete .coloring-viewport{grid-row:2;grid-column:1}
+ .coloring-game .coloring-finale{grid-row:3;grid-column:1;display:grid;grid-template-columns:36px minmax(0,1fr);gap:5px 9px;padding:7px 10px;border-radius:14px;text-align:left;overflow:hidden}
+ .coloring-finale-medal{width:32px;height:32px;font-size:25px;box-shadow:0 0 0 3px #d6b26930}
+ .coloring-finale-copy small{font-size:9px;letter-spacing:.04em}
+ .coloring-finale-copy h3{font-size:17px;margin:2px 0}
+ .coloring-finale-copy p{font-size:10px;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
+ .coloring-finale-actions{grid-column:1/-1;flex-direction:row;gap:5px}
+ .coloring-game .coloring-finale-actions button{flex:1;min-width:0;min-height:28px;padding:4px 6px;font-size:10px}
+ .coloring-game.artwork-only{grid-template-rows:30px minmax(0,1fr)}
+ .coloring-game.artwork-only .coloring-finale{display:none}
+}
+@media(prefers-reduced-motion:reduce){.coloring-finale{animation:none}.coloring-celebration-sparks{display:none}}
 @media(pointer:coarse),(max-height:500px){
  dialog.coloring-game{inset:0!important;width:100%!important;height:100dvh!important;max-height:100dvh!important;margin:0!important;padding:5px max(6px,env(safe-area-inset-right)) 4px max(6px,env(safe-area-inset-left));border-width:1px;border-radius:8px;overflow:hidden;grid-template-columns:minmax(0,1fr) 82px;grid-template-rows:30px 30px minmax(0,1fr) 16px;gap:4px 7px}
  .coloring-game header{padding:0;border:0;min-width:0;flex-wrap:nowrap;gap:5px;grid-row:1}
@@ -77,3 +121,10 @@ dialog.coloring-game{background:radial-gradient(ellipse at top left,#fffdf5,#f3e
  .coloring-game .coloring-palette button{border-width:3px;font-size:11px;min-height:32px;aspect-ratio:1}
  .coloring-game .coloring-status{grid-row:4;font-size:10px;line-height:16px;padding:0;margin:0;white-space:nowrap;overflow:hidden;text-overflow:ellipsis}
 }
+.coloring-sidebar{grid-column:2;grid-row:3;display:grid;grid-template-rows:auto minmax(0,1fr);gap:10px;min-height:0;min-width:0;overflow:hidden}
+.coloring-miniature{margin:0;padding:8px 6px 6px;background:#fff9ec;border:1px solid #b99a6c;border-radius:14px;box-shadow:0 2px 5px #62472b22;min-width:0;text-align:center}
+.coloring-miniature canvas{display:block;position:static;width:100%;height:100px;object-fit:contain;image-rendering:pixelated;max-width:100%;background:#f4ead6;border-radius:7px}
+.coloring-miniature figcaption{margin-top:5px;font-size:11px;font-weight:700;color:#70573d;white-space:nowrap}
+.coloring-game .coloring-sidebar>.coloring-palette{grid-row:auto;grid-column:auto;min-height:0;overscroll-behavior:contain}
+.coloring-game.is-complete .coloring-sidebar{display:none!important}
+@media(pointer:coarse),(max-height:500px){.coloring-sidebar{grid-column:2;grid-row:3;gap:5px}.coloring-miniature{padding:4px;border-radius:10px}.coloring-miniature canvas{height:58px;border-radius:5px}.coloring-miniature figcaption{font-size:9px;margin-top:3px}}

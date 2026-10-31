@@ -1,0 +1,3 @@
+# Facultatif : uniquement pour le service de commandes Discord, jamais le bilan quotidien.
+-r requirements.txt
+discord.py>=2.4,<3

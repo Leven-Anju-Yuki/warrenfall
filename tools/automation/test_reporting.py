@@ -37,6 +37,7 @@ class DetailedReports(unittest.TestCase):
     def test_missing_manifest_url_does_not_abort_reports_or_trello(self):
         state = fixture()
         state['manifest']['assets']['failed.png'] = {'path': 'failed.png', 'status': 'error'}
+        state['inventory']['selected'].append({'path': 'failed.png'})
         locked = Mock(data=state)
         with patch('remote.deletion_allowed', return_value=False), \
              patch('remote.trello', return_value=(0, 'Bilan Trello complet')) as trello:
@@ -45,6 +46,25 @@ class DetailedReports(unittest.TestCase):
         self.assertIn('Bilan Trello complet', report)
         self.assertTrue(any('URL' in e and 'failed.png' in e for e in errors))
         self.assertEqual(set(reporting.bundle(state, report, state['report_sections']['images'])), {'bilan', 'images', 'trello'})
+
+    def test_abandoned_failed_manifest_entry_is_not_a_current_error(self):
+        state = fixture()
+        state['report_sections'] = {}
+        legacy = {'path': 'assets/img/old-intro.gif', 'status': 'failed', 'public_id': 'lapinous/old-intro'}
+        state['manifest']['assets'][legacy['path']] = legacy.copy()
+        locked = Mock(data=state)
+        with patch('remote.deletion_allowed', return_value=False):
+            _, errors = remote.cloudinary_stage(locked, KEY, Cloud(), NOW, '')
+        self.assertFalse(any('old-intro' in error for error in errors))
+        self.assertEqual(state['manifest']['assets'][legacy['path']], legacy)
+
+    def test_referenced_failed_entry_still_reports_error_without_inventory_selection(self):
+        state = fixture()
+        state['report_sections'] = {}
+        state['manifest']['assets']['assets/img/active-intro.gif'] = {'path': 'assets/img/active-intro.gif', 'status': 'failed', 'public_id': 'lapinous/active-intro'}
+        with patch('remote.deletion_allowed', return_value=False):
+            _, errors = remote.cloudinary_stage(Mock(data=state), KEY, Cloud(), NOW, 'assets/img/active-intro.gif')
+        self.assertTrue(any('active-intro.gif' in error for error in errors))
 
     def test_three_channels_attempted_even_if_first_fails(self):
         locked = Mock(data={})

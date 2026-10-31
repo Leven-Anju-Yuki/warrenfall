@@ -12,7 +12,7 @@ import sys
 import tempfile
 import uuid
 from zoneinfo import ZoneInfo
-from core import plan, apply_trash, paris_day
+from core import plan, apply_trash, paris_day, reconcile_absences
 from state_store import GitHubStore, LockedState, StateError, wait_for_state
 from transports import Cloudinary, send_discord, request
 from reporting import cloudinary_details, bundle, deliver
@@ -164,6 +164,7 @@ def render(state, proposed, errors, details=''):
              '', '## Sauvegardes locales attestées',
              *[f'- {p["payload"]["path"]} — SHA-256 {p["payload"]["hash"]}' for p in state.get('attestations', {}).values()],
              '', '## Opérations persistées / reprises', json.dumps(state.get('operations', {}), ensure_ascii=False, indent=2),
+             '', '## Absences Cloudinary constatées (sans suppression par cette exécution)', json.dumps(state.get('cloudinary_absences', {}), ensure_ascii=False, indent=2),
              '', '## Notifications', json.dumps(state.get('notifications', {}), ensure_ascii=False, indent=2),
              '', '## Trello / Git / documentation', details or 'Non exécuté en simulation.',
              '', '## Erreurs', *errors]
@@ -192,8 +193,12 @@ def cloudinary_stage(locked, key, cloud, now, source):
         elif record.get('public_id') and record.get('url'):
             active_local.extend([record['public_id'], record['url']])
     source += '\n' + '\n'.join(active_local)
+    observed_absent, existence_errors = reconcile_absences(locked, source, key, cloud, now)
+    errors.extend('Cloudinary existence : ' + json.dumps(error, ensure_ascii=False) for error in existence_errors)
     try:
         proposed = plan(state, source, key, now)
+        if observed_absent:
+            proposed['already_absent'] = observed_absent
     except Exception as exc:
         proposed = {'blocked': [{'reason': 'Plan de corbeille invalide : ' + type(exc).__name__}]}
         inventory_ok = False
@@ -217,12 +222,19 @@ def cloudinary_stage(locked, key, cloud, now, source):
             errors.append('Cloudinary corbeille : erreur de script ; reprise nécessaire.')
     # Vérification quotidienne des URL actives, indépendante du traitement corbeille.
     checked = 0
-    for item in state['manifest']['assets'].values():
+    selected_paths = {item.get('path') for item in inventory.get('selected', [])}
+    for path, item in state['manifest']['assets'].items():
         url = item.get('url')
+        # Le manifeste garde aussi les anciens essais et versions abandonnées.
+        # Leur absence de métadonnées n'est pas un échec du jeu actuel. En revanche,
+        # toute entrée sélectionnée ou référencée doit toujours être vérifiée.
+        active = (path in selected_paths or item.get('path') in selected_paths or
+                  any(isinstance(value, str) and value and value in source
+                      for value in (path, item.get('path'), item.get('public_id'), url)))
+        if not active:
+            continue
         if not isinstance(url, str) or not url or not item.get('public_id'):
             errors.append('Cloudinary manifeste : URL ou identité absente — ' + str(item.get('path', '?')))
-            continue
-        if url not in source:
             continue
         checked += 1
         try:

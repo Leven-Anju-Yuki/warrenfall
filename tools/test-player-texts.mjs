@@ -1,0 +1,16 @@
+import assert from 'node:assert/strict';
+import fs from 'node:fs/promises';
+import {visibleMarkup,sourceText,textKey} from './player-texts.mjs';
+assert.deepEqual(visibleMarkup('<button class="technical-id" data-item="energy">Nourrir</button>'),['Nourrir']);
+assert.deepEqual(visibleMarkup('<img src="assets/img/a.png" alt="invisible fallback"><input placeholder="Ton petit nom" aria-label="label technique">'),['Ton petit nom']);
+assert.deepEqual(visibleMarkup('<script>secret()</script><style>.invisible{}</style><template>Ancien brouillon</template><section id="adminPanel">Outil admin</section>'),[]);
+assert.deepEqual(visibleMarkup('<section hidden>Accessible en ouvrant le panneau</section>'),['Accessible en ouvrant le panneau']);
+assert.deepEqual(visibleMarkup('<button title="Voir le panier">Acheter &amp; jouer</button>'),['Voir le panier','Acheter & jouer']);
+assert.equal(textKey('  🥕 CUISINE '),textKey('Cuisine'));
+assert.equal(sourceText('Bonjour\n  petit lapin !'),'Bonjour petit lapin !');
+assert.equal(textKey('Énergie'),textKey('E\u0301nergie'));
+const french=JSON.parse(await fs.readFile('assets/i18n/fr.json','utf8'));
+const unique=new Set(french.strings.map(textKey));
+assert.equal(unique.size,french.strings.length,'The source catalogue must contain no duplicate phrase');
+assert.ok(french.strings.every(text=>!/(?:assets\/|res\.cloudinary|querySelector|document\.|@keyframes|prefers-reduced-motion)/.test(text)),'No technical strings in the translation catalogue');
+console.log('Player text only, no technical attributes/admin, placeholders and deduplication: OK');
