@@ -1,5 +1,22 @@
 # Warrenfall - suivi des travaux et validations
 
+## État de référence après rapprochement Trello — 2 novembre 2026
+
+Audit en lecture seule du tableau Warrenfall : **74 cartes ouvertes**, dont **30 dans Réalisé — code et historique** et **21 dans À valider en jeu**. Détail carte par carte : [AUDIT_TRELLO_A_FAIRE_2026-11-02.md](docs/AUDIT_TRELLO_A_FAIRE_2026-11-02.md).
+
+Les notes datées plus bas sont conservées comme historique. Les mentions « non publié » antérieures ne décrivent plus nécessairement la situation actuelle : le commit local `a361711` correspond au `main` distant vérifié le 2 novembre. Cela ne vaut pas validation du rendu en jeu ni vérification d'un déploiement Pages.
+
+- **Code présent et testé** : coloriage pixel art (album, progression et miniature), explorations en heures réelles, deux jeux de grilles distincts, Petits nids datés, récompenses réellement créditées, capacités et boucliers des boss, dépendances de visibilité et traductions partielles. Tests ciblés : 18 séries réussies ; automatisation : 119 tests simulés réussis.
+- **Salon** : zones transparentes associées aux assises dans `assets/js/salon-layout.js` et `assets/css/salon-layout.css`, cadrage du fond pris en compte ; anciennes règles concurrentes retirées. Contrôle visuel Halloween du 31 octobre conservé ; autres décors et téléphone physique restent à valider.
+- **Traductions** : bouton drapeau, catalogues chargés à la demande, succès, dialogues et provisions complétés. Les longues histoires et le quiz ne sont pas intégralement traduits ; ne pas cocher une traduction complète.
+- **Équipes favorites : écart à clarifier**. Le classement humain en Réalisé est conservé, mais le code retrouvé concerne les trois favoris du salon. Les trois compositions de combat enregistrables et rappelables décrites par la carte ne sont pas retrouvées. Ne pas confondre ces deux fonctions.
+- **Suivi devenu ancien** : Mode pixel art, Expéditions courtes et Boss à comportements distincts disposent désormais de code ; les mentions « idée sans correspondance » ci-dessous sont dépassées. Les records Memory existent ; meilleure distance et victoire sans K.O. restent non établies.
+- **Sauvegarde de secours** : copies de récupération et trois autosauvegardes existent. Le rappel périodique d'export décrit dans l'idée reste à distinguer de ces fonctions.
+- **Structure de suivi** : les 71 cartes configurées dans `liaisons_trello.json` ont une case principale unique, sans sous-tâche dupliquée. Les deux idées du 19 octobre et le repère violet sont hors de cette configuration ; aucune règle automatique ajoutée pendant cet audit.
+- **Trello** : aucune carte déplacée, aucune case cochée/décochée, aucun commentaire envoyé. La checklist historique « niveau » conserve ses trois cases non cochées. Le test d'équipe a seulement reçu le champ `speciesNames` manquant dans sa partie fictive ; aucune règle du jeu modifiée.
+
+Restent notamment ouverts : équilibrage des combats/prix, estimation de difficulté complète, validation physique mobile, accessibilité générale, mesures de performance, juridique/paiement, serveur anti-triche et idées non sélectionnées. Le bot Discord est préparé mais son activation n'est pas prouvée par cet audit. Les simulations ne certifient pas les déclenchements réels de production ; aucun traitement distant n'a été rejoué.
+
 ## Textes joueurs et nettoyage ciblé — 30 octobre 2026
 
 - [x] Remplacer les deux comptages bruts par un inventaire des destinations d'affichage, champs de catalogue et cas indirects vérifiés. Dédupliquer le catalogue sans supprimer les phrases des écrans qui en ont besoin.

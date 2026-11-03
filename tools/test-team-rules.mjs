@@ -37,7 +37,9 @@ for(const enemy of Object.values(content.opponents)){
 assert.equal(rules.victory(content.bosses.courgette).loot,true);
 // Actual reward integration: no loot, boss achievement or duplicate payout for small opponents.
 const finish=script.slice(script.indexOf('        function finishTacticalFight('),script.indexOf('        // ---- Boutique à œufs'));
-const game={carrots:0,species:'azur'};let loot=0,bossWins=0,friendship=0;
+// La partie fictive conserve le champ de noms utilisé par le bilan de combat.
+const game={carrots:0,species:'azur',speciesNames:{}};let loot=0,bossWins=0,friendship=0;
+context.getSpecies=()=>sp;
 vm.runInContext(script.slice(script.indexOf('        function combatEscape('),script.indexOf('        // Update existing nodes')),context);
 Object.assign(context,{rabbitDisplayName:r=>r.sp.name,game,autoFightTimer:null,tacticalFight:{key:'debut_radis',boss:content.opponents.debut_radis,team:[{key:'azur',sp:content.species.azur,pr:{food:80,energy:80,cleanliness:80}}]},clearTimeout(){},awardBattleLoot(){loot++;},recordAchievement(){bossWins++;},gainFriendship:n=>friendship+=n,playSfx(){},showToast(){},updateStatusBars(){},autoSave(){},gameArea:{innerHTML:''}});
 vm.runInContext(finish+'finishTacticalFight(true);finishTacticalFight(true);',context);
