@@ -1,5 +1,34 @@
 # Warrenfall - suivi des travaux et validations
 
+## Anti-triche — tâches ouvertes du 19 novembre 2026
+
+Inventaire et limites : [docs/ANTI_TRICHE.md](docs/ANTI_TRICHE.md). Douze cartes créées dans « Anti-triche — à sécuriser », avec correspondances explicites et critères de validation. Suivi manuel uniquement ; aucune protection nouvelle annoncée comme réalisée et aucun déplacement automatique en Réalisé.
+
+- [ ] P1 — Sauvegardes — authenticité des gains et modification locale [trello:6afeb617c8d440056a9634e2] — [Carte](https://trello.com/c/U7gTgugC)
+  Fichiers : `assets/js/save-validation.js`, `assets/js/save-safety.js`, `assets/js/script.js`.
+- [ ] P1 — Horloge — durées d’exploration, bonus et défis quotidiens [trello:6afeb618ace0c233d29d0cae] — [Carte](https://trello.com/c/ZdgvXg3e)
+  Fichiers : `assets/js/exploration.js`, `assets/js/achievements.js`, `assets/js/script.js`.
+- [ ] P1 — Reprise d’anciennes copies — rejeu des tirages et des récompenses [trello:6afeb61a8de87f7a5f9e19b5] — [Carte](https://trello.com/c/FXV8KCGl)
+  Fichiers : `assets/js/save-safety.js`, `assets/js/auto-nests.js`, `assets/js/script.js`.
+- [ ] P1 — Catalogues locaux — séparer les réglages Admin du jeu public [trello:6afeb61ba3d2d19c32e1b840] — [Carte](https://trello.com/c/R5Sr11KU)
+  Fichiers : `assets/js/species-data.js`, `assets/js/shop.js`, `assets/js/dashboard.js`, `lapinous-content.json`.
+- [ ] P1 — Textes importés — empêcher l’interprétation de HTML dans les noms [trello:6afeb61c2c4a2dd1fff2c202] — [Carte](https://trello.com/c/Bczoj9Av)
+  Fichiers : `assets/js/script.js`, `assets/js/save-validation.js`, `assets/js/shop.js`.
+- [ ] P1 — Actions directes — revérifier coûts, possession et déblocages [trello:6afeb61e4edf50c685ff32be] — [Carte](https://trello.com/c/cD9BTIyV)
+  Fichiers : `assets/js/script.js`, `assets/js/shop.js`, `assets/js/exploration.js`.
+- [ ] P1 — Concurrence — deux onglets, doubles clics et récompenses uniques [trello:6afeb6206963d8f0b04c4ee2] — [Carte](https://trello.com/c/zgErnpEG)
+  Fichiers : `assets/js/save-safety.js`, `assets/js/script.js`, `assets/js/shop.js`, `assets/js/exploration.js`.
+- [ ] P1 — Exploration — cohérence des voyages et butins importés [trello:6afeb621b5f344595561762d] — [Carte](https://trello.com/c/wwL5KXZi)
+  Fichiers : `assets/js/exploration.js`, `assets/js/save-validation.js`, `lapinous-content.json`, `lapinous-shop.json`.
+- [ ] P2 — Aléatoire — tirages locaux et modification des probabilités [trello:6afeb623c0c1af979acaa76e] — [Carte](https://trello.com/c/dxaDMXbC)
+  Fichiers : `assets/js/script.js`, `assets/js/exploration.js`, `assets/js/species-data.js`.
+- [ ] P2 — Mini-jeux — solutions et bonnes réponses accessibles au client [trello:6afeb625c351feba6fead898] — [Carte](https://trello.com/c/FPRD0KPH)
+  Fichiers : `assets/js/number-sudoku.js`, `assets/js/lapidoku.js`, `assets/js/quiz.js`, `assets/js/pixel-coloring.js`, `lapinous-quiz.json`.
+- [ ] P2 — Automatisation des actions — autoclics, vitesse et limites métier [trello:6afeb627b34ba466c94a8689] — [Carte](https://trello.com/c/I7GpGCvh)
+  Fichiers : `assets/js/script.js`, `assets/js/pixel-coloring.js`, `assets/js/shop.js`.
+- [ ] P2 — Imports — compléter les invariants de progression et les limites [trello:6afeb628903ec6f23a7437b0] — [Carte](https://trello.com/c/K0s5ory6)
+  Fichiers : `assets/js/save-validation.js`, `assets/js/save-safety.js`, `assets/js/achievements.js`, `assets/js/apothecary-effects.js`.
+
 ## Arrière-plan, guide et frigo — 19 novembre 2026
 
 - Audio : musique, effets clonés et notes saisonnières arrêtés quand la page est masquée, quittée ou gelée ; les minuteurs ne relancent pas les sons en arrière-plan. Retour dans la page respectant le choix muet du joueur. Sauvegarde au départ conservée.

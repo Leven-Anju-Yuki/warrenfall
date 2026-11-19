@@ -1645,6 +1645,156 @@
         }
       ],
       "automatique": true
+    },
+    {
+      "card_id": "6afeb617c8d440056a9634e2",
+      "nom": "P1 - Sauvegardes — authenticité des gains et modification locale",
+      "chemins": [
+        "assets/js/save-validation.js",
+        "assets/js/save-safety.js",
+        "assets/js/script.js"
+      ],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Audit anti-triche : suivi manuel, aucune transition automatique ni validation deduite."
+    },
+    {
+      "card_id": "6afeb618ace0c233d29d0cae",
+      "nom": "P1 - Horloge — durées d’exploration, bonus et défis quotidiens",
+      "chemins": [
+        "assets/js/exploration.js",
+        "assets/js/achievements.js",
+        "assets/js/script.js"
+      ],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Audit anti-triche : suivi manuel, aucune transition automatique ni validation deduite."
+    },
+    {
+      "card_id": "6afeb61a8de87f7a5f9e19b5",
+      "nom": "P1 - Reprise d’anciennes copies — rejeu des tirages et des récompenses",
+      "chemins": [
+        "assets/js/save-safety.js",
+        "assets/js/auto-nests.js",
+        "assets/js/script.js"
+      ],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Audit anti-triche : suivi manuel, aucune transition automatique ni validation deduite."
+    },
+    {
+      "card_id": "6afeb61ba3d2d19c32e1b840",
+      "nom": "P1 - Catalogues locaux — séparer les réglages Admin du jeu public",
+      "chemins": [
+        "assets/js/species-data.js",
+        "assets/js/shop.js",
+        "assets/js/dashboard.js",
+        "lapinous-content.json"
+      ],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Audit anti-triche : suivi manuel, aucune transition automatique ni validation deduite."
+    },
+    {
+      "card_id": "6afeb61c2c4a2dd1fff2c202",
+      "nom": "P1 - Textes importés — empêcher l’interprétation de HTML dans les noms",
+      "chemins": [
+        "assets/js/script.js",
+        "assets/js/save-validation.js",
+        "assets/js/shop.js"
+      ],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Audit anti-triche : suivi manuel, aucune transition automatique ni validation deduite."
+    },
+    {
+      "card_id": "6afeb61e4edf50c685ff32be",
+      "nom": "P1 - Actions directes — revérifier coûts, possession et déblocages",
+      "chemins": [
+        "assets/js/script.js",
+        "assets/js/shop.js",
+        "assets/js/exploration.js"
+      ],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Audit anti-triche : suivi manuel, aucune transition automatique ni validation deduite."
+    },
+    {
+      "card_id": "6afeb6206963d8f0b04c4ee2",
+      "nom": "P1 - Concurrence — deux onglets, doubles clics et récompenses uniques",
+      "chemins": [
+        "assets/js/save-safety.js",
+        "assets/js/script.js",
+        "assets/js/shop.js",
+        "assets/js/exploration.js"
+      ],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Audit anti-triche : suivi manuel, aucune transition automatique ni validation deduite."
+    },
+    {
+      "card_id": "6afeb621b5f344595561762d",
+      "nom": "P1 - Exploration — cohérence des voyages et butins importés",
+      "chemins": [
+        "assets/js/exploration.js",
+        "assets/js/save-validation.js",
+        "lapinous-content.json",
+        "lapinous-shop.json"
+      ],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Audit anti-triche : suivi manuel, aucune transition automatique ni validation deduite."
+    },
+    {
+      "card_id": "6afeb623c0c1af979acaa76e",
+      "nom": "P2 - Aléatoire — tirages locaux et modification des probabilités",
+      "chemins": [
+        "assets/js/script.js",
+        "assets/js/exploration.js",
+        "assets/js/species-data.js"
+      ],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Audit anti-triche : suivi manuel, aucune transition automatique ni validation deduite."
+    },
+    {
+      "card_id": "6afeb625c351feba6fead898",
+      "nom": "P2 - Mini-jeux — solutions et bonnes réponses accessibles au client",
+      "chemins": [
+        "assets/js/number-sudoku.js",
+        "assets/js/lapidoku.js",
+        "assets/js/quiz.js",
+        "assets/js/pixel-coloring.js",
+        "lapinous-quiz.json"
+      ],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Audit anti-triche : suivi manuel, aucune transition automatique ni validation deduite."
+    },
+    {
+      "card_id": "6afeb627b34ba466c94a8689",
+      "nom": "P2 - Automatisation des actions — autoclics, vitesse et limites métier",
+      "chemins": [
+        "assets/js/script.js",
+        "assets/js/pixel-coloring.js",
+        "assets/js/shop.js"
+      ],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Audit anti-triche : suivi manuel, aucune transition automatique ni validation deduite."
+    },
+    {
+      "card_id": "6afeb628903ec6f23a7437b0",
+      "nom": "P2 - Imports — compléter les invariants de progression et les limites",
+      "chemins": [
+        "assets/js/save-validation.js",
+        "assets/js/save-safety.js",
+        "assets/js/achievements.js",
+        "assets/js/apothecary-effects.js"
+      ],
+      "preuves": [],
+      "automatique": false,
+      "note_automatisation": "Audit anti-triche : suivi manuel, aucune transition automatique ni validation deduite."
     }
   ],
   "version": 2,
