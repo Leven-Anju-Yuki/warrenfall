@@ -1,5 +1,12 @@
 # Warrenfall - suivi des travaux et validations
 
+## Arrière-plan, guide et frigo — 19 novembre 2026
+
+- Audio : musique, effets clonés et notes saisonnières arrêtés quand la page est masquée, quittée ou gelée ; les minuteurs ne relancent pas les sons en arrière-plan. Retour dans la page respectant le choix muet du joueur. Sauvegarde au départ conservée.
+- Guide : trois pages détaillent la reprise automatique, les trois Petits nids datés (rotation, intervalle et chargement), les fichiers externes, les dossiers autorisés et les limites du stockage du navigateur. Explications des besoins et des déblocages enrichies.
+- Frigo : bouton visible « Frigo et provisions » ajouté aux commandes, en complément du décor ; zone tactile explicitement interactive. Restrictions de visibilité conservées ; stock vide ou faim pleine ne bloquent pas l'ouverture. Cause visuelle exacte et validation sur téléphone physique non établies : accès au navigateur interrompu pendant le contrôle.
+- Tests isolés audio/arrière-plan, frigo, visibilité, sauvegardes et rotation des Petits nids ; aucun fichier joueur modifié. Modifications locales, publication non effectuée.
+
 ## État de référence après rapprochement Trello — 2 novembre 2026
 
 Audit en lecture seule du tableau Warrenfall : **74 cartes ouvertes**, dont **30 dans Réalisé — code et historique** et **21 dans À valider en jeu**. Détail carte par carte : [AUDIT_TRELLO_A_FAIRE_2026-11-02.md](docs/AUDIT_TRELLO_A_FAIRE_2026-11-02.md).

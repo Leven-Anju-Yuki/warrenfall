@@ -359,6 +359,19 @@ document.addEventListener("DOMContentLoaded", () => {
             monsterCombat: "./assets/audio/combat/cris_monstre_deb_combat.mp3",
         };
         const SFX_VOLUMES = { monsterCombat: 0.25, victory: 0.25 };
+        // Les clones audio ne sont pas dans le DOM : garder leur référence pour
+        // pouvoir aussi arrêter les effets quand le téléphone masque le jeu.
+        const playingPageAudio = new Set();
+        let audioPageInactive = document.hidden;
+        let seasonalAudioContext = null;
+        function playPageAudio(audio) {
+            if (audioPageInactive || document.hidden) return Promise.reject(new Error('Page masquée'));
+            playingPageAudio.add(audio);
+            audio.addEventListener('ended', () => playingPageAudio.delete(audio), {once:true});
+            return audio.play().then(() => {
+                if (audioPageInactive || document.hidden) audio.pause();
+            });
+        }
         let ambienceAudios = [];
         let ambienceKey = "";
         let ambienceCleanups = [];
@@ -384,7 +397,7 @@ document.addEventListener("DOMContentLoaded", () => {
         function playSfx(name) {
             if (name !== "click") buttonPlayedSfx = true;
             ensureNewSystems();
-            if (game.audio.muted || !game.audio.sfx || !AUDIO_FILES[name]) return;
+            if (audioPageInactive || document.hidden || game.audio.muted || !game.audio.sfx || !AUDIO_FILES[name]) return;
             const files = Array.isArray(AUDIO_FILES[name])
                 ? AUDIO_FILES[name]
                 : [AUDIO_FILES[name]];
@@ -411,7 +424,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         { once: true },
                     );
                 }
-                a.play().catch(() => {});
+                playPageAudio(a).catch(() => {});
             });
         }
         function createCrossfadeAmbience(src) {
@@ -444,7 +457,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     fading = true;
                     next.currentTime = 0;
                     next.volume = 0;
-                    next.play()
+                    playPageAudio(next)
                         .then(() => {
                             if (stopped) {
                                 next.pause();
@@ -476,7 +489,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 clearInterval(fadeTimer);
                 tracks.forEach((track) => track.pause());
             });
-            active.play().catch(() => {});
+            playPageAudio(active).catch(() => {});
             return tracks;
         }
 
@@ -487,14 +500,14 @@ document.addEventListener("DOMContentLoaded", () => {
             const event = currentActiveEvents().find((name) => AUDIO_FILES[name]);
             const wanted = event ? AUDIO_FILES[event] : AUDIO_FILES.ambience;
             const files = Array.isArray(wanted) ? wanted : [wanted];
-            const enabled = !game.audio.muted && game.audio.ambience && Date.now() >= seasonSoundUntil;
+            const enabled = !audioPageInactive && !document.hidden && !game.audio.muted && game.audio.ambience && Date.now() >= seasonSoundUntil;
             const key = enabled ? files.join("|") : "";
             // Changer de pièce ne redémarre pas la musique déjà en cours.
             if (key === ambienceKey) {
                 if (enabled)
                     ambienceAudios
                         .filter((a) => a.paused && a.volume > 0)
-                        .forEach((a) => a.play().catch(() => {}));
+                        .forEach((a) => playPageAudio(a).catch(() => {}));
                 return;
             }
             ambienceCleanups.forEach((cleanup) => cleanup());
@@ -512,10 +525,35 @@ document.addEventListener("DOMContentLoaded", () => {
                 const audio = getCachedAudio(src).cloneNode();
                 audio.loop = true;
                 audio.volume = 0.22;
-                audio.play().catch(() => {});
+                playPageAudio(audio).catch(() => {});
                 return [audio];
             });
         }
+
+        function suspendPageAudio() {
+            audioPageInactive = true;
+            clearTimeout(seasonResumeTimer);
+            clearTimeout(careAudioTimer);
+            playingPageAudio.forEach(audio => { audio.pause(); audio.currentTime = 0; });
+            playingPageAudio.clear();
+            activeCareAudio = null;
+            // Fermer le contexte supprime aussi les notes déjà programmées :
+            // elles ne doivent pas se rejouer au retour dans le jeu.
+            if (seasonalAudioContext) {
+                seasonalAudioContext.close().catch(() => {});
+                seasonalAudioContext = null;
+            }
+            updateAmbience();
+        }
+        function resumePageAudio() {
+            audioPageInactive = document.hidden;
+            if (!audioPageInactive) updateAmbience();
+        }
+        document.addEventListener('visibilitychange', () => document.hidden ? suspendPageAudio() : resumePageAudio());
+        window.addEventListener('pagehide', suspendPageAudio);
+        window.addEventListener('pageshow', resumePageAudio);
+        document.addEventListener('freeze', suspendPageAudio);
+        document.addEventListener('resume', resumePageAudio);
 
         window.toggleLapinousAudio = function () {
             ensureNewSystems();
@@ -2482,7 +2520,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 label: "🍳 Cuisine",
                 image: () => "./assets/img/Zone_cuisine/faim.png",
                 content: () =>
-                    '<button class="fridge-hotspot" onclick="openKitchenFridge()" aria-label="Ouvrir le frigo"><span>🧊 Ouvrir le frigo</span></button><div class="kitchen-scene-actions"><button class="action-btn" onclick="feedRabbit()"><img class="action-icon" src="' +
+                    '<button class="fridge-hotspot" onclick="openKitchenFridge()" aria-label="Ouvrir le frigo"><span>🧊 Ouvrir le frigo</span></button><div class="kitchen-scene-actions"><button class="action-btn kitchen-fridge-button" onclick="openKitchenFridge()"><span class="action-icon-emoji">🧊</span><span>Frigo et provisions</span></button><button class="action-btn" onclick="feedRabbit()"><img class="action-icon" src="' +
                     (roomStage("cuisine") > 0
                         ? "./assets/img/Zone_cuisine/pomme.png"
                         : "./assets/img/Zone_cuisine/carotte.png") +
@@ -4530,10 +4568,9 @@ document.addEventListener("DOMContentLoaded", () => {
             nouvel_an_chinois: "🏮 🐉 ✨",
         };
 
-        let seasonalAudioContext = null;
         let lastSeasonSound = "";
         function playSeasonSound(eventName, force = false) {
-            if (!eventName || game.audio?.muted || game.audio?.sfx===false || (!force && lastSeasonSound === eventName)) return;
+            if (audioPageInactive || document.hidden || !eventName || game.audio?.muted || game.audio?.sfx===false || (!force && lastSeasonSound === eventName)) return;
             try {
                 const AudioCtx = window.AudioContext || window.webkitAudioContext;
                 if (!AudioCtx) return;

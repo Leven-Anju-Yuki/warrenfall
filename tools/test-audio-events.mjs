@@ -1,9 +1,10 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
 const source=fs.readFileSync('assets/js/script.js','utf8');
 const start=source.indexOf('        function updateAmbience() {');
-const end=source.indexOf('        window.toggleLapinousAudio',start);
+const end=source.indexOf('        function suspendPageAudio',start);
 const tracks=[];let events=[];
 const context={window:{},Date,ensureNewSystems(){},currentActiveEvents:()=>events,AUDIO_FILES:{ambience:'base.mp3',noel:'event.mp3',nouvel_an_chinois:[]},game:{audio:{muted:false,ambience:true}},ambienceKey:'',ambienceCleanups:[],ambienceAudios:[],seasonSoundUntil:0,getCachedAudio:src=>({cloneNode(){const audio={src,paused:true,volume:1,play(){this.paused=false;return Promise.resolve();},pause(){this.paused=true;}};tracks.push(audio);return audio;}})};
+Object.assign(context,{document:{hidden:false},audioPageInactive:false,playPageAudio:audio=>audio.play()});
 vm.runInNewContext(source.slice(start,end),context);
 context.updateAmbience();assert.equal(tracks[0].paused,false);
 events=['noel'];context.updateAmbience();assert.equal(tracks[0].paused,true);assert.equal(tracks[1].src,'event.mp3');assert.equal(tracks[1].paused,false);

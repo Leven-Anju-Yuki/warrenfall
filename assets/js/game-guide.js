@@ -23,13 +23,13 @@
     "title": "Un lapin bien dans ses pattes.",
     "image": "./assets/img/Zone_cuisine/faim.png",
     "where": "Cuisine · Chambre · Bain",
-    "text": "Trois petites habitudes pour prendre soin de lui.",
+    "text": "Chaque lapin possède ses propres jauges de nourriture, d’énergie et de propreté. Prendre soin de l’un ne remplit pas celles des autres.",
     "points": [
       "Cuisine : donne-lui à manger.",
       "Chambre : laisse-le se reposer.",
       "Bain : lave-le."
     ],
-    "tip": "Regarde ses trois jauges pour savoir ce dont il a besoin."
+    "tip": "Des besoins bas peuvent réduire les gains des activités. Regarde les jauges avant de jouer ou de combattre ; le frigo permet de consulter tes provisions même quand ton lapin n’a plus faim."
   },
   {
     "section": "L’amitié",
@@ -42,7 +42,7 @@
       "Au Jardin : cours et remporte des combats.",
       "L’amitié gagnée fait monter son niveau."
     ],
-    "tip": "Chaque lapin a son niveau. Les améliorations des pièces profitent à tous."
+    "tip": "La barre d’amitié indique ta progression et le prochain niveau. Les pièces se débloquent progressivement : lis le niveau et le coût indiqués sur le bouton. Les améliorations des pièces profitent à tous."
   },
   {
     "section": "Les carottes",
@@ -95,6 +95,45 @@
       "Couturière : elle assemble les pièces bien placées du puzzle."
     ],
     "tip": "Les besoins, le niveau et les techniques restent propres à chaque lapin."
+  },
+  {
+    "section": "Tes sauvegardes",
+    "title": "Ton terrier se souvient de toi.",
+    "image": "./assets/img/Ouverture_du_jeu/logo/Warrenfall_logo_transparent.png",
+    "where": "Disquette → Sauvegardes",
+    "text": "La partie en cours est enregistrée automatiquement dans ce navigateur après les actions importantes. Tu n’as pas besoin de fermer le jeu pour sauvegarder.",
+    "points": [
+      "Quand tu changes d’application ou masques la page, le jeu tente aussi d’enregistrer ta partie. La musique et les effets s’arrêtent ; la musique peut reprendre à ton retour si tu ne l’as pas coupée.",
+      "Au prochain lancement dans le même navigateur, le jeu reprend la dernière partie enregistrée. Une fermeture forcée par le téléphone peut empêcher la toute dernière sauvegarde.",
+      "Si un avertissement indique que l’enregistrement a échoué, garde la page ouverte et exporte un fichier avant de quitter."
+    ],
+    "tip": "Enregistrement automatique ne veut pas dire sauvegarde sur un compte en ligne : changer de navigateur ou d’appareil ne transfère pas ta partie."
+  },
+  {
+    "section": "Tes sauvegardes",
+    "title": "Trois Petits nids pour revenir en arrière.",
+    "image": "./assets/img/oeuf/rare.png",
+    "where": "Disquette → Sauvegardes → Petits nids",
+    "text": "En plus de la reprise automatique, le jeu garde trois instantanés nommés « Petit nid », avec leur date et leur heure.",
+    "points": [
+      "Un nouveau Petit nid est créé environ toutes les cinq minutes pendant le jeu. Un instantané peut aussi être créé au départ de la page, avec au moins une minute entre deux copies.",
+      "Seuls les trois plus récents restent disponibles : le nouveau remplace le plus ancien Petit nid. Tes sauvegardes manuelles ne sont pas supprimées par cette rotation.",
+      "Ouvre les sauvegardes avec la disquette, repère la date et l’heure du Petit nid, puis utilise Charger pour reprendre cet état. Tu retrouveras la progression de cet instant, pas les actions réalisées après."
+    ],
+    "tip": "Le message « Petit nid enregistré dans ce navigateur » confirme la copie locale. Si un dossier de sauvegardes est connecté et autorisé, les Petits nids y sont aussi copiés ; sinon ils restent dans le navigateur."
+  },
+  {
+    "section": "Tes sauvegardes",
+    "title": "Garde aussi une copie à toi.",
+    "image": "./assets/img/Ouverture_du_jeu/logo/Warrenfall_logo_transparent.png",
+    "where": "Disquette → Sauvegardes",
+    "text": "La copie la plus sûre à conserver en dehors du navigateur est un fichier de ta partie. C’est particulièrement utile avant de changer de téléphone, de navigateur ou de nettoyer ses données.",
+    "points": [
+      "Depuis la disquette, crée une sauvegarde nommée et utilise l’export ou le téléchargement JSON pour conserver un fichier daté. Garde-le dans un endroit que tu peux retrouver.",
+      "Pour reprendre ce fichier, utilise Importer / Charger une sauvegarde. Sur un autre appareil, il faut d’abord y transférer ton fichier.",
+      "Le dossier « Lapinous sauvegarde » n’est utilisé que si ton navigateur permet de le choisir et d’y écrire. Sur les téléphones sans cet accès, utilise le téléchargement et l’import de fichiers."
+    ],
+    "tip": "Effacer les données du site peut supprimer la reprise automatique et les Petits nids du navigateur. Une copie téléchargée à part évite de dépendre uniquement de ces enregistrements."
   },
   {
     "section": "À toi de jouer",
