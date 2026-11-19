@@ -1,5 +1,21 @@
 # Anti-triche Warrenfall — audit du 19 novembre 2026
 
+## Avancement — premier lot local
+
+Mise à jour lot 185 : publication demandée des correctifs d'affichage et de lecture économique ci-dessous, avec le rétablissement du frigo. Une garde supplémentaire vérifie les nouveaux départs d'exploration : préparation émise par le module, paramètres inchangés, niveau réel, préparation récente, reçu à usage unique et copie indépendante de l'objet stocké. Une sauvegarde refusée restaure l'énergie et le voyage précédent ; le reçu reste utilisable pour réessayer.
+
+Cette garde s'applique seulement aux nouveaux départs. Les voyages déjà présents dans une ancienne partie restent récupérables et ne nécessitent aucun reçu en mémoire. Les délais, taux, coûts et formats sauvegardés ne changent pas. La confirmation du dernier compagnon intervient avant le tirage et la datation du départ, pour ne pas compter le temps passé dans cette confirmation.
+
+Les tests `test-exploration-departure-safety.mjs` et `test-exploration.mjs` couvrent les falsifications de préparation, le rejeu, la mutation par référence, les retours arrière après échec et la récupération unique de voyages anciens. Cela ne certifie ni l'horloge de l'appareil, ni un client complètement modifié, ni la provenance de tous les butins importés. Les cartes restent ouvertes pour ce périmètre restant.
+
+Les noms sont désormais échappés dans 40 expressions HTML du jeu, sans modifier leurs valeurs dans les sauvegardes. Deux tests dédiés vérifient l'affichage littéral de balises, guillemets et Unicode, ainsi que la conservation des données de partie.
+
+Les prix, taux d'œufs et fenêtres d'événements des brouillons locaux sont ignorés sur le site public. L'édition locale reste possible sur localhost, IPv4 et IPv6. Les valeurs stockées ne sont ni supprimées ni remplacées. Le contrôle repose sur l'hôte, pas sur une classe CSS.
+
+Les deux cartes concernées restent ouvertes : l'audit de l'ensemble des textes/URL/identifiants et des surcharges de personnages, boss et puzzles n'est pas terminé. Ces dernières sont conservées pour ne pas rendre indisponible un ancien compagnon personnalisé avant étude de compatibilité. Les autres catégories ci-dessous restent des tâches à réaliser.
+
+Aucune modification du format de sauvegarde, aucun filtrage rétroactif des stocks ou de la collection, aucun changement des coûts publiés, de la rotation des copies ou des règles de progression. Treize séries de tests ciblés réussies pour le premier lot. Contrôle visuel physique restant ; publication demandée avec le lot 185.
+
 Cet inventaire recense les principales familles de contournement identifiables dans le code actuel. Ce n'est pas une garantie exhaustive ni une annonce de corrections déjà réalisées. Aucun essai ne modifie une partie réelle.
 
 Les tâches sont dans la liste **Anti-triche — à sécuriser** du [tableau Warrenfall](https://trello.com/b/5VmsAFi7/warrenfall). Elles sont reliées à A_FAIRE et au suivi manuel de l'agent, avec fichiers et critères de validation. Aucun déplacement automatique en Réalisé.

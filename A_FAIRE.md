@@ -1,5 +1,21 @@
 # Warrenfall - suivi des travaux et validations
 
+## Frigo rétabli et départs d'exploration — lot 185
+
+- Frigo : cause identifiée dans la trace fournie, `meals` supprimé alors que le rendu des plats l'utilisait encore. Tableau rétabli à partir des recettes et de leurs identifiants de stock, comme avant. Bouton ajouté près du fruit retiré ; ouverture depuis le frigo du décor conservée. Le test exécute maintenant le vrai rendu avec le catalogue réel, recettes actives/inactives, stock vide et faim pleine, sans changement d'inventaire. Le message Chrome `beforeinstallprompt` est distinct de cette exception.
+- [x] Vérifier les nouvelles préparations de voyage avant débit : reçu en mémoire, contenu inchangé, niveau actuel, dates récentes, non-réutilisation après succès et copie indépendante du voyage actif. Les délais et tarifs publiés restent identiques. [trello:6afeb61e4edf50c685ff32be:code:departure-receipt-185]
+- [x] Conserver la récupération des voyages déjà sauvegardés sans exiger de reçu en mémoire ; annuler entièrement les débits lors d'un échec de sauvegarde et permettre une nouvelle tentative. Aucun durcissement rétroactif de l'import, aucune nouvelle version de sauvegarde. [trello:6afeb621b5f344595561762d:code:legacy-trips-185]
+- Fichiers : `assets/js/pantry.js`, `assets/js/exploration.js`, `assets/js/script.js`, `tools/test-fridge-access.mjs`, `tools/test-exploration-departure-safety.mjs`.
+- Publication demandée pour ce lot et le lot 184 ci-dessous. Les cartes anti-triche restent ouvertes : identité serveur, horloge de confiance et cohérence de tous les imports ne sont pas résolues par ces gardes locales. Aucune sauvegarde joueur ni sauvegarde permanente d'image modifiée.
+
+## Anti-triche — premier lot conservateur, 19 novembre 2026
+
+- [x] Échapper les noms dans 40 expressions HTML du jeu : salon, collection, encyclopédie, puzzles, œufs et combats. L'échappement se fait à l'affichage, sans changer les noms bruts de la sauvegarde. Les autres textes de catalogues, URL et identifiants restent à auditer : la carte complète reste ouverte. [trello:6afeb61c2c4a2dd1fff2c202:code:names-render-184]
+- [x] Ignorer les brouillons locaux de prix, taux d'œufs et fenêtres d'événements sur le site public ; les autoriser sur les hôtes locaux réels, sans se fier à une classe CSS. Ne supprimer ni brouillon ni progression. Les surcharges de personnages, boss et puzzles sont conservées à ce stade pour étudier leur compatibilité avant filtrage. [trello:6afeb61ba3d2d19c32e1b840:code:public-economy-184]
+- Fichiers : `assets/js/script.js`, `assets/js/species-data.js`, `assets/js/shop.js`, `tools/test-player-text-safety.mjs`, `tools/test-public-catalogs.mjs`. Aucun changement du format, de la migration ou de la rotation des sauvegardes.
+- Vérifications : 13 séries ciblées réussies, dont noms hostiles affichés littéralement, profils public/local, migration conservant noms, niveau, amitié, stocks et champs inconnus, sauvegardes anciennes et rotation des Petits nids. Tests sur données fictives ; aucune partie réelle ouverte ou modifiée. Cache du code actualisé ; modifications locales non publiées.
+- Reste : tester le rendu en navigateur et sur téléphone, poursuivre les autres champs affichés et étudier les anciens personnages/catalogues personnalisés avant d'isoler leurs brouillons. Aucun durcissement rétroactif des imports ni refus d'une ancienne partie ajouté dans ce lot.
+
 ## Anti-triche — tâches ouvertes du 19 novembre 2026
 
 Inventaire et limites : [docs/ANTI_TRICHE.md](docs/ANTI_TRICHE.md). Douze cartes créées dans « Anti-triche — à sécuriser », avec correspondances explicites et critères de validation. Suivi manuel uniquement ; aucune protection nouvelle annoncée comme réalisée et aucun déplacement automatique en Réalisé.

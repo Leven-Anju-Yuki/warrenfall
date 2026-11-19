@@ -52,6 +52,9 @@ const RELATIONS_TEXT = [
 const CUSTOM_SPECIES_KEY = "lapinous_custom_species";
 const CUSTOM_BOSSES_KEY = "lapinous_custom_bosses";
 const EGG_RATES_KEY = "lapinous_egg_rates";
+// Le stockage de progression reste intact. Seuls les brouillons économiques
+// du Dashboard sont réservés à l'hôte local, jamais à une classe CSS modifiable.
+const LOCAL_CATALOG_EDITING = ['localhost','127.0.0.1','::1','[::1]'].includes(location.hostname.toLowerCase());
 
 function loadCustomSpecies() {
     try { return JSON.parse(localStorage.getItem(CUSTOM_SPECIES_KEY) || "{}"); } catch (e) { return {}; }
@@ -61,7 +64,7 @@ function loadCustomBosses() {
 }
 function loadEggRates() {
     try {
-        const stored = JSON.parse(localStorage.getItem(EGG_RATES_KEY));
+        const stored = LOCAL_CATALOG_EDITING && JSON.parse(localStorage.getItem(EGG_RATES_KEY));
         if (stored) return stored;
     } catch (e) {}
     return JSON_EGG_RATES || { commun: 68, rare: 22, epique: 6, legendaire: 2.5, mythique: 1.2, divin: 0.3 };
@@ -100,7 +103,7 @@ function getChineseNewYearDate(year) {
 }
 function loadEventWindows() {
     try {
-        const stored = JSON.parse(localStorage.getItem(EVENT_WINDOWS_KEY));
+        const stored = LOCAL_CATALOG_EDITING && JSON.parse(localStorage.getItem(EVENT_WINDOWS_KEY));
         if (stored) return { ...DEFAULT_EVENT_WINDOWS, ...stored };
     } catch (e) {}
     return { ...DEFAULT_EVENT_WINDOWS, ...(JSON_EVENT_WINDOWS || {}) };
@@ -178,7 +181,7 @@ window.LapinousContentReady = fetch("./lapinous-content.json", { cache: "no-stor
 // Visibilité éditoriale : les réglages locaux de l’administrateur précèdent le catalogue publié.
 (() => {
     const key='lapinous_visibility';
-    const definitions={quiz:['Quiz des lapins','[onclick="openRabbitQuiz()"]','public'],market:['Rayon Marche','[data-shop-tab=market]','public'],evolution:['Rayon Evolutions','[data-shop-tab=evolution]','public'],fragments:['Rayon Fragments','[data-shop-tab=fragments]','public'],carrotShop:['Rayon Carottes','[data-shop-tab=carrots]','admin'],recipes:['Preparation des plats','.pantry-meals','public'],agility:['Agilite','[onclick="startAgility()"]','public'],games:['Coin jeux','[onclick="openGameConsole()"]','public'],favorites:['Favoris du salon','.salon-favorites-button,.rabbit-favorite-star','public'],records:['Records et succes','#lapinousRecordsBtn','public'],pantry:['Garde-manger et cuisine du Chef','.fridge-hotspot,.kitchen-fridge-button,#kitchenFridgeDialog','public'],shop:['Magasin','#shopButton','public'],inventory:['Apothicairerie','#inventoryButton','public'],legal:['Documents juridiques','#legalTrigger','public'],encyclopedia:['Encyclopédie','#encyclopediaBtn','public'],puzzles:['Puzzles','[onclick="openPuzzleHub()"]','public'],memory:['Memory','[onclick="openMemory()"]','public'],lapidoku:['Lapidoku','[onclick="openNumberSudoku()"]','public'],lapinoudoku:['Lapinoudoku','[onclick="openLapidoku()"]','public'],combat:['Combats','[onclick="openAdventure()"]','public']};
+    const definitions={quiz:['Quiz des lapins','[onclick="openRabbitQuiz()"]','public'],market:['Rayon Marche','[data-shop-tab=market]','public'],evolution:['Rayon Evolutions','[data-shop-tab=evolution]','public'],fragments:['Rayon Fragments','[data-shop-tab=fragments]','public'],carrotShop:['Rayon Carottes','[data-shop-tab=carrots]','admin'],recipes:['Preparation des plats','.pantry-meals','public'],agility:['Agilite','[onclick="startAgility()"]','public'],games:['Coin jeux','[onclick="openGameConsole()"]','public'],favorites:['Favoris du salon','.salon-favorites-button,.rabbit-favorite-star','public'],records:['Records et succes','#lapinousRecordsBtn','public'],pantry:['Garde-manger et cuisine du Chef','.fridge-hotspot,#kitchenFridgeDialog','public'],shop:['Magasin','#shopButton','public'],inventory:['Apothicairerie','#inventoryButton','public'],legal:['Documents juridiques','#legalTrigger','public'],encyclopedia:['Encyclopédie','#encyclopediaBtn','public'],puzzles:['Puzzles','[onclick="openPuzzleHub()"]','public'],memory:['Memory','[onclick="openMemory()"]','public'],lapidoku:['Lapidoku','[onclick="openNumberSudoku()"]','public'],lapinoudoku:['Lapinoudoku','[onclick="openLapidoku()"]','public'],combat:['Combats','[onclick="openAdventure()"]','public']};
     let base={},local={};
     const admin=['localhost','127.0.0.1','::1','[::1]'].includes(location.hostname.toLowerCase());
     try {if(admin)local=JSON.parse(localStorage.getItem(key)||'{}');} catch {}

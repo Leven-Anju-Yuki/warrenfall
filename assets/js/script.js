@@ -1131,8 +1131,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const card = document.getElementById("adoptionCard");
             card.innerHTML = `
             <div class="rarity-badge" style="background:${rarity.color};">${rarity.label}</div>
-            <img src="${s.faceImg || s.coteImg}" class="adoption-photo" alt="${s.name}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';">
-            <div class="adoption-name">${s.name}, ${s.nickname}</div>
+            <img src="${s.faceImg || s.coteImg}" class="adoption-photo" alt="${combatEscape(s.name)}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';">
+            <div class="adoption-name">${combatEscape(s.name)}, ${s.nickname}</div>
             <div class="adoption-personality">${s.personality}</div>
             <div class="trait-badge">${trait.emoji} ${trait.label}</div>
         `;
@@ -1250,10 +1250,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const rarity = RARITY_META[s.rarity];
             document.getElementById("encyclopediaDetailCard").innerHTML = `
             <div class="encyclopedia-detail-card">
-                <img src="${s.faceImg || s.coteImg}" alt="${s.name}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';">
+                <img src="${s.faceImg || s.coteImg}" alt="${combatEscape(s.name)}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';">
                 <div class="entry-body">
                     <div class="entry-header">
-                        <strong>${s.name}, ${s.nickname}</strong>
+                        <strong>${combatEscape(s.name)}, ${s.nickname}</strong>
                         <span class="rarity-badge small" style="background:${rarity.color};">${rarity.label}</span>
                     </div>
                     <p><em>${s.personality}</em></p>
@@ -1262,7 +1262,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     <p><strong>Aime :</strong> ${(s.likes || []).join(", ") || "—"}</p>
                     <p><strong>N'aime pas :</strong> ${(s.dislikes || []).join(", ") || "—"}</p>
                     <p><strong>Ultime (coup critique) :</strong> ${s.power}</p>
-                    <p><strong>Amis :</strong> ${(s.friends || []).map(k=>getSpecies()[k]?.name).filter(Boolean).join(", ") || "Aucun connu"}</p><p><strong>Rivalités :</strong> ${(s.rivals || []).map(k=>getSpecies()[k]?.name).filter(Boolean).join(", ") || "Aucune connue"}</p>${encyclopediaProgressHtml(key)}
+                    <p><strong>Amis :</strong> ${combatEscape((s.friends || []).map(k=>getSpecies()[k]?.name).filter(Boolean).join(", ") || "Aucun connu")}</p><p><strong>Rivalités :</strong> ${combatEscape((s.rivals || []).map(k=>getSpecies()[k]?.name).filter(Boolean).join(", ") || "Aucune connue")}</p>${encyclopediaProgressHtml(key)}
                     <button class="action-btn" onclick="switchActiveSpecies('${key}'); bootstrap.Modal.getOrCreateInstance(document.querySelector('#encyclopediaModal')).hide();">🐰 Choisir ce lapin</button>
                     <p class="entry-quote">« ${s.quote} »</p>
                 </div>
@@ -1279,10 +1279,10 @@ document.addEventListener("DOMContentLoaded", () => {
             const b = getBosses()[key];
             document.getElementById("encyclopediaDetailCard").innerHTML = `
             <div class="encyclopedia-detail-card">
-                <img src="${b.faceImg || b.coteImg}" alt="${b.name}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';">
+                <img src="${b.faceImg || b.coteImg}" alt="${combatEscape(b.name)}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';">
                 <div class="entry-body">
                     <div class="entry-header">
-                        <strong>${b.name}${b.nickname ? ", " + b.nickname : ""}</strong>
+                        <strong>${combatEscape(b.name)}${b.nickname ? ", " + b.nickname : ""}</strong>
                         <span class="rarity-badge small" style="background:#7a3a3a;">Difficulté ${b.difficulty ?? "?"}</span>
                     </div>
                     ${b.rang ? `<p><em>${b.rang}</em></p>` : ""}
@@ -1316,7 +1316,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const realImg = s.faceImg || s.coteImg || "";
                 const imgSrc =
                     realImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg";
-                card.innerHTML = `<img class="${owned ? "" : realImg ? "rabbit-silhouette" : ""}" src="${imgSrc}" alt="${owned ? s.name : "???"}" onerror="this.onerror=null;this.classList.remove('rabbit-silhouette');this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';"><span class="card-name">${owned ? s.name : "???"}</span>`;
+                card.innerHTML = `<img class="${owned ? "" : realImg ? "rabbit-silhouette" : ""}" src="${imgSrc}" alt="${combatEscape(owned ? s.name : "???")}" onerror="this.onerror=null;this.classList.remove('rabbit-silhouette');this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';"><span class="card-name">${combatEscape(owned ? s.name : "???")}</span>`;
                 if(s.event){
                     const badge=document.createElement('span');
                     badge.className='event-badge';
@@ -1376,7 +1376,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 card.type = "button";
                 card.className = "encyclopedia-card" + (found ? "" : " locked");
                 const imgSrc = found ? b.faceImg || b.coteImg : BOSS_MYSTERY_IMG;
-                card.innerHTML = `<img src="${imgSrc}" alt="${found ? b.name : "???"}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';"><span class="card-name">${found ? b.name : "???"}</span>${found ? '<span class="owned-badge">✓</span>' : ""}`;
+                card.innerHTML = `<img src="${imgSrc}" alt="${combatEscape(found ? b.name : "???")}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';"><span class="card-name">${combatEscape(found ? b.name : "???")}</span>${found ? '<span class="owned-badge">✓</span>' : ""}`;
                 card.addEventListener("click", () => {
                     if (found) showBossDetail(key);
                     else
@@ -1647,7 +1647,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 sp.coteImg ||
                 "./assets/img/lapins_jouables/sans_evenements/mystery.svg";
             const name = game.speciesNames[key] || sp.name;
-            return `<div class="collection-switcher collection-carousel"><p class="upgrade-locked-note">Tes lapins (${collectionCarouselIndex + 1}/${owned.length}) :</p><div class="collection-carousel-main"><button class="collection-arrow" onclick="moveCollectionCarousel(-1)">‹</button><button class="collection-card carousel-big ${key === game.species ? "active" : ""}" onclick="switchActiveSpecies('${key}')"><img src="${img}" alt="${name}" onerror="this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg'"><span>${name}${key === game.species ? " · actif" : ""}</span></button><button class="collection-arrow" onclick="moveCollectionCarousel(1)">›</button></div></div>`;
+            return `<div class="collection-switcher collection-carousel"><p class="upgrade-locked-note">Tes lapins (${collectionCarouselIndex + 1}/${owned.length}) :</p><div class="collection-carousel-main"><button class="collection-arrow" onclick="moveCollectionCarousel(-1)">‹</button><button class="collection-card carousel-big ${key === game.species ? "active" : ""}" onclick="switchActiveSpecies('${key}')"><img src="${img}" alt="${combatEscape(name)}" onerror="this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg'"><span>${combatEscape(name)}${key === game.species ? " · actif" : ""}</span></button><button class="collection-arrow" onclick="moveCollectionCarousel(1)">›</button></div></div>`;
         }
         window.moveCollectionCarousel = function (dir) {
             const owned = window.LapinousTeamRules.eventFirst((game.ownedSpecies || []).filter(k=>getSpecies()[k]).map(k=>[k,getSpecies()[k]]),currentActiveEvents()).map(x=>x[0]);
@@ -1710,9 +1710,9 @@ document.addEventListener("DOMContentLoaded", () => {
                         sp.coteImg ||
                         "./assets/img/lapins_jouables/sans_evenements/mystery.svg";
                     const name = game.speciesNames[key] || sp.name || key;
-                    return `<button class="salon-rabbit-friend friend-${index % 8}" onclick="switchActiveSpecies('${key}')" title="Jouer avec ${name}">
-                <img src="${img}" alt="${name}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';">
-                <span>${name}</span>
+                    return `<button class="salon-rabbit-friend friend-${index % 8}" onclick="switchActiveSpecies('${key}')" title="Jouer avec ${combatEscape(name)}">
+                <img src="${img}" alt="${combatEscape(name)}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';">
+                <span>${combatEscape(name)}</span>
             </button>`;
                 })
                 .join("");
@@ -1720,7 +1720,7 @@ document.addEventListener("DOMContentLoaded", () => {
             <div class="salon-room-title">🐰 Le Salon de tes compagnons</div>
             <button class="salon-favorites-button" type="button" onclick="openSalonFavorites()">Choisir mes 3 favoris</button>
             <div class="salon-friends">${friends || '<span class="salon-alone-note">Ton premier compagnon profite du Salon ✨</span>'}</div>
-            <div id="salonActiveRabbitSpot" class="salon-active-rabbit-spot"><span class="active-rabbit-name">${currentRabbitName()}</span></div>
+            <div id="salonActiveRabbitSpot" class="salon-active-rabbit-spot"><span class="active-rabbit-name">${combatEscape(currentRabbitName())}</span></div>
             <button class="salon-console-object board-game-object" type="button" onclick="openGameConsole()" aria-label="Ouvrir le coin jeux">
                 <span class="board-top">
                     <span class="board-grid"></span>
@@ -1984,7 +1984,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </button>`;
                 })
                 .join("");
-            gameArea.innerHTML = `<div class="puzzle-hub"><div class="console-title">🧩 Puzzles de ${currentRabbitName()}</div><p class="agility-hint">Les puzzles événementiels apparaissent uniquement pendant leur événement.</p><div class="puzzle-list">${cards}</div><button class="ghost-btn" onclick="openGameConsole()">← Console</button></div>`;
+            gameArea.innerHTML = `<div class="puzzle-hub"><div class="console-title">🧩 Puzzles de ${combatEscape(currentRabbitName())}</div><p class="agility-hint">Les puzzles événementiels apparaissent uniquement pendant leur événement.</p><div class="puzzle-list">${cards}</div><button class="ghost-btn" onclick="openGameConsole()">← Console</button></div>`;
         };
 
         window.openPuzzleLevels = function (puzzleIndex) {
@@ -2365,7 +2365,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 <img class="puzzle-preview" src="${puz.image}" alt="${puz.title}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';">
                 <p><strong>${moves}</strong> coups · Amitié gagnée : +${friendshipGained} 💛</p>
                 <p>Besoins consommés : −${needsBefore.food-progress().food} nourriture · −${needsBefore.energy-progress().energy} énergie · −${needsBefore.cleanliness-progress().cleanliness} propreté.</p>
-                <p class="agility-hint">Progression enregistrée pour ${currentRabbitName()}.</p>
+                <p class="agility-hint">Progression enregistrée pour ${combatEscape(currentRabbitName())}.</p>
                 <button class="action-btn" onclick="openPuzzleLevels(${puzzleIndex})"><span>Continuer 🧩</span></button>
                 <button class="ghost-btn" onclick="openPuzzleHub()">Voir les puzzles</button>
             </div>`;
@@ -2417,8 +2417,8 @@ document.addEventListener("DOMContentLoaded", () => {
                     const maxed = level >= 5;
                     const ready = unlocked && !maxed && editable && owned && pr.attackFragments > 0;
                     return `<article class="rabbit-technique-card ${!unlocked ? "locked" : maxed ? "mastered" : ready ? "ready" : ""}">
-                    <div class="rabbit-technique-info"><span class="rabbit-technique-status">${!unlocked ? "🔒 Verrouillée" : maxed ? "✓ Maîtrisée" : "✦ Disponible"} · Attaque ${index + 1}</span><strong>${t.name}</strong><small>${effect}</small>
-                    <div class="rabbit-technique-progress"><span>Amélioration</span><b>${level}/5</b></div><progress value="${level}" max="5" aria-label="Amélioration de ${t.name}">${level}/5</progress>
+                    <div class="rabbit-technique-info"><span class="rabbit-technique-status">${!unlocked ? "🔒 Verrouillée" : maxed ? "✓ Maîtrisée" : "✦ Disponible"} · Attaque ${index + 1}</span><strong>${combatEscape(t.name)}</strong><small>${effect}</small>
+                    <div class="rabbit-technique-progress"><span>Amélioration</span><b>${level}/5</b></div><progress value="${level}" max="5" aria-label="Amélioration de ${combatEscape(t.name)}">${level}/5</progress>
                     ${!unlocked ? `<small class="rabbit-technique-hint">Déblocage au niveau ${techniqueUnlockLevel(index)} de ce lapin.</small>` : ""}</div>
                     ${editable && owned ? `<button type="button" class="rabbit-technique-upgrade" onclick="upgradeRabbitAttack('${key}',${index})" ${!ready ? "disabled" : ""}>${!unlocked ? "🔒 Verrouillée" : maxed ? "✓ Maximum" : "Améliorer<span>💎 1 fragment</span>"}</button>` : ""}</article>`;
                 })
@@ -2454,11 +2454,11 @@ document.addEventListener("DOMContentLoaded", () => {
             const options = pr.attackLevels
                 .map((level, i) =>
                     isTechniqueUnlocked({ sp, pr }, i) && level < 5
-                        ? `<option value="${i}">${techniqueFor({ key: pending.speciesKey, sp, pr }, i).name} · ${level}/5</option>`
+                        ? `<option value="${i}">${combatEscape(techniqueFor({ key: pending.speciesKey, sp, pr }, i).name)} · ${level}/5</option>`
                         : "",
                 )
                 .join("");
-            return `<div class="duplicate-choice"><div class="duplicate-title">✨ Doublon : ${sp.name}</div><p>Recycle-le ou reçois un fragment pour ce lapin.</p><div class="action-row"><button class="action-btn" onclick="resolveDuplicate('carrots')">🥕 +${pending.carrotReward} carottes</button><button class="action-btn adventure" onclick="resolveDuplicate('fragment')">💎 Garder le fragment</button></div>${options ? `<label>Attaque à améliorer <select class="duplicate-attack-select" id="duplicateAttackTarget">${options}</select></label><button class="action-btn adventure" onclick="resolveDuplicate('attack',Number(document.getElementById('duplicateAttackTarget').value))">⚔️ Améliorer cette attaque</button>` : "<p>Aucune attaque débloquée à améliorer pour le moment. Garde le fragment pour plus tard.</p>"}<small>Les fragments conservés se dépensent dans la fiche du lapin.</small></div>`;
+            return `<div class="duplicate-choice"><div class="duplicate-title">✨ Doublon : ${combatEscape(sp.name)}</div><p>Recycle-le ou reçois un fragment pour ce lapin.</p><div class="action-row"><button class="action-btn" onclick="resolveDuplicate('carrots')">🥕 +${pending.carrotReward} carottes</button><button class="action-btn adventure" onclick="resolveDuplicate('fragment')">💎 Garder le fragment</button></div>${options ? `<label>Attaque à améliorer <select class="duplicate-attack-select" id="duplicateAttackTarget">${options}</select></label><button class="action-btn adventure" onclick="resolveDuplicate('attack',Number(document.getElementById('duplicateAttackTarget').value))">⚔️ Améliorer cette attaque</button>` : "<p>Aucune attaque débloquée à améliorer pour le moment. Garde le fragment pour plus tard.</p>"}<small>Les fragments conservés se dépensent dans la fiche du lapin.</small></div>`;
         }
         window.resolveDuplicate = function (choice, index) {
             const pending = game.pendingDuplicate;
@@ -2504,7 +2504,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 label: "🏡 Salon",
                 image: () => speciesFaceImg(),
                 content: () => `
-                <p class="welcome-msg">Te voilà à la maison avec ${currentRabbitName() || "ton lapin"} ! Clique sur un compagnon du Salon pour changer de lapin, ou sur la console pour jouer.</p>
+                <p class="welcome-msg">Te voilà à la maison avec ${combatEscape(currentRabbitName() || "ton lapin")} ! Clique sur un compagnon du Salon pour changer de lapin, ou sur la console pour jouer.</p>
                 ${duplicateChoiceHtml()}
                 ${salonOwnedRabbitsSceneHtml()}
                 <div class="egg-shop"><details class="egg-rate-guide"><summary>🥚 Voir les œufs et leurs taux d’apparition</summary><div class="egg-rates-display" data-egg-rates>${eggRatesMarkup()}</div></details>
@@ -2520,7 +2520,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 label: "🍳 Cuisine",
                 image: () => "./assets/img/Zone_cuisine/faim.png",
                 content: () =>
-                    '<button class="fridge-hotspot" onclick="openKitchenFridge()" aria-label="Ouvrir le frigo"><span>🧊 Ouvrir le frigo</span></button><div class="kitchen-scene-actions"><button class="action-btn kitchen-fridge-button" onclick="openKitchenFridge()"><span class="action-icon-emoji">🧊</span><span>Frigo et provisions</span></button><button class="action-btn" onclick="feedRabbit()"><img class="action-icon" src="' +
+                    '<button class="fridge-hotspot" onclick="openKitchenFridge()" aria-label="Ouvrir le frigo"><span>🧊 Ouvrir le frigo</span></button><div class="kitchen-scene-actions"><button class="action-btn" onclick="feedRabbit()"><img class="action-icon" src="' +
                     (roomStage("cuisine") > 0
                         ? "./assets/img/Zone_cuisine/pomme.png"
                         : "./assets/img/Zone_cuisine/carotte.png") +
@@ -3319,8 +3319,8 @@ document.addEventListener("DOMContentLoaded", () => {
                               ? "⚠️ Difficile"
                               : "🙂 Faisable";
                     return `<button class="boss-card" onclick="prepareFight('${key}')">
-                    <img src="${b.faceImg || b.coteImg}" alt="${b.name}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';">
-                    <div class="boss-name">${b.name}</div><small>${b.kind === "vegetable" ? "Petit adversaire : amitié et "+b.rewardCarrots+" carottes, sans butin" : "Boss : défi plus corsé"}</small>
+                    <img src="${b.faceImg || b.coteImg}" alt="${combatEscape(b.name)}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';">
+                    <div class="boss-name">${combatEscape(b.name)}</div><small>${b.kind === "vegetable" ? "Petit adversaire : amitié et "+b.rewardCarrots+" carottes, sans butin" : "Boss : défi plus corsé"}</small>
                     <div class="boss-power">⚔️ Puissance ${stats.power}</div>
                     <div class="boss-power">❤️ ${stats.maxHp} PV</div>
                     <div class="boss-diff">${label}</div>
@@ -3360,23 +3360,23 @@ document.addEventListener("DOMContentLoaded", () => {
             gameArea.innerHTML = `
             <div class="fight-stage">
                 <div class="fight-hud-side player">
-                    <div class="fight-name">🐰 ${currentRabbitName() || s.name}</div>
+                    <div class="fight-name">🐰 ${combatEscape(currentRabbitName() || s.name)}</div>
                     <div class="fight-hp"><div class="fight-hp-fill player-hp" style="width:100%"></div></div>
                     <div class="fight-hp-text">${playerHp} / ${playerHp} PV</div>
                     <div class="fight-crit-label">💥 Critique <span class="fight-crit-text">0%</span></div>
                     <div class="fight-crit"><div class="fight-crit-fill player-crit-fill" style="width:0%"></div></div>
                 </div>
                 <div class="fight-hud-side boss">
-                    <div class="fight-name">🥕 ${boss.name}</div>
+                    <div class="fight-name">🥕 ${combatEscape(boss.name)}</div>
                     <div class="fight-hp"><div class="fight-hp-fill boss-hp" style="width:100%"></div></div>
                     <div class="fight-hp-text">${bossHp} / ${bossHp} PV</div>
                     <div class="fight-crit-label">💥 Critique <span class="fight-crit-text">0%</span></div>
                     <div class="fight-crit"><div class="fight-crit-fill boss-crit-fill" style="width:0%"></div></div>
                 </div>
                 <div class="vs-screen battle-vs">
-                    <div class="vs-side fighter player-fighter"><img class="battle-sprite player-sprite" style="${combatSpriteStyle(s, "rabbit", game.species)}" src="${s.coteImg || s.faceImg}" alt="${s.name}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';"><div class="vs-sub">Niveau ${progress().currentLevel}</div><div class="fight-power-name">${powerName(s)}</div></div>
+                    <div class="vs-side fighter player-fighter"><img class="battle-sprite player-sprite" style="${combatSpriteStyle(s, "rabbit", game.species)}" src="${s.coteImg || s.faceImg}" alt="${combatEscape(s.name)}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';"><div class="vs-sub">Niveau ${progress().currentLevel}</div><div class="fight-power-name">${powerName(s)}</div></div>
                     <div class="vs-mark">⚔️</div>
-                    <div class="vs-side fighter boss-fighter"><img class="battle-sprite boss-sprite" style="${combatSpriteStyle(boss, "boss")}" src="${boss.coteImg || boss.faceImg}" alt="${boss.name}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';"><div class="vs-sub">Difficulté ${boss.difficulty}</div><div class="fight-power-name">${powerName(boss)}</div></div>
+                    <div class="vs-side fighter boss-fighter"><img class="battle-sprite boss-sprite" style="${combatSpriteStyle(boss, "boss")}" src="${boss.coteImg || boss.faceImg}" alt="${combatEscape(boss.name)}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';"><div class="vs-sub">Difficulté ${boss.difficulty}</div><div class="fight-power-name">${powerName(boss)}</div></div>
                 </div>
                 <div id="fightLog" class="fight-log">Prêt au combat !</div>
                 <div class="action-row fight-actions"><button class="action-btn adventure" onclick="fightBoss('${key}')"><span>⚔️ Combattre !</span></button><button class="ghost-btn" onclick="openAdventure()">← Autre adversaire</button></div>
@@ -3731,7 +3731,7 @@ document.addEventListener("DOMContentLoaded", () => {
                             : t.kind === "guard"
                               ? ` · protection ${Math.round(Math.min(0.75, 0.55 + level * 0.04) * 100)} %`
                               : "";
-                    return `<li><b>${t.name}</b><span>${low}${high > low ? `–${high}` : ""} dégâts${extra}</span></li>`;
+                    return `<li><b>${combatEscape(t.name)}</b><span>${low}${high > low ? `–${high}` : ""} dégâts${extra}</span></li>`;
                 })
                 .join("");
             const config = criticalConfig(r.sp);
@@ -3755,7 +3755,7 @@ document.addEventListener("DOMContentLoaded", () => {
             );
             const bossPower = bossCombatStats(boss).power;
             const share = (teamPower / (teamPower + bossPower)) * 100;
-            return `<div class="fight-power-comparison"><div class="fight-power-values"><span>🐰 Équipe <b>${teamPower}</b></span><strong>Puissance totale</strong><span>🥕 ${boss.name} <b>${bossPower}</b></span></div><div class="fight-power-meter" role="img" aria-label="Puissance de l’équipe ${teamPower}, puissance du boss ${bossPower}"><i style="width:${share}%"></i></div><small>Somme de la puissance des lapins sélectionnés. Les PV, techniques et protections comptent aussi dans le combat.</small></div>`;
+            return `<div class="fight-power-comparison"><div class="fight-power-values"><span>🐰 Équipe <b>${teamPower}</b></span><strong>Puissance totale</strong><span>🥕 ${combatEscape(boss.name)} <b>${bossPower}</b></span></div><div class="fight-power-meter" role="img" aria-label="Puissance de l’équipe ${teamPower}, puissance du boss ${bossPower}"><i style="width:${share}%"></i></div><small>Somme de la puissance des lapins sélectionnés. Les PV, techniques et protections comptent aussi dans le combat.</small></div>`;
         }
         function fightAffinityHtml() {
             const species = getSpecies();
@@ -3764,6 +3764,8 @@ document.addEventListener("DOMContentLoaded", () => {
             const totals = selectedFightTeam.map(key => `${species[key]?.name} : ${bonuses[key] > 0 ? '+' : ''}${bonuses[key] || 0} %`).join(' · ');
             return `<aside class="fight-affinities" aria-live="polite"><strong>Les liens de ton équipe</strong><p>${pairText || 'Pas de lien particulier dans cette équipe.'}</p><small>${totals}. Effet sur la puissance seulement, limité à ±10 % par lapin. Les niveaux et l’amitié restent inchangés.</small></aside>`;
         }
+        // Échapper uniquement à la frontière HTML : les noms d'origine restent
+        // intacts pour les sauvegardes, exports, comparaisons et textContent.
         function combatEscape(text){return String(text??'').replace(/[&<>"']/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;',"'":'&#39;'}[c]));}
         // Update existing nodes at each impact; replacing the stage would interrupt animations.
         function updateTacticalVitals(f){
@@ -3871,7 +3873,7 @@ document.addEventListener("DOMContentLoaded", () => {
                     return `<div class="team-preview-rabbit slot-${i + 1}"><img style="${combatSpriteStyle(sp, "rabbit", r.key)}" src="${sp.coteImg || sp.faceImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg"}"><strong>${rabbitDisplayName(r)}</strong>${rabbitFightPreviewHtml(r)}</div>`;
                 })
                 .join("");
-            gameArea.innerHTML = `<div class="fight-stage fight-preparation"><div class="console-title">⚔️ Prépare ton équipe contre ${boss.name}</div>${fightPowerComparisonHtml(boss)}${fightAffinityHtml()}<div class="fight-team-select">${teamCards}</div><div class="battlefield-preview"><div class="team-preview-side">${preview || "<span>Choisis ton équipe</span>"}</div><div class="vs-mark">VS</div><div class="preview-boss"><img style="${combatSpriteStyle(boss, "boss")}" src="${boss.coteImg || boss.faceImg}" onerror="this.src='./assets/img/boss/mystery_boss.svg'"><strong>${boss.name}</strong>${bossFightPreviewHtml(boss,key)}</div></div><div class="action-row"><label>Combat <select onchange="setFightMode(this.value)"><option value="manual" ${fightMode === "manual" ? "selected" : ""}>Manuel</option><option value="auto" ${fightMode === "auto" ? "selected" : ""}>Automatique</option></select></label><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${fightSpeed === 1 ? "selected" : ""}>×1</option><option value="3" ${fightSpeed === 3 ? "selected" : ""}>×3</option></select></label><button class="action-btn adventure" onclick="startTacticalFight('${key}')" ${selectedFightTeam.length ? "" : "disabled"}>⚔️ Commencer</button><button class="ghost-btn" onclick="openAdventure()">← Boss</button></div></div>`;
+            gameArea.innerHTML = `<div class="fight-stage fight-preparation"><div class="console-title">⚔️ Prépare ton équipe contre ${combatEscape(boss.name)}</div>${fightPowerComparisonHtml(boss)}${fightAffinityHtml()}<div class="fight-team-select">${teamCards}</div><div class="battlefield-preview"><div class="team-preview-side">${preview || "<span>Choisis ton équipe</span>"}</div><div class="vs-mark">VS</div><div class="preview-boss"><img style="${combatSpriteStyle(boss, "boss")}" src="${boss.coteImg || boss.faceImg}" onerror="this.src='./assets/img/boss/mystery_boss.svg'"><strong>${combatEscape(boss.name)}</strong>${bossFightPreviewHtml(boss,key)}</div></div><div class="action-row"><label>Combat <select onchange="setFightMode(this.value)"><option value="manual" ${fightMode === "manual" ? "selected" : ""}>Manuel</option><option value="auto" ${fightMode === "auto" ? "selected" : ""}>Automatique</option></select></label><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${fightSpeed === 1 ? "selected" : ""}>×1</option><option value="3" ${fightSpeed === 3 ? "selected" : ""}>×3</option></select></label><button class="action-btn adventure" onclick="startTacticalFight('${key}')" ${selectedFightTeam.length ? "" : "disabled"}>⚔️ Commencer</button><button class="ghost-btn" onclick="openAdventure()">← Boss</button></div></div>`;
             autoSave();
         };
         window.startTacticalFight = function (key) {
@@ -3911,7 +3913,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const skills = Array.from({ length: skillN }, (_, i) => {
                 if (!isTechniqueUnlocked(r, i)) return "";
                 const t = techniqueFor(r, i);
-                return `<button class="fight-command" onclick="tacticalAction('skill',${i})" >✨ ${t.name}</button>`;
+                return `<button class="fight-command" onclick="tacticalAction('skill',${i})" >✨ ${combatEscape(t.name)}</button>`;
             }).join("");
             const fighters = f.team
                 .map(
@@ -3919,7 +3921,7 @@ document.addEventListener("DOMContentLoaded", () => {
                         `<div class="team-fighter battle-slot-${i + 1} ${i === f.active ? "active-turn" : ""} ${x.hp <= 0 ? "ko" : ""}" data-fighter="${i}"><div class="turn-marker">${i === f.active ? "▼ TOUR" : ""}</div><img class="battle-sprite team-rabbit-sprite" style="${combatSpriteStyle(x.sp, "rabbit", x.key)}" src="${x.sp.coteImg || x.sp.faceImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg"}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';"><strong>${rabbitDisplayName(x)}</strong><small>${Math.max(0, x.hp)} / ${x.maxHp} PV</small><span class="fighter-effects" title="${combatEscape(window.LapinousBossAbilities.rabbitLabels(x).join(', '))}">${window.LapinousBossAbilities.rabbitLabels(x).map(label=>label.split(' ')[0]).join(' ')}</span><div class="mini-hp"><i style="width:${(Math.max(0, x.hp) / x.maxHp) * 100}%"></i></div></div>`,
                 )
                 .join("");
-            gameArea.innerHTML = `<div class="fight-stage tactical"><div class="fight-hud-side player"><div class="fight-name">🐰 Tour de ${rabbitDisplayName(r)}</div><div class="fight-hp"><div class="fight-hp-fill player-hp" style="width:${(r.hp / r.maxHp) * 100}%"></div></div><div class="fight-hp-text">${Math.max(0, r.hp)} / ${r.maxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(r.charge)}%</div><div class="fight-crit"><div class="fight-crit-fill player-crit-fill" style="width:${r.charge}%"></div></div>${combatStatusHtml(window.LapinousBossAbilities.rabbitLabels(r))}</div><div class="fight-hud-side boss"><div class="fight-name">🥕 ${f.boss.name}</div><div class="fight-hp"><div class="fight-hp-fill boss-hp" style="width:${(f.bossHp / f.bossMaxHp) * 100}%"></div></div><div class="fight-hp-text">${Math.max(0, f.bossHp)} / ${f.bossMaxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(f.bossCharge)}%</div><div class="fight-crit"><div class="fight-crit-fill" style="width:${f.bossCharge}%"></div></div>${bossIntentHtml(f)}</div><div class="team-battlefield"><div class="team-fighters">${fighters}</div><div class="vs-mark">⚔️</div><div class="boss-battle-slot"><img class="battle-sprite boss-sprite" style="${combatSpriteStyle(f.boss, "boss")}" src="${f.boss.coteImg || f.boss.faceImg}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';"><strong>${f.boss.name}</strong></div></div><div id="fightLog" class="fight-log" role="status" aria-live="polite">Tour ${f.turn} · ${message}</div><div class="fight-command-grid">${skills}${r.charge >= 100 ? `<button class="fight-command ultimate" onclick="tacticalAction('ultimate')">🌟 ${ultimateName(r)}</button>` : ""}<button id="fightModeToggle" class="fight-command" onclick="setFightMode(tacticalFightMode())">${f.auto ? "⏸ Reprendre en manuel" : "▶ Combat automatique"}</button><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${f.speed === 1 ? "selected" : ""}>×1</option><option value="3" ${f.speed === 3 ? "selected" : ""}>×3</option></select></label></div></div>`;
+            gameArea.innerHTML = `<div class="fight-stage tactical"><div class="fight-hud-side player"><div class="fight-name">🐰 Tour de ${rabbitDisplayName(r)}</div><div class="fight-hp"><div class="fight-hp-fill player-hp" style="width:${(r.hp / r.maxHp) * 100}%"></div></div><div class="fight-hp-text">${Math.max(0, r.hp)} / ${r.maxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(r.charge)}%</div><div class="fight-crit"><div class="fight-crit-fill player-crit-fill" style="width:${r.charge}%"></div></div>${combatStatusHtml(window.LapinousBossAbilities.rabbitLabels(r))}</div><div class="fight-hud-side boss"><div class="fight-name">🥕 ${combatEscape(f.boss.name)}</div><div class="fight-hp"><div class="fight-hp-fill boss-hp" style="width:${(f.bossHp / f.bossMaxHp) * 100}%"></div></div><div class="fight-hp-text">${Math.max(0, f.bossHp)} / ${f.bossMaxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(f.bossCharge)}%</div><div class="fight-crit"><div class="fight-crit-fill" style="width:${f.bossCharge}%"></div></div>${bossIntentHtml(f)}</div><div class="team-battlefield"><div class="team-fighters">${fighters}</div><div class="vs-mark">⚔️</div><div class="boss-battle-slot"><img class="battle-sprite boss-sprite" style="${combatSpriteStyle(f.boss, "boss")}" src="${f.boss.coteImg || f.boss.faceImg}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';"><strong>${combatEscape(f.boss.name)}</strong></div></div><div id="fightLog" class="fight-log" role="status" aria-live="polite">Tour ${f.turn} · ${message}</div><div class="fight-command-grid">${skills}${r.charge >= 100 ? `<button class="fight-command ultimate" onclick="tacticalAction('ultimate')">🌟 ${ultimateName(r)}</button>` : ""}<button id="fightModeToggle" class="fight-command" onclick="setFightMode(tacticalFightMode())">${f.auto ? "⏸ Reprendre en manuel" : "▶ Combat automatique"}</button><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${f.speed === 1 ? "selected" : ""}>×1</option><option value="3" ${f.speed === 3 ? "selected" : ""}>×3</option></select></label></div></div>`;
             updateCombatShieldBars(f);
             queueAutoFight();
         }
@@ -4167,7 +4169,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 const image = EGG_IMAGES[rarity] || EGG_IMAGES.divin;
                 const overlay = document.createElement("div");
                 overlay.className = `egg-reveal-overlay rarity-${rarity}`;
-                overlay.innerHTML = `<div class="egg-reveal-card"><div class="egg-rates-display" data-egg-rates></div><button type="button" class="egg-shell illustrated-egg" aria-label="Toucher l'œuf pour le faire éclore"><img src="${image}" alt="Œuf ${RARITY_META[rarity]?.label || rarity}" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span hidden aria-hidden="true">🥚</span></button><div class="egg-reveal-hint" role="status">Touche l'œuf plusieurs fois : 0/${EGG_TAPS_TO_HATCH}</div><div class="egg-rabbit" hidden><img src="${speciesData.faceImg || speciesData.coteImg}" alt="${speciesData.name}"><strong>${speciesData.name}</strong><span>${RARITY_META[rarity]?.label || rarity}</span><button type="button" class="action-btn">Continuer</button></div></div>`;
+                overlay.innerHTML = `<div class="egg-reveal-card"><div class="egg-rates-display" data-egg-rates></div><button type="button" class="egg-shell illustrated-egg" aria-label="Toucher l'œuf pour le faire éclore"><img src="${image}" alt="Œuf ${RARITY_META[rarity]?.label || rarity}" onerror="this.hidden=true;this.nextElementSibling.hidden=false"><span hidden aria-hidden="true">🥚</span></button><div class="egg-reveal-hint" role="status">Touche l'œuf plusieurs fois : 0/${EGG_TAPS_TO_HATCH}</div><div class="egg-rabbit" hidden><img src="${speciesData.faceImg || speciesData.coteImg}" alt="${combatEscape(speciesData.name)}"><strong>${combatEscape(speciesData.name)}</strong><span>${RARITY_META[rarity]?.label || rarity}</span><button type="button" class="action-btn">Continuer</button></div></div>`;
                 const finishReveal = window.LapinousEggView
                     ? window.LapinousEggView.mount(overlay)
                     : (document.body.appendChild(overlay), () => overlay.remove());

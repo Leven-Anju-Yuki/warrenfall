@@ -1,6 +1,9 @@
 /* Expéditions à échéance absolue, sans dépendance à un onglet ouvert. */
 (() => {
   const HOUR=3600000;
+  // Reçus de préparation uniquement en mémoire : aucune nouvelle contrainte
+  // de format n'est imposée aux voyages déjà présents dans les sauvegardes.
+  const preparedTrips=new WeakMap();
   const trip=(game,rabbit)=>game.exploration?.trips?.[rabbit];
   const busy=(game,rabbit,now=Date.now())=>{const t=trip(game,rabbit);return !!t&&!t.claimed&&now<t.endsAt;};
   function rates(zone,duration,rabbit,level){
@@ -21,17 +24,27 @@
       const previous=loot.find(entry=>entry.id===id&&entry.rarity===rarity);
       if(previous)previous.quantity++;else loot.push({id,rarity,quantity:1});
     }
-    return {id:globalThis.crypto?.randomUUID?.()||`${now}-${Math.random().toString(36).slice(2)}`,rabbit,zone:zoneId,hours,startedAt:now,endsAt:now+hours*HOUR,level,rates:chances,loot,claimed:false,energy:duration.energy};
+    const planned={id:globalThis.crypto?.randomUUID?.()||`${now}-${Math.random().toString(36).slice(2)}`,rabbit,zone:zoneId,hours,startedAt:now,endsAt:now+hours*HOUR,level,rates:chances,loot,claimed:false,energy:duration.energy};
+    preparedTrips.set(planned,{raw:JSON.stringify(planned),requiredLevel:zone.level});
+    return planned;
   }
   function depart(game,rabbit,planned,save,now=Date.now()){
+    const receipt=planned&&preparedTrips.get(planned);
+    if(!receipt||JSON.stringify(planned)!==receipt.raw)throw Error('Ce départ a été modifié ou déjà utilisé. Prépare à nouveau le voyage.');
     if(planned.rabbit!==rabbit||!Number.isFinite(planned.startedAt)||!Number.isFinite(planned.endsAt)||planned.endsAt-planned.startedAt!==planned.hours*HOUR||!Number.isSafeInteger(planned.energy)||planned.energy<0)throw Error('Départ incorrect, ton lapin reste au terrier.');
     if(!game.ownedSpecies?.includes(rabbit)||busy(game,rabbit,now))throw Error('Ce lapin n’est pas disponible.');
     if(trip(game,rabbit)&&!trip(game,rabbit).claimed)throw Error('Récupère ses trouvailles avant de repartir.');
-    const progress=game.progress?.[rabbit];if(!progress||progress.energy<planned.energy)throw Error('Ce lapin doit se reposer avant de partir.');
+    const progress=game.progress?.[rabbit];if(!progress||!Number.isFinite(progress.energy)||progress.energy<planned.energy)throw Error('Ce lapin doit se reposer avant de partir.');
+    const level=Number(progress.currentLevel)||1;
+    if(level<receipt.requiredLevel||level!==planned.level)throw Error('Le niveau de ce lapin a changé. Prépare à nouveau son voyage.');
+    if(planned.startedAt>now||now-planned.startedAt>60000)throw Error('Ce départ a expiré. Prépare à nouveau le voyage.');
     const before=game.exploration,energy=progress.energy;
-    game.exploration={...before,trips:{...before?.trips,[rabbit]:planned}};progress.energy-=planned.energy;
+    // Une copie indépendante empêche de modifier ensuite le voyage actif en
+    // conservant une référence vers l'objet de préparation.
+    game.exploration={...before,trips:{...before?.trips,[rabbit]:JSON.parse(receipt.raw)}};progress.energy-=planned.energy;
     try{if(save()!==true)throw Error('Départ non enregistré : ton lapin reste au terrier.');}
     catch(error){if(before===undefined)delete game.exploration;else game.exploration=before;progress.energy=energy;throw error;}
+    preparedTrips.delete(planned);
     return planned;
   }
   function claim(game,rabbit,items,save,now=Date.now()){
@@ -87,7 +100,7 @@
     for(const [text,input] of [['Compagnon',rabbit],['Destination',zones],['Durée',durations]]){const label=el('label',text);label.append(input);form.append(label);}
     const details=el('div',undefined,'exploration-details'),feedback=el('p',undefined,'exploration-feedback');feedback.setAttribute('role','status');
     const availability=el('div',undefined,'exploration-availability');availability.setAttribute('role','status');
-    const start=button('Préparer le sac et partir',()=>{try{const p=game.progress?.[selected];const planned=plan(config,items,selected,p?.currentLevel||1,zoneId,hours);const last=(game.ownedSpecies||[]).filter(id=>id!==selected&&!busy(game,id)).length===0;if(last&&!window.confirm(`${name(selected)} est ton dernier compagnon disponible. Pendant ${hours} h réelles, les mini-jeux, les soins, l’entraînement et les combats seront indisponibles jusqu’à son retour et la récupération de ses trouvailles. Tu pourras toujours consulter ta collection et tes sauvegardes. Le faire partir ?`))return;depart(game,selected,planned,save);feedback.textContent=`${name(selected)} est parti ! Retour le ${new Date(planned.endsAt).toLocaleString('fr-FR')}.`;refresh();render();pose('wave');}catch(error){feedback.textContent=error.message;}});
+    const start=button('Préparer le sac et partir',()=>{try{const p=game.progress?.[selected];const last=(game.ownedSpecies||[]).filter(id=>id!==selected&&!busy(game,id)).length===0;if(last&&!window.confirm(`${name(selected)} est ton dernier compagnon disponible. Pendant ${hours} h réelles, les mini-jeux, les soins, l’entraînement et les combats seront indisponibles jusqu’à son retour et la récupération de ses trouvailles. Tu pourras toujours consulter ta collection et tes sauvegardes. Le faire partir ?`))return;const planned=plan(config,items,selected,p?.currentLevel||1,zoneId,hours);depart(game,selected,planned,save);feedback.textContent=`${name(selected)} est parti ! Retour le ${new Date(planned.endsAt).toLocaleString('fr-FR')}.`;refresh();render();pose('wave');}catch(error){feedback.textContent=error.message;}});
     const active=el('div',undefined,'exploration-trips'),tripsTitle=el('h3','Sur les sentiers');content.append(form,details,availability,start,feedback,tripsTitle,active);layout.append(guide,content);dialog.append(title,el('p','1 h d’exploration = 1 h dans la vraie vie. Tu peux fermer le jeu : le voyage continue.','exploration-intro'),layout);
     start.dataset.explorationStart='';
     function render(){
