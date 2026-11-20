@@ -184,6 +184,14 @@ Fichiers : `assets/js/save-validation.js`, `assets/js/save-safety.js`, `assets/j
 
 ## Priorités pratiques
 
+### Lot 187 — bonus et défis quotidiens
+
+`temporal-bonuses.js` fournit une horloge monotone de session aux bonus des plats et aux journées des succès. Les changements civils de plus de deux minutes suspendent consommation des repas à bonus et attribution quotidienne. La reprise d'arrière-plan réancre l'heure pour les téléphones suspendus. Le dernier instant de récupération quotidienne est conservé comme champ optionnel au prochain gain, sans réécriture de l'historique ancien. Les montants des repas importés sont bornés ; une expiration observée ne réactive pas le même bonus lors d'un recul ultérieur. Les anciens bonus sans `issuedAt` restent lisibles.
+
+Le fuseau de la partie est conservé dans le champ optionnel `dailyTimeZone` : changer le fuseau du téléphone ne crée pas une seconde journée. Les tests couvrent trois fuseaux et le passage normal de minuit sans délai artificiel de 24 heures. Attribution quotidienne, préparation et consommation des repas sont annulées si l'enregistrement échoue ; les tests vérifient les stocks, les besoins, les succès et les carottes. La fuite n'attribue rien et débite une seule fois après confirmation. Le renfort reste temporaire au combat et ne touche pas au catalogue ou aux sauvegardes. Aucun changement de version de sauvegarde.
+
+Limites : pas de preuve d'heure après fermeture/arrière-plan, de provenance des bonus plausibles importés, ni de résistance à un client réécrit. La restauration d'une ancienne copie reste une restauration de son historique. Ne pas présenter ces gardes comme une protection serveur.
+
 ### Lot 186 — cohérence à la récupération et horloge de session (local)
 
 `assets/js/exploration.js` contrôle les voyages avant toute attribution : possession, zone et durée connues, coût et niveau si présents, appartenance des objets à la zone et à la rareté, et total cumulé inférieur ou égal au nombre de tirages prévu. Les champs facultatifs historiques restent acceptés. Une incohérence ne supprime ni le voyage ni son butin : la récupération est suspendue avec diagnostic. Un catalogue modifié depuis le départ peut aussi demander une vérification ; ce contrôle ne qualifie pas le joueur de tricheur et ne réécrit jamais son historique.

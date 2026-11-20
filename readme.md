@@ -31,6 +31,8 @@ Documentation actualisée le **25 octobre 2026**. Le suivi repose sur ce README,
 - **Progression des puzzles** : il faut terminer un niveau pour accéder au suivant, et terminer un puzzle pour débloquer le suivant.
 - **Memory** : 30 niveaux progressifs, de 3 à 36 paires, avec portraits de lapins et de boss, records par lapin et animation des paires trouvées vers un tas sur le côté.
 - **Aventures & combats** : combats contre les boss légumes avec PV, animations d'attaque et jauges de pouvoir critique.
+- **Renfort et fuite** : sous 35 % de PV, un boss peut tenter un seul appel avec son cri. Le renfort est limité à la puissance disponible face aux lapins encore debout ; Azur et Myco empêchent l'appel tant qu'ils restent debout. Le renfort protège le boss et reçoit les attaques en premier. La fuite, entre deux actions et après confirmation, coûte à chaque lapin 8 nourriture, 12 énergie et jusqu'à 5 propreté, sans récompense de victoire.
+- **Bonus des plats** : les 19 recettes donnent un effet de 30 minutes, sans cumul du même type : puissance, résistance, expérience ou chances de soins rares en exploration. Le bonus de voyage est fixé au départ ; durée réelle et nombre de trouvailles restent identiques. Un plat peut servir de préparation même si la nourriture est pleine. Si l'enregistrement échoue, son stock et les besoins sont restaurés.
 - **Fatigue de combat** : une défaite, ou une fin de combat dans un état critique, peut faire tomber la nourriture, le sommeil et la propreté à 0.
 - **Pouvoirs** : le champ `power` du contenu décrit le pouvoir spécial / critique du lapin ou du boss.
 - **Œufs et collection** : les carottes permettent d'acheter des œufs et d'obtenir de nouveaux compagnons.
@@ -846,7 +848,7 @@ Le bouton 🏆 conserve les records et donne accès à cinq défis quotidiens : 
 
 Les grands succès récompensent la collection, les niveaux, les victoires, les jeux réussis et les œufs ouverts, avec des paliers allant jusqu’à 200 carottes. Chaque palier se récupère une seule fois par partie. Les records existants servent aux objectifs permanents ; les défis quotidiens comptent les actions réalisées depuis leur ajout.
 
-L’historique des jours, la progression et les récompenses récupérées sont conservés dans les sauvegardes et les exports JSON. Une récompense quotidienne gagnée reste récupérable les jours suivants. Charger une ancienne sauvegarde restaure l’état des succès de cette sauvegarde.
+L’historique des jours, la progression et les récompenses récupérées sont conservés dans les sauvegardes et les exports JSON. Les récompenses quotidiennes se récupèrent le jour concerné ; les paliers permanents restent disponibles. Charger une ancienne sauvegarde restaure l’état des succès de cette sauvegarde. Un écart d'horloge supérieur à deux minutes en session suspend la récupération quotidienne ; un recul avant la dernière récupération connue ne rouvre pas une ancienne journée. Une sauvegarde refusée annule l'attribution et laisse la récompense disponible. Ces contrôles locaux ne prouvent pas l'heure réelle après fermeture du jeu ou restauration d'une ancienne copie.
 
 ## 👩‍💻 Autrice
 

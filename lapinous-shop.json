@@ -590,7 +590,12 @@
       "kind": "restore",
       "stat": "food",
       "description": "Rend 70 points de nourriture. Morceaux de pomme et de poire avec fraises ; friandise occasionnelle.",
-      "preparation": "cutting"
+      "preparation": "cutting",
+      "bonus": {
+        "type": "travel",
+        "value": 0.1,
+        "durationMs": 1800000
+      }
     },
     {
       "id": "carrot_salad",
@@ -608,7 +613,12 @@
       "kind": "restore",
       "stat": "food",
       "description": "Rend 70 points de nourriture. Bâtonnets de carotte, concombre et romaine.",
-      "preparation": "cutting"
+      "preparation": "cutting",
+      "bonus": {
+        "type": "combat",
+        "value": 0.1,
+        "durationMs": 1800000
+      }
     },
     {
       "id": "fruit_bowl",
@@ -626,7 +636,12 @@
       "kind": "restore",
       "stat": "food",
       "description": "Rend 75 points de nourriture. Pomme, poire et fraises en morceaux ; friandise occasionnelle.",
-      "preparation": "cooking"
+      "preparation": "cooking",
+      "bonus": {
+        "type": "travel",
+        "value": 0.1,
+        "durationMs": 1800000
+      }
     },
     {
       "id": "flowery_hay",
@@ -643,7 +658,12 @@
       "kind": "restore",
       "stat": "food",
       "description": "Rend 55 points de nourriture. Foin, herbes et fleurs de pissenlit comestibles.",
-      "preparation": "cooking"
+      "preparation": "cooking",
+      "bonus": {
+        "type": "resistance",
+        "value": 0.1,
+        "durationMs": 1800000
+      }
     },
     {
       "id": "veggie_sticks",
@@ -661,7 +681,12 @@
       "kind": "restore",
       "stat": "food",
       "description": "Rend 70 points de nourriture. Bâtonnets de carotte et concombre servis sur du foin.",
-      "preparation": "cooking"
+      "preparation": "cooking",
+      "bonus": {
+        "type": "combat",
+        "value": 0.1,
+        "durationMs": 1800000
+      }
     },
     {
       "id": "cucumber_cups",
@@ -679,7 +704,12 @@
       "kind": "restore",
       "stat": "food",
       "description": "Rend 72 points de nourriture. Tronçons de concombre garnis de carotte et d’herbes.",
-      "preparation": "cooking"
+      "preparation": "cooking",
+      "bonus": {
+        "type": "resistance",
+        "value": 0.1,
+        "durationMs": 1800000
+      }
     },
     {
       "id": "floral_cucumber_salad",
@@ -700,7 +730,12 @@
       "kind": "restore",
       "stat": "food",
       "description": "Salade fraîche de concombre, camomille, bleuet, souci, menthe et aneth. Rend 85 points de nourriture.",
-      "preparation": "cutting"
+      "preparation": "cutting",
+      "bonus": {
+        "type": "travel",
+        "value": 0.1,
+        "durationMs": 1800000
+      }
     },
     {
       "id": "forest_fruit_salad",
@@ -721,7 +756,12 @@
       "kind": "restore",
       "stat": "food",
       "description": "Mélange gourmand de pommes, poires, fraises et myrtilles, décoré de menthe et de bleuet. Rend 110 points de nourriture.",
-      "preparation": "cooking"
+      "preparation": "cooking",
+      "bonus": {
+        "type": "experience",
+        "value": 0.1,
+        "durationMs": 1800000
+      }
     },
     {
       "id": "crunchy_vegetable_salad",
@@ -742,7 +782,12 @@
       "kind": "restore",
       "stat": "food",
       "description": "Salade de carottes, concombre et fenouil, parfumée à l'aneth et à la coriandre. Rend 95 points de nourriture.",
-      "preparation": "cutting"
+      "preparation": "cutting",
+      "bonus": {
+        "type": "combat",
+        "value": 0.1,
+        "durationMs": 1800000
+      }
     },
     {
       "id": "green_garden_salad",
@@ -762,7 +807,12 @@
       "kind": "restore",
       "stat": "food",
       "description": "Mélange de céleri, carottes et herbes fraîches, agrémenté de fleurs de pissenlit. Rend 80 points de nourriture.",
-      "preparation": "cutting"
+      "preparation": "cutting",
+      "bonus": {
+        "type": "resistance",
+        "value": 0.1,
+        "durationMs": 1800000
+      }
     },
     {
       "id": "flower_bouquet",
@@ -782,7 +832,12 @@
       "kind": "restore",
       "stat": "food",
       "description": "Composition de fleurs de camomille, bleuet, souci et rose, accompagnées de menthe. Rend 100 points de nourriture.",
-      "preparation": "cooking"
+      "preparation": "cooking",
+      "bonus": {
+        "type": "travel",
+        "value": 0.1,
+        "durationMs": 1800000
+      }
     },
     {
       "id": "floral_hay_balls",
@@ -802,7 +857,12 @@
       "kind": "restore",
       "stat": "food",
       "description": "Petites boules de foin garnies de pétales de fleurs séchées. Rend 120 points de nourriture.",
-      "preparation": "cooking"
+      "preparation": "cooking",
+      "bonus": {
+        "type": "resistance",
+        "value": 0.1,
+        "durationMs": 1800000
+      }
     },
     {
       "id": "floral_hay_hearts",
@@ -822,7 +882,12 @@
       "kind": "restore",
       "stat": "food",
       "description": "Friandises en forme de cœur, composées de foin et de pétales colorés. Rend 135 points de nourriture.",
-      "preparation": "cooking"
+      "preparation": "cooking",
+      "bonus": {
+        "type": "experience",
+        "value": 0.1,
+        "durationMs": 1800000
+      }
     },
     {
       "id": "surprise_apple",
@@ -843,7 +908,12 @@
       "kind": "restore",
       "stat": "food",
       "description": "Pomme évidée et garnie de foin, menthe et pétales de fleurs. Rend 145 points de nourriture.",
-      "preparation": "cooking"
+      "preparation": "cooking",
+      "bonus": {
+        "type": "travel",
+        "value": 0.1,
+        "durationMs": 1800000
+      }
     },
     {
       "id": "stuffed_cucumber",
@@ -863,7 +933,12 @@
       "kind": "restore",
       "stat": "food",
       "description": "Rondelles épaisses de concombre garnies de fenouil et d'herbes fraîches, décorées de bleuet. Rend 105 points de nourriture.",
-      "preparation": "cooking"
+      "preparation": "cooking",
+      "bonus": {
+        "type": "resistance",
+        "value": 0.1,
+        "durationMs": 1800000
+      }
     },
     {
       "id": "fruit_skewers",
@@ -883,7 +958,12 @@
       "kind": "restore",
       "stat": "food",
       "description": "Brochettes décoratives de pommes, poires, fraises et concombre avec quelques feuilles de menthe. Rend 125 points de nourriture.",
-      "preparation": "cooking"
+      "preparation": "cooking",
+      "bonus": {
+        "type": "combat",
+        "value": 0.1,
+        "durationMs": 1800000
+      }
     },
     {
       "id": "herb_patties",
@@ -904,7 +984,12 @@
       "kind": "restore",
       "stat": "food",
       "description": "Petits palets de légumes et d'herbes, décorés de fleurs de pissenlit. Rend 130 points de nourriture.",
-      "preparation": "cooking"
+      "preparation": "cooking",
+      "bonus": {
+        "type": "combat",
+        "value": 0.1,
+        "durationMs": 1800000
+      }
     },
     {
       "id": "garden_mosaic",
@@ -927,7 +1012,12 @@
       "kind": "restore",
       "stat": "food",
       "description": "Composition colorée de légumes et de fruits coupés en dés, décorée de fleurs comestibles. Rend 150 points de nourriture.",
-      "preparation": "cooking"
+      "preparation": "cooking",
+      "bonus": {
+        "type": "travel",
+        "value": 0.1,
+        "durationMs": 1800000
+      }
     },
     {
       "id": "herb_tartlets",
@@ -948,7 +1038,12 @@
       "kind": "restore",
       "stat": "food",
       "description": "Tartelettes végétales aux herbes fraîches et légumes. Rend 130 points de nourriture.",
-      "preparation": "cooking"
+      "preparation": "cooking",
+      "bonus": {
+        "type": "resistance",
+        "value": 0.1,
+        "durationMs": 1800000
+      }
     }
   ],
   "recipesEnabled": true,

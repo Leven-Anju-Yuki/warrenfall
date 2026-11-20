@@ -46,16 +46,17 @@
   }
   const trip=(game,rabbit)=>game.exploration?.trips?.[rabbit];
   const busy=(game,rabbit,now=Date.now())=>{const t=trip(game,rabbit);return !!t&&!t.claimed&&now<t.endsAt;};
-  function rates(zone,duration,rabbit,level){
+  function rates(zone,duration,rabbit,level,meal=0){
     const affinity=zone.affinities.includes(rabbit),bounded=Math.max(1,Math.min(100,Number(level)||1));
     const care=Math.min(30,duration.care+Math.floor(bounded/25)),rare=Math.min(22,duration.rare+Math.floor(bounded/10)+(affinity?3:0)),egg=Math.min(12,duration.egg+Math.floor(bounded/20)+(affinity?1:0));
-    return {ingredient:100-care-rare-egg,care,rare,egg,affinity};
+    const mealRare=Math.min(35,rare+Math.max(0,Math.min(.15,Number(meal)||0))*100);
+    return {ingredient:100-care-mealRare-egg,care,rare:mealRare,egg,affinity};
   }
-  function plan(config,items,rabbit,level,zoneId,hours,now=Date.now(),random=Math.random){
+  function plan(config,items,rabbit,level,zoneId,hours,now=Date.now(),random=Math.random,meal=0){
     const zone=config.zones.find(z=>z.id===zoneId),duration=config.durations.find(d=>d.hours===hours);
     if(!zone||!duration||level<zone.level)throw Error('Ce lieu n’est pas encore accessible à ce lapin.');
     for(const id of [...zone.ingredients,...zone.care,...zone.rare])if(!items.some(item=>item.id===id))throw Error('Le catalogue de trouvailles est incomplet.');
-    const chances=rates(zone,duration,rabbit,level),loot=[];
+    const chances=rates(zone,duration,rabbit,level,meal),loot=[];
     const pick=pool=>pool[Math.min(pool.length-1,Math.floor(random()*pool.length))];
     for(let i=0;i<duration.rolls;i++){
       const value=random()*100;
@@ -143,11 +144,11 @@
     for(const [text,input] of [['Compagnon',rabbit],['Destination',zones],['Durée',durations]]){const label=el('label',text);label.append(input);form.append(label);}
     const details=el('div',undefined,'exploration-details'),feedback=el('p',undefined,'exploration-feedback');feedback.setAttribute('role','status');
     const availability=el('div',undefined,'exploration-availability');availability.setAttribute('role','status');
-    const start=button('Préparer le sac et partir',()=>{try{const p=game.progress?.[selected];const last=(game.ownedSpecies||[]).filter(id=>id!==selected&&!busy(game,id)).length===0;if(last&&!window.confirm(`${name(selected)} est ton dernier compagnon disponible. Pendant ${hours} h réelles, les mini-jeux, les soins, l’entraînement et les combats seront indisponibles jusqu’à son retour et la récupération de ses trouvailles. Tu pourras toujours consulter ta collection et tes sauvegardes. Le faire partir ?`))return;const planned=plan(config,items,selected,p?.currentLevel||1,zoneId,hours);depart(game,selected,planned,save);feedback.textContent=`${name(selected)} est parti ! Retour le ${new Date(planned.endsAt).toLocaleString('fr-FR')}.`;refresh();render();pose('wave');}catch(error){feedback.textContent=error.message;}});
+    const start=button('Préparer le sac et partir',()=>{try{const p=game.progress?.[selected];const last=(game.ownedSpecies||[]).filter(id=>id!==selected&&!busy(game,id)).length===0;if(last&&!window.confirm(`${name(selected)} est ton dernier compagnon disponible. Pendant ${hours} h réelles, les mini-jeux, les soins, l’entraînement et les combats seront indisponibles jusqu’à son retour et la récupération de ses trouvailles. Tu pourras toujours consulter ta collection et tes sauvegardes. Le faire partir ?`))return;const planned=plan(config,items,selected,p?.currentLevel||1,zoneId,hours,Date.now(),Math.random,window.LapinousMealBonuses?.value(p,'travel')||0);depart(game,selected,planned,save);feedback.textContent=`${name(selected)} est parti ! Retour le ${new Date(planned.endsAt).toLocaleString('fr-FR')}.`;refresh();render();pose('wave');}catch(error){feedback.textContent=error.message;}});
     const active=el('div',undefined,'exploration-trips'),tripsTitle=el('h3','Sur les sentiers');content.append(form,details,availability,start,feedback,tripsTitle,active);layout.append(guide,content);dialog.append(title,el('p','1 h d’exploration = 1 h dans la vraie vie. Tu peux fermer le jeu : le voyage continue.','exploration-intro'),layout);
     start.dataset.explorationStart='';
     function render(){
-      const zone=config.zones.find(z=>z.id===zoneId),duration=config.durations.find(d=>d.hours===hours),level=game.progress?.[selected]?.currentLevel||1,chances=rates(zone,duration,selected,level);
+      const zone=config.zones.find(z=>z.id===zoneId),duration=config.durations.find(d=>d.hours===hours),level=game.progress?.[selected]?.currentLevel||1,chances=rates(zone,duration,selected,level,window.LapinousMealBonuses?.value(game.progress?.[selected],'travel')||0);
       const background=zone.image?new URL(window.LapinousImages?.url(zone.image)||zone.image,document.baseURI).href:'';
       dialog.style.setProperty('--biome-image',background?`url(${JSON.stringify(background)})`:'none');
       dialog.dataset.biome=zone.id;

@@ -36,7 +36,8 @@
           "mult": 1.35
         }
       ],
-      "combatFacing": "right"
+      "combatFacing": "right",
+      "blocksBossCall": true
     },
     "caramel": {
       "name": "Caramel",
@@ -411,7 +412,8 @@
           "mult": 1.35
         }
       ],
-      "combatFacing": "right"
+      "combatFacing": "right",
+      "blocksBossCall": true
     },
     "corsaire": {
       "name": "Corsaire",

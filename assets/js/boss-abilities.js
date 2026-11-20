@@ -22,6 +22,44 @@
   const effects=r=>(r.bossEffects ||= {});
   const enemy=f=>(f.bossEffects ||= {});
   const alive=f=>f.team.filter(r=>r.hp>0);
+  // Renfort temporaire : jamais ajouté au catalogue ou à la sauvegarde.
+  // La puissance combinée reste dans le budget des lapins encore debout.
+  function callAlly(f,candidates,stats,random=Math.random){
+    if(f.callAttempted||f.boss.kind==='vegetable'||f.bossHp<=0||f.bossHp>f.bossMaxHp*.35)return null;
+    f.callAttempted=true;
+    const blocker=alive(f).find(r=>r.sp?.blocksBossCall);
+    if(blocker)return {blocked:true,key:blocker.key};
+    const budget=Math.floor(alive(f).reduce((sum,r)=>sum+r.power,0)-stats(f.boss).power);
+    f.bossPower=stats(f.boss).power;
+    if(budget<1)return {unavailable:true};
+    const options=Object.entries(candidates).filter(([key,b])=>key!==f.key&&b.kind!=='vegetable'&&stats(b).power>0);
+    if(!options.length)return {unavailable:true};
+    const [key,boss]=options[Math.min(options.length-1,Math.floor(Math.max(0,Math.min(.999999,random()))*options.length))];
+    const base=stats(boss),power=Math.min(budget,base.power);
+    const maxHp=Math.max(1,Math.round(base.maxHp*(power/base.power)*.35));
+    f.ally={key,boss,power,maxHp,hp:maxHp};
+    return {ally:f.ally};
+  }
+  function rebalanceAlly(f){
+    const ally=f.ally;if(!ally||ally.hp<=0)return;
+    const budget=Math.max(0,alive(f).reduce((sum,r)=>sum+r.power,0)-(f.bossHp>0?f.bossPower:0));
+    ally.power=Math.min(ally.power,budget);
+    if(ally.power<=0)ally.hp=0;
+  }
+  function allyDamage(f,target,resistance=0){
+    rebalanceAlly(f);
+    const ally=f.ally;if(!ally||ally.hp<=0)return 0;
+    return protect(target,Math.max(1,Math.round(ally.power*.55)),resistance);
+  }
+  function flee(f,save,cleanCost=(p,n)=>n){
+    if(!f||f.finished||f.locked)throw Error('Attends la fin de l’action pour fuir.');
+    const before=f.team.map(r=>({r,food:r.pr.food,energy:r.pr.energy,cleanliness:r.pr.cleanliness,remedyEffects:r.pr.remedyEffects===undefined?undefined:JSON.parse(JSON.stringify(r.pr.remedyEffects))}));
+    try{
+      for(const r of f.team){r.pr.food=Math.max(0,r.pr.food-8);r.pr.energy=Math.max(0,r.pr.energy-12);r.pr.cleanliness=Math.max(0,r.pr.cleanliness-cleanCost(r.pr,5));}
+      if(save()!==true)throw Error('Fuite non enregistrée : tes besoins sont conservés, tu peux réessayer.');
+    }catch(error){for(const b of before){Object.assign(b.r.pr,{food:b.food,energy:b.energy,cleanliness:b.cleanliness});if(b.remedyEffects===undefined)delete b.r.pr.remedyEffects;else b.r.pr.remedyEffects=b.remedyEffects;}throw error;}
+    f.finished=true;return true;
+  }
   function tag(r,key,value){effects(r)[key]={...value};}
   function consume(store,key){if(store[key]&&--store[key].remaining<=0)delete store[key];}
   function playerDamage(f,r,damage){
@@ -102,5 +140,5 @@
     const amount=shield?.remaining>0?clamp(shield.amount):0;
     return {reduction:f.bossHp<=0?0:1-(1-legacy)*(1-amount),hits:f.bossHp<=0?0:Math.max(legacy>0?1:0,amount>0?shield.remaining:0)};
   }
-  window.LapinousBossAbilities={get,playerDamage,bossDamage,cast,afterBoss,rabbitLabels,bossLabels,intent,shieldInfo};
+  window.LapinousBossAbilities={get,playerDamage,bossDamage,cast,afterBoss,rabbitLabels,bossLabels,intent,shieldInfo,callAlly,rebalanceAlly,allyDamage,flee};
 })();

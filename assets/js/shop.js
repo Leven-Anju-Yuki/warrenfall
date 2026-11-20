@@ -10,7 +10,7 @@
             if (!item.id || ids.has(item.id) || !Number.isSafeInteger(item.price) || item.price <= 0) throw new Error('Article incorrect');
             if (item.kind !== 'reset' && (item.kind !== 'restore' || !['food','energy','cleanliness'].includes(item.stat))) throw new Error('Effet incorrect');
             if(item.restoreAmount!==undefined&&(!Number.isFinite(item.restoreAmount)||(item.restoreAmount<0||(item.restoreAmount===0&&!item.remedyEffect))))throw new Error('Quantité de nourriture incorrecte');
-            if(item.bonus&&(!['resistance','combat','speed','experience'].includes(item.bonus.type)||!Number.isFinite(item.bonus.value)||item.bonus.value<=0||item.bonus.value>1||!Number.isSafeInteger(item.bonus.durationMs)||item.bonus.durationMs<=0))throw new Error('Bonus incorrect');
+            if(item.bonus&&(!['resistance','combat','speed','experience','travel'].includes(item.bonus.type)||!Number.isFinite(item.bonus.value)||item.bonus.value<=0||item.bonus.value>1||!Number.isSafeInteger(item.bonus.durationMs)||item.bonus.durationMs<=0))throw new Error('Bonus incorrect');
             if(item.remedyEffect&&(!['sleep','trainingSaving','trainingSavings','trainingExperience','cleanProtection','brush','interaction','level'].includes(item.remedyEffect.type)||!Number.isFinite(item.remedyEffect.value)||item.remedyEffect.value<=0||(item.remedyEffect.uses!==undefined&&(!Number.isSafeInteger(item.remedyEffect.uses)||item.remedyEffect.uses<1))||(item.remedyEffect.durationMs!==undefined&&(!Number.isSafeInteger(item.remedyEffect.durationMs)||item.remedyEffect.durationMs<1))))throw new Error('Effet de soin incorrect');
             ids.add(item.id);
         }
@@ -82,10 +82,19 @@
         const count = game.inventory?.[item.id];
         if (!Number.isSafeInteger(count) || count < 1) throw new Error('Cet article est épuisé.');
         if (!Number.isFinite(progress[item.stat]) || (progress[item.stat] >= 100 && !item.bonus&&!item.remedyEffect)) throw new Error('Cette barre est déjà pleine.');
+        if(item.bonus&&window.LapinousMealBonuses)window.LapinousMealBonuses.arm(progress,item.bonus);
         if(item.remedyEffect)window.LapinousRemedies.arm(progress,item.remedyEffect);
         progress[item.stat] = Math.min(100,progress[item.stat]+(item.restoreAmount??100));
-        if(item.bonus){progress.mealBonuses ||= {};progress.mealBonuses[item.bonus.type]={value:item.bonus.value,expiresAt:Date.now()+item.bonus.durationMs};}
+        if(item.bonus&&!window.LapinousMealBonuses){progress.mealBonuses ||= {};progress.mealBonuses[item.bonus.type]={value:item.bonus.value,expiresAt:Date.now()+item.bonus.durationMs};}
         game.inventory[item.id] = count - 1;
+    }
+    function consumeAndSave(game,progress,item,save){
+        const before=JSON.parse(JSON.stringify(progress)),inventory=game.inventory;
+        const next=JSON.parse(JSON.stringify(progress)),draft={...game,inventory:{...inventory}};
+        useConsumable(draft,next,item);
+        Object.assign(progress,next);game.inventory=draft.inventory;
+        try{if(save()!==true)throw Error('Repas non enregistré : ton plat et tes besoins sont conservés.');}
+        catch(error){for(const key of Object.keys(progress))if(!Object.hasOwn(before,key))delete progress[key];Object.assign(progress,before);game.inventory=inventory;throw error;}
     }
     window.LapinousShopReady = fetch('./lapinous-shop.json').then(response => {
         if (!response.ok) throw new Error('Catalogue introuvable');
@@ -589,5 +598,5 @@
         const poses=catalog?.companions?.[role];
         return Object.values(poses||{}).find(value=>typeof value==='string'&&value.endsWith('/'+filename))||'./assets/img/accompagnateurs/couturiere/'+filename;
     }
-    window.LapinousShop={getCatalog:()=>catalog,companionImage,init,transact,resetPlan,validateCatalog,checkout,useConsumable};
+    window.LapinousShop={getCatalog:()=>catalog,companionImage,init,transact,resetPlan,validateCatalog,checkout,useConsumable,consumeAndSave};
 })();

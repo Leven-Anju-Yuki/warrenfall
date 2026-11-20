@@ -14,7 +14,7 @@
     const slots = Array(columns*rows).fill(null);
     stocked.forEach((item,index)=>slots[index]=item);
     let markup = `<section class="pantry-workshop"><header><h2>Le garde-manger du Chef</h2><p>${full ? `La barre de nourriture de ${escape(name)} est pleine.` : `Choisis une provision pour ${escape(name)}.`}</p></header><div class="pantry-stage"><section class="pantry-shelves" style="--pantry-columns:${columns}" aria-label="Les provisions">${Array.from({length:rows}, (_, row) => `<div class="pantry-shelf" data-shelf-kind="${row === 2 ? 'meals' : 'ingredients'}" aria-label="${row === 2 ? 'Plats prepares' : 'Ingredients'}"><span class="pantry-shelf-label">${row === 2 ? 'Plats pr\u00eats' : 'Ingr\u00e9dients'}</span>${slots.slice(row * columns, (row + 1) * columns).map(item => item ? `<button type="button" class="pantry-provision" data-pantry-use="${escape(item.id)}" aria-disabled="${full}" aria-label="${escape(item.name)}"><span class="pantry-picture">${item.image ? `<img src="${escape(item.image)}" alt="">` : escape(item.emoji)}</span><b>×${inventory[item.id]}</b><span class="pantry-details"><strong>${escape(item.name)}</strong><span>+${item.restoreAmount} nourriture · ${escape(item.description)}</span></span></button>` : '<div class="pantry-empty" aria-label="Emplacement libre"></div>').join('')}</div>`).join('')}</section><aside class="pantry-chef"><img src="${escape(catalog?.companions?.chef?.greeting)}" alt="Le Chef"><p aria-live="polite">Bonjour ! Que souhaites-tu ?</p></aside></div>${catalog?.recipesEnabled ? `<section class="pantry-meals"><label>Plat \u00e0 pr\u00e9parer<select id="pantryRecipe" aria-label="Plat à préparer">${(catalog.recipes || []).map(recipe => `<option value="${escape(recipe.id)}">${escape(recipe.emoji)} ${escape(recipe.name)}</option>`).join('')}</select></label><p id="pantryIngredients"></p><button type="button" id="pantryCook">Pr\u00e9parer ce plat</button></section>` : ''}<button class="ghost-btn" onclick="openLapinousMarket()">Aller au Marché</button></section>`;
-    const plates = `<section class="pantry-ready" aria-label="Plats pr\u00e9par\u00e9s"><h3>Plats pr\u00eats</h3><div class="pantry-ready-shelves">${meals.length ? meals.map(item => `<button type="button" class="pantry-provision ${(inventory[item.id]||0)>0?'':'pantry-unavailable'}" data-pantry-use="${escape(item.id)}" aria-disabled="${full||!(inventory[item.id]>0)}" aria-label="${escape(item.name)}"><span class="pantry-picture">${item.image ? `<img src="${escape(item.image)}" alt="">` : escape(item.emoji)}</span><b>\u00d7${inventory[item.id]||0}</b><span class="pantry-details"><strong>${escape(item.name)}</strong><span>+${item.restoreAmount} nourriture</span></span></button>`).join('') : '<p>Les plats du Chef seront d\u00e9pos\u00e9s ici.</p>'}</div></section>`;
+    const plates = `<section class="pantry-ready" aria-label="Plats pr\u00e9par\u00e9s"><h3>Plats pr\u00eats</h3><div class="pantry-ready-shelves">${meals.length ? meals.map(item => `<button type="button" class="pantry-provision ${(inventory[item.id]||0)>0?'':'pantry-unavailable'}" data-pantry-use="${escape(item.id)}" aria-disabled="${(full&&!item.bonus)||!(inventory[item.id]>0)}" aria-label="${escape(item.name)}"><span class="pantry-picture">${item.image ? `<img src="${escape(item.image)}" alt="">` : escape(item.emoji)}</span><b>\u00d7${inventory[item.id]||0}</b><span class="pantry-details"><strong>${escape(item.name)}</strong><span>+${item.restoreAmount} nourriture${escape(window.LapinousMealBonuses?.describe(item.bonus)||'')}</span></span></button>`).join('') : '<p>Les plats du Chef seront d\u00e9pos\u00e9s ici.</p>'}</div></section>`;
     markup = markup.replace('</aside></div>', '</aside>' + plates + '</div>');
     markup = markup.replaceAll('data-shelf-kind="meals"','data-shelf-kind="ingredients"').replaceAll('aria-label="Plats prepares"','aria-label="Ingredients"').replace('Plats pr\u00eats','Ingr\u00e9dients');
     return markup;
@@ -72,7 +72,7 @@
     buttons.forEach(button=>{
       const show=()=>{
         const detail=button.querySelector('.pantry-details');if(!detail)return;
-        info.innerHTML=detail.innerHTML+`<span class="pantry-eat-hint">${button.classList.contains('pantry-unavailable')?'Choisir cette recette pour la cuisiner':canUse()?'Cliquer pour manger cet aliment':'Barre pleine : aliment conserve dans la reserve'}</span>`;info.hidden=false;
+        info.innerHTML=detail.innerHTML+`<span class="pantry-eat-hint">${button.classList.contains('pantry-unavailable')?'Choisir cette recette pour la cuisiner':canUse(button.dataset.pantryUse)?'Cliquer pour manger cet aliment':'Barre pleine : aliment conserve dans la reserve'}</span>`;info.hidden=false;
         const rect=button.getBoundingClientRect(),box=info.getBoundingClientRect();
         info.style.left=Math.max(12,Math.min(innerWidth-box.width-12,rect.left))+'px';
         info.style.top=Math.max(12,Math.min(innerHeight-box.height-12,rect.bottom+8))+'px';
@@ -84,12 +84,12 @@
     function updateRecipe() {
       if (!cook) return;
       const recipe = selected(), stock = cooking.inventory?.() || {};
-      ingredients.innerHTML = `<strong class="pantry-recipe-name">${escape(recipe?.name || '')}</strong>` + Object.entries(recipe?.ingredients || {}).map(([id,count]) => `<span class="pantry-ingredient ${stock[id] >= count ? 'available' : 'missing'}">${escape(catalog.items.find(item => item.id === id)?.name || id)} <b>${stock[id] || 0}/${count}</b></span>`).join('');
+      ingredients.innerHTML = `<strong class="pantry-recipe-name">${escape(recipe?.name || '')}</strong>${escape(window.LapinousMealBonuses?.describe(recipe?.bonus)||'')}` + Object.entries(recipe?.ingredients || {}).map(([id,count]) => `<span class="pantry-ingredient ${stock[id] >= count ? 'available' : 'missing'}">${escape(catalog.items.find(item => item.id === id)?.name || id)} <b>${stock[id] || 0}/${count}</b></span>`).join('');
       cook.disabled = !!actor.dataset.busy || !recipe || !Object.entries(recipe.ingredients).every(([id,count]) => stock[id] >= count);
     }
     function lock(busy) {
       if (busy) actor.dataset.busy = 'true'; else delete actor.dataset.busy;
-      buttons.forEach(button => {button.disabled=busy;button.setAttribute('aria-disabled',String(busy||!canUse()));});
+      buttons.forEach(button => {button.disabled=busy;button.setAttribute('aria-disabled',String(busy||!canUse(button.dataset.pantryUse)));});
       if (picker) picker.disabled = busy;
       updateRecipe();
     }
@@ -165,12 +165,12 @@
       const recipe=catalog.recipes?.find(entry=>entry.item===button.dataset.pantryUse);
       if(recipe&&picker){picker.value=recipe.id;dialog.querySelectorAll('[data-recipe-choice]').forEach(choice=>choice.setAttribute('aria-pressed',String(choice.dataset.recipeChoice===recipe.id)));updateRecipe();
         if(!(cooking.inventory?.()[recipe.item]>0)){speech.textContent=cook.disabled?'Il manque des ingrédients pour ce plat.':'Je peux cuisiner ce plat. Appuie sur Préparer ce plat.';return;}}
-      if(!canUse()){speech.textContent='La barre de nourriture est pleine. Garde cette provision pour plus tard.';return;}
+      if(!canUse(button.dataset.pantryUse)){speech.textContent='La barre de nourriture est pleine. Garde cette provision pour plus tard.';return;}
       lock(true);
       try {
         if (!await retrieve(button, button.getAttribute('aria-label'))) return;
         sprite.src = poses.thanks; speech.textContent = 'Voil? ta provision !';
-        await wait(900); if (valid() && canUse()) onUse(button.dataset.pantryUse);
+        await wait(900); if (valid() && canUse(button.dataset.pantryUse)) onUse(button.dataset.pantryUse);
       } finally { if (valid()) { sprite.style.transform = ''; sprite.src = poses.idle; lock(false); } }
     }));
     picker?.addEventListener('change',updateRecipe);

@@ -6511,4 +6511,8 @@ body.game-running #gameArea:has(.game-cupboard){justify-content:center;align-ite
 .game-box{min-width:0;display:flex;flex-direction:column;align-items:center;justify-content:flex-end;padding:8px 12px 10px;border:0;border-bottom:12px solid #c2975f;border-radius:0;background:linear-gradient(transparent,#d6b07818);box-shadow:0 5px 0 #583a23;color:#fff7df;cursor:pointer;transition:background .15s}
 .game-box img{display:block;width:100%;height:clamp(90px,18dvh,180px);object-fit:contain;filter:drop-shadow(0 4px 4px #24190f60);transition:transform .15s}.game-box strong{font-size:.95rem;margin-top:6px}.game-box small{font-size:.7rem;opacity:.9}.game-box:hover,.game-box:focus-visible{background:#eac99322;outline:2px solid #e9cf95;outline-offset:-2px}.game-box:hover img{transform:translateY(-3px)}
 .game-cupboard>.ghost-btn{display:block;margin:18px auto 0;font-size:.85rem;padding:8px 12px;border:1px solid #d9bd8e;border-radius:10px;background:#fff5dc;color:#624831}
+/* Renfort dans le champ de bataille, sans déplacer les emplacements de l'équipe. */
+.combat-ally{position:absolute;right:23%;bottom:0;display:flex;flex-direction:column;align-items:center;max-width:24%;gap:3px;padding:6px;border-radius:12px;background:#fff4dfeb;color:#432e27;font-size:.75rem;text-align:center;z-index:2}
+.combat-ally img{width:80px;height:90px;object-fit:contain}.combat-ally small{max-width:160px}
+@media(max-width:700px){.combat-ally{right:22%;font-size:.6rem;padding:3px}.combat-ally img{width:45px;height:55px}.combat-ally small{max-width:95px}}
 @media(max-width:600px){.game-cupboard{padding:10px;border-width:7px}.game-cupboard-shelves{gap:10px}.game-box{padding:4px}.game-box img{height:14dvh}.game-box strong{font-size:.75rem}.game-box small{font-size:.6rem}}

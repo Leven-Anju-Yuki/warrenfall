@@ -233,7 +233,7 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         function recordAchievement(metric, amount = 1, dailyAmount = amount) {
-            window.LapinousAchievements.record(game, metric, amount, new Date(), dailyAmount);
+            window.LapinousAchievements.record(game, metric, amount, new Date(window.LapinousClock?.now?.()??Date.now()), dailyAmount);
         }
 
         let achievementTab = "daily";
@@ -251,7 +251,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 </article>`,
                     )
                     .join("");
-            return `<section class="achievement-section" data-records-panel="daily"><h3>☀️ Défis du jour</h3><p>Renouvelés à minuit, selon l’heure de ton appareil. Les récompenses acquises restent récupérables.</p>${rows(entries.today)}
+            return `<section class="achievement-section" data-records-panel="daily"><h3>☀️ Défis du jour</h3><p>Renouvelés à minuit dans le fuseau de ta partie. Récupère les récompenses quotidiennes avant minuit ; les paliers permanents restent disponibles.</p>${rows(entries.today)}
                 ${entries.pending.length ? `<h3>🎁 Récompenses des jours précédents</h3>${rows(entries.pending)}` : ""}</section>
                 <section class="achievement-section" data-records-panel="longterm"><h3>🌟 Grands succès</h3><p>Récupère ta récompense pour révéler le palier suivant. Les activit?s disponibles ont leurs objectifs. Les récompenses déjà récupérées restent acquises.</p>${rows(entries.permanent)}</section>`;
         }
@@ -302,13 +302,15 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
                 const button = e.target.closest("[data-achievement]");
                 if (!button || button.disabled) return;
-                const reward = window.LapinousAchievements.claim(
+                if(button.dataset.day&&!window.LapinousAchievements.dailyAllowed(game,new Date())){showToast('Vérifie l’heure automatique de ton appareil. Les succès et la progression sont conservés.','warn');return;}
+                let reward;
+                try {reward = window.LapinousAchievements.claimAndSave(
                     game,
                     button.dataset.achievement,
                     button.dataset.day || null,
-                );
+                    autoSave,
+                );}catch(error){showToast(error.message,'warn');return;}
                 if (!reward) return;
-                autoSave();
                 showToast(`Succès récupéré : +${reward} carottes !`, "success");
                 // Met à jour le solde sans interrompre un combat ou un mini-jeu.
                 document.querySelectorAll(".carrot-counter").forEach((balance) => {
@@ -1537,6 +1539,7 @@ document.addEventListener("DOMContentLoaded", () => {
         function mealBonus(key, type) {
             if (!window.LapinousShop.getCatalog()?.recipesEnabled) return 0;
             const bonus = progressForSpecies(key).mealBonuses?.[type];
+            if(window.LapinousMealBonuses)return window.LapinousMealBonuses.value(progressForSpecies(key),type);
             return bonus && bonus.expiresAt > Date.now() ? Number(bonus.value) || 0 : 0;
         }
         // La réserve n’apparaît qu’à l’ouverture du frigo ; le stock du panier reste inchangé.
@@ -1570,7 +1573,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 dialog,
                 () => window.LapinousShop.getCatalog(),
                 (id) => eatKitchenItem(id),
-                () => progress().food < 100,
+                (id) => progress().food < 100 || !!window.LapinousShop.getCatalog()?.recipes?.find(recipe=>recipe.item===id)?.bonus,
                 {
                     inventory: () => game.inventory || {},
                     valid: () =>
@@ -1590,18 +1593,18 @@ document.addEventListener("DOMContentLoaded", () => {
                 (catalog?.recipesEnabled
                     ? catalog.recipes.find((recipe) => recipe.item === id)
                     : null);
-            if (!item || progress().food >= 100) return;
+            if (!item || (progress().food >= 100&&!item.bonus)) return;
             try {
-                window.LapinousShop.useConsumable(
+                window.LapinousShop.consumeAndSave(
                     game,
                     progress(),
                     item.item ? { ...item, id: item.item } : item,
+                    autoSave,
                 );
-                autoSave();
                 updateStatusBars();
                 refreshCurrentZone();
                 if (document.getElementById("kitchenFridgeDialog")?.open) openKitchenFridge();
-                showToast(item.name + " consommé !", "success");
+                showToast(item.name + " consommé !" + (window.LapinousMealBonuses?.describe(item.bonus)||""), "success",8000);
             } catch (error) {
                 showToast(error.message, "warn");
             }
@@ -1614,12 +1617,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 return false;
             const recipe = catalog.recipes.find((recipe) => recipe.id === id);
             if (!recipe) return false;
-            game.inventory ||= {};
-            if (!window.LapinousPantry.craft(game.inventory, recipe)) {
+            const previousInventory=game.inventory,draftInventory={...game.inventory};
+            if (!window.LapinousPantry.craft(draftInventory, recipe)) {
                 showToast("Il manque des ingredients pour ce plat.", "warn");
                 return false;
             }
-            autoSave();
+            game.inventory=draftInventory;
+            if(autoSave()!==true){game.inventory=previousInventory;showToast('Plat non enregistré : les ingrédients sont conservés.','warn');return false;}
             refreshCurrentZone();
             if (document.getElementById("kitchenFridgeDialog")?.open) openKitchenFridge();
             showToast(recipe.name + " est pret !", "success");
@@ -3735,7 +3739,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 })
                 .join("");
             const config = criticalConfig(r.sp);
-            return `<div class="fight-preview-stats"><div class="fight-stat-chips"><span>❤️ ${r.maxHp} PV</span><span>⚔️ ${r.power} puissance</span></div><ul>${skills}<li class="preview-ultimate"><b>🌟 ${powerName(r.sp)}</b><span>${Math.round(r.power * config.multiplier)}–${Math.round(r.power * config.multiplier + 12)} dégâts · +${config.chargePerTurn} % charge/tour${powerMode(r.sp) === "heal" ? " · soin équipe 25 %" : powerMode(r.sp) === "support" ? " · protection équipe 55 %" : ""}</span></li></ul></div>`;
+            return `<div class="fight-preview-stats">${r.sp.blocksBossCall?'<p>🔇 Empêche un appel de renfort tant que ce lapin est debout.</p>':''}<div class="fight-stat-chips"><span>❤️ ${r.maxHp} PV</span><span>⚔️ ${r.power} puissance</span></div><ul>${skills}<li class="preview-ultimate"><b>🌟 ${powerName(r.sp)}</b><span>${Math.round(r.power * config.multiplier)}–${Math.round(r.power * config.multiplier + 12)} dégâts · +${config.chargePerTurn} % charge/tour${powerMode(r.sp) === "heal" ? " · soin équipe 25 %" : powerMode(r.sp) === "support" ? " · protection équipe 55 %" : ""}</span></li></ul></div>`;
         }
         function bossCombatStats(boss) {
             if (boss.kind === "vegetable") return {power:boss.combatPower,maxHp:boss.maxHp,attackBase:boss.combatPower*.85,attackSpread:2};
@@ -3789,6 +3793,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 const effects=slot.querySelector('.fighter-effects'),labels=window.LapinousBossAbilities.rabbitLabels(r);
                 effects.title=labels.join(', ');effects.textContent=labels.map(label=>label.split(' ')[0]).join(' ');
             });
+            const ally=gameArea.querySelector('.combat-ally span');
+            if(ally&&f.ally)ally.textContent=`${f.ally.hp}/${f.ally.maxHp} PV · ${f.ally.power} puissance`;
             updateCombatShieldBars(f);
         }
         function updateCombatShieldBars(f){
@@ -3810,7 +3816,9 @@ document.addEventListener("DOMContentLoaded", () => {
         function bossIntentHtml(f){
             const intent=window.LapinousBossAbilities.intent(f,criticalConfig(f.boss).chargePerTurn);
             if(!intent)return '';
-            return `<p class="boss-intent ${intent.ready?'ready':''}" title="${combatEscape(intent.description)}"><strong>${intent.icon} ${combatEscape(intent.name)}</strong><span>${intent.label}</span></p>${combatStatusHtml(window.LapinousBossAbilities.bossLabels(f))}`;
+            const blocker=f.team.find(r=>r.hp>0&&r.sp.blocksBossCall);
+            const call=f.boss.kind==='vegetable'?'':f.callAttempted?'Appel de renfort déjà tenté.':`Appel possible sous 35 % de PV, plafonné à la puissance de ton équipe.${blocker?' '+combatEscape(rabbitDisplayName(blocker))+' peut le bloquer.':''}`;
+            return `<p class="boss-intent ${intent.ready?'ready':''}" title="${combatEscape(intent.description)}"><strong>${intent.icon} ${combatEscape(intent.name)}</strong><span>${intent.label}</span></p><small>${call}</small>${combatStatusHtml(window.LapinousBossAbilities.bossLabels(f))}`;
         }
         function animateBossAbility(f,ability){
             const field=gameArea.querySelector('.team-battlefield');if(!field||!ability)return;
@@ -3895,6 +3903,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 speed: fightSpeed,
                 bossCharge: 0,
                 bossGuard: 0,
+                bossPower: bossCombatStats(boss).power,
             };
             clearTimeout(autoFightTimer);
             playSfx("monsterCombat");
@@ -3921,11 +3930,21 @@ document.addEventListener("DOMContentLoaded", () => {
                         `<div class="team-fighter battle-slot-${i + 1} ${i === f.active ? "active-turn" : ""} ${x.hp <= 0 ? "ko" : ""}" data-fighter="${i}"><div class="turn-marker">${i === f.active ? "▼ TOUR" : ""}</div><img class="battle-sprite team-rabbit-sprite" style="${combatSpriteStyle(x.sp, "rabbit", x.key)}" src="${x.sp.coteImg || x.sp.faceImg || "./assets/img/lapins_jouables/sans_evenements/mystery.svg"}" onerror="this.onerror=null;this.src='./assets/img/lapins_jouables/sans_evenements/mystery.svg';"><strong>${rabbitDisplayName(x)}</strong><small>${Math.max(0, x.hp)} / ${x.maxHp} PV</small><span class="fighter-effects" title="${combatEscape(window.LapinousBossAbilities.rabbitLabels(x).join(', '))}">${window.LapinousBossAbilities.rabbitLabels(x).map(label=>label.split(' ')[0]).join(' ')}</span><div class="mini-hp"><i style="width:${(Math.max(0, x.hp) / x.maxHp) * 100}%"></i></div></div>`,
                 )
                 .join("");
-            gameArea.innerHTML = `<div class="fight-stage tactical"><div class="fight-hud-side player"><div class="fight-name">🐰 Tour de ${rabbitDisplayName(r)}</div><div class="fight-hp"><div class="fight-hp-fill player-hp" style="width:${(r.hp / r.maxHp) * 100}%"></div></div><div class="fight-hp-text">${Math.max(0, r.hp)} / ${r.maxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(r.charge)}%</div><div class="fight-crit"><div class="fight-crit-fill player-crit-fill" style="width:${r.charge}%"></div></div>${combatStatusHtml(window.LapinousBossAbilities.rabbitLabels(r))}</div><div class="fight-hud-side boss"><div class="fight-name">🥕 ${combatEscape(f.boss.name)}</div><div class="fight-hp"><div class="fight-hp-fill boss-hp" style="width:${(f.bossHp / f.bossMaxHp) * 100}%"></div></div><div class="fight-hp-text">${Math.max(0, f.bossHp)} / ${f.bossMaxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(f.bossCharge)}%</div><div class="fight-crit"><div class="fight-crit-fill" style="width:${f.bossCharge}%"></div></div>${bossIntentHtml(f)}</div><div class="team-battlefield"><div class="team-fighters">${fighters}</div><div class="vs-mark">⚔️</div><div class="boss-battle-slot"><img class="battle-sprite boss-sprite" style="${combatSpriteStyle(f.boss, "boss")}" src="${f.boss.coteImg || f.boss.faceImg}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';"><strong>${combatEscape(f.boss.name)}</strong></div></div><div id="fightLog" class="fight-log" role="status" aria-live="polite">Tour ${f.turn} · ${message}</div><div class="fight-command-grid">${skills}${r.charge >= 100 ? `<button class="fight-command ultimate" onclick="tacticalAction('ultimate')">🌟 ${ultimateName(r)}</button>` : ""}<button id="fightModeToggle" class="fight-command" onclick="setFightMode(tacticalFightMode())">${f.auto ? "⏸ Reprendre en manuel" : "▶ Combat automatique"}</button><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${f.speed === 1 ? "selected" : ""}>×1</option><option value="3" ${f.speed === 3 ? "selected" : ""}>×3</option></select></label></div></div>`;
+            const allyHtml=f.ally?.hp>0?`<aside class="combat-ally" role="status"><img style="${combatSpriteStyle(f.ally.boss,'boss',f.ally.key)}" src="${combatEscape(f.ally.boss.coteImg||f.ally.boss.faceImg||'./assets/img/boss/mystery_boss.svg')}" alt=""><strong>Renfort : ${combatEscape(f.ally.boss.name)}</strong><span>${f.ally.hp}/${f.ally.maxHp} PV · ${f.ally.power} puissance</span><small>Il protège le boss : tes attaques le ciblent en premier.</small></aside>`:'';
+            gameArea.innerHTML = `<div class="fight-stage tactical"><div class="fight-hud-side player"><div class="fight-name">🐰 Tour de ${rabbitDisplayName(r)}</div><div class="fight-hp"><div class="fight-hp-fill player-hp" style="width:${(r.hp / r.maxHp) * 100}%"></div></div><div class="fight-hp-text">${Math.max(0, r.hp)} / ${r.maxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(r.charge)}%</div><div class="fight-crit"><div class="fight-crit-fill player-crit-fill" style="width:${r.charge}%"></div></div>${combatStatusHtml(window.LapinousBossAbilities.rabbitLabels(r))}</div><div class="fight-hud-side boss"><div class="fight-name">🥕 ${combatEscape(f.boss.name)}</div><div class="fight-hp"><div class="fight-hp-fill boss-hp" style="width:${(f.bossHp / f.bossMaxHp) * 100}%"></div></div><div class="fight-hp-text">${Math.max(0, f.bossHp)} / ${f.bossMaxHp} PV</div><div class="fight-crit-label">🌟 Critique ${Math.round(f.bossCharge)}%</div><div class="fight-crit"><div class="fight-crit-fill" style="width:${f.bossCharge}%"></div></div>${bossIntentHtml(f)}</div><div class="team-battlefield"><div class="team-fighters">${fighters}</div><div class="vs-mark">⚔️</div>${allyHtml}<div class="boss-battle-slot"><img class="battle-sprite boss-sprite" style="${combatSpriteStyle(f.boss, "boss")}" src="${f.boss.coteImg || f.boss.faceImg}" onerror="this.onerror=null;this.src='./assets/img/boss/mystery_boss.svg';"><strong>${combatEscape(f.boss.name)}</strong></div></div><div id="fightLog" class="fight-log" role="status" aria-live="polite">Tour ${f.turn} · ${combatEscape(message)}</div><div class="fight-command-grid">${skills}${r.charge >= 100 ? `<button class="fight-command ultimate" onclick="tacticalAction('ultimate')">🌟 ${ultimateName(r)}</button>` : ""}<button class="fight-command" onclick="fleeTacticalFight()">Fuir · −8 nourriture / −12 énergie / −5 propreté max.</button><button id="fightModeToggle" class="fight-command" onclick="setFightMode(tacticalFightMode())">${f.auto ? "⏸ Reprendre en manuel" : "▶ Combat automatique"}</button><label>Vitesse <select onchange="setFightSpeed(this.value)"><option value="1" ${f.speed === 1 ? "selected" : ""}>×1</option><option value="3" ${f.speed === 3 ? "selected" : ""}>×3</option></select></label></div></div>`;
             updateCombatShieldBars(f);
             queueAutoFight();
         }
         window.tacticalFightMode = () => (tacticalFight?.auto ? "manual" : "auto");
+        window.fleeTacticalFight = function(){
+            const f=tacticalFight;if(!f||f.finished||f.locked)return;
+            clearTimeout(autoFightTimer);
+            if(!window.confirm('Fuir avec toute l’équipe ? Chaque lapin perd 8 nourriture, 12 énergie et jusqu’à 5 propreté. Aucune récompense de combat.')){queueAutoFight();return;}
+            try{window.LapinousBossAbilities.flee(f,autoSave,(p,n)=>window.LapinousRemedies.cleanCost(p,n));}
+            catch(error){showToast(error.message,'warn');return;}
+            tacticalFight=null;updateStatusBars();openAdventure();
+            showToast('Équipe à l’abri · −8 nourriture, −12 énergie et jusqu’à −5 propreté par lapin. Aucune récompense.','warn',8000);
+        };
         window.tacticalAction = async function (type, index = 0) {
             const f = tacticalFight;
             if (!f || f.locked || f.finished || !gameArea.querySelector(".tactical")) return;
@@ -4000,7 +4019,8 @@ document.addEventListener("DOMContentLoaded", () => {
             dmg = window.LapinousBossAbilities.playerDamage(f,r,Math.max(1, Math.round(dmg * (1 - f.bossGuard))));
             msg=msg.replace(/\d+ dégâts/,`${dmg} dégâts`);
             f.bossGuard = 0;
-            f.bossHp = Math.max(0, f.bossHp - dmg);
+            if(f.ally?.hp>0){f.ally.hp=Math.max(0,f.ally.hp-dmg);msg+=` Renfort ${f.ally.boss.name} : ${f.ally.hp} PV restants.`;}
+            else f.bossHp = Math.max(0, f.bossHp - dmg);
             updateTacticalVitals(f);
             bossSprite?.classList.add(type === "ultimate" ? "fight-critical-hit" : "fight-hit");
             const log = gameArea.querySelector("#fightLog");
@@ -4014,6 +4034,12 @@ document.addEventListener("DOMContentLoaded", () => {
                 return;
             }
             const config = criticalConfig(f.boss);
+            const call=window.LapinousBossAbilities.callAlly(f,getOpponents(),bossCombatStats);
+            if(call){
+                if(call.blocked)msg+=` 🔇 ${rabbitDisplayName(f.team.find(x=>x.key===call.key))} empêche l’appel de renfort !`;
+                else if(call.ally){playSfx('monsterCombat');msg+=` 📣 ${f.boss.name} appelle ${call.ally.boss.name} ! Puissance du renfort : ${call.ally.power}.`;}
+                else msg+=' Aucun renfort ne peut rejoindre ce combat sans dépasser la puissance de ton équipe.';
+            }
             f.bossCharge = Math.min(100, f.bossCharge + config.chargePerTurn);
             const bossCritical = f.bossCharge >= 100;
             const bossStats = bossCombatStats(f.boss);
@@ -4035,13 +4061,15 @@ document.addEventListener("DOMContentLoaded", () => {
             await fightPause(f, 220);
             if(tacticalFight!==f||f.finished||!gameArea.querySelector(".tactical"))return;
             r.hp = Math.max(0, r.hp - bd);
-            const abilityCast=bossCritical?window.LapinousBossAbilities.cast(f,r,bd,x=>mealBonus(x.key,'resistance')):null;
+            if(r.hp>0&&f.ally?.hp>0){const extra=window.LapinousBossAbilities.allyDamage(f,r,mealBonus(r.key,'resistance'));r.hp=Math.max(0,r.hp-extra);bossMessage+=` ${f.ally.boss.name} soutient son allié : ${extra} dégâts.`;}
+            const abilityCast=(bossCritical||call)?window.LapinousBossAbilities.cast(f,r,bd,x=>mealBonus(x.key,'resistance')):null;
             if(abilityCast){
                 animateBossAbility(f,abilityCast);
                 bossMessage+=' '+abilityCast.description;
                 if(abilityCast.extra.length)bossMessage+=' '+abilityCast.extra.map(hit=>`${rabbitDisplayName(f.team.find(x=>x.key===hit.key))} : −${hit.damage} PV.`).join(' ');
             }
             const poisonTicks=window.LapinousBossAbilities.afterBoss(f);
+            window.LapinousBossAbilities.rebalanceAlly(f);
             updateTacticalVitals(f);
             if(poisonTicks.length)bossMessage+=' '+poisonTicks.map(hit=>`🧪 ${rabbitDisplayName(f.team.find(x=>x.key===hit.key))} : −${hit.damage} PV (poison).`).join(' ');
 

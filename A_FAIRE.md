@@ -1,11 +1,19 @@
 # Warrenfall - suivi des travaux et validations
 
-## Butins importés et horloge — lot 186 local
+## Bonus, défis quotidiens et renforts de combat — lot 187
+
+- Horloge des bonus et journées ancrée sur le compteur monotone en session ; saut de l'horloge civile détecté avant repas ou récupération quotidienne. Fuseau de la partie conservé dans `dailyTimeZone` ; repère optionnel `lastDailyClaimAt` ajouté au prochain gain quotidien, sans migration imposée. Historique ancien conservé, réattribution d'une récompense déjà cochée impossible et annulation si la sauvegarde échoue. Les limites hors ligne et de restauration de copie restent documentées.
+- Boss : une tentative de renfort sous 35 % de PV, cri de début de combat, une seule créature temporaire. Puissance du boss + renfort plafonnée à la somme des lapins debout au moment de l'appel ; aucun renfort si le boss atteint déjà ce total. Le renfort diminue sa puissance si un lapin tombe K.O. Azur/Myco debout bloquent l'appel. Techniques spéciales existantes également déclenchées au moment de la tentative de renfort, et toujours annoncées.
+- Fuite confirmée entre deux actions : −8 nourriture, −12 énergie, jusqu'à −5 propreté par lapin, sans récompense. Débits annulés si la sauvegarde échoue, protections de propreté conservées sur échec.
+- 19 plats : bonus de 30 minutes, +10 % puissance/résistance/expérience ou jusqu'à +10 points de soins rares au départ en exploration ; cumul du même type interdit, stock consommé une fois. Recettes et stocks déjà sauvegardés restent compatibles. Aucun changement de durée de voyage ni du nombre de trouvailles.
+- Tests : `tools/test-temporal-bonuses.mjs`, `tools/test-combat-support.mjs`, affichage réel des aperçus/combat et suites existantes sauvegardes, autosauvegardes, boss, voyages, recettes, récompenses. Aucune sauvegarde réelle modifiée. Publication autorisée par la demande du 20 novembre ; les cartes anti-triche restent ouvertes.
+
+## Butins importés et horloge — lot 186 publié (5b1a400)
 
 - [x] Contrôler avant crédit les voyages chargés : compagnon possédé, destination, durée exacte, coût et niveau lorsqu'ils sont présents, objets autorisés par zone et rareté, total cumulé limité au nombre de trouvailles. Les lignes dupliquées ne contournent pas le plafond. Une incohérence laisse le voyage et le reste de la partie intacts, avec une explication ; aucun refus supplémentaire du fichier entier à l'import. [trello:6afeb621b5f344595561762d:code:import-loot-186]
 - [x] Détecter les écarts de plus de deux minutes entre horloge civile et compteur monotone pendant une session au premier plan, avant départ ou récupération. Corriger l'heure permet de réessayer ; aucune échéance sauvegardée n'est modifiée. Reprise après arrière-plan recalée pour éviter les faux positifs des téléphones suspendus. [trello:6afeb618ace0c233d29d0cae:code:foreground-clock-186]
 - Tests : `tools/test-exploration-import-clock.mjs`, anciennes explorations, sauvegardes et départs. Anciens champs facultatifs et extensions futures conservés, échec d'enregistrement annulé, reprise après plusieurs jours hors ligne.
-- Limites : contrôle de cohérence, pas preuve d'origine d'un butin plausible. Pas d'heure de confiance après fermeture ou arrière-plan ; bonus et défis quotidiens restent à traiter. Aucun bannissement ni effacement. Modifications locales non publiées.
+- Limites : contrôle de cohérence, pas preuve d'origine d'un butin plausible. Pas d'heure de confiance après fermeture ou arrière-plan ; bonus et défis quotidiens restent à traiter. Aucun bannissement ni effacement. Publié sur main dans le commit 5b1a400 ; bonus et défis complétés par le lot 187 ci-dessus.
 
 ## Frigo rétabli et départs d'exploration — lot 185
 

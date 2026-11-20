@@ -21,10 +21,23 @@
         ...[1, 5, 20].map((n,i) => ({id:`puzzle-${n}`,title:`${n} puzzle(s) cousu(s) terminé(s)`,metric:'puzzleCompleted',target:n,reward:[5,15,40][i],text:'Terminer le plateau, y compris en rejouant'})),
         ...[1, 5, 20].map((n,i) => ({id:`quiz-${n}`,title:`${n} quiz terminé(s)`,metric:'quizCompleted',target:n,reward:[4,15,40][i],text:'Chaque quiz terminé compte, quel que soit le score'})),
     ];
-    function dayKey(date = new Date()) {
+    function dayKey(date = new Date(root.LapinousClock?.now?.() ?? Date.now()),timeZone) {
+        if(timeZone)try{
+            const parts=new Intl.DateTimeFormat('en-CA',{timeZone,year:'numeric',month:'2-digit',day:'2-digit'}).formatToParts(date);
+            const part=type=>parts.find(p=>p.type===type).value;
+            return `${part('year')}-${part('month')}-${part('day')}`;
+        }catch{} // Un ancien champ non reconnu ne rend pas la partie illisible.
         return `${date.getFullYear()}-${String(date.getMonth()+1).padStart(2,'0')}-${String(date.getDate()).padStart(2,'0')}`;
     }
-    function ensure(game, date = new Date()) {
+    // Un recul d'horloge ne rouvre pas une ancienne journée. Le repère n'est
+    // ajouté qu'au prochain gain quotidien, sans réécrire l'historique existant.
+    function dailyAllowed(game,date){
+        if(!Number.isFinite(date?.getTime?.()))return false;
+        if(root.LapinousClock?.valid()===false)return false;
+        const last=game.achievements?.lastDailyClaimAt;
+        return !Number.isFinite(last)||date.getTime()>=last-120000;
+    }
+    function ensure(game, date = new Date(root.LapinousClock?.now?.() ?? Date.now())) {
         game.records ||= {};
         // Les anciens compteurs sont conservés ; seuls les résultats connus sont repris.
         if (game.records.gamesWon == null) {
@@ -34,7 +47,10 @@
         const state = game.achievements ||= { days: {}, claimed: {}, peaks: {}, earnedCarrots: 0 };
         state.days ||= {}; state.claimed ||= {}; state.peaks ||= {};
         state.earnedCarrots ||= 0;
-        const key = dayKey(date);
+        // Conserver le fuseau de la partie évite de créer de nouvelles journées
+        // en changeant simplement le réglage de fuseau du téléphone.
+        state.dailyTimeZone ||= Intl.DateTimeFormat().resolvedOptions().timeZone;
+        const key = dayKey(date,state.dailyTimeZone);
         state.days[key] ||= { counts: { visit: 1 }, claimed: {} };
         for (const entry of Object.values(state.days)) {
             entry.counts.gamesFinished = (entry.counts.gamesWon || 0) + (entry.counts.agilityPlayed || 0);
@@ -49,15 +65,15 @@
         for (const [metric,value] of Object.entries(values)) state.peaks[metric] = Math.max(Number(state.peaks[metric]) || 0, Number(value) || 0);
         return state;
     }
-    function record(game, metric, amount = 1, date = new Date(), dailyAmount = amount) {
+    function record(game, metric, amount = 1, date = new Date(root.LapinousClock?.now?.() ?? Date.now()), dailyAmount = amount) {
         const state = ensure(game, date);
         game.records[metric] = (Number(game.records[metric]) || 0) + amount;
-        const counts = state.days[dayKey(date)].counts;
+        const counts = state.days[dayKey(date,state.dailyTimeZone)].counts;
         counts[metric] = (counts[metric] || 0) + dailyAmount;
         ensure(game, date);
     }
-    function list(game, date = new Date()) {
-        const state = ensure(game, date), today = dayKey(date);
+    function list(game, date = new Date(root.LapinousClock?.now?.() ?? Date.now())) {
+        const state = ensure(game, date), today = dayKey(date,state.dailyTimeZone);
         const row = (def, counts, claimed, day) => ({...def, day, value: Math.min(def.target, counts[def.metric] || 0), claimed: !!claimed[def.id]});
         const todayRows = daily.map(d => row(d, state.days[today].counts, state.days[today].claimed, today));
         const pending = []; // Historique conserv?, r?compenses quotidiennes expir?es.
@@ -76,16 +92,27 @@
         const visible=row=>row.claimed||row.value>=row.target||!features[row.metric]||root.LapinousVisibility?.allowed(features[row.metric])!==false;
         return { today: completedFirst(todayRows.filter(visible)), pending, permanent: completedFirst(permanent.filter(visible)) };
     }
-    function claim(game, id, day = null, date = new Date()) {
+    function claim(game, id, day = null, date = new Date(root.LapinousClock?.now?.() ?? Date.now())) {
+        if(day!==null&&!dailyAllowed(game,date))return 0;
         const state = ensure(game, date);
-        if (day !== null && day !== dayKey(date)) return 0;
+        if (day !== null && day !== dayKey(date,state.dailyTimeZone)) return 0;
         const def = (day === null ? milestones : daily).find(d => d.id === id);
         const entry = day === null ? { counts: state.peaks, claimed: state.claimed } : state.days[day];
         if (!def || !entry || entry.claimed[id] || (entry.counts[def.metric] || 0) < def.target) return 0;
         entry.claimed[id] = date.toISOString();
+        if(day!==null)state.lastDailyClaimAt=Math.max(Number(state.lastDailyClaimAt)||0,date.getTime());
         game.carrots = (Number(game.carrots) || 0) + def.reward;
         state.earnedCarrots += def.reward;
         return def.reward;
     }
-    root.LapinousAchievements = { ensure, record, list, claim, dayKey };
+    function claimAndSave(game,id,day,save,date=new Date(root.LapinousClock?.now?.() ?? Date.now())){
+        const keys=['achievements','records','carrots'];
+        const before=keys.map(key=>({key,exists:Object.hasOwn(game,key),value:game[key]===undefined?undefined:JSON.parse(JSON.stringify(game[key]))}));
+        try{
+            const reward=claim(game,id,day,date);
+            if(reward&&save()!==true)throw Error('Récompense non enregistrée : elle reste à récupérer.');
+            return reward;
+        }catch(error){for(const b of before){if(b.exists)game[b.key]=b.value;else delete game[b.key];}throw error;}
+    }
+    root.LapinousAchievements = { ensure, record, list, claim, claimAndSave, dayKey, dailyAllowed };
 })(typeof window === 'undefined' ? globalThis : window);
