@@ -16,7 +16,7 @@ for (const icon of manifest.icons) {
   assert.equal(bytes.readUInt32BE(20), size);
 }
 const handlers = {}, stores = new Map([['portfolio', new Map()], ['lapinous-/autre/-shell-v0', new Map()], ['lapinous-/lapinous/-shell-v0', new Map()]]);
-let offline = false, writes = 0;
+let offline = false, writes = 0, activations = 0;
 const keyOf = key => typeof key === 'string' ? key : key.url;
 async function network(request) {
   if (offline) throw Error('offline');
@@ -41,10 +41,12 @@ const caches = {
   }
 };
 vm.runInNewContext(await fs.readFile('sw.js','utf8'), {
-  self: {registration:{scope},location:{origin:new URL(scope).origin},clients:{claim:async()=>{}},addEventListener:(name,handler)=>handlers[name]=handler},
+  self: {registration:{scope},location:{origin:new URL(scope).origin},clients:{claim:async()=>{}},skipWaiting:async()=>{activations++;},addEventListener:(name,handler)=>handlers[name]=handler},
   URL,caches,fetch:network,Set,Promise,Error
 });
 async function lifecycle(name) { let done; handlers[name]({waitUntil:promise=>done=promise}); await done; }
+handlers.message({data:{type:'UNKNOWN'}});assert.equal(activations,0);
+let activated;handlers.message({data:{type:'ACTIVATE_UPDATE'},waitUntil:promise=>activated=promise});await activated;assert.equal(activations,1);
 await lifecycle('install');
 await lifecycle('activate');
 assert(stores.has('portfolio'));

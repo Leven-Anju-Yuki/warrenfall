@@ -1,0 +1,48 @@
+import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
+const window={},context=vm.createContext({window,crypto:globalThis.crypto});
+for(const file of ['replay-draws','exploration','game-economy','achievements','save-validation'])vm.runInContext(fs.readFileSync('assets/js/'+file+'.js','utf8'),context);
+const api=window.LapinousReplay;
+const fresh=()=>({species:'azur',ownedSpecies:['azur'],speciesNames:{azur:'Test'},progress:{azur:{food:80,energy:100,cleanliness:90,currentLevel:10,friendshipTotal:200}},eggs:20,carrots:10,inventory:{},future:{keep:true}});
+const g=fresh();api.fresh(g);const saved=JSON.stringify(g);
+const seq=game=>Array.from({length:10},()=>{const rng=api.random(game,'eggs');return [rng(),rng(),rng(),rng()];});
+assert.deepEqual(seq(g),seq(JSON.parse(saved)),'Same old copy must yield the same next ten streams');
+const ten=JSON.parse(saved),single=JSON.parse(saved);assert.deepEqual(seq(ten),Array.from({length:10},()=>{const r=api.random(single,'eggs');return [r(),r(),r(),r()];}));
+const a=JSON.parse(saved),b=JSON.parse(saved);api.random(a,'exploration')();assert.deepEqual(seq(a),seq(b),'Exploration must not advance egg draws');
+const legacy=fresh(),legacy2=JSON.parse(JSON.stringify(legacy));api.legacy(legacy);api.legacy(legacy2);assert.deepEqual(seq(legacy),seq(legacy2));assert.equal(legacy.future.keep,true);
+const invalid=fresh();invalid.drawState={version:99,seed:'keep',counters:{}};const raw=JSON.stringify(invalid);assert.throws(()=>api.random(invalid,'eggs'));assert.equal(JSON.stringify(invalid),raw);
+window.LapinousSaveValidation.validate(JSON.parse(saved));
+const content=JSON.parse(fs.readFileSync('lapinous-content.json','utf8')),shop=JSON.parse(fs.readFileSync('lapinous-shop.json','utf8'));
+const exp=window.LapinousExploration,one=JSON.parse(saved),before=JSON.stringify(one);
+assert.throws(()=>exp.prepareDeparture(one,'azur',content.exploration,shop.items,10,'forest',1,()=>false));assert.equal(JSON.stringify(one),before,'Failed save must restore both needs and draw position');
+const t=exp.prepareDeparture(one,'azur',content.exploration,shop.items,10,'forest',1,()=>true);
+const restored=JSON.parse(saved),t2=exp.prepareDeparture(restored,'azur',content.exploration,shop.items,10,'forest',1,()=>true);assert.equal(JSON.stringify(t.loot),JSON.stringify(t2.loot));
+const l1=JSON.parse(saved),l2=JSON.parse(saved);const loot=game=>window.LapinousEconomy.loot(game,shop.items,api.random(game,'battleLoot'));
+assert.equal(loot(l1)?.id,loot(l2)?.id);
+// Restoring a pre-reward balance restores that balance too, without a global
+// blacklist which would remove a legitimately recoverable reward.
+const old=fresh(),date=new Date('2026-11-20T12:00:00'),day=window.LapinousAchievements.dayKey(date),oldRaw=JSON.stringify(old);
+window.LapinousAchievements.claimAndSave(old,'visit',day,()=>true,date);const rewardBalance=old.carrots;
+const copy=JSON.parse(oldRaw);window.LapinousAchievements.claimAndSave(copy,'visit',day,()=>true,date);assert.equal(copy.carrots,rewardBalance);assert.equal(window.LapinousAchievements.claimAndSave(copy,'visit',day,()=>true,date),0);
+// Execute the actual egg algorithm rather than a duplicate test implementation.
+const source=fs.readFileSync('assets/js/script.js','utf8');
+Object.assign(context,{game:JSON.parse(saved),loadEggRates:()=>content.eggRates,getSpecies:()=>content.species,isSpeciesAvailableNow:()=>true,currentActiveEvents:()=>[],TRAITS:{aucun:{},curieux:{}},COMMON_ORDER:()=>['azur']});
+vm.runInContext(source.slice(source.indexOf('        function randomTrait('),source.indexOf('        function renderAdoptionCard(')),context);
+const eggs=()=>Array.from({length:10},()=>vm.runInContext('rollEgg()',context));
+const first=JSON.stringify(eggs());context.game=JSON.parse(saved);assert.equal(JSON.stringify(eggs()),first);
+Object.assign(context,{openingEggs:false,ensureNewSystems(){},ensureAttackTraining:p=>p,recordAchievement:(metric,n=1)=>{context.game.records||={};context.game.records[metric]=(context.game.records[metric]||0)+n;},allAttacksMaxed:()=>false,progressForSpecies:key=>context.game.progress[key]||(context.game.progress[key]={attackLevels:[0],attackFragments:0}),autoSave:()=>false,refreshCurrentZone(){},showToast(){},spawnParticles(){},eggRevealAnimation:async()=>{},RARITY_META:{commun:{label:'Commun'},rare:{label:'Rare'},epique:{label:'Epique'},legendaire:{label:'Légendaire'},mythique:{label:'Mythique'},divin:{label:'Divin'}}});
+vm.runInContext(source.slice(source.indexOf('        window.openEgg ='),source.indexOf('        // ---- Améliorations ----',source.indexOf('        window.openTenEggs ='))),context);
+context.game=JSON.parse(saved);const beforeBatch=JSON.stringify(context.game);window.openTenEggs();assert.equal(JSON.stringify(context.game),beforeBatch);assert.equal(context.openingEggs,false);
+await window.openEgg();assert.equal(JSON.stringify(context.game),beforeBatch);assert.equal(context.openingEggs,false);
+context.game.pendingEgg={speciesKey:'azur',trait:'aucun'};const pending=JSON.stringify(context.game);await window.openEgg();assert.equal(JSON.stringify(context.game),pending,'Failed final attribution must retain the already rolled egg');
+context.game=JSON.parse(saved);const beforeBattle=JSON.stringify(context.game);
+window.LapinousTeamRules={victory:()=>({carrots:6,loot:true,bossAchievement:true})};window.LapinousRemedies={cleanCost:(p,n)=>n};window.LapinousShop={getCatalog:()=>shop};
+Object.assign(context,{tacticalFight:{key:'carotte',boss:content.bosses.carotte,team:[{key:'azur',sp:content.species.azur,pr:context.game.progress.azur}]},autoFightTimer:0,clearTimeout(){},playSfx(){},updateStatusBars(){},gainFriendship:n=>{context.game.progress[context.game.species].friendshipTotal+=n;return n;},gameArea:{innerHTML:''},combatEscape:x=>String(x??'')});
+const lootStart=source.indexOf('        function awardBattleLoot()');vm.runInContext(source.slice(lootStart,source.indexOf('\n',lootStart)),context);
+vm.runInContext(source.slice(source.indexOf('        function finishTacticalFight(win)'),source.indexOf('        // ---- Boutique à œufs',source.indexOf('        function finishTacticalFight(win)'))),context);
+context.rabbitDisplayName=r=>r.key;
+context.game.drawState.version=99;const malformed=JSON.stringify(context.game);
+vm.runInContext('finishTacticalFight(true)',context);assert.equal(JSON.stringify(context.game),malformed,'A draw error after reward calculation must roll back the complete result');
+context.game=JSON.parse(beforeBattle);context.tacticalFight.team[0].pr=context.game.progress.azur;
+vm.runInContext('finishTacticalFight(true)',context);assert.equal(JSON.stringify(context.game),beforeBattle);assert.equal(context.tacticalFight.pendingResult,true);
+context.autoSave=()=>true;vm.runInContext('finishTacticalFight(true)',context);assert.equal(context.game.carrots,16);assert.equal(context.game.progress.azur.food,72);assert.equal(context.game.drawState.counters.battleLoot,1);assert.equal(context.tacticalFight,null);
+console.log('Restore/replay: actual egg rolls, x1/x10 streams, old files, separate channels, expedition/loot stability, save rollback and reward balances preserved');

@@ -5,6 +5,11 @@ const window={};vm.runInNewContext(fs.readFileSync('assets/js/boss-abilities.js'
 const api=window.LapinousBossAbilities,content=JSON.parse(fs.readFileSync('lapinous-content.json','utf8'));
 const fixture=key=>({key,boss:structuredClone(content.bosses[key]),bossHp:700,bossMaxHp:1000,bossCharge:80,team:[0,1,2].map(i=>({key:'rabbit'+i,hp:200,maxHp:200,guard:0,pr:{food:50,energy:50,cleanliness:50}}))});
 const original=JSON.stringify(content);
+for(const [key,boss] of Object.entries(content.bosses)){
+ assert.ok([34,50].includes(boss.critical.chargePerTurn),'Boss critical reaches full charge in two or three turns');
+ assert.ok(boss.attackName);assert.equal(api.get(boss,key).name,boss.power.split(':')[0]);
+}
+for(const mob of Object.values(content.opponents||{}))assert.equal(mob.critical?.chargePerTurn,10);
 const kinds=new Set();
 for(const [key,boss]of Object.entries(content.bosses)){
  const profile=api.get(boss,key);assert(profile?.description&&profile.tip&&profile.icon);kinds.add(profile.kind);

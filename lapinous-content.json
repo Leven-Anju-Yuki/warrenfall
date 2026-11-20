@@ -2018,7 +2018,7 @@
         "Les trahisons"
       ],
       "quote": "Vous nous avez arrachés de la terre. Nous allons vous y remettre.",
-      "power": "Révolte des Racines : Entrave tous les lapins : leur prochaine attaque inflige 25 % de dégâts en moins.",
+      "power": "Soulèvement des Racines: Entrave tous les lapins : leur prochaine attaque inflige 25 % de dégâts en moins.",
       "difficulty": 250,
       "faceImg": "./assets/img/boss/carotte_face.png",
       "coteImg": "./assets/img/boss/carotte_cote.png",
@@ -2031,10 +2031,11 @@
         "ail"
       ],
       "critical": {
-        "chargePerTurn": 20,
+        "chargePerTurn": 34,
         "multiplier": 1.75
       },
-      "combatAbility": "roots"
+      "combatAbility": "roots",
+      "attackName": "Croc de Racine"
     },
     "oignon": {
       "name": "SHINOBI OIGNON",
@@ -2059,7 +2060,7 @@
         "Bananax"
       ],
       "quote": "Les larmes arrivent toujours avant la mort.",
-      "power": "Voile de Larmes : Brouille la vue de toute l’équipe : dégâts réduits de 20 % pendant les deux prochaines actions de chaque lapin.",
+      "power": "Chagrin du Potager: Brouille la vue de toute l’équipe : dégâts réduits de 20 % pendant les deux prochaines actions de chaque lapin.",
       "difficulty": 150,
       "faceImg": "./assets/img/boss/oignon_face.png",
       "coteImg": "./assets/img/boss/oignon_cote.png",
@@ -2071,10 +2072,11 @@
         "banane"
       ],
       "critical": {
-        "chargePerTurn": 20,
+        "chargePerTurn": 34,
         "multiplier": 1.75
       },
-      "combatAbility": "veil"
+      "combatAbility": "veil",
+      "attackName": "Larme tranchante"
     },
     "choux": {
       "name": "BRUTUS CHOU",
@@ -2099,7 +2101,7 @@
         "Les traîtres"
       ],
       "quote": "Plus tu frappes, plus je pousse.",
-      "power": "Mur de Chou : Réduit de 45 % les dégâts des deux prochaines attaques reçues.",
+      "power": "Citadelle de Chou: Réduit de 45 % les dégâts des deux prochaines attaques reçues.",
       "difficulty": 200,
       "faceImg": "./assets/img/boss/choux_face.png",
       "coteImg": "./assets/img/boss/choux_cote.png",
@@ -2112,10 +2114,11 @@
         "oignon"
       ],
       "critical": {
-        "chargePerTurn": 20,
+        "chargePerTurn": 34,
         "multiplier": 1.75
       },
-      "combatAbility": "shell"
+      "combatAbility": "shell",
+      "attackName": "Heurt du Rempart"
     },
     "piment": {
       "name": "PIMENTOR",
@@ -2140,7 +2143,7 @@
         "Les règles"
       ],
       "quote": "Si ça n'explose pas, c'est pas fini.",
-      "power": "Explosion Contrôlée : Frappe aussi les autres lapins encore debout : 35 % des dégâts principaux, avant leur protection.",
+      "power": "Brasier Écarlate: Frappe aussi les autres lapins encore debout : 35 % des dégâts principaux, avant leur protection.",
       "difficulty": 75,
       "faceImg": "./assets/img/boss/piment_face.png",
       "coteImg": "./assets/img/boss/piment_cote.png",
@@ -2152,10 +2155,11 @@
         "choux"
       ],
       "critical": {
-        "chargePerTurn": 20,
+        "chargePerTurn": 34,
         "multiplier": 1.75
       },
-      "combatAbility": "explosion"
+      "combatAbility": "explosion",
+      "attackName": "Griffe ardente"
     },
     "banane": {
       "name": "BANANAX",
@@ -2180,7 +2184,7 @@
         "Être ignoré"
       ],
       "quote": "Je n'entends que le chaos.",
-      "power": "Folie Bananière : Ses deux prochaines attaques sont renforcées de 25 %, mais il subit 20 % de dégâts supplémentaires pendant deux impacts.",
+      "power": "Fureur des Tropiques: Ses deux prochaines attaques sont renforcées de 25 %, mais il subit 20 % de dégâts supplémentaires pendant deux impacts.",
       "difficulty": 40,
       "faceImg": "./assets/img/boss/banane.png",
       "coteImg": "./assets/img/boss/banane.png",
@@ -2192,10 +2196,11 @@
         "aubergine"
       ],
       "critical": {
-        "chargePerTurn": 20,
+        "chargePerTurn": 34,
         "multiplier": 1.75
       },
-      "combatAbility": "frenzy"
+      "combatAbility": "frenzy",
+      "attackName": "Bourrasque tropicale"
     },
     "courgette": {
       "name": "ZUKK",
@@ -2220,7 +2225,7 @@
         "Les imprudents"
       ],
       "quote": "Les traces racontent toujours une histoire.",
-      "power": "Marque du Traqueur : Marque sa cible : elle subit 25 % de dégâts supplémentaires lors des deux prochaines attaques du boss qui la touchent.",
+      "power": "Serment du Traqueur: Marque sa cible : elle subit 25 % de dégâts supplémentaires lors des deux prochaines attaques du boss qui la touchent.",
       "difficulty": 20,
       "faceImg": "./assets/img/boss/courgette_face.png",
       "coteImg": "./assets/img/boss/courgette_cote.png",
@@ -2230,10 +2235,11 @@
       ],
       "rivals": [],
       "critical": {
-        "chargePerTurn": 20,
+        "chargePerTurn": 34,
         "multiplier": 1.75
       },
-      "combatAbility": "mark"
+      "combatAbility": "mark",
+      "attackName": "Griffe du Traqueur"
     },
     "tomate": {
       "name": "TOMARAK",
@@ -2258,7 +2264,7 @@
         "L'échec"
       ],
       "quote": "La victoire est une maladie contagieuse.",
-      "power": "Toxines Paralysantes : Empoisonne sa cible : elle perd 4 % de ses PV maximum à la fin des deux prochains tours du boss. Sa prochaine attaque est affaiblie de 15 %.",
+      "power": "Venin du Crépuscule: Empoisonne sa cible : elle perd 4 % de ses PV maximum à la fin des deux prochains tours du boss. Sa prochaine attaque est affaiblie de 15 %.",
       "difficulty": 50,
       "faceImg": "./assets/img/boss/tomate_face.png",
       "coteImg": "./assets/img/boss/tomate_cote.png",
@@ -2269,10 +2275,11 @@
         "ail"
       ],
       "critical": {
-        "chargePerTurn": 20,
+        "chargePerTurn": 34,
         "multiplier": 1.75
       },
-      "combatAbility": "toxin"
+      "combatAbility": "toxin",
+      "attackName": "Morsure acide"
     },
     "ail": {
       "name": "COMTE AILULA",
@@ -2297,7 +2304,7 @@
         "Le désordre"
       ],
       "quote": "La conquête commence par une conversation.",
-      "power": "Autorité Royale : Renforce ses deux prochaines attaques de 20 % et réduit de 20 % les deux prochains coups reçus.",
+      "power": "Couronne des Ombres: Renforce ses deux prochaines attaques de 20 % et réduit de 20 % les deux prochains coups reçus.",
       "difficulty": 60,
       "faceImg": "./assets/img/boss/ail_face.png",
       "coteImg": "./assets/img/boss/ail_cote.png",
@@ -2309,10 +2316,11 @@
         "tomate"
       ],
       "critical": {
-        "chargePerTurn": 20,
+        "chargePerTurn": 34,
         "multiplier": 1.75
       },
-      "combatAbility": "royal"
+      "combatAbility": "royal",
+      "attackName": "Sceau royal"
     },
     "mais": {
       "name": "MARÉCHAL ÉPI-DOR",
@@ -2336,7 +2344,7 @@
         "Les tricheurs"
       ],
       "quote": "Un seul tir suffit.",
-      "power": "Précision Mortelle : Prépare sa prochaine frappe : dégâts augmentés de 35 % et moitié de la protection ignorée.",
+      "power": "Flèche du Zénith: Prépare sa prochaine frappe : dégâts augmentés de 35 % et moitié de la protection ignorée.",
       "difficulty": 70,
       "faceImg": "./assets/img/boss/mais_face.png",
       "coteImg": "./assets/img/boss/mais_cote.png",
@@ -2346,10 +2354,11 @@
       ],
       "rivals": [],
       "critical": {
-        "chargePerTurn": 34,
+        "chargePerTurn": 50,
         "multiplier": 2
       },
-      "combatAbility": "aim"
+      "combatAbility": "aim",
+      "attackName": "Trait solaire"
     },
     "aubergine": {
       "name": "SHOGUN AUBERGINE",
@@ -2373,7 +2382,7 @@
         "Le chaos"
       ],
       "quote": "La maîtrise précède la victoire.",
-      "power": "Lame du Shogun : Prépare un coup critique : sa prochaine attaque inflige 60 % de dégâts supplémentaires.",
+      "power": "Tranchant du Shogun: Prépare un coup critique : sa prochaine attaque inflige 60 % de dégâts supplémentaires.",
       "difficulty": 100,
       "faceImg": "./assets/img/boss/aubergine_face.png",
       "coteImg": "./assets/img/boss/aubergine_cote.png",
@@ -2385,10 +2394,11 @@
         "banane"
       ],
       "critical": {
-        "chargePerTurn": 34,
+        "chargePerTurn": 50,
         "multiplier": 2
       },
-      "combatAbility": "blade"
+      "combatAbility": "blade",
+      "attackName": "Lame violette"
     },
     "patate": {
       "name": "PATATOR LE BROYEUR",
@@ -2412,7 +2422,7 @@
         "L'abandon"
       ],
       "quote": "Je me bats pour ceux qui ne peuvent plus le faire.",
-      "power": "Séisme : Touche les autres lapins pour 25 % des dégâts principaux et affaiblit de 20 % la prochaine attaque de chacun.",
+      "power": "Fracas des Profondeurs: Touche les autres lapins pour 25 % des dégâts principaux et affaiblit de 20 % la prochaine attaque de chacun.",
       "difficulty": 85,
       "faceImg": "./assets/img/boss/patate_face.png",
       "coteImg": "./assets/img/boss/patate_cote.png",
@@ -2422,10 +2432,11 @@
       ],
       "rivals": [],
       "critical": {
-        "chargePerTurn": 20,
+        "chargePerTurn": 34,
         "multiplier": 1.75
       },
-      "combatAbility": "quake"
+      "combatAbility": "quake",
+      "attackName": "Marteau de terre"
     }
   },
   "eggRates": {

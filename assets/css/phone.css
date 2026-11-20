@@ -57,7 +57,10 @@ body.battle-scene #eventBanner{display:none!important}
  html.phone-ui body.game-running .kitchen-scene-actions{position:absolute!important;left:49%!important;right:19%!important;bottom:7%!important;display:flex!important;gap:6px!important;flex-wrap:wrap!important;width:auto!important;max-height:52%;overflow:auto;padding:5px!important}
  html.phone-ui .kitchen-scene-actions .action-btn{font-size:12px!important;min-height:44px!important;max-height:72px!important;min-width:0!important;padding:5px!important;flex:1!important}
  html.phone-ui .kitchen-scene-actions .action-icon{height:28px!important;width:28px!important}
- html.phone-ui .fridge-hotspot{right:4%!important;bottom:10%!important;padding:7px!important;font-size:12px!important}
+ /* Une seule zone tactile, sur le frigo : pas de contraintes gauche/droite
+    et haut/bas contradictoires, ni de deuxième bouton près des fruits. */
+ html.phone-ui body.game-running.cuisine .fridge-hotspot{position:fixed!important;left:auto!important;right:3%!important;top:38%!important;bottom:auto!important;width:15%!important;height:36%!important;min-width:54px;min-height:64px;padding:0!important;z-index:1250!important;font-size:12px!important;touch-action:manipulation}
+ html.phone-ui .fridge-hotspot span{white-space:normal;text-align:center;max-width:100%;box-sizing:border-box;pointer-events:none}
  /* Jeux et combats : les commandes de la maison ne recouvrent pas la partie. */
  html.phone-ui body:has(.puzzle-workshop,.memory-panel,.fight-stage,.boss-grid) :is(#friendshipBarContainer,#statusBars,.brand,.scene-label,.rules-btn,.encyclopedia-btn,.save-btn,.shop-trigger,#installInGame){display:none!important}
  html.phone-ui body.game-running #gameArea:has(.puzzle-workshop,.memory-panel,.fight-stage,.boss-grid){padding:8px!important;display:block!important;overflow:auto!important;box-sizing:border-box!important}

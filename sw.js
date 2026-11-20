@@ -1,7 +1,11 @@
 /* Les caches sont propres à ce projet, y compris sur un domaine GitHub Pages partagé. */
 const PREFIX = 'lapinous-' + new URL(self.registration.scope).pathname + '-';
-const SHELL = PREFIX + 'shell-v75', IMAGES = PREFIX + 'images-v1';
+const SHELL = PREFIX + 'shell-v76', IMAGES = PREFIX + 'images-v1';
 const HOME = new URL('index.html', self.registration.scope).href;
+// Activation uniquement après confirmation et sauvegarde dans la page.
+self.addEventListener('message',event=>{
+  if(event.data?.type==='ACTIVATE_UPDATE')event.waitUntil(self.skipWaiting());
+});
 self.addEventListener('install', event => {
   event.waitUntil((async () => {
     const cache = await caches.open(SHELL);
@@ -12,6 +16,8 @@ self.addEventListener('install', event => {
       .map(match => new URL(match[1], HOME).href).filter(url => new URL(url).origin === self.location.origin);
     await cache.put(HOME, response);
     await cache.addAll([...new Set([...assets, '403.html', '404.html', 'offline.html', 'assets/icons/error-403.png', 'assets/icons/error-404.png', 'assets/icons/error-offline.png', 'assets/icons/warrenfall-48.png', 'assets/icons/warrenfall-192.png', 'assets/icons/warrenfall-512.png', 'assets/fonts/CinzelDecorative-Bold.ttf', 'assets/fonts/EBGaramond.ttf', 'assets/icons/vegetable-placeholder.svg', 'manifest.json', 'lapinous-content.json', 'lapinous-shop.json', 'lapinous-puzzles.json', 'lapinous-quiz.json'].map(url => new URL(url, HOME).href))]);
+    // L'illustration est facultative : son échec ne bloque pas une correction.
+    try{const url=new URL('assets/img/Ouverture_du_jeu/mise_a_jour/az_travaux.png',HOME).href;const art=await fetch(url);if(art.ok)await(await caches.open(IMAGES)).put(url,art);}catch{}
   })());
 });
 self.addEventListener('activate', event => event.waitUntil((async () => {

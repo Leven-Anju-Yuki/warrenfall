@@ -109,6 +109,15 @@
     catch(error){Object.assign(game,before);throw error;}
     return current.loot;
   }
+  function prepareDeparture(game,rabbit,config,items,level,zone,hours,save,meal=0){
+    const now=checkedTime();
+    const existed=Object.hasOwn(game,'drawState'),before=game.drawState===undefined?undefined:JSON.parse(JSON.stringify(game.drawState));
+    try{
+      const random=window.LapinousReplay?.random(game,'exploration')||Math.random;
+      const planned=plan(config,items,rabbit,level,zone,hours,now,random,meal);
+      depart(game,rabbit,planned,save,now);return planned;
+    }catch(error){if(existed)game.drawState=before;else delete game.drawState;throw error;}
+  }
   function open({host,game,config,items,species,save,toast,refresh}){
     if(!config){toast('La carte des explorations n’est pas encore disponible.','warn');return;}
     const el=(tag,text,cls)=>{const n=document.createElement(tag);if(text!==undefined)n.textContent=text;if(cls)n.className=cls;return n;};
@@ -144,7 +153,7 @@
     for(const [text,input] of [['Compagnon',rabbit],['Destination',zones],['Durée',durations]]){const label=el('label',text);label.append(input);form.append(label);}
     const details=el('div',undefined,'exploration-details'),feedback=el('p',undefined,'exploration-feedback');feedback.setAttribute('role','status');
     const availability=el('div',undefined,'exploration-availability');availability.setAttribute('role','status');
-    const start=button('Préparer le sac et partir',()=>{try{const p=game.progress?.[selected];const last=(game.ownedSpecies||[]).filter(id=>id!==selected&&!busy(game,id)).length===0;if(last&&!window.confirm(`${name(selected)} est ton dernier compagnon disponible. Pendant ${hours} h réelles, les mini-jeux, les soins, l’entraînement et les combats seront indisponibles jusqu’à son retour et la récupération de ses trouvailles. Tu pourras toujours consulter ta collection et tes sauvegardes. Le faire partir ?`))return;const planned=plan(config,items,selected,p?.currentLevel||1,zoneId,hours,Date.now(),Math.random,window.LapinousMealBonuses?.value(p,'travel')||0);depart(game,selected,planned,save);feedback.textContent=`${name(selected)} est parti ! Retour le ${new Date(planned.endsAt).toLocaleString('fr-FR')}.`;refresh();render();pose('wave');}catch(error){feedback.textContent=error.message;}});
+    const start=button('Préparer le sac et partir',()=>{try{const p=game.progress?.[selected];const last=(game.ownedSpecies||[]).filter(id=>id!==selected&&!busy(game,id)).length===0;if(last&&!window.confirm(`${name(selected)} est ton dernier compagnon disponible. Pendant ${hours} h réelles, les mini-jeux, les soins, l’entraînement et les combats seront indisponibles jusqu’à son retour et la récupération de ses trouvailles. Tu pourras toujours consulter ta collection et tes sauvegardes. Le faire partir ?`))return;const planned=prepareDeparture(game,selected,config,items,p?.currentLevel||1,zoneId,hours,save,window.LapinousMealBonuses?.value(p,'travel')||0);feedback.textContent=`${name(selected)} est parti ! Retour le ${new Date(planned.endsAt).toLocaleString('fr-FR')}.`;refresh();render();pose('wave');}catch(error){feedback.textContent=error.message;}});
     const active=el('div',undefined,'exploration-trips'),tripsTitle=el('h3','Sur les sentiers');content.append(form,details,availability,start,feedback,tripsTitle,active);layout.append(guide,content);dialog.append(title,el('p','1 h d’exploration = 1 h dans la vraie vie. Tu peux fermer le jeu : le voyage continue.','exploration-intro'),layout);
     start.dataset.explorationStart='';
     function render(){
@@ -185,5 +194,5 @@
     const timer=setInterval(()=>{if(!dialog.isConnected||!dialog.open){clearInterval(timer);clearTimeout(poseTimer);return;}tick();},1000);
     dialog.onclose=()=>{clearTimeout(poseTimer);clearInterval(timer);dialog.remove();refresh();};render();pose('wave');
   }
-  window.LapinousExploration={HOUR,trip,busy,rates,plan,depart,claim,open};
+  window.LapinousExploration={HOUR,trip,busy,rates,plan,depart,claim,prepareDeparture,open};
 })();

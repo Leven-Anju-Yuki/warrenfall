@@ -108,7 +108,7 @@
   visibility();
   addEventListener('resize', visibility);
   if ('serviceWorker' in navigator && isSecureContext) {
-    addEventListener('load', () => navigator.serviceWorker.register('./sw.js').catch(() => {
+    addEventListener('load', () => navigator.serviceWorker.register('./sw.js',{updateViaCache:'none'}).catch(() => {
       button.title = savedButton.title = 'Installation indisponible pour le moment ; recharge le jeu avec Internet.';
     }));
   }

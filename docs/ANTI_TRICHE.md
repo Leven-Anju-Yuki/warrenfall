@@ -184,6 +184,14 @@ Fichiers : `assets/js/save-validation.js`, `assets/js/save-safety.js`, `assets/j
 
 ## Priorités pratiques
 
+### Lot 188 local — restauration et suite des tirages
+
+`assets/js/replay-draws.js` conserve une graine et un compteur par canal dans `drawState`, champ optionnel sans changement de version. Restaurer la même copie donne les mêmes tirages suivants avec le même catalogue et les mêmes événements, pour les œufs, départs d'exploration et butins de combat. Les nouvelles parties utilisent une graine propre ; une ancienne copie sans ce champ est initialisée de façon déterministe à partir de son contenu, sans accès au réseau. Les œufs en attente sont repris tels quels. Une erreur d'enregistrement restaure aussi la position du tirage ; les tests exécutent les fonctions réelles des œufs simples/×10, des départs et des résultats tactiques.
+
+Ne pas ajouter une liste noire navigateur « déjà gagné » : une restauration restitue également les anciens soldes et peut légitimement avoir besoin de récupérer à nouveau sa récompense. Un marqueur externe qui refuserait le gain sans restituer son solde ferait perdre de la progression. Les gains déjà cochés dans la copie courante restent uniques.
+
+Limites : pas d'identité commune attestée pour des copies historiques différentes, pas d'authenticité de graine/compteur dans un fichier éditable et résultats pouvant évoluer avec un catalogue ou événement différent. Cette suite locale décourage le rechargement opportuniste ; elle n'est ni un secret ni une preuve d'équité serveur. Aucune ancienne copie n'est supprimée, rejetée ou réécrite sur disque.
+
 ### Lot 187 — bonus et défis quotidiens
 
 `temporal-bonuses.js` fournit une horloge monotone de session aux bonus des plats et aux journées des succès. Les changements civils de plus de deux minutes suspendent consommation des repas à bonus et attribution quotidienne. La reprise d'arrière-plan réancre l'heure pour les téléphones suspendus. Le dernier instant de récupération quotidienne est conservé comme champ optionnel au prochain gain, sans réécriture de l'historique ancien. Les montants des repas importés sont bornés ; une expiration observée ne réactive pas le même bonus lors d'un recul ultérieur. Les anciens bonus sans `issuedAt` restent lisibles.

@@ -636,6 +636,7 @@ document.addEventListener("DOMContentLoaded", () => {
             }catch(error){if(!autoNestWarningShown){autoNestWarningShown=true;showToast('Partie enregistrée, mais le petit nid n’a pas pu être créé : '+error.message,'warn',10000);}}
             return true;
         }
+        window.LapinousPrepareUpdate=()=>!body.classList.contains('game-running')||autoSave(true)===true;
 
         document.addEventListener("visibilitychange",()=>{if(document.hidden&&body.classList.contains("game-running"))autoSave(true);});
         window.addEventListener("pagehide",()=>{if(body.classList.contains("game-running"))autoSave(true);});
@@ -725,6 +726,7 @@ document.addEventListener("DOMContentLoaded", () => {
 
         function applyLoadedGame(data) {
             const candidate=window.LapinousSaveSafety.migrate(data,freshGame(),freshSpeciesProgress());
+            window.LapinousReplay?.legacy(candidate,data);
             if(!getSpecies()[candidate.species])throw Error("Le catalogue du lapin de cette sauvegarde n'est pas disponible. Recharge avec Internet : la sauvegarde est conservée.");
             if(data.saveVersion!==window.LapinousSaveSafety.VERSION)window.LapinousSaveSafety.archiveMigration(localStorage,AUTOSAVE_KEY,JSON.stringify(data));
             const oldGame=game;
@@ -1081,15 +1083,16 @@ document.addEventListener("DOMContentLoaded", () => {
         let commonIndex = 0;
         let pick = { speciesKey: "azur", trait: "aucun" };
 
-        function randomTrait() {
+        function randomTrait(random = Math.random) {
             const keys = Object.keys(TRAITS);
-            return keys[Math.floor(Math.random() * keys.length)];
+            return keys[Math.floor(random() * keys.length)];
         }
 
         function rollEgg() {
+            const random=window.LapinousReplay?.random(game,"eggs")||Math.random;
             const rates = loadEggRates();
             const species = getSpecies();
-            const roll = Math.random() * 100;
+            const roll = random() * 100;
             let acc = 0;
             let chosenRarity = "commun";
             for (const rarity of ["commun", "rare", "epique", "legendaire", "mythique", "divin"]) {
@@ -1110,19 +1113,19 @@ document.addEventListener("DOMContentLoaded", () => {
                         activeEvents.includes(String(e).trim()),
                     ),
             );
-            if (eventPool.length && Math.random() < 0.65) pool = eventPool;
+            if (eventPool.length && random() < 0.65) pool = eventPool;
             if (pool.length === 0) {
                 // Rien de dispo dans cette rareté en ce moment (ex: tout événementiel hors saison) → repli sur un commun
                 const fallback = Object.entries(species).filter(
                     ([k, s]) => s.rarity === "commun" && isSpeciesAvailableNow(s),
                 );
-                const [key] = fallback[Math.floor(Math.random() * fallback.length)] || [
+                const [key] = fallback[Math.floor(random() * fallback.length)] || [
                     COMMON_ORDER()[0],
                 ];
-                return { speciesKey: key, trait: randomTrait() };
+                return { speciesKey: key, trait: randomTrait(random) };
             }
-            const [key] = pool[Math.floor(Math.random() * pool.length)];
-            return { speciesKey: key, trait: randomTrait() };
+            const [key] = pool[Math.floor(random() * pool.length)];
+            return { speciesKey: key, trait: randomTrait(random) };
         }
 
         function renderAdoptionCard() {
@@ -1169,6 +1172,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const s = getSpecies()[pick.speciesKey];
             const name = nameInput.value.trim() || s.name;
             game = freshGame();
+            window.LapinousReplay?.fresh(game);
             if (name.trim().toLowerCase() === "azazel") {
                 game.species = "az";
                 game.trait = "az_special";
@@ -2468,6 +2472,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const pending = game.pendingDuplicate;
             if (!pending) return;
             if (!["carrots", "fragment", "attack"].includes(choice)) return;
+            const beforeChoice=JSON.stringify(game);
             const pr = ensureTechniqueProgress(pending.speciesKey);
             if (
                 choice === "attack" &&
@@ -2499,7 +2504,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 );
             }
             game.pendingDuplicate = (game.pendingDuplicates || []).shift() || null;
-            autoSave();
+            if(!autoSave()){game=JSON.parse(beforeChoice);refreshCurrentZone();return;}
             refreshCurrentZone();
         };
 
@@ -2701,7 +2706,7 @@ document.addEventListener("DOMContentLoaded", () => {
             updateStatusBars();
         }
         function rewardMinigame(key,level){const amount=window.LapinousEconomy.mini(game,key,level);if(amount)showToast(`Niveau réussi : +${amount} carottes, en plus de ton amitié !`,"success");}
-        function awardBattleLoot(){const item=window.LapinousEconomy.loot(game,window.LapinousShop.getCatalog()?.items||[]);if(item)showToast(`Butin : ${item.name} ×1 dans la réserve de cuisine !`,"success");}
+        function awardBattleLoot(){const item=window.LapinousEconomy.loot(game,window.LapinousShop.getCatalog()?.items||[],window.LapinousReplay?.random(game,"battleLoot")||Math.random);if(item)showToast(`Butin : ${item.name} ×1 dans la réserve de cuisine !`,"success");}
         function gainFriendship(amount) {
             const scaled = Math.max(
                 1,
@@ -3838,7 +3843,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const low = Math.round(stats.attackBase),
                 high = Math.round(stats.attackBase + stats.attackSpread);
             const config = criticalConfig(boss), ability=window.LapinousBossAbilities.get(boss,key);
-            return `<div class="fight-preview-stats"><div class="fight-stat-chips"><span>❤️ ${hp} PV</span><span>⚔️ ${stats.power} puissance</span></div><ul><li><b>Attaque du légume</b><span>${low}–${high} dégâts</span></li><li class="preview-ultimate"><b>🌟 ${powerName(boss)}</b><span>${Math.round(low * config.multiplier)}–${Math.round(high * config.multiplier)} dégâts · +${config.chargePerTurn} % charge/tour${!ability&&powerMode(boss) === "heal" ? " · soin 20 %" : !ability&&powerMode(boss) === "support" ? " · protection 40 %" : ""}</span></li></ul>${ability?`<div class="boss-preview-ability"><strong>${ability.icon} ${combatEscape(ability.name)}</strong><p>${combatEscape(ability.description)}</p><small>Conseil : ${combatEscape(ability.tip)}</small></div>`:''}<small>Valeurs avant protection adverse.</small></div>`;
+            return `<div class="fight-preview-stats"><div class="fight-stat-chips"><span>❤️ ${hp} PV</span><span>⚔️ ${stats.power} puissance</span></div><ul><li><b>${combatEscape(boss.attackName||"Attaque")}</b><span>${low}–${high} dégâts</span></li><li class="preview-ultimate"><b>🌟 ${powerName(boss)}</b><span>${Math.round(low * config.multiplier)}–${Math.round(high * config.multiplier)} dégâts · +${config.chargePerTurn} % charge/tour${!ability&&powerMode(boss) === "heal" ? " · soin 20 %" : !ability&&powerMode(boss) === "support" ? " · protection 40 %" : ""}</span></li></ul>${ability?`<div class="boss-preview-ability"><strong>${ability.icon} ${combatEscape(ability.name)}</strong><p>${combatEscape(ability.description)}</p><small>Conseil : ${combatEscape(ability.tip)}</small></div>`:''}<small>Valeurs avant protection adverse.</small></div>`;
         }
         function nextLivingIndex(f, from) {
             if (!f.team.some((x) => x.hp > 0)) return -1;
@@ -4047,7 +4052,7 @@ document.addEventListener("DOMContentLoaded", () => {
             const hitShield = (r.guard || 0) > 0;
             const preparedStrike=!!f.bossEffects?.strike;
             const bd=window.LapinousBossAbilities.bossDamage(f,r,raw*(bossCritical?config.multiplier:1),mealBonus(r.key,'resistance'));
-            let bossMessage=bossCritical?`🌟 ${f.boss.name} déclenche ${powerName(f.boss)} : ${bd} dégâts !`:`🥕 ${f.boss.name} ${preparedStrike?'utilise sa frappe préparée contre':'attaque'} ${name} : ${bd} dégâts.`;
+            let bossMessage=bossCritical?`🌟 ${f.boss.name} déclenche ${powerName(f.boss)} : ${bd} dégâts !`:`🥕 ${f.boss.name} ${preparedStrike?'utilise sa frappe préparée contre':(f.boss.attackName||'attaque')+' contre'} ${name} : ${bd} dégâts.`;
             if(bossCritical){
                 f.bossCharge=0;
                 if(!window.LapinousBossAbilities.get(f.boss,f.key)){
@@ -4092,11 +4097,14 @@ document.addEventListener("DOMContentLoaded", () => {
                 `${msg} ${bossMessage} C'est au tour de ${rabbitDisplayName(f.team[f.active])}.`,
             );
         };
+        window.retryTacticalResult=()=>{if(tacticalFight&&typeof tacticalFight.pendingResult==='boolean')finishTacticalFight(tacticalFight.pendingResult);};
         function finishTacticalFight(win) {
             clearTimeout(autoFightTimer);
             const f = tacticalFight;
             if (!f || f.finished) return;
+            const beforeResult=JSON.stringify(game);
             f.finished = true;
+            try {
             if (win) {
                 const rewards = window.LapinousTeamRules.victory(f.boss);
                 const reward = rewards.carrots;
@@ -4123,7 +4131,13 @@ document.addEventListener("DOMContentLoaded", () => {
                 x.pr.cleanliness = Math.max(0, x.pr.cleanliness - window.LapinousRemedies.cleanCost(x.pr,5));
             });
             updateStatusBars();
-            autoSave();
+            if(!autoSave())throw Error("Résultat non enregistré : tu peux réessayer.");
+            }catch(error){
+                game=JSON.parse(beforeResult);f.team.forEach(r=>r.pr=game.progress?.[r.key]||r.pr);
+                f.finished=false;f.pendingResult=win;
+                gameArea.innerHTML=`<section class="battle-result"><h2>Résultat conservé en attente</h2><p>${combatEscape(error.message)} Aucun gain ni coût n’a été appliqué à la partie en mémoire.</p><button onclick="retryTacticalResult()">Réessayer l’enregistrement du résultat</button></section>`;
+                return;
+            }
             const key = f.key;
             tacticalFight = null;
             const portraits=f.team.map(x=>`<figure><img src="${combatEscape(x.sp.faceImg||x.sp.coteImg||'./assets/img/lapins_jouables/sans_evenements/mystery.svg')}" alt=""><figcaption>${combatEscape(rabbitDisplayName(x))}</figcaption></figure>`).join('');
@@ -4268,11 +4282,13 @@ document.addEventListener("DOMContentLoaded", () => {
             openingEggs = true;
             if(!game.pendingEgg){
                 const before=JSON.stringify(game);
+                try {
                 game.eggs -= 1;
                 ensureNewSystems();
                 recordAchievement("eggsOpened");
                 game.pendingEgg=rollEgg();
                 if(!autoSave()){game=JSON.parse(before);openingEggs=false;return;}
+                }catch(error){game=JSON.parse(before);openingEggs=false;showToast(error.message,"warn");return;}
             }
             const session=game;
             const result = game.pendingEgg;
@@ -4281,6 +4297,7 @@ document.addEventListener("DOMContentLoaded", () => {
             await eggRevealAnimation(s);
             if(game!==session){openingEggs=false;return;}
             openingEggs = false;
+            const beforeReward=JSON.stringify(game);
             delete game.pendingEgg;
             const isNew = !game.ownedSpecies.includes(result.speciesKey);
             if (isNew) {
@@ -4321,13 +4338,16 @@ document.addEventListener("DOMContentLoaded", () => {
                 }
             }
             spawnParticles("✨", 10);
-            autoSave();
+            if(!autoSave()){game=JSON.parse(beforeReward);refreshCurrentZone();return;}
             refreshCurrentZone();
         };
 
         window.openTenEggs = function () {
             if (openingEggs || game.pendingEgg || game.eggs < 10 || game.pendingDuplicate) return;
+            const before=JSON.stringify(game);
             openingEggs = true;
+            let cards;
+            try {
             ensureNewSystems();
             const results = Array.from({ length: 10 }, () => rollEgg());
             game.eggs -= 10;
@@ -4342,7 +4362,7 @@ document.addEventListener("DOMContentLoaded", () => {
                 secret: 70,
             };
             game.pendingDuplicates = game.pendingDuplicates || [];
-            const cards = results.map((result) => {
+            cards = results.map((result) => {
                 const sp = getSpecies()[result.speciesKey];
                 const isNew = !game.ownedSpecies.includes(result.speciesKey);
                 let label = "Nouveau !";
@@ -4370,7 +4390,8 @@ document.addEventListener("DOMContentLoaded", () => {
                 return { sp, label };
             });
             game.pendingDuplicate = game.pendingDuplicates.shift() || null;
-            autoSave();
+            if(!autoSave()){game=JSON.parse(before);openingEggs=false;return;}
+            }catch(error){game=JSON.parse(before);openingEggs=false;showToast(error.message,"warn");return;}
             refreshCurrentZone();
             const overlay = document.createElement("div");
             overlay.className = "egg-batch-overlay";
