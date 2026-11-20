@@ -4,6 +4,46 @@
   // Reçus de préparation uniquement en mémoire : aucune nouvelle contrainte
   // de format n'est imposée aux voyages déjà présents dans les sauvegardes.
   const preparedTrips=new WeakMap();
+  // Comparaison en mémoire seulement : aucune date historique de sauvegarde
+  // n'est réécrite. Une horloge corrigée rend les actions disponibles à nouveau.
+  const clockAnchor={wall:Date.now(),mono:globalThis.performance?.now?.()};
+  // Certains téléphones suspendent aussi leur compteur monotone en arrière-plan.
+  // Reprendre un onglet doit conserver le temps hors ligne habituel ; le contrôle
+  // porte donc sur les changements observés pendant une session au premier plan.
+  globalThis.document?.addEventListener?.('visibilitychange',()=>{
+    if(!document.hidden){clockAnchor.wall=Date.now();clockAnchor.mono=globalThis.performance?.now?.();}
+  });
+  function checkedTime(value){
+    if(value!==undefined){if(!Number.isFinite(value))throw Error('Heure incorrecte.');return value;}
+    const now=Date.now(),mono=globalThis.performance?.now?.();
+    if(Number.isFinite(mono)&&Number.isFinite(clockAnchor.mono)&&Math.abs((now-clockAnchor.wall)-(mono-clockAnchor.mono))>120000)
+      throw Error('L’heure de l’appareil a changé pendant le jeu. Vérifie son réglage automatique : le voyage et ses trouvailles sont conservés.');
+    return now;
+  }
+  // Ce contrôle refuse un crédit incohérent, sans modifier le voyage importé.
+  // Les champs facultatifs des anciennes parties restent facultatifs.
+  function checkLoot(game,rabbit,current,items,config){
+    if(!game.ownedSpecies?.includes(rabbit)||current.rabbit!==rabbit)throw Error('Compagnon du voyage incorrect : les trouvailles sont conservées.');
+    if(!config)throw Error('La carte des explorations est indisponible : réessaie après son chargement.');
+    const zone=config.zones.find(z=>z.id===current.zone);
+    const elapsed=current.endsAt-current.startedAt;
+    const duration=config.durations.find(d=>d.hours*HOUR===elapsed);
+    if(!zone||!duration||!Number.isFinite(current.startedAt)||!Number.isFinite(current.endsAt)||
+      (current.hours!==undefined&&current.hours!==duration.hours)||
+      (current.energy!==undefined&&current.energy!==duration.energy)||
+      (current.level!==undefined&&(!Number.isSafeInteger(current.level)||current.level<zone.level)))
+      throw Error('Destination, durée, niveau ou coût du voyage incohérent : voyage conservé, aucune récompense ajoutée.');
+    let total=0;
+    if(!Array.isArray(current.loot)||!current.loot.length)throw Error('Butin illisible : voyage conservé.');
+    for(const entry of current.loot){
+      if(!entry||!Number.isSafeInteger(entry.quantity)||entry.quantity<=0)throw Error('Quantité de butin incorrecte : voyage conservé.');
+      const pools={ingredient:zone.ingredients,care:zone.care,rare:zone.rare,egg:['egg']};
+      const allowed=entry.rarity===undefined?Object.values(pools).flat():pools[entry.rarity];
+      if(!allowed?.includes(entry.id)||(entry.id!=='egg'&&!items.some(item=>item.id===entry.id)))throw Error('Trouvaille incompatible avec ce lieu ou ce catalogue : voyage conservé, aucune récompense ajoutée.');
+      total+=entry.quantity;
+      if(!Number.isSafeInteger(total)||total>duration.rolls)throw Error('Trop de trouvailles pour cette durée : voyage conservé, aucune récompense ajoutée.');
+    }
+  }
   const trip=(game,rabbit)=>game.exploration?.trips?.[rabbit];
   const busy=(game,rabbit,now=Date.now())=>{const t=trip(game,rabbit);return !!t&&!t.claimed&&now<t.endsAt;};
   function rates(zone,duration,rabbit,level){
@@ -28,7 +68,8 @@
     preparedTrips.set(planned,{raw:JSON.stringify(planned),requiredLevel:zone.level});
     return planned;
   }
-  function depart(game,rabbit,planned,save,now=Date.now()){
+  function depart(game,rabbit,planned,save,now){
+    now=checkedTime(now);
     const receipt=planned&&preparedTrips.get(planned);
     if(!receipt||JSON.stringify(planned)!==receipt.raw)throw Error('Ce départ a été modifié ou déjà utilisé. Prépare à nouveau le voyage.');
     if(planned.rabbit!==rabbit||!Number.isFinite(planned.startedAt)||!Number.isFinite(planned.endsAt)||planned.endsAt-planned.startedAt!==planned.hours*HOUR||!Number.isSafeInteger(planned.energy)||planned.energy<0)throw Error('Départ incorrect, ton lapin reste au terrier.');
@@ -47,9 +88,11 @@
     preparedTrips.delete(planned);
     return planned;
   }
-  function claim(game,rabbit,items,save,now=Date.now()){
+  function claim(game,rabbit,items,save,now,config=window.getExplorationConfig?.()){
+    now=checkedTime(now);
     const current=trip(game,rabbit);
     if(!current||current.claimed)throw Error('Ces trouvailles ont déjà été récupérées.');
+    checkLoot(game,rabbit,current,items,config);
     if(now<current.endsAt)throw Error('Ce lapin explore encore les environs.');
     const inventory={...game.inventory};let eggs=game.eggs||0;
     for(const entry of current.loot){
@@ -131,7 +174,7 @@
         const row=el('article',undefined,'exploration-trip'),zone=config.zones.find(z=>z.id===t.zone),left=Math.max(0,t.endsAt-Date.now());
         row.append(el('strong',`${name(t.rabbit)} · ${zone?.name||t.zone}`));
         const clock=el('span');clock.dataset.endsAt=t.endsAt;row.append(clock,el('small',`Retour : ${new Date(t.endsAt).toLocaleString('fr-FR')}`));
-        const collect=button('Accueillir et récupérer',()=>{try{const loot=claim(game,t.rabbit,items,save);feedback.textContent=`${name(t.rabbit)} rapporte : `+loot.map(e=>`${e.quantity} × ${e.id==='egg'?'œuf':items.find(i=>i.id===e.id)?.name||e.id}`).join(', ')+'.';refresh();render();pose('wave');}catch(error){feedback.textContent=error.message;}});collect.disabled=left>0;collect.dataset.collectRabbit=t.rabbit;row.append(collect);active.append(row);
+        const collect=button('Accueillir et récupérer',()=>{try{const loot=claim(game,t.rabbit,items,save,undefined,config);feedback.textContent=`${name(t.rabbit)} rapporte : `+loot.map(e=>`${e.quantity} × ${e.id==='egg'?'œuf':items.find(i=>i.id===e.id)?.name||e.id}`).join(', ')+'.';refresh();render();pose('wave');}catch(error){feedback.textContent=error.message;}});collect.disabled=left>0;collect.dataset.collectRabbit=t.rabbit;row.append(collect);active.append(row);
       }
       tripsTitle.hidden=!active.children.length;active.hidden=!active.children.length;
       tick();

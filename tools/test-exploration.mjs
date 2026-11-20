@@ -1,6 +1,7 @@
 import fs from 'node:fs';import vm from 'node:vm';import assert from 'node:assert/strict';
 const context={window:{}};vm.createContext(context);vm.runInContext(fs.readFileSync('assets/js/exploration.js','utf8'),context);
 const api=context.window.LapinousExploration,config=JSON.parse(fs.readFileSync('lapinous-content.json','utf8')).exploration,items=JSON.parse(fs.readFileSync('lapinous-shop.json','utf8')).items;
+context.window.getExplorationConfig=()=>config;
 const now=Date.UTC(2026,9,22,12),fresh=()=>({species:'myco',ownedSpecies:['myco','nopal'],progress:{myco:{currentLevel:15,energy:100},nopal:{currentLevel:15,energy:100}},eggs:3,inventory:{market_apple:7},future:{preserve:true}});
 for(const zone of config.zones)for(const duration of config.durations){
  const plan=api.plan(config,items,'myco',20,zone.id,duration.hours,now,()=>.9);

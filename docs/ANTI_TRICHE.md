@@ -184,6 +184,16 @@ Fichiers : `assets/js/save-validation.js`, `assets/js/save-safety.js`, `assets/j
 
 ## Priorités pratiques
 
+### Lot 186 — cohérence à la récupération et horloge de session (local)
+
+`assets/js/exploration.js` contrôle les voyages avant toute attribution : possession, zone et durée connues, coût et niveau si présents, appartenance des objets à la zone et à la rareté, et total cumulé inférieur ou égal au nombre de tirages prévu. Les champs facultatifs historiques restent acceptés. Une incohérence ne supprime ni le voyage ni son butin : la récupération est suspendue avec diagnostic. Un catalogue modifié depuis le départ peut aussi demander une vérification ; ce contrôle ne qualifie pas le joueur de tricheur et ne réécrit jamais son historique.
+
+L'horloge civile est comparée au compteur monotone du navigateur. Un écart supérieur à deux minutes pendant une session au premier plan suspend départs et récupérations, sans modifier les dates enregistrées. Une correction de l'heure permet de réessayer. Au retour d'arrière-plan, la référence de session est reprise pour préserver les téléphones dont le compteur est suspendu. Les changements de fuseau et été/hiver ne changent pas les millisecondes UTC utilisées.
+
+Tests : `tools/test-exploration-import-clock.mjs`, `tools/test-exploration.mjs`, `tools/test-exploration-departure-safety.mjs`, `tools/test-save-safety.mjs`. Pas de changement de format, pas de réécriture des fichiers joueurs. Non publié.
+
+Limites restantes : heure manipulée avant ouverture ou pendant l'arrière-plan, client modifié, butin falsifié mais plausible, provenance de l'énergie débitée et récompenses quotidiennes. Une heure de confiance et une preuve de tirage demandent un service extérieur. Les paramètres temporels injectables des fonctions restent utiles aux tests, sans constituer une frontière de sécurité du client local.
+
 Commencer par l'échappement des textes importés, l'isolation des brouillons Admin et la cohérence des imports. Consolider ensuite les transactions et les tests de concurrence. Décider séparément du niveau de garantie souhaité pour les sauvegardes locales, l'horloge et de futurs records partagés.
 
 Préserver toutes les sauvegardes et proposer une récupération explicite en cas d'incohérence. Ne pas classer une partie ancienne comme tricheuse sur la seule base d'un format ancien ou d'un changement d'heure. Aucun secret de production ne doit être embarqué dans le jeu.

@@ -1,5 +1,12 @@
 # Warrenfall - suivi des travaux et validations
 
+## Butins importés et horloge — lot 186 local
+
+- [x] Contrôler avant crédit les voyages chargés : compagnon possédé, destination, durée exacte, coût et niveau lorsqu'ils sont présents, objets autorisés par zone et rareté, total cumulé limité au nombre de trouvailles. Les lignes dupliquées ne contournent pas le plafond. Une incohérence laisse le voyage et le reste de la partie intacts, avec une explication ; aucun refus supplémentaire du fichier entier à l'import. [trello:6afeb621b5f344595561762d:code:import-loot-186]
+- [x] Détecter les écarts de plus de deux minutes entre horloge civile et compteur monotone pendant une session au premier plan, avant départ ou récupération. Corriger l'heure permet de réessayer ; aucune échéance sauvegardée n'est modifiée. Reprise après arrière-plan recalée pour éviter les faux positifs des téléphones suspendus. [trello:6afeb618ace0c233d29d0cae:code:foreground-clock-186]
+- Tests : `tools/test-exploration-import-clock.mjs`, anciennes explorations, sauvegardes et départs. Anciens champs facultatifs et extensions futures conservés, échec d'enregistrement annulé, reprise après plusieurs jours hors ligne.
+- Limites : contrôle de cohérence, pas preuve d'origine d'un butin plausible. Pas d'heure de confiance après fermeture ou arrière-plan ; bonus et défis quotidiens restent à traiter. Aucun bannissement ni effacement. Modifications locales non publiées.
+
 ## Frigo rétabli et départs d'exploration — lot 185
 
 - Frigo : cause identifiée dans la trace fournie, `meals` supprimé alors que le rendu des plats l'utilisait encore. Tableau rétabli à partir des recettes et de leurs identifiants de stock, comme avant. Bouton ajouté près du fruit retiré ; ouverture depuis le frigo du décor conservée. Le test exécute maintenant le vrai rendu avec le catalogue réel, recettes actives/inactives, stock vide et faim pleine, sans changement d'inventaire. Le message Chrome `beforeinstallprompt` est distinct de cette exception.

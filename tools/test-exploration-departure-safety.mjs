@@ -6,6 +6,7 @@ vm.runInNewContext(fs.readFileSync('assets/js/exploration.js','utf8'),context);
 const api=context.window.LapinousExploration;
 const config=JSON.parse(fs.readFileSync('lapinous-content.json','utf8')).exploration;
 const items=JSON.parse(fs.readFileSync('lapinous-shop.json','utf8')).items;
+context.window.getExplorationConfig=()=>config;
 const now=Date.UTC(2026,10,19,12);
 const fresh=()=>({species:'myco',ownedSpecies:['myco'],progress:{myco:{currentLevel:15,energy:100,friendshipTotal:123}},inventory:{market_apple:7},eggs:3,future:{keep:true}});
 const prepare=()=>api.plan(config,items,'myco',15,'forest',1,now,()=>.9);
