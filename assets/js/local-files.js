@@ -25,7 +25,8 @@
     const folder=memory.get('player');
     const options={id:'lapinous-load-save',startIn:folder||'downloads',types:[{description:'Sauvegarde Warrenfall',accept:{'application/json':['.json']}}],multiple:false};
     const [handle]=await window.showOpenFilePicker(options);
-    return JSON.parse(await (await handle.getFile()).text());
+    const text=await (await handle.getFile()).text();
+    return window.LapinousSaveFiles?window.LapinousSaveFiles.decode(text):JSON.parse(text);
   }
   function download(name,text){const url=URL.createObjectURL(new Blob([text],{type:'application/json'}));const link=document.createElement('a');link.href=url;link.download=name;link.click();setTimeout(()=>URL.revokeObjectURL(url),1000);}
   async function write(handle,text){const stream=await handle.createWritable();try{await stream.write(text);await stream.close();}catch(error){await stream.abort().catch(()=>{});throw error;}}
@@ -59,7 +60,8 @@
       // Confirmer toutes les nouvelles copies avant de retirer les anciens nids.
       for(let i=0;i<snapshot.length;i++){
         const entry=snapshot[i];
-        const name=nestFilename(entry,i+1),text=JSON.stringify({...entry.data,savedAt:entry.savedAt,autoNest:{name:entry.name,savedAt:entry.savedAt,savedAtISO:new Date(entry.savedAt).toISOString()}},null,2);
+        const name=nestFilename(entry,i+1),data={...entry.data,savedAt:entry.savedAt,autoNest:{name:entry.name,savedAt:entry.savedAt,savedAtISO:new Date(entry.savedAt).toISOString()}};
+        const text=window.LapinousSaveFiles?await window.LapinousSaveFiles.encode(data):JSON.stringify(data,null,2);
         const file=await folder.getFileHandle(name,{create:true});
         await write(file,text);
         if(await (await file.getFile()).text()!==text)throw Error('Copie du petit nid non confirmée.');
@@ -68,7 +70,7 @@
       if(keep.size)for await(const [name,file]of folder.entries()){
         if(file.kind!=='file'||keep.has(name)||!/^warrenfall-petit-nid-auto-[123](?:-\d{2}-\d{2}-\d{4}_\d{2}h\d{2}-\d{2}-\d{3})?\.json$/.test(name))continue;
         // Les anciens noms fixes sont reconnus, mais seuls nos instantanés sont retirés.
-        let old;try{old=JSON.parse(await (await file.getFile()).text());}catch{continue;}
+        let old;try{const text=await (await file.getFile()).text();old=window.LapinousSaveFiles?await window.LapinousSaveFiles.decode(text):JSON.parse(text);}catch{continue;}
         if(typeof old.autoNest?.name==='string'&&Number.isFinite(old.autoNest.savedAt))await folder.removeEntry(name);
       }
       return true;

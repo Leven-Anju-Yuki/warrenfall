@@ -969,6 +969,8 @@ Installation mobile : le bouton Installer est accessible sur l’écran de rotat
 
 Tirages et restauration : chaque partie conserve désormais sa suite d'œufs, de trouvailles et de butins. Avec le même catalogue, recharger la même copie redonne les mêmes prochains résultats ; une ouverture ×10 suit la même suite que dix ouvertures simples. Les anciens fichiers restent chargeables et les soldes sont restaurés avec la copie. Ce contrôle local ne garantit pas l'authenticité d'un fichier modifié et ne supprime aucun ancien gain.
 
+Fichiers de sauvegarde : les nouveaux exports et Petits nids sur disque sont encodés avec un contrôle d'intégrité, lorsqu'il est disponible dans le navigateur. Un contenu retouché ou endommagé est refusé avant de remplacer la partie ; conserve toujours sa copie d'origine. Les anciens JSON, anciens objets et gros soldes restent acceptés sans réduction. Le format interne des parties reste inchangé. Les nouveaux fichiers nécessitent la version du jeu qui sait lire cette enveloppe sur l'autre appareil ; ne désinstalle pas l'application pour les charger. Si le contrôle est indisponible, l'export JSON simple reste proposé en secours. Cette empreinte publique n'est pas une preuve anti-triche serveur et peut être recalculée.
+
 Vérifications : `node tools/test-team-rules.mjs`, `node tools/test-install-visibility.mjs`, `node tools/test-pwa.mjs`, puis `node tools/test-landscape-game.mjs --quick --family --ui-only --adventure` (ajouter `--desktop` pour le PC). Les tests utilisent un profil isolé ; aucune partie réelle ni service distant n’est modifié.
 
 ### Rappels des événements

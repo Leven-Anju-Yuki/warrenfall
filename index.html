@@ -209,10 +209,10 @@
                         <div class="save-section-title">📦 Import / export</div>
                         <div class="save-io-row save-io-main">
                             <button id="exportBtn" class="io-btn" type="button">
-                                ⬇️ Exporter en JSON
+                                ⬇️ Exporter la partie
                             </button>
                             <label class="io-btn io-btn-file"
-                                >⬆️ Importer un JSON<input
+                                >⬆️ Importer une sauvegarde<input
                                     type="file"
                                     id="importInput"
                                     accept="application/json"
@@ -221,6 +221,7 @@
                         </div>
 
                         <!-- Éléments historiques conservés hors écran pour compatibilité JS -->
+                        <p class="dash-note">Les nouveaux fichiers disposent d’un contrôle d’intégrité lorsque le navigateur le permet. Un fichier retouché ou abîmé peut être refusé : conserve sa copie d’origine. Tes anciens JSON restent importables et leurs ressources sont conservées.</p>
                         <div class="legacy-save-ui" aria-hidden="true">
                             <input type="text" id="newSaveName" />
                             <button id="newSaveBtn" type="button"></button>
@@ -390,7 +391,8 @@
         </nav>
 
         <script src="./assets/js/bootstrap.min.js"></script>
-        <script src="./assets/js/local-files.js?v=dated-saves-168"></script>
+        <script src="./assets/js/save-files.js?v=save-integrity-189"></script>
+        <script src="./assets/js/local-files.js?v=save-integrity-189"></script>
         <script src="./assets/js/event-reminders.js?v=events-115"></script>
         <script src="./assets/js/team-rules.js?v=adventure-114"></script>
 <script src="./assets/js/boss-abilities.js?v=replay-phone-188"></script>
@@ -406,7 +408,7 @@
         <script src="./assets/js/apothecary-effects.js?v=remedies-126"></script>
         <script src="./assets/js/shop.js?v=combat-buffs-187"></script>
         <script src="./assets/js/quiz.js?v=reliable-progress-171"></script>
-        <script src="./assets/js/save-validation.js?v=reliable-progress-171"></script>
+        <script src="./assets/js/save-validation.js?v=save-integrity-189"></script>
         <script src="./assets/js/pantry.js?v=combat-buffs-187"></script>
         <script src="./assets/js/scene-preload.js?v=scene-loading-78"></script>
         <script src="./assets/js/replay-draws.js?v=replay-phone-188"></script>
@@ -416,7 +418,7 @@
         <script src="./assets/js/auto-nests.js?v=nests-153"></script>
         <script src="./assets/js/exploration.js?v=replay-phone-188"></script>
         <script src="./assets/js/salon-layout.js?v=salon-zones-182"></script>
-        <script src="./assets/js/script.js?v=replay-phone-188"></script>
+        <script src="./assets/js/script.js?v=save-integrity-189"></script>
         <script src="./assets/js/app-updates.js?v=replay-phone-188"></script>
         <script src="./assets/js/installer.js?v=replay-phone-188"></script>
         <script src="./assets/js/mobile-ui.js?v=inline-eggs-169"></script>

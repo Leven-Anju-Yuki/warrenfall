@@ -1,5 +1,14 @@
 # Warrenfall - suivi des travaux et validations
 
+## Fichiers de sauvegarde et ressources importées — lot 189 local
+
+- [x] Ajouter aux nouveaux fichiers téléchargés, manuels et Petits nids sur disque une enveloppe portable UTF-8/base64 avec empreinte SHA-256 vérifiée avant import. Contenu retouché ou endommagé refusé avant remplacement de la partie ; original conservé. Aucun secret embarqué, aucun chiffrement annoncé et aucune attestation d'origine. Les anciens JSON restent acceptés. [trello:6afeb617c8d440056a9634e2:code:file-integrity-189]
+- [x] Vérifier le montant des doublons en attente d'après la rareté publiée et la possession du compagnon ; montant incohérent conservé en attente, sans gain ni suppression. Refuser les débordements de carottes/fragments avant crédit, sans plafonner ni réduire les soldes existants. Échec d'enregistrement : choix du doublon et stocks restaurés. [trello:6afeb628903ec6f23a7437b0:code:pending-resources-189]
+- Compatibilité : format interne de partie et stockage navigateur inchangés (version 2), objets historiques et champs inconnus conservés, noms Unicode et gros soldes légitimes acceptés. Les nouveaux fichiers demandent un jeu capable de lire l'enveloppe ; les anciens restent lisibles. Si les API d'intégrité manquent, l'export JSON simple de secours reste disponible avec un message explicite.
+- Import asynchrone : si la partie ou sa révision enregistrée change pendant la lecture, ne pas l'écraser. Sur disque, calculer l'enveloppe avant d'ouvrir le flux de remplacement ; abandonner le flux en cas d'échec. Rotation de trois Petits nids testée en mémoire pour fichiers anciens et encodés ; fichiers manuels et fichiers endommagés conservés.
+- Limite : un ancien JSON retouché mais cohérent reste impossible à distinguer d'une ancienne partie légitime ; l'empreinte publique peut être recalculée. Ce lot décourage les retouches simples et les corruptions, pas un client modifié. L'authenticité des carottes et stocks plausibles nécessite un service de confiance. Aucun ancien gain effacé pour compenser cette limite.
+- Fichiers : `assets/js/save-files.js`, `assets/js/save-validation.js`, `assets/js/local-files.js`, `assets/js/script.js`, `tools/test-save-files.mjs`, `tools/test-auto-nest-files.mjs`. Tests sans ouvrir ni modifier de sauvegarde réelle. Non publié.
+
 ## Tirages restaurés, frigo tactile et mise à jour illustrée — lot 188
 
 - [x] Suite de tirages enregistrée dans le champ optionnel `drawState`, avec canaux distincts œufs/voyages/butins. Même copie et même catalogue : mêmes prochains tirages, y compris ×1/×10. Nouvelles adoptions indépendantes, anciennes copies initialisées de façon déterministe fichier par fichier. Aucun blocage global de récompenses qui priverait une partie restaurée de ses gains. [trello:6afeb61a8de87f7a5f9e19b5:code:stable-draws-188]

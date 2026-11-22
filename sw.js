@@ -1,6 +1,6 @@
 /* Les caches sont propres à ce projet, y compris sur un domaine GitHub Pages partagé. */
 const PREFIX = 'lapinous-' + new URL(self.registration.scope).pathname + '-';
-const SHELL = PREFIX + 'shell-v76', IMAGES = PREFIX + 'images-v1';
+const SHELL = PREFIX + 'shell-v77', IMAGES = PREFIX + 'images-v1';
 const HOME = new URL('index.html', self.registration.scope).href;
 // Activation uniquement après confirmation et sauvegarde dans la page.
 self.addEventListener('message',event=>{

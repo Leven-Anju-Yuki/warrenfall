@@ -22,3 +22,18 @@ files.set('warrenfall-petit-nid-auto-1.json',JSON.stringify({autoNest:{name:'Anc
 await api.writeAutoNests([{name:'Nid',savedAt:1000,data:{carrots:10}}]);assert.equal(files.size,2);assert.equal(files.get('admin.json'),'manual untouched');
 allowed=false;const before=JSON.stringify([...files]);assert.equal(await api.writeAutoNests([{data:{}}]),false);assert.equal(JSON.stringify([...files]),before);
 console.log('Autosaves disque : rotation, dates, fichiers manuels et permissions OK.');
+// The real file writer must also rotate encoded nests without deleting manual files.
+Object.assign(context,{crypto:globalThis.crypto,TextEncoder,TextDecoder,btoa,atob});
+vm.runInContext(fs.readFileSync('assets/js/save-files.js','utf8'),context);allowed=true;
+const codec=context.window.LapinousSaveFiles;
+const entries=Array.from({length:3},(_,i)=>({name:'Nid encodé',savedAt:1795161600000+i,data:{species:'azur',carrots:120+i,inventory:{ancienne_potion:7},future:{keep:'日本語'}}}));
+await api.writeAutoNests(entries);
+assert.equal(files.size,4);assert.equal(files.get('admin.json'),'manual untouched');
+for(const [name,text]of files){if(name==='admin.json')continue;assert.equal(JSON.parse(text).format,codec.FORMAT);const data=await codec.decode(text);assert.equal(data.inventory.ancienne_potion,7);assert.equal(data.future.keep,'日本語');assert.ok(Number.isFinite(data.autoNest.savedAt));}
+const savedFiles=JSON.stringify([...files]);failWrite=true;
+await assert.rejects(api.writeAutoNests([{name:'Nid',savedAt:1795161609999,data:{species:'azur',carrots:999}}]));assert.equal(JSON.stringify([...files]),savedFiles);failWrite=false;
+const selected=[...files.keys()].find(n=>n!=='admin.json');context.window.showOpenFilePicker=async()=>[handle(selected)];
+const imported=await api.openSaveFile();assert.equal(imported.inventory.ancienne_potion,7);
+const packet=JSON.parse(files.get(selected));packet.checksum='0'.repeat(64);files.set(selected,JSON.stringify(packet));
+const corrupted=files.get(selected);await assert.rejects(api.openSaveFile());assert.equal(files.get(selected),corrupted);assert.equal(files.get('admin.json'),'manual untouched');
+console.log('Encoded nests: three-copy rotation, dates, old items, manual files, failed disk write and protected picker import OK');

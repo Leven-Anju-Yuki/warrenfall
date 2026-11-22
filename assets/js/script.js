@@ -792,29 +792,36 @@ document.addEventListener("DOMContentLoaded", () => {
             nameInput.value = "";
         });
 
-        document.getElementById("exportBtn").addEventListener("click", () => {
-            const blob = new Blob([serializeGame()], { type: "application/json" });
+        document.getElementById("exportBtn").addEventListener("click", async () => {
+            try {
+            const data=JSON.parse(serializeGame()),filename=timestampedFilename(`lapinous-${(currentRabbitName() || "save").toLowerCase()}`);
+            const text=window.LapinousSaveFiles?await window.LapinousSaveFiles.encode(data):JSON.stringify(data);
+            const blob = new Blob([text], { type: "application/json" });
             const url = URL.createObjectURL(blob);
             const a = document.createElement("a");
             a.href = url;
-            a.download = timestampedFilename(`lapinous-${(currentRabbitName() || "save").toLowerCase()}`);
+            a.download = filename;
             a.click();
             URL.revokeObjectURL(url);
-            showToast("Partie exportée en JSON ⬇️ (un vrai fichier sur ton disque)", "success");
+            showToast(window.LapinousSaveFiles?.available()?"Partie exportée avec contrôle d’intégrité ⬇️":"Export JSON de compatibilité ⬇️ — contrôle d’intégrité indisponible dans ce navigateur.", "success");
+            }catch(error){showToast('Export non effectué : '+error.message,'warn');}
         });
         document.getElementById("importInput").addEventListener("change", (e) => {
             const file = e.target.files[0];
             if (!file) return;
+            const importingGame=game,importingRevision=lastSavedRaw;
             const reader = new FileReader();
-            reader.onload = () => {
+            reader.onload = async () => {
                 try {
-                    applyLoadedGame(JSON.parse(reader.result));
+                    const data=window.LapinousSaveFiles?await window.LapinousSaveFiles.decode(reader.result):JSON.parse(reader.result);
+                    if(game!==importingGame||lastSavedRaw!==importingRevision)throw Error('La partie a changé pendant la lecture. Recommence l’import ; le fichier est conservé.');
+                    applyLoadedGame(data);
                     showToast("Sauvegarde importée ✨", "success");
                     bootstrap.Modal.getOrCreateInstance(
                         document.querySelector("#saveModal"),
                     ).hide();
                 } catch (err) {
-                    showToast("Fichier JSON invalide.", "warn");
+                    showToast('Import refusé : '+err.message, "warn",12000);
                 }
             };
             reader.readAsText(file);
@@ -881,15 +888,18 @@ document.addEventListener("DOMContentLoaded", () => {
         }
 
         async function loadFromFolder(filename) {
+            const importingGame=game,importingRevision=lastSavedRaw;
             try {
                 const fileHandle = await savesDirHandle.getFileHandle(filename);
                 const file = await fileHandle.getFile();
                 const text = await file.text();
-                applyLoadedGame(JSON.parse(text));
+                const data=window.LapinousSaveFiles?await window.LapinousSaveFiles.decode(text):JSON.parse(text);
+                if(game!==importingGame||lastSavedRaw!==importingRevision)throw Error('La partie a changé pendant la lecture. Recommence le chargement.');
+                applyLoadedGame(data);
                 showToast(`Sauvegarde "${filename}" chargée ✨`, "success");
                 bootstrap.Modal.getOrCreateInstance(document.querySelector("#saveModal")).hide();
             } catch (e) {
-                showToast("Impossible de lire ce fichier.", "warn");
+                showToast('Chargement refusé : '+e.message, "warn",12000);
             }
         }
 
@@ -942,9 +952,10 @@ document.addEventListener("DOMContentLoaded", () => {
                         fileHandle = await savesDirHandle.getFileHandle(filename, { create: true });
                     }
                 }
+                const raw=serializeGame(),text=window.LapinousSaveFiles?await window.LapinousSaveFiles.encode(JSON.parse(raw)):raw;
                 const writable = await fileHandle.createWritable();
-                await writable.write(serializeGame());
-                await writable.close();
+                try{await writable.write(text);await writable.close();}
+                catch(error){await writable.abort().catch(()=>{});throw error;}
                 showToast(`Sauvegardé sous "${filename}" 📁`, "success");
                 document.getElementById("folderSaveName").value = "";
                 renderFolderSaves();
@@ -1196,7 +1207,8 @@ document.addEventListener("DOMContentLoaded", () => {
             .getElementById("loadInsteadBtn")
              .addEventListener("click", async () => {
                 if(!window.showOpenFilePicker){document.getElementById('importInput').click();return;}
-                try{applyLoadedGame(await window.LapinousLocalFiles.openSaveFile());}catch(error){if(error.name!=='AbortError')showToast('Impossible de charger cette sauvegarde.','warn');}
+                const importingGame=game,importingRevision=lastSavedRaw;
+                try{const data=await window.LapinousLocalFiles.openSaveFile();if(game!==importingGame||lastSavedRaw!==importingRevision)throw Error('La partie a changé pendant la lecture. Recommence le chargement.');applyLoadedGame(data);}catch(error){if(error.name!=='AbortError')showToast('Chargement refusé : '+error.message,'warn',12000);}
             });
 
         // ============================================================
@@ -2458,6 +2470,9 @@ document.addEventListener("DOMContentLoaded", () => {
             if (!pending) return "";
             const sp = getSpecies()[pending.speciesKey];
             if (!sp) return "";
+            let duplicateReward;
+            try{duplicateReward=window.LapinousSaveValidation.duplicateReward(game,pending,getSpecies());}
+            catch(error){return `<div class="duplicate-choice"><p>${combatEscape(error.message)}</p></div>`;}
             const pr = ensureTechniqueProgress(pending.speciesKey);
             const options = pr.attackLevels
                 .map((level, i) =>
@@ -2466,12 +2481,15 @@ document.addEventListener("DOMContentLoaded", () => {
                         : "",
                 )
                 .join("");
-            return `<div class="duplicate-choice"><div class="duplicate-title">✨ Doublon : ${combatEscape(sp.name)}</div><p>Recycle-le ou reçois un fragment pour ce lapin.</p><div class="action-row"><button class="action-btn" onclick="resolveDuplicate('carrots')">🥕 +${pending.carrotReward} carottes</button><button class="action-btn adventure" onclick="resolveDuplicate('fragment')">💎 Garder le fragment</button></div>${options ? `<label>Attaque à améliorer <select class="duplicate-attack-select" id="duplicateAttackTarget">${options}</select></label><button class="action-btn adventure" onclick="resolveDuplicate('attack',Number(document.getElementById('duplicateAttackTarget').value))">⚔️ Améliorer cette attaque</button>` : "<p>Aucune attaque débloquée à améliorer pour le moment. Garde le fragment pour plus tard.</p>"}<small>Les fragments conservés se dépensent dans la fiche du lapin.</small></div>`;
+            return `<div class="duplicate-choice"><div class="duplicate-title">✨ Doublon : ${combatEscape(sp.name)}</div><p>Recycle-le ou reçois un fragment pour ce lapin.</p><div class="action-row"><button class="action-btn" onclick="resolveDuplicate('carrots')">🥕 +${duplicateReward} carottes</button><button class="action-btn adventure" onclick="resolveDuplicate('fragment')">💎 Garder le fragment</button></div>${options ? `<label>Attaque à améliorer <select class="duplicate-attack-select" id="duplicateAttackTarget">${options}</select></label><button class="action-btn adventure" onclick="resolveDuplicate('attack',Number(document.getElementById('duplicateAttackTarget').value))">⚔️ Améliorer cette attaque</button>` : "<p>Aucune attaque débloquée à améliorer pour le moment. Garde le fragment pour plus tard.</p>"}<small>Les fragments conservés se dépensent dans la fiche du lapin.</small></div>`;
         }
         window.resolveDuplicate = function (choice, index) {
             const pending = game.pendingDuplicate;
             if (!pending) return;
             if (!["carrots", "fragment", "attack"].includes(choice)) return;
+            let duplicateReward;
+            try{duplicateReward=window.LapinousSaveValidation.duplicateReward(game,pending,getSpecies());}
+            catch(error){showToast(error.message,'warn',12000);return;}
             const beforeChoice=JSON.stringify(game);
             const pr = ensureTechniqueProgress(pending.speciesKey);
             if (
@@ -2488,14 +2506,14 @@ document.addEventListener("DOMContentLoaded", () => {
             )
                 return;
             if (choice === "carrots") {
-                game.carrots += pending.carrotReward;
-                showToast(`🥕 +${pending.carrotReward} carottes`, "success");
+                if(!Number.isSafeInteger(game.carrots)||!Number.isSafeInteger(game.carrots+duplicateReward)){showToast('Solde incorrect : doublon conservé.','warn');return;}
+                game.carrots += duplicateReward;
+                showToast(`🥕 +${duplicateReward} carottes`, "success");
             } else {
-                pr.attackFragments++;
+                if(!Number.isSafeInteger(pr.attackFragments)||pr.attackFragments<0||(choice==='fragment'&&pr.attackFragments>=Number.MAX_SAFE_INTEGER)){showToast('Stock de fragments incorrect : doublon conservé.','warn');return;}
                 if (choice === "attack") {
-                    pr.attackFragments--;
                     pr.attackLevels[index]++;
-                }
+                }else pr.attackFragments++;
                 showToast(
                     choice === "attack"
                         ? "⚔️ Attaque choisie améliorée !"

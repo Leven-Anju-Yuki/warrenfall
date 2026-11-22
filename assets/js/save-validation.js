@@ -48,5 +48,15 @@
     }
     return data;
   }
-  window.LapinousSaveValidation = { validate };
+  /** Une récompense en attente ne décide jamais elle-même de son montant. */
+  function duplicateReward(game,pending,species){
+    const sp=species?.[pending?.speciesKey];
+    if(!sp||!game.ownedSpecies?.includes(pending.speciesKey))throw Error('Le compagnon de ce doublon doit être retrouvé dans la collection et le catalogue. Récompense conservée en attente.');
+    const rewards={commun:5,rare:10,epique:18,legendaire:30,mythique:45,divin:70,secret:70};
+    if(!Object.hasOwn(rewards,sp.rarity))throw Error('Rareté du doublon inconnue : récompense conservée.');
+    const expected=rewards[sp.rarity];
+    if(pending.carrotReward!==undefined&&pending.carrotReward!==expected)throw Error('Montant du doublon incohérent avec sa rareté. Récompense conservée sans attribution ; vérifie le catalogue ou la sauvegarde d’origine.');
+    return expected;
+  }
+  window.LapinousSaveValidation = { validate, duplicateReward };
 })();

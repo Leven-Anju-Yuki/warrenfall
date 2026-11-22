@@ -184,6 +184,14 @@ Fichiers : `assets/js/save-validation.js`, `assets/js/save-safety.js`, `assets/j
 
 ## Priorités pratiques
 
+### Lot 189 local — intégrité des fichiers, sans authentification d'origine
+
+Les nouveaux fichiers d'export et Petits nids sur disque contiennent une enveloppe `warrenfall-save` version 1 : contenu UTF-8 encodé en base64 et empreinte SHA-256. La vérification précède le remplacement de la partie. L'encodage évite l'édition directe des quantités dans le texte ; l'empreinte détecte une retouche ou corruption tant qu'elle n'est pas recalculée. Ce n'est ni du chiffrement ni une signature de serveur. Les anciens JSON bruts restent importables : les refuser ou fixer un plafond de ressources casserait des parties légitimes. Le stockage navigateur reste dans son format antérieur, version 2, et aucun fichier existant n'est converti sans une nouvelle sauvegarde demandée par le jeu.
+
+Les règles de récompenses sont vérifiées indépendamment de l'enveloppe : un doublon ne peut pas imposer son propre montant. Si son montant ne correspond pas à la rareté actuelle, il reste en attente avec diagnostic ; aucun ancien solde n'est réduit. Débordements numériques refusés, attribution unique et annulation sur échec d'écriture testées. Les quantités positives plausibles d'un ancien fichier, les métadonnées de récompenses falsifiées mais cohérentes et un fichier dont l'empreinte a été recalculée ne sont pas authentifiés. Aucun contrôle local ne résout cela sans une autorité extérieure.
+
+Tests `tools/test-save-files.mjs` et `tools/test-auto-nest-files.mjs` : import réel avant remplacement, retouches carottes/objets, Unicode, gros soldes, anciens objets, lecture protégée via sélecteur, trois copies, échec disque et import interrompu par une autre activité. Les fichiers originaux et parties réelles ne sont pas modifiés pendant les tests. Lot non publié.
+
 ### Lot 188 local — restauration et suite des tirages
 
 `assets/js/replay-draws.js` conserve une graine et un compteur par canal dans `drawState`, champ optionnel sans changement de version. Restaurer la même copie donne les mêmes tirages suivants avec le même catalogue et les mêmes événements, pour les œufs, départs d'exploration et butins de combat. Les nouvelles parties utilisent une graine propre ; une ancienne copie sans ce champ est initialisée de façon déterministe à partir de son contenu, sans accès au réseau. Les œufs en attente sont repris tels quels. Une erreur d'enregistrement restaure aussi la position du tirage ; les tests exécutent les fonctions réelles des œufs simples/×10, des départs et des résultats tactiques.
